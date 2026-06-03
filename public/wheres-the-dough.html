@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a7f37'/><text y='.9em' font-size='75' x='12'>💰</text></svg>">
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:title" content="Where's the Dough? · Harris County Campaign Finance">
+  <meta property="og:description" content="Cash-on-hand leaderboard for every Harris County elected official and candidate — all levels, both parties. Updated from FEC, TEC & Harris County Clerk filings.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://placehold.co/1200x630/1a7f37/white?text=Where%27s+the+Dough%3F%0AHarris+County+Campaign+Finance">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Where's the Dough? · Harris County">
+  <meta name="twitter:description" content="Real-time campaign cash leaderboard — Harris County officials & candidates, all parties.">
+  <!-- Theme color -->
+  <meta name="theme-color" content="#1a7f37">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Where's the Dough? · Harris County</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+  :root {
+    --cream:   #f4f0e8;
+    --ivory:   #fdfbf7;
+    --turf:    #1c3a28;
+    --turf-2:  #2a5438;
+    --turf-lt: #e6ede8;
+    --gold:    #b5892a;
+    --gold-lt: #f5edd8;
+    --gold-dk: #8a6518;
+    --charcoal:#1a1810;
+    --slate:   #5c5848;
+    --linen:   #ddd8ce;
+    --linen-2: #ccc7bc;
+    --navy:    #1a2744;
+    --navy-lt: #e8edf6;
+    --crimson: #5c1414;
+    --crimson-lt:#f5e8e8;
+    --white:   #ffffff;
+    --hdr-h:   60px;
+  }
+
+  html, body {
+    background: var(--cream);
+    color: var(--charcoal);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  /* ── Topbar ── */
+  .topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--turf);
+    height: var(--hdr-h);
+    display: flex; align-items: center;
+    padding: 0 20px; gap: 14px;
+    border-bottom: 2px solid var(--gold);
+  }
+
+  .brand { display:flex; align-items:center; gap:10px; flex-shrink:0; text-decoration:none; }
+
+  .brand-icon {
+    width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    opacity: .9;
+  }
+
+  .brand-text { display:flex; flex-direction:column; line-height:1; }
+
+  .brand-eyebrow {
+    font-size: 9px; font-weight: 500;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--gold); opacity: .9;
+    margin-bottom: 2px;
+  }
+
+  .brand-title {
+    font-family: 'Pacifico', cursive;
+    font-size: 20px; color: var(--white);
+    letter-spacing: .01em;
+  }
+
+  .topbar-controls {
+    flex: 1; display: flex; align-items: center;
+    gap: 8px; justify-content: center; min-width: 0;
+  }
+
+  .ctrl-select {
+    appearance: none; -webkit-appearance: none;
+    background: rgba(255,255,255,.1)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23b5892a' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")
+      no-repeat right 10px center;
+    border: 1px solid rgba(181,137,42,.4);
+    border-radius: 4px; color: rgba(255,255,255,.9);
+    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+    padding: 7px 28px 7px 10px; cursor: pointer; outline: none;
+    min-width: 150px; flex-shrink: 0;
+    letter-spacing: .02em;
+  }
+  .ctrl-select option { background: var(--turf); color: white; }
+  .ctrl-select:hover { border-color: var(--gold); }
+
+  .search-input {
+    flex: 1; min-width: 80px; max-width: 240px;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(181,137,42,.4);
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif; font-size: 12px;
+    padding: 7px 10px; outline: none;
+    color: rgba(255,255,255,.9);
+  }
+  .search-input::placeholder { color: rgba(255,255,255,.4); }
+  .search-input:focus { border-color: var(--gold); background: rgba(255,255,255,.15); }
+
+  .party-toggle { display:flex; border:1px solid rgba(181,137,42,.35); border-radius:4px; overflow:hidden; flex-shrink:0; }
+  .party-btn {
+    background: transparent; border: none;
+    border-left: 1px solid rgba(181,137,42,.35);
+    font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600;
+    padding: 7px 12px; cursor: pointer; color: rgba(255,255,255,.6);
+    letter-spacing: .06em; text-transform: uppercase;
+    transition: background .15s, color .15s;
+  }
+  .party-btn:first-child { border-left: none; }
+  .party-btn.active     { background: var(--gold); color: var(--turf); }
+  .party-btn.active-d   { background: var(--navy); color: white; }
+  .party-btn.active-r   { background: var(--crimson); color: white; }
+  .party-btn:hover:not(.active):not(.active-d):not(.active-r) { background: rgba(255,255,255,.08); color: white; }
+
+  /* ── Main ── */
+  .main { max-width: 880px; margin: 0 auto; padding: 28px 16px 80px; }
+
+  /* ── FEC Bar ── */
+  .fec-bar {
+    background: var(--gold-lt); border: 1px solid var(--gold);
+    border-radius: 4px; padding: 8px 14px; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; color: var(--gold-dk); letter-spacing: .02em;
+  }
+  .fec-bar button {
+    background: var(--turf); color: var(--gold);
+    border: none; border-radius: 3px;
+    font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600;
+    padding: 4px 10px; cursor: pointer; letter-spacing: .06em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .fec-bar button:hover { opacity: .85; }
+  .fec-bar button:disabled { opacity: .4; cursor: default; }
+  .fec-spinner {
+    display: inline-block; width: 10px; height: 10px;
+    border: 1.5px solid currentColor; border-top-color: transparent;
+    border-radius: 50%; animation: spin .7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Section label ── */
+  .section-label {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 11px; font-style: italic;
+    letter-spacing: .06em; color: var(--slate);
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--linen);
+  }
+
+  /* ── Stats strip ── */
+  .stats-bar { display:flex; gap:0; margin-bottom:12px; border:1px solid var(--linen); border-radius:4px; overflow:hidden; background:var(--ivory); }
+  .stat-card { flex:1; padding:12px 14px; text-align:center; border-right:1px solid var(--linen); }
+  .stat-card:last-child { border-right:none; }
+  .stat-label { font-size:9px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--slate); margin-bottom:3px; }
+  .stat-value { font-family:'DM Mono',monospace; font-size:17px; font-weight:500; color:var(--turf); }
+
+  /* ── Leaderboard card ── */
+  .lb-card { background:var(--ivory); border:1px solid var(--linen); border-radius:4px; overflow:hidden; }
+  .lb-table { width:100%; border-collapse:collapse; }
+  .lb-table thead tr { border-bottom:1px solid var(--linen-2); background:var(--cream); }
+  .lb-table th {
+    font-family:'DM Sans',sans-serif; font-size:9px; font-weight:600;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--slate);
+    padding:10px 16px; text-align:left;
+  }
+  .lb-table th.right { text-align:right; }
+  .lb-table tbody tr.main-row {
+    border-bottom:1px solid var(--linen); cursor:pointer;
+    transition:background .12s;
+  }
+  .lb-table tbody tr.main-row:last-of-type { border-bottom:none; }
+  .lb-table tbody tr.main-row:hover { background:#f0ece4; }
+  .lb-table tbody tr.main-row.open { background:#f0ece4; }
+  /* Subtle alternating */
+  .lb-table tbody tr.main-row:nth-child(4n+1) { background:var(--ivory); }
+  .lb-table tbody tr.main-row:nth-child(4n+1):hover { background:#f0ece4; }
+  .lb-table td { padding:13px 16px; vertical-align:middle; }
+
+  /* ── Post position rank ── */
+  .td-rank { width:44px; text-align:center; }
+  .post-pos {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:26px; height:26px;
+    border-radius:50%;
+    font-family:'DM Mono',monospace; font-size:12px; font-weight:500;
+    border:1.5px solid var(--linen-2); color:var(--slate);
+    background:var(--cream);
+  }
+  .post-pos.p1 { background:var(--gold); border-color:var(--gold-dk); color:var(--turf); font-weight:700; }
+  .post-pos.p2 { background:var(--cream); border-color:var(--linen-2); color:var(--slate); }
+  .post-pos.p3 { background:var(--turf-lt); border-color:var(--turf-2); color:var(--turf); }
+
+  /* ── Name cell ── */
+  .td-name { width:auto; }
+  .name-primary {
+    font-size:14px; font-weight:600; color:var(--charcoal);
+    line-height:1.25; cursor:default;
+    display:inline-block;
+  }
+  .name-office { font-size:11px; color:var(--slate); margin-top:2px; letter-spacing:.01em; }
+  .name-tags { display:flex; gap:4px; flex-wrap:wrap; margin-top:5px; align-items:center; }
+
+  /* ── Minimal badges ── */
+  .badge {
+    display:inline-flex; align-items:center; gap:3px;
+    font-size:9px; font-weight:700; border-radius:2px;
+    padding:2px 6px; letter-spacing:.06em; text-transform:uppercase;
+  }
+  .badge-D { background:var(--navy-lt); color:var(--navy); }
+  .badge-R { background:var(--crimson-lt); color:var(--crimson); }
+  .badge-I { background:#f0e8ff; color:#4a1d96; }
+  .badge-incumbent { background:var(--gold-lt); color:var(--gold-dk); }
+  .badge-challenger { background:var(--turf-lt); color:var(--turf-2); }
+  .badge-level { background:var(--cream); color:var(--slate); border:1px solid var(--linen); }
+
+  .expand-hint {
+    font-size:9px; color:var(--linen-2); margin-top:4px;
+    display:flex; align-items:center; gap:3px; letter-spacing:.04em;
+  }
+  .expand-hint svg { transition:transform .2s; }
+  .main-row.open .expand-hint svg { transform:rotate(180deg); }
+  .expand-hint span { color: var(--gold); }
+
+  /* ── Cash column ── */
+  .td-cash { text-align:right; width:170px; }
+  .cash-amount {
+    font-family:'DM Mono',monospace; font-size:16px; font-weight:500;
+    color:var(--turf); white-space:nowrap;
+  }
+  .cash-bar-wrap { width:100%; height:2px; background:var(--linen); border-radius:2px; margin:6px 0 0 auto; }
+  .cash-bar { height:2px; border-radius:2px; background:var(--turf-2); }
+
+  /* ── Detail row ── */
+  .detail-row { background:var(--cream); }
+  .detail-row td { padding:0; border-bottom:1px solid var(--linen); }
+  .formula-wrap { overflow:hidden; max-height:0; transition:max-height .35s ease; }
+  .formula-wrap.open { max-height:420px; }
+
+  /* ── Formula panel — club receipt style ── */
+  .formula-panel {
+    padding: 20px 20px 20px 56px;
+    border-top: 1px solid var(--linen);
+  }
+  .formula-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 12px; font-style: italic;
+    color: var(--slate); letter-spacing: .04em;
+    margin-bottom: 14px; text-align: left;
+  }
+  .formula-lines { display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
+  .f-line { display:flex; align-items:center; gap:12px; font-size:12px; }
+  .f-op { width:12px; text-align:center; font-weight:600; color:var(--linen-2); flex-shrink:0; font-family:'DM Mono',monospace; }
+  .f-op.minus  { color:#b08080; }
+  .f-op.equals { color:var(--turf-2); }
+  .f-label { width:150px; color:var(--slate); flex-shrink:0; font-size:11px; letter-spacing:.02em; }
+  .f-amt { font-family:'DM Mono',monospace; font-weight:500; width:90px; text-align:right; flex-shrink:0; font-size:12px; }
+  .f-amt.zero     { color:var(--linen-2); font-weight:400; }
+  .f-amt.positive { color:var(--turf-2); }
+  .f-amt.negative { color:#8a3a3a; }
+  .f-amt.total    { color:var(--turf); font-size:14px; font-weight:500; }
+  .f-bar-wrap { flex:1; height:2px; background:var(--linen); border-radius:2px; }
+  .f-bar { height:2px; border-radius:2px; }
+  .f-bar.raised-bar { background:var(--turf-2); }
+  .f-bar.spent-bar  { background:#c06060; }
+  .f-bar.begin-bar  { background:#7090b0; }
+  .f-bar.loan-bar   { background:#9070b0; }
+  .f-bar.inkind-bar { background:var(--gold); }
+
+  /* formula rule line */
+  .f-rule { height:1px; background:var(--linen); margin:6px 0; }
+
+  /* story text — pull quote */
+  .formula-story {
+    font-family:'Playfair Display',Georgia,serif;
+    font-size:13px; font-style:italic;
+    color:var(--turf); line-height:1.6;
+    padding:10px 14px; margin-top:10px;
+    border-left:2px solid var(--gold);
+    background: var(--gold-lt);
+    border-radius:0 3px 3px 0;
+  }
+  .formula-nodata { font-size:11px; color:var(--slate); padding:4px 0; font-style:italic; }
+  .formula-source { font-size:9px; color:var(--linen-2); margin-top:10px; letter-spacing:.06em; text-transform:uppercase; }
+
+  /* ── Global tooltip — crisp, fast ── */
+  #link-tooltip {
+    position: fixed; z-index: 9999;
+    background: var(--turf); border: 1px solid var(--gold);
+    border-radius: 3px;
+    padding: 6px 8px; display: none; gap: 6px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.2);
+    white-space: nowrap; pointer-events: auto;
+  }
+  #link-tooltip.visible { display:flex; }
+  .hover-link-btn {
+    display:inline-flex; align-items:center; gap:4px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(181,137,42,.4);
+    border-radius: 2px;
+    padding: 4px 8px; font-size:10px; font-weight:600;
+    color: rgba(255,255,255,.85); text-decoration:none;
+    font-family:'DM Sans',sans-serif; letter-spacing:.04em;
+    text-transform:uppercase; transition:background .1s;
+  }
+  .hover-link-btn:hover { background:var(--gold); color:var(--turf); border-color:var(--gold); }
+
+  /* ── Pending section ── */
+  .pending-section {
+    margin-top:10px; background:var(--ivory);
+    border:1px solid var(--linen); border-radius:4px; overflow:hidden;
+  }
+  .pending-header {
+    padding:10px 14px; background:var(--cream);
+    border-bottom:1px solid var(--linen);
+    font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--slate); display:flex; justify-content:space-between; align-items:center;
+    cursor:pointer;
+  }
+  .pending-toggle { color:var(--gold); font-weight:400; text-transform:none; letter-spacing:0; }
+  .pending-grid { display:none; padding:12px 14px; display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:5px; }
+  .pending-item { font-size:11px; color:var(--slate); padding:5px 8px; background:var(--cream); border-radius:2px; border:1px solid var(--linen); }
+  .pending-item span { font-size:9px; color:var(--linen-2); display:block; margin-top:1px; letter-spacing:.03em; }
+
+  /* ── LB Footer ── */
+  .lb-footer {
+    padding:10px 16px; border-top:1px solid var(--linen);
+    font-size:9px; color:var(--slate); display:flex;
+    align-items:center; justify-content:space-between;
+    background:var(--cream); letter-spacing:.06em; text-transform:uppercase;
+  }
+
+  /* ── Site footer ── */
+  .site-footer { margin-top:2rem; text-align:center; }
+  .site-footer-sig { font-family:'Pacifico',cursive; font-size:16px; color:var(--slate); }
+  .site-footer-email { font-size:11px; color:var(--linen-2); margin-top:4px; letter-spacing:.04em; }
+  .site-footer-note { font-size:10px; color:var(--linen-2); margin-top:12px; line-height:1.6; max-width:520px; margin-left:auto; margin-right:auto; }
+
+  /* ⚠️  Gate CSS removed — restore with gate HTML/JS */
+
+    /* ── Empty / Message ── */
+  .state-msg { padding:3rem 1.5rem; text-align:center; color:var(--slate); }
+  .state-msg strong { display:block; font-family:'Playfair Display',serif; font-size:15px; font-style:italic; color:var(--charcoal); margin-bottom:6px; }
+
+  /* ── Mobile ── */
+  @media(max-width:640px){
+    .topbar { flex-wrap:wrap; height:auto; padding:10px 12px; gap:8px; }
+    .topbar-controls { flex-wrap:wrap; justify-content:flex-start; order:3; width:100%; }
+    .search-input { max-width:100%; }
+    .ctrl-select { min-width:120px; }
+    .main { padding:16px 10px 60px; }
+    .stats-bar { flex-wrap:wrap; }
+    .lb-table thead { display:none; }
+    .lb-table, .lb-table tbody, .lb-table tr, .lb-table td { display:block; width:100%; }
+    .lb-table tr.main-row { padding:12px 14px; position:relative; }
+    .lb-table tr.main-row td { padding:0; border:none; }
+    .td-rank { position:absolute; top:14px; left:14px; }
+    .td-name { padding-left:42px !important; }
+    .td-cash { text-align:left !important; padding-left:42px !important; margin-top:6px; }
+    .td-cash .cash-bar-wrap { width:60%; }
+    .formula-panel { padding:14px; }
+    .f-label { width:110px; }
+    .f-bar-wrap { display:none; }
+    .gate-card { padding:28px 20px; }
+    .gate-row { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-icon">
+      <!-- Minimal horse & jockey silhouette — turf club -->
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+        <!-- Jockey cap -->
+        <ellipse cx="20" cy="9" rx="5" ry="3.5" fill="rgba(255,255,255,0.75)"/>
+        <!-- Jockey body -->
+        <path d="M15 11 Q17 9 20 10 L22 13 Q20 15 17 14 Z" fill="rgba(181,137,42,0.9)"/>
+        <!-- Horse head -->
+        <path d="M12 13 Q14 10 16 11 Q18 9 20 10 Q19 13 17 14 Q15 15 13 14 Z" fill="rgba(255,255,255,0.85)"/>
+        <!-- Horse body -->
+        <path d="M8 18 Q11 14 15 15 Q17 14 17 14 Q19 16 18 19 Q16 22 12 21 Q9 22 8 18Z" fill="rgba(255,255,255,0.85)"/>
+        <!-- Legs -->
+        <line x1="10" y1="21" x2="9" y2="27" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="13" y1="21" x2="13" y2="27" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="16" y1="20" x2="17" y2="26" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="18" y1="19" x2="20" y2="25" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Tail -->
+        <path d="M8 18 Q4 17 3 20 Q4 22 6 21" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        <!-- Gold accent racing stripe -->
+        <line x1="2" y1="30" x2="32" y2="30" stroke="rgba(181,137,42,0.4)" stroke-width=".8"/>
+      </svg>
+    </div>
+    <div class="brand-text">
+      <span class="brand-eyebrow">Harris County · Campaign Finance &nbsp;<span id="freshness-badge" style="background:rgba(181,137,42,.2);color:var(--gold);padding:2px 6px;border-radius:2px;font-size:8px;font-weight:600;letter-spacing:.04em">FEC: Apr 2026 · State/Local: Jan 2026</span></span>
+      <span class="brand-title">Where's the Dough?</span>
+    </div>
+  </div>
+
+  <div class="topbar-controls">
+    <select class="ctrl-select" id="sort-select" onchange="onFilterChange()" style="min-width:130px">
+    <option value="cash">↓ Cash on Hand</option>
+    <option value="raised">↓ Raised</option>
+    <option value="spent">↓ Spent</option>
+    <option value="burn">↓ Burn Rate</option>
+  </select>
+  <select class="ctrl-select" id="level-select" onchange="onFilterChange()">
+      <option value="summary">— All Levels —</option>
+      <option value="federal">Federal</option>
+      <option value="state">State</option>
+      <option value="houston">City of Houston</option>
+      <option value="county">County</option>
+      <option value="judges">Judges</option>
+      <option value="jps">Justice of the Peace</option>
+    </select>
+    <input class="search-input" id="search-input" type="text" placeholder="Search name or office…" oninput="onFilterChange()">
+  </div>
+
+  <div class="party-toggle" role="group">
+    <button class="party-btn active" data-party="all" onclick="onPartyChange(this)">All</button>
+    <button class="party-btn" data-party="D" onclick="onPartyChange(this)">Dem</button>
+    <button class="party-btn" data-party="R" onclick="onPartyChange(this)">Rep</button>
+  </div>
+</header>
+
+
+<!-- ⚠️  SIGN-IN GATE REMOVED FOR TESTING — restore before going live --><main class="main">
+  <div class="fec-bar" id="fec-bar">
+  <span style="font-size:16px">⚡</span>
+  <span style="flex:1"><strong>FEC Live Data:</strong> Federal candidates pull directly from api.fec.gov</span>
+  <button onclick="fetchFECData()" id="fec-btn">Refresh Federal Data</button>
+  <span id="fec-status" style="font-size:11px;color:var(--text-3)">Last: Apr 2026</span>
+</div>
+  <div class="section-label" id="section-label" style="display:none"></div>
+  <div id="lb-wrap"></div>
+  <div class="site-footer">
+    <div class="site-footer-sig">Created by Kory Haywood</div>
+    <div class="site-footer-email">koryahaywood@gmail.com</div>
+    <div class="site-footer-note">Data sourced from Harris County Clerk (local), TEC (state), and FEC (federal). Federal data through Q1 2026 (Apr 2026). State/county semi-annual data through Dec 31, 2025. Pre-election 8-day reports (Feb 2026) may show updated county figures.<br>
+    <strong style="color:var(--rank1)">&#9888; Officials showing $0 need cash on hand data entered.</strong> Look up file numbers at ethics.harrisvotes.com.</div>
+  </div>
+</main>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   DATA — Add party:'D' or party:'R' to every entry.
+   Cash = 0 means data still needs to be entered.
+   To add/edit: find the entry and update the cash value.
+   Levels: federal | state | houston | county | judges | jps
+   ═══════════════════════════════════════════════════════ */
+const DATA = [
+  /* ── FEDERAL ── */
+  { name:'Lizzie Fletcher',       office:'US Rep CD-07',            level:'federal',  party:'D', cash:1750893, asOf:'Apr 2026' , raised:0, spent:0, begin:1796226, campaignUrl:'https://www.lizziefletcher.com', govUrl:'https://fletcher.house.gov', incumbent:true },
+  { name:'Sylvia Garcia',         office:'US Rep CD-29',            level:'federal',  party:'D', cash:175662,  asOf:'Apr 2026' , raised:0, spent:0, begin:389230, campaignUrl:'https://sylvia4congress.com', govUrl:'https://sylviagarcia.house.gov', incumbent:true },
+  { name:'Al Green',              office:'US Rep CD-18 (runoff)',    level:'federal',  party:'D', cash:264570,  asOf:'Apr 2026' , raised:0, spent:262992, begin:527562, campaignUrl:'https://algreen.house.gov', govUrl:'https://algreen.house.gov', incumbent:true },
+  { name:'James Talarico',         office:'US Senator (D nominee)',   level:'federal',  party:'D', cash:9858865, asOf:'Apr 2026', raised:27000000, spent:17141135, begin:0, campaignUrl:'https://www.talaricotexas.com', govUrl:'https://house.texas.gov/members/member-page/?district=50', incumbent:false },
+  /* ── FEDERAL REPUBLICANS ── */
+  { name:'John Cornyn',            office:'US Senator (R runoff)',    level:'federal',  party:'R', cash:8200000, asOf:'Apr 2026', raised:9000000, spent:15800000, begin:15000000, campaignUrl:'https://www.johncornyn.com', govUrl:'https://www.cornyn.senate.gov', incumbent:true  },
+  { name:'Ken Paxton',             office:'US Senator (R runoff)',    level:'federal',  party:'R', cash:2600000, asOf:'Apr 2026', raised:2200000, spent:3200000, begin:3600000, campaignUrl:'https://www.kenpaxton.com', incumbent:false },
+  { name:'Steve Toth',             office:'US Rep CD-02 (R nominee)', level:'federal',  party:'R', cash:0,       asOf:'', incumbent:false },
+  { name:'Michael McCaul',         office:'US Rep CD-10 (retiring)',  level:'federal',  party:'R', cash:0,       asOf:'', upIn:0, incumbent:true  },
+  { name:'Troy Nehls',             office:'US Rep CD-22 (retired)',   level:'federal',  party:'R', cash:0,       asOf:'', upIn:0, incumbent:true  },
+  { name:'Christian Menefee',     office:'US Rep CD-18 (runoff)',level:'federal',  party:'D', cash:255858,  asOf:'Apr 2026', raised:0, spent:132881, begin:388739, campaignUrl:'https://menefee.com', govUrl:'https://menefee.house.gov', incumbent:false },
+  { name:'Dan Crenshaw',          office:'US Rep CD-02 (lost primary)',level:'federal',party:'R', cash:0,       asOf:'', raised:0, spent:0, begin:0, campaignUrl:'https://dancrenshaw.com', govUrl:'https://crenshaw.house.gov', incumbent:true  },
+  { name:'Ted Cruz',               office:'US Senator (incumbent)',   level:'federal',  party:'R', cash:0, asOf:'', raised:0, spent:0, begin:0, campaignUrl:'https://www.tedcruz.org', govUrl:'https://www.cruz.senate.gov', upIn:2030, incumbent:true  },
+
+  /* ── FEDERAL DEMOCRATS (missing from data) — April 2026 FEC ── */
+  { name:'Shaun Finnie',           office:'US Rep CD-02 (D nominee)', level:'federal',  party:'D', cash:1543080, asOf:'Apr 2026', incumbent:false },
+  { name:'Leticia Gutierrez',      office:'US Rep CD-09 (D nominee)', level:'federal',  party:'D', cash:2484,    asOf:'Apr 2026', incumbent:false },
+  { name:'Caitlin Rourk',          office:'US Rep CD-10 (D nominee)', level:'federal',  party:'D', cash:55859,   asOf:'Apr 2026', incumbent:false },
+  { name:'Marquette Greene-Scott', office:'US Rep CD-22 (D nominee)', level:'federal',  party:'D', cash:116,     asOf:'Apr 2026', incumbent:false },
+  { name:'Melissa McDonough',      office:'US Rep CD-38 (D nominee)', level:'federal',  party:'D', cash:37302,   asOf:'Apr 2026', incumbent:false },
+
+  /* ── FEDERAL REPUBLICANS (nominees/runoffs) ── */
+  { name:'Trever Nehls',           office:'US Rep CD-22 (R nominee)', level:'federal',  party:'R', cash:0, asOf:'', incumbent:false },
+  { name:'Jon Bonck',              office:'US Rep CD-38 (R runoff)',   level:'federal',  party:'R', cash:0, asOf:'', incumbent:false },
+  { name:'Shelly deZevallos',      office:'US Rep CD-38 (R runoff)',   level:'federal',  party:'R', cash:0, asOf:'', incumbent:false },
+  { name:'Jessica Steinmann',      office:'US Rep CD-08 (R nominee)', level:'federal',  party:'R', cash:0, asOf:'', incumbent:false },
+  /* CD-09 R nominee TBD (runoff May 26) — Briscoe Cain leading */
+  { name:'Briscoe Cain',           office:'US Rep CD-09 (R runoff)',   level:'federal',  party:'R', cash:0, asOf:'', incumbent:false },
+  /* CD-10 R nominee TBD (runoff May 26) */
+  /* CD-38 is open — Hunt left for Senate. R nominee TBD */
+  /* CD-09 open — Al Green left for CD-18. R nominee TBD */
+
+  /* ── STATE ── */
+  { name:'Carol Alvarado',        office:'State Senator SD-6',      level:'state',    party:'D', cash:1564381, asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  { name:'Borris Miles',          office:'State Senator SD-13',     level:'state',    party:'D', cash:22107,   asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  { name:'Molly Cook',            office:'State Senator SD-15',     level:'state',    party:'D', cash:155853,  asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  { name:'Senfronia Thompson',    office:'State Rep HD-141',        level:'state',    party:'D', cash:1032927, asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  { name:'Ann Johnson',           office:'State Rep HD-134',        level:'state',    party:'D', cash:527021,  asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  { name:'Ana Hernandez',         office:'State Rep HD-143',        level:'state',    party:'D', cash:448309,  asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  { name:'Armando Walle',         office:'State Rep HD-140',        level:'state',    party:'D', cash:267898,  asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  { name:'Mary Ann Perez',        office:'State Rep HD-144',        level:'state',    party:'D', cash:211703,  asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  { name:'Harold Dutton',         office:'State Rep HD-142',        level:'state',    party:'D', cash:148761,  asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  { name:'Gene Wu',               office:'State Rep HD-137',        level:'state',    party:'D', cash:123609,  asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  { name:'Jolanda Jones',         office:'State Rep HD-147',        level:'state',    party:'D', cash:118195,  asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  { name:'Hubert Vo',             office:'State Rep HD-149',        level:'state',    party:'D', cash:100998,  asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  { name:'Lauren Ashley Simmons', office:'State Rep HD-146',        level:'state',    party:'D', cash:86488,   asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  { name:'Jon Rosenthal',         office:'Railroad Commissioner (candidate)', level:'state', party:'D', cash:66763, asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  { name:'Alma Allen',            office:'State Rep HD-131',        level:'state',    party:'D', cash:67125,   asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  { name:'Christina Morales',     office:'State Rep HD-145',        level:'state',    party:'D', cash:61067,   asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  { name:'Charlene Ward Johnson', office:'State Rep HD-139',        level:'state',    party:'D', cash:26059,   asOf:'Jan 2025 (semi-annual)' , incumbent:true },
+  /* ── STATE REPUBLICANS (Harris County area) ── */
+  { name:'Lacey Hull',             office:'State Rep HD-138',         level:'state',    party:'R', cash:0, asOf:'', incumbent:true  },
+  { name:'Tom Oliverson',          office:'State Rep HD-130',         level:'state',    party:'R', cash:0, asOf:'', incumbent:true  },
+  { name:'Dennis Paul',            office:'State Rep HD-129',         level:'state',    party:'R', cash:0, asOf:'', incumbent:true  },
+  { name:'Greg Bonnen',            office:'State Rep HD-24',          level:'state',    party:'R', cash:0, asOf:'', incumbent:true  },
+  { name:'Mike Schofield',         office:'State Rep HD-132',         level:'state',    party:'R', cash:0, asOf:'', incumbent:true  },
+
+  /* ── GOVERNOR ── */
+  { name:'Greg Abbott',            office:'Governor',                 level:'state',    party:'R', cash:105700000, asOf:'Jan 2026 (semi-annual)', raised:22700000, spent:0, begin:83000000, incumbent:true,  upIn:2026, campaignUrl:'https://www.gregabbott.com' },
+  { name:'Gina Hinojosa',          office:'Governor (D nominee)',     level:'state',    party:'D', cash:1000000,  asOf:'Jan 2026 (est.)',        raised:1300000,  spent:300000, begin:0, loans:300000, incumbent:false, upIn:2026, campaignUrl:'https://ginafortexas.com' },
+
+  /* ── CITY OF HOUSTON ── */
+  { name:'John Whitmire',         office:'Mayor',                   level:'houston',  party:'D', cash:2741969, asOf:'Jan 2026 (semi-annual)' , raised:0, spent:0, begin:2741969, govUrl:'https://www.houstontx.gov/mayor', upIn:2027, incumbent:true },
+  { name:'Ed Pollard',            office:'City Council At-Large 2', level:'houston',  party:'D', cash:2197573, asOf:'Jan 2026 (semi-annual)' , raised:0, spent:0, begin:2197573, upIn:2027, incumbent:true },
+  { name:'Chris Hollins',         office:'City Controller',         level:'houston',  party:'D', cash:530765,  asOf:'Jan 2026 (semi-annual)' , raised:0, spent:0, begin:530765, campaignUrl:'https://www.hollinsforhouston.com', govUrl:'https://www.houstontx.gov/controller', upIn:2027, incumbent:true },
+  { name:'Martha Castex-Tatum',   office:'City Council D-F',        level:'houston',  party:'D', cash:366298,  asOf:'Jan 2026 (semi-annual)' , upIn:2027, incumbent:true },
+  { name:'Tiffany Thomas',        office:'City Council At-Large 4', level:'houston',  party:'D', cash:262877,  asOf:'Jan 2026 (semi-annual)' , upIn:2027, incumbent:true },
+  { name:'Julian Ramirez',        office:'City Council D-I',        level:'houston',  party:'R', cash:174226,  asOf:'Jan 2026 (semi-annual)' , upIn:2027, incumbent:true },
+  { name:'Mario Castillo',        office:'City Council At-Large 5', level:'houston',  party:'D', cash:160561,  asOf:'Jan 2026 (semi-annual)' , upIn:2027, incumbent:true },
+  { name:'Twila Carter',          office:'City Council D-G',        level:'houston',  party:'R', cash:103895,  asOf:'Jan 2026 (semi-annual)' , upIn:2027, incumbent:true },
+  { name:'Alejandra Salinas',     office:'City Council D-C',        level:'houston',  party:'D', cash:101659,  asOf:'Jan 2026 (semi-annual)' , upIn:2027, incumbent:true },
+  { name:'Sallie Alcorn',         office:'City Council At-Large 1', level:'houston',  party:'D', cash:79344,   asOf:'Jan 2026 (semi-annual)' , upIn:2027, incumbent:true },
+  { name:'Fred Flickinger',       office:'City Council At-Large 3', level:'houston',  party:'R', cash:60932,   asOf:'Jan 2026 (semi-annual)' , upIn:2027, incumbent:true },
+  { name:'Joaquin Martinez',      office:'City Council D-H',        level:'houston',  party:'D', cash:29304,   asOf:'Jan 2026 (semi-annual)' , upIn:2027, incumbent:true },
+  { name:'Carolyn Evans-Shabazz', office:'City Council D-D',        level:'houston',  party:'D', cash:17235,   asOf:'Jan 2026 (semi-annual)' , upIn:2027, incumbent:true },
+  { name:'Tarsha Jackson',        office:'City Council D-B',        level:'houston',  party:'D', cash:9689,    asOf:'Jan 2026 (semi-annual)' , upIn:2027, incumbent:true },
+  { name:'Amy Peck',              office:'City Council D-A',        level:'houston',  party:'R', cash:44030,   asOf:'Jan 2026 (semi-annual)' , upIn:2027, incumbent:true },
+  { name:'Willie Davis',          office:'City Council D-E',        level:'houston',  party:'R', cash:0,       asOf:'' },
+  { name:'Mary Nan Huffman',       office:'City Council D-G (former)',level:'houston',  party:'R', cash:0,       asOf:'' },
+
+  /* ── COUNTY ── */
+  { name:'Rodney Ellis',          office:'Commissioner PCT 1',      level:'county',   party:'D', cash:7783681, asOf:'Jan 2026 (semi-annual)' , raised:0, spent:0, begin:7783681, govUrl:'https://www.harriscountytx.gov/government/commissioners-court/district-1', incumbent:true },
+  { name:'Lesley Briones',        office:'Commissioner PCT 4',      level:'county',   party:'D', cash:4058292, asOf:'Jan 2026 (semi-annual)' , raised:0, spent:0, begin:4058292, govUrl:'https://www.harriscountytx.gov/government/commissioners-court/district-4', incumbent:true },
+  { name:'Adrian Garcia',         office:'Commissioner PCT 2',      level:'county',   party:'D', cash:2544776, asOf:'Jan 2026 (semi-annual)' , raised:0, spent:0, begin:2544776, govUrl:'https://www.harriscountytx.gov/government/commissioners-court/district-2', incumbent:true },
+  { name:'Tom Ramsey',            office:'Commissioner PCT 3',      level:'county',   party:'R', cash:2032612, asOf:'Jan 2026 (semi-annual)' , incumbent:true },
+  { name:'Lina Hidalgo',          office:'County Judge',            level:'county',   party:'D', cash:344873,  asOf:'Jan 2026 (semi-annual)' , raised:0, spent:0, begin:344873, govUrl:'https://www.harriscountytx.gov/government/commissioners-court/county-judge', incumbent:true },
+  { name:'Ed Gonzalez',           office:'Sheriff',                 level:'county',   party:'D', cash:90573,   asOf:'Jan 2026 (semi-annual)' , incumbent:true },
+  { name:'Marilyn Burgess',       office:'District Clerk',          level:'county',   party:'D', cash:26240,   asOf:'Jan 2026 (semi-annual)' , incumbent:true },
+  { name:'Sean Teare',            office:'District Attorney',       level:'county',   party:'D', cash:14291,   asOf:'Jan 2026 (semi-annual)' , incumbent:true },
+  { name:'Teneshia Hudspeth',     office:'County Clerk',            level:'county',   party:'D', cash:17147,   asOf:'Jan 2026 (semi-annual)' , incumbent:true },
+  { name:'Abbie Kamin',            office:'County Attorney (D nominee)', level:'county',   party:'D', cash:572019, asOf:'Jan 2026 (semi-annual)', raised:0, spent:0, begin:572019, campaignUrl:'https://www.abbiekamin.com', incumbent:false },
+  { name:'Annette Ramirez',       office:'Tax Assessor-Collector',  level:'county',   party:'D', cash:5775,    asOf:'Jan 2026 (semi-annual)' , incumbent:true },
+
+  /* ── JUDGES — fill in cash from ethics.harrisvotes.com ── */
+  /* Civil Courts at Law */
+  { name:'Elaine Palmer',         office:'Civil Court At Law 1',    level:'judges',   party:'D', cash:0, asOf:'' }, /* file 2026134 */
+  { name:'James Kovach',          office:'Civil Court At Law 2',    level:'judges',   party:'D', cash:0, asOf:'' }, /* file 202694  */
+  { name:'LaShawn Williams',      office:'Civil Court At Law 3',    level:'judges',   party:'D', cash:0, asOf:'' }, /* file 2026144 */
+  { name:'Manpreet Singh',        office:'Civil Court At Law 4',    level:'judges',   party:'D', cash:0, asOf:'' }, /* file 202692  */
+  { name:'Jermaine Thomas',       office:'Civil Court At Law 5',    level:'judges',   party:'D', cash:0, asOf:'' }, /* file 202686  */
+  /* Criminal Courts at Law */
+  { name:'Hector Salgado',        office:'Criminal Court At Law 1', level:'judges',   party:'D', cash:0, asOf:'' }, /* file 202671  */
+  { name:'Shannon Baldwin',       office:'Criminal Court At Law 4', level:'judges',   party:'D', cash:0, asOf:'' }, /* file 2026139 */
+  { name:'David Fleischer',       office:'Criminal Court At Law 5', level:'judges',   party:'D', cash:0, asOf:'' }, /* file 202653  */
+  { name:'Kelley Andrews',        office:'Criminal Court At Law 6', level:'judges',   party:'D', cash:0, asOf:'' }, /* file 202630  */
+  { name:'Andrew Wright',         office:'Criminal Court At Law 7', level:'judges',   party:'D', cash:0, asOf:'' }, /* file 2026225 */
+  { name:'Toria Finch',           office:'Criminal Court At Law 9', level:'judges',   party:'D', cash:0, asOf:'' }, /* file 2026143 */
+  { name:'Juanita Jackson',       office:'Criminal Court At Law 10',level:'judges',   party:'D', cash:0, asOf:'' }, /* file 2026140 */
+  { name:'Sedrick Walker II',     office:'Criminal Court At Law 11',level:'judges',   party:'D', cash:0, asOf:'' }, /* file 2026109 */
+  { name:'Ashley Mayes Guice',    office:'Criminal Court At Law 12',level:'judges',   party:'D', cash:0, asOf:'' }, /* file 2026127 */
+  { name:'Raul Rodriguez',        office:'Criminal Court At Law 13',level:'judges',   party:'D', cash:0, asOf:'' }, /* file 202664  */
+  { name:'James Hu',              office:'Criminal Court At Law 14',level:'judges',   party:'D', cash:0, asOf:'' }, /* file 2026233 */
+  { name:'Tonya Jones',           office:'Criminal Court At Law 15',level:'judges',   party:'D', cash:0, asOf:'' }, /* file 2026141 */
+  { name:'Linda Garcia',          office:'Criminal Court At Law 16',level:'judges',   party:'D', cash:0, asOf:'' }, /* file 2026125 */
+  /* Probate Courts */
+  { name:'Jerry Simoneaux',       office:'Probate Court 1',         level:'judges',   party:'D', cash:0, asOf:'' }, /* file 202684  */
+  { name:'Pamela Medina',         office:'Probate Court 2',         level:'judges',   party:'D', cash:0, asOf:'' }, /* file 202648  */
+  { name:'Jason Cox',             office:'Probate Court 3',         level:'judges',   party:'D', cash:0, asOf:'' }, /* file 202628  */
+  { name:'James Horwitz',         office:'Probate Court 4',         level:'judges',   party:'D', cash:0, asOf:'' }, /* file 202670  */
+  { name:'Fransheneka Watson',    office:'Probate Court 5',         level:'judges',   party:'D', cash:0, asOf:'' }, /* file 2025204 */
+
+  /* ── JUSTICE OF THE PEACE — fill in cash from ethics.harrisvotes.com ── */
+  { name:'Eric Carter',           office:'JP PCT 1, Place 1',       level:'jps',      party:'D', cash:0, asOf:'' }, /* file 202693  */
+  { name:'Jo Ann Delgado',        office:'JP PCT 2, Place 1',       level:'jps',      party:'D', cash:0, asOf:'' }, /* file 202622  */
+  { name:'Dolores Lozano',        office:'JP PCT 2, Place 2',       level:'jps',      party:'D', cash:0, asOf:'' }, /* file 2026142 */
+  { name:'Joe Stephens',          office:'JP PCT 3, Place 1',       level:'jps',      party:'D', cash:0, asOf:'' }, /* file 2026105 */
+  { name:'Lucia Bates',           office:'JP PCT 3, Place 2',       level:'jps',      party:'D', cash:0, asOf:'' }, /* file 2026158 */
+  { name:'Victoriano Trevino',    office:'JP PCT 6, Place 1',       level:'jps',      party:'D', cash:0, asOf:'' }, /* file 2026122 */
+  { name:'Wanda Adams',           office:'JP PCT 7, Place 1',       level:'jps',      party:'D', cash:0, asOf:'' }, /* file 2026156 */
+  { name:'Markia Bordeaux',       office:'JP PCT 7, Place 2',       level:'jps',      party:'D', cash:0, asOf:'', incumbent:true  }, /* file 2026149 */
+
+  /* ── CHALLENGERS — from Jan/Feb 2026 Harris County filings ── */
+  /* County Judge runoffs — May 26 */
+  { name:'Letitia Plummer',        office:'County Judge (D runoff)',  level:'county',   party:'D', cash:0,       asOf:'', incumbent:false },
+  { name:'Orlando Sanchez',        office:'County Judge (R runoff)',  level:'county',   party:'R', cash:0,       asOf:'', incumbent:false },
+  /* District Clerk runoff (D) + R nominee */
+  { name:'Darrell Jordan',         office:'District Clerk (D runoff)',level:'county',   party:'D', cash:9091,    asOf:'Jan 2026 (semi-annual)', incumbent:false },
+  { name:'Jose Maldonado',         office:'District Clerk (D runoff)',level:'county',   party:'D', cash:0,       asOf:'', incumbent:false },
+  { name:'Chris Daniel',           office:'District Clerk (R nominee)',level:'county',  party:'R', cash:0,       asOf:'', incumbent:false },
+  /* County Attorney — Kamin won D primary, Smith is R ——* */
+  { name:'Jacqueline Lucci Smith', office:'County Attorney (R nominee)',level:'county', party:'R', cash:0,       asOf:'', incumbent:false },
+  /* Commissioner PCT 4 — Radack won R primary */
+  { name:'Steve Radack',           office:'Commissioner PCT 4 (R nominee)',level:'county',party:'R', cash:0,    asOf:'', incumbent:false },
+  /* County Clerk — Wolfe won R primary */
+  { name:'Mike Wolfe',             office:'County Clerk (R nominee)', level:'county',   party:'R', cash:0,       asOf:'', incumbent:false },
+  /* County Judge race */
+  { name:'Annise Parker',          office:'County Judge (D runoff)', level:'county',   party:'D', cash:332475,  asOf:'Jan 2026 (semi-annual)', raised:0, spent:0, begin:332475, campaignUrl:'https://anniseparker.com', incumbent:false },
+  { name:'Warren Howell',          office:'County Judge (R runoff)', level:'county',   party:'R', cash:106156,  asOf:'Jan 2026 (semi-annual)', incumbent:false },
+  /* Commissioner PCT 2 challengers */
+  { name:'Richard Vega',           office:'Commissioner PCT 2 (R general)', level:'county', party:'R', cash:59395,  asOf:'Jan 2026 (semi-annual)', incumbent:false },
+  /* District Clerk challengers */
+  /* County Criminal Court challengers (known) */
+  { name:'Jorge Garcia Diaz',      office:'Criminal Court At Law 7 (candidate)', level:'judges', party:'D', cash:0, asOf:'', incumbent:false },
+  { name:'Ebony Williams',         office:'Civil Court At Law 2 (candidate)',    level:'judges', party:'D', cash:0, asOf:'', incumbent:false },
+];
+
+/* ═══════════════════════════════════════════════════════ */
+
+const LEVEL_LABELS = {
+  federal:'Federal', state:'State', houston:'City of Houston',
+  county:'County', judges:'Judges', jps:'Justice of the Peace'
+};
+
+let activeLevel = 'summary';
+let activeParty = 'all';
+
+function formatCash(n) {
+  if (n >= 1000000) return '$' + (n/1000000).toFixed(2) + 'M';
+  if (n >= 1000)    return '$' + Math.round(n/1000).toLocaleString() + 'K';
+  return '$' + Math.round(n).toLocaleString();
+}
+function rankClass(i) { return i===0?'p1':i===1?'p2':i===2?'p3':''; }
+function medal(i) { return i+1; }
+function partyBadge(p) {
+  const labels = {D:'Dem',R:'Rep',I:'Ind'};
+  const cls = {D:'badge-D',R:'badge-R',I:'badge-I'};
+  return `<span class="badge ${cls[p]||'badge-I'}">${labels[p]||p}</span>`;
+}
+function incumbentBadge(o) {
+  if (!o.incumbent && o.incumbent !== undefined) return '<span class="badge badge-challenger">Candidate</span>';
+  if (o.incumbent) return '<span class="badge badge-incumbent">&#9733; Incumbent</span>';
+  return '';
+}
+
+function getFiltered() {
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  let data = [...DATA];
+  if (activeLevel !== 'summary') data = data.filter(d => d.level === activeLevel);
+  if (activeParty !== 'all') data = data.filter(d => d.party === activeParty);
+  if (q) data = data.filter(d => d.name.toLowerCase().includes(q) || d.office.toLowerCase().includes(q));
+  return data;
+}
+
+function getSorted(data) {
+  const s = document.getElementById('sort-select')?.value || 'cash';
+  return [...data].sort((a,b) => {
+    if (s === 'raised') return (b.raised||0) - (a.raised||0);
+    if (s === 'spent')  return (b.spent||0)  - (a.spent||0);
+    if (s === 'burn') {
+      const ba = a.raised ? (a.spent||0)/a.raised : 0;
+      const bb = b.raised ? (b.spent||0)/b.raised : 0;
+      return bb - ba;
+    }
+    return (b.cash||0) - (a.cash||0);
+  });
+}
+
+function renderStatsBar(withData, pending) {
+  const total = withData.reduce((s,o) => s + o.cash, 0);
+  const avg   = withData.length ? total / withData.length : 0;
+  return `<div class="stats-bar">
+    <div class="stat-card"><div class="stat-label">With Data</div><div class="stat-value">${withData.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Total Cash on Hand</div><div class="stat-value">${formatCash(total)}</div></div>
+    <div class="stat-card"><div class="stat-label">Average</div><div class="stat-value">${formatCash(avg)}</div></div>
+    ${pending.length ? `<div class="stat-card"><div class="stat-label">Pending Data</div><div class="stat-value" style="color:var(--rank1)">${pending.length}</div></div>` : ''}
+  </div>`;
+}
+
+/* ── Campaign Finance Commentary ── */
+function baseOffice(office) {
+  return office.replace(/\s*\([^)]*\)/g,'').replace(/\s*(runoff|nominee|candidate|retiring|retired|outgoing|general|primary loss)\s*/gi,'').trim().toLowerCase();
+}
+
+function cashStory(o, allData) {
+  const r=o.raised||0, s=o.spent||0, l=o.loans||0, k=o.inkind||0, b=o.begin||0;
+  const seed = (o.name||'').split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+  const pick  = arr => arr[seed % arr.length];
+
+  /* ── CYCLE AWARENESS ── */
+  const upIn = o.upIn;
+  if (upIn === 0) return pick([
+    `Retiring this cycle. War chest sits at ${formatCash(o.cash)} — unspent, uncontested.`,
+    `Not on the ballot. ${formatCash(o.cash)} accumulated over a career. Someone will want that donor list.`,
+  ]);
+  if (upIn === 2027) return pick([
+    `Not up until 2027. Holding ${formatCash(o.cash)} between now and the next Houston municipal cycle.`,
+    `Houston officials run in odd years. ${formatCash(o.cash)} in reserve — two years from the next test.`,
+  ]);
+  if (upIn === 2030) return pick([
+    `Next election isn't until 2030. That's a long time to sit on ${formatCash(o.cash)}.`,
+    `Six years between elections. ${formatCash(o.cash)} on hand with no immediate race in sight.`,
+  ]);
+
+  /* ── PEER COMPARISON ── */
+  let peerNote = '';
+  if (allData && allData.length > 0) {
+    const myBase = baseOffice(o.office);
+    const peers  = allData.filter(p => p !== o && p.cash > 0 && baseOffice(p.office) === myBase);
+    if (peers.length > 0) {
+      const maxPeer = Math.max(...peers.map(p=>p.cash));
+      const topPeer = peers.find(p=>p.cash===maxPeer);
+      const total   = peers.reduce((s,p)=>s+p.cash,0) + o.cash;
+      const share   = Math.round(o.cash/total*100);
+      if (o.cash > maxPeer * 10) {
+        peerNote = ' Holds ' + share + '% of all cash in this race. Opponents are running on fumes.';
+      } else if (o.cash > maxPeer * 2) {
+        peerNote = ' Leads the field. Nearest competitor has ' + formatCash(maxPeer) + ' — a ' + Math.round(o.cash/maxPeer) + '-to-1 advantage.';
+      } else if (o.cash > maxPeer) {
+        peerNote = ' Leads the field by ' + formatCash(o.cash - maxPeer) + '.';
+      } else if (maxPeer > 0 && o.cash < maxPeer * 0.1 && maxPeer > 500000) {
+        peerNote = ' Trails ' + topPeer.name.split(' ').pop() + ' ' + Math.round(maxPeer/o.cash) + '-to-1. The gap is significant.';
+      } else if (maxPeer > 0 && o.cash < maxPeer * 0.5) {
+        peerNote = ' Trails the frontrunner ' + (maxPeer/o.cash).toFixed(1) + '-to-1 in this race.';
+      } else if (maxPeer > 0 && Math.abs(o.cash - maxPeer) < maxPeer * 0.15) {
+        peerNote = ' Running neck and neck with ' + topPeer.name.split(' ').pop() + '. Money alone won't decide this one.';
+      }
+    }
+  }
+
+  /* ── NO FINANCIALS ── */
+  if (!r && !s && !l && !k && !b) {
+    return peerNote ? pick(['Cash on hand only.' + peerNote, 'No breakdown on file.' + peerNote]) : null;
+  }
+
+  const burnPct  = r ? Math.round(s/r*100) : 0;
+  const cashGrew = o.cash > b && b > 0;
+
+  if (l > 100000 && l > r*0.25) return pick([
+    'Loaned ' + formatCash(l) + ' to their own campaign. Either very sure — or running low on options.' + peerNote,
+    formatCash(l) + ' of personal funds on the table. One way to signal belief.' + peerNote,
+  ]);
+  if (k > 50000 && k > r*0.2) return pick([
+    formatCash(k) + ' in-kind. Somebody called in favors. Those relationships run deep.' + peerNote,
+    'Heavy in-kind support. The alliances here run deeper than the cash shows.' + peerNote,
+  ]);
+  if (burnPct > 90) return pick([
+    'Spent ' + burnPct + ' cents of every dollar raised. The well is almost dry.' + peerNote,
+    formatCash(s) + ' out, ' + formatCash(o.cash) + ' left. Bold move. Better have been worth it.' + peerNote,
+  ]);
+  if (burnPct > 65) return pick([
+    burnPct + '% of what came in already gone. Confident — or spooked.' + peerNote,
+    'Moving money fast. Hope the direction was right.' + peerNote,
+  ]);
+  if (burnPct < 12 && r > 300000) return pick([
+    'Raised ' + formatCash(r) + ' and barely touched it. Sitting on that money like they know something\'s coming.' + peerNote,
+    'That war chest is fat and unbothered. Waiting for the right moment.' + peerNote,
+  ]);
+  if (burnPct < 35 && r > 200000) return pick([
+    'Disciplined. Spent only ' + burnPct + '% of what came in. ' + formatCash(o.cash) + ' still in reserve.' + peerNote,
+    'Steady hand on the money. The kind of balance sheet still standing in November.' + peerNote,
+  ]);
+  if (b > 0 && b > r*1.2 && b > o.cash*0.6) return pick([
+    'Walked in with ' + formatCash(b) + ' already in hand. This race started long before filing day.' + peerNote,
+    'That opening balance tells you everything. Somebody has been building this for a while.' + peerNote,
+  ]);
+  if (cashGrew && r > 0) return pick([
+    'Ends the period with more than they started. That doesn\'t happen by accident.' + peerNote,
+    formatCash(b) + ' became ' + formatCash(o.cash) + '. Growing while others burn down.' + peerNote,
+  ]);
+  if (s > o.cash*2.5) return pick([
+    'Spent ' + formatCash(s) + ', kept ' + formatCash(o.cash) + '. The math here demands results.' + peerNote,
+    "That's a lot of spend for a short stack. Better have bought something real." + peerNote,
+  ]);
+  if (r > 1000000) return pick([
+    formatCash(r) + ' raised in one period. Somebody has very good friends.' + peerNote,
+    'You don\'t raise ' + formatCash(r) + ' without the right relationships. Noted.' + peerNote,
+  ]);
+  return pick([
+    formatCash(r) + ' in, ' + formatCash(s) + ' out. Numbers don\'t lie. People do.' + peerNote,
+    formatCash(o.cash) + ' on hand. Not the whole story — but the most important line.' + peerNote,
+  ]);
+}
+
+function renderFormula(o, uid) {
+  const r = o.raised||0, s = o.spent||0, b = o.begin||0, l = o.loans||0, k = o.inkind||0;
+  const hasData = r||s||l||k||b;
+  const maxVal = Math.max(r, s, b, l, k, o.cash, 1);
+  const bar = (val, cls) => val > 0
+    ? `<div class="f-bar-wrap"><div class="f-bar ${cls}" style="width:${Math.round(val/maxVal*100)}%"></div></div>`
+    : `<div class="f-bar-wrap"></div>`;
+
+  const fmt = v => v > 0 ? `<span class="f-amt positive">+${formatCash(v)}</span>` : `<span class="f-amt zero">—</span>`;
+  const fmtS= v => v > 0 ? `<span class="f-amt negative">−${formatCash(v)}</span>` : `<span class="f-amt zero">—</span>`;
+
+  const story = cashStory(o, typeof DATA !== "undefined" ? DATA.filter(d=>d.cash>0) : []);
+  const period = o.asOf ? `Reporting period: ${o.asOf}` : 'Period data not available';
+
+  if (!hasData) {
+    return `<div class="formula-panel">
+      <div class="formula-nodata">📄 Detailed breakdown not yet available. <a href="https://ethics.harrisvotes.com" target="_blank" style="color:var(--blue)">Look up filing →</a></div>
+    </div>`;
+  }
+
+  return `<div class="formula-panel">
+    <div class="formula-title">how ${o.name.split(' ')[0]} got to ${formatCash(o.cash)}</div>
+    <div class="formula-lines">
+      <div class="f-line">
+        <span class="f-op"> </span>
+        <span class="f-label">Opening balance</span>
+        ${fmt(b)} ${bar(b,'begin-bar')}
+      </div>
+      <div class="f-line">
+        <span class="f-op">+</span>
+        <span class="f-label">Raised</span>
+        ${fmt(r)} ${bar(r,'raised-bar')}
+      </div>
+      ${l ? `<div class="f-line">
+        <span class="f-op">+</span>
+        <span class="f-label">Loans</span>
+        ${fmt(l)} ${bar(l,'loan-bar')}
+      </div>` : ''}
+      ${k ? `<div class="f-line">
+        <span class="f-op">+</span>
+        <span class="f-label">In-Kind</span>
+        ${fmt(k)} ${bar(k,'inkind-bar')}
+      </div>` : ''}
+      <div class="f-line">
+        <span class="f-op minus">−</span>
+        <span class="f-label">Spent</span>
+        ${fmtS(s)} ${bar(s,'spent-bar')}
+      </div>
+      <div class="f-line" style="border-top:1px solid var(--border);padding-top:6px;margin-top:2px">
+        <span class="f-op equals">=</span>
+        <span class="f-label" style="font-weight:600;color:var(--text)">Cash on Hand</span>
+        <span class="f-amt total">${formatCash(o.cash)}</span>
+        <div class="f-bar-wrap"><div class="f-bar raised-bar" style="width:${Math.round(o.cash/maxVal*100)}%"></div></div>
+      </div>
+    </div>
+    ${story ? `<div class="formula-story">${story}</div>` : ''}
+    <div class="formula-source">${period}</div>
+  </div>`;
+}
+
+function hoverLinks(o) {
+  // Store links as data attrs on the name div; global tooltip reads them on hover
+  const c = o.campaignUrl ? `data-campaign="${o.campaignUrl}"` : '';
+  const g = o.govUrl      ? `data-gov="${o.govUrl}"` : '';
+  return c || g ? `${c} ${g}` : 'data-nolinks="1"';
+}
+
+function renderRows(ranked) {
+  const max = ranked[0]?.cash || 1;
+  return ranked.map((o, i) => {
+    const uid   = `row-${i}-${o.name.replace(/\s+/g,'_')}`;
+    const pct   = Math.round((o.cash/max)*100);
+    const rc    = rankClass(i);
+    const showLevel = activeLevel === 'summary';
+    const lvlTag = showLevel ? `<span class="badge badge-level">${LEVEL_LABELS[o.level]||o.level}</span>` : '';
+    const hasFinancials = (o.raised||0)+(o.spent||0)+(o.begin||0)+(o.loans||0)+(o.inkind||0) > 0;
+    return `<tr class="main-row ${i<3?'lb-row-'+(i+1):''}" onclick="toggleDetail('${uid}', this)">
+      <td class="td-rank"><span class="post-pos ${rc}">${medal(i)}</span></td>
+      <td class="td-name">
+        <div class="name-primary name-hoverable" ${hoverLinks(o)}
+          onmouseenter="showTooltip(this, event)" onmouseleave="hideTooltip()">${o.name}</div>
+        <div class="name-office">${o.office}</div>
+        <div class="name-tags">${partyBadge(o.party)}${incumbentBadge(o)}${lvlTag}</div>
+        <div class="expand-hint">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6,9 12,15 18,9"/></svg>
+          ${hasFinancials ? 'Click for formula' : 'Click for details'}
+        </div>
+      </td>
+      <td class="td-cash">
+        <div class="cash-amount">${formatCash(o.cash)}</div>
+        <div class="cash-bar-wrap"><div class="cash-bar" style="width:${pct}%"></div></div>
+      </td>
+    </tr>
+    <tr class="detail-row" id="${uid}">
+      <td colspan="3">
+        <div class="formula-wrap" id="${uid}-wrap">
+          ${renderFormula(o, uid)}
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleDetail(uid, row) {
+  const wrap = document.getElementById(uid + '-wrap');
+  if (!wrap) return;
+  const isOpen = wrap.classList.contains('open');
+  wrap.classList.toggle('open', !isOpen);
+  if (row) row.classList.toggle('open', !isOpen);
+}
+
+function renderPending(pending) {
+  if (!pending.length) return '';
+  const ds = {D:pending.filter(o=>o.party==='D').length, R:pending.filter(o=>o.party==='R').length};
+  const items = pending.map(o =>
+    `<div class="pending-item">${partyBadge(o.party)} ${o.name}<span>${o.office}</span></div>`
+  ).join('');
+  return `<div class="pending-section">
+    <div class="pending-header" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'grid':'none'">
+      <span>&#128274; ${pending.length} entries need data &nbsp;<span style="font-weight:400;font-size:11px;color:var(--blue)">D: ${ds.D}</span>&nbsp;<span style="font-weight:400;font-size:11px;color:var(--red)">R: ${ds.R}</span></span>
+      <span class="pending-toggle">show list</span>
+    </div>
+    <div class="pending-grid" style="display:none">${items}</div>
+  </div>`;
+}
+
+function render() {
+  const all     = getFiltered();
+  const withData = getSorted(all.filter(o => o.cash > 0));
+  const pending  = all.filter(o => o.cash === 0).sort((a,b) => a.name.localeCompare(b.name));
+
+  const label = document.getElementById('section-label');
+  const wrap  = document.getElementById('lb-wrap');
+
+  // Section label
+  label.style.display = 'block';
+  const isSummary = activeLevel === 'summary';
+  const lvlText   = isSummary ? 'All Levels' : LEVEL_LABELS[activeLevel];
+  const partyText = activeParty === 'all' ? '' : activeParty === 'D' ? ' · Democrats' : ' · Republicans';
+  const q         = document.getElementById('search-input').value.trim();
+  const qText     = q ? ` · "${q}"` : '';
+  label.textContent = (isSummary ? 'Top 10' : lvlText) + partyText + qText;
+
+  if (!all.length) {
+    wrap.innerHTML = `<div class="lb-card"><div class="state-msg"><strong>No results</strong>Try a different filter or search term.</div></div>`;
+    return;
+  }
+
+  // In summary: top 10 with data; in level view: all with data
+  const ranked = isSummary ? withData.slice(0,10) : withData;
+  const dates  = ranked.map(o=>o.asOf).filter(Boolean);
+  const latest = dates.length ? dates[0] : '';
+
+  wrap.innerHTML = renderStatsBar(withData, pending) +
+    `<div class="lb-card">
+      <table class="lb-table">
+        <thead><tr>
+          <th style="text-align:center">Rank</th>
+          <th>Official / Candidate <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:9px;color:var(--slate);font-style:italic">(select a row to see the full formula)</span></th>
+          <th class="right">Cash on Hand</th>
+        </tr></thead>
+        <tbody>${ranked.length ? renderRows(ranked) : '<tr><td colspan="3" style="text-align:center;padding:2rem;color:var(--text-3)">No data yet for this view</td></tr>'}</tbody>
+      </table>
+      ${latest ? `<div class="lb-footer"><span>&#128197; Most recent data: ${latest}</span><span>${ranked.length} shown</span></div>` : ''}
+    </div>` +
+    renderPending(pending);
+}
+
+function onFilterChange() {
+  activeLevel = document.getElementById('level-select').value;
+  render();
+}
+
+function onPartyChange(btn) {
+  document.querySelectorAll('.party-btn').forEach(b => {
+    b.classList.remove('active','active-d','active-r');
+  });
+  const p = btn.dataset.party;
+  if (p === 'D') btn.classList.add('active-d');
+  else if (p === 'R') btn.classList.add('active-r');
+  else btn.classList.add('active');
+  activeParty = p;
+  render();
+}
+
+window.addEventListener('DOMContentLoaded', render);
+
+/* ── Email Gate Logic ── */
+(function initGate() {
+  // Bypass gate if already signed in, skipped, or ?open=1 param
+  const gated = localStorage.getItem('wtd_gated');
+  const bypass = window.location.search.includes('open=1') || window.location.search.includes('admin=kory');
+  if (gated || bypass) {
+    const g = document.getElementById('email-gate');
+    if (g) g.classList.add('hidden');
+  }
+})();
+
+/* ⚠️  SIGN-IN GATE DISABLED FOR TESTING
+   ────────────────────────────────────────────────────────────────────────
+   TO RESTORE BEFORE GOING LIVE:
+     1. Uncomment the gate HTML block above (search "SIGN-IN GATE REMOVED")
+     2. Replace this stub with the full gate JS (saved in git / backup copy)
+     3. Set up Formspree ID or Google Sheets URL
+     4. Test that Skip button works before deploying
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* Gate stubs — harmless no-ops while gate is disabled */
+const FORMSPREE_ID = '';
+const SHEETS_URL   = '';
+function handleGateSubmit(e) { if(e) e.preventDefault(); closeGate(); }
+function closeGate(email) {
+  localStorage.setItem('wtd_gated','1');
+  var g = document.getElementById('email-gate');
+  if (g) g.classList.add('hidden');
+}
+function skipGate() { closeGate(); }
+
+const FEC_KEY = 'DEMO_KEY'; // Replace with your free key from api.fec.gov/developers
+
+// Harris County area candidate IDs from FEC
+// These are stable across filings for the same candidate
+const FEC_CANDIDATES = [
+  {fecId:'H8TX07065', name:'Lizzie Fletcher',    office:'US Rep CD-07'},
+  {fecId:'H8TX29049', name:'Sylvia Garcia',       office:'US Rep CD-29'},
+  {fecId:'H2TX18049', name:'Al Green',            office:'US Rep CD-18 (runoff)'},
+  {fecId:'H2TX18064', name:'Christian Menefee',   office:'US Rep CD-18 (runoff)'},
+  {fecId:'H2TX02228', name:'Shaun Finnie',         office:'US Rep CD-02 (D nominee)'},
+  {fecId:'H6TX22057', name:'Marquette Greene-Scott',office:'US Rep CD-22 (D nominee)'},
+  {fecId:'H2TX38052', name:'Melissa McDonough',   office:'US Rep CD-38 (D nominee)'},
+  {fecId:'S6TX00180', name:'John Cornyn',         office:'US Senator (R runoff)'},
+  {fecId:'S6TX00354', name:'James Talarico',      office:'US Senator (D nominee)'},
+];
+
+async function fetchFECData() {
+  const btn = document.getElementById('fec-btn');
+  const status = document.getElementById('fec-status');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="fec-spinner"></span> Fetching...';
+  status.textContent = 'Pulling from FEC...';
+
+  let updated = 0;
+  const results = {};
+
+  for (const c of FEC_CANDIDATES) {
+    try {
+      const url = `https://api.fec.gov/v1/candidate/${c.fecId}/totals/?api_key=${FEC_KEY}&election_year=2026&per_page=1&sort=-coverage_end_date`;
+      const resp = await fetch(url);
+      if (!resp.ok) continue;
+      const data = await resp.json();
+      const t = data.results?.[0];
+      if (!t) continue;
+
+      results[c.name] = {
+        cash: Math.round(t.cash_on_hand_end_period || 0),
+        raised: Math.round(t.receipts || 0),
+        spent: Math.round(t.disbursements || 0),
+        begin: Math.round(t.cash_on_hand_beginning_period || 0),
+        loans: Math.round(t.loans_received || 0),
+        asOf: t.coverage_end_date ? t.coverage_end_date.substring(0,7).replace('-','/') : '',
+      };
+      updated++;
+    } catch(e) { /* skip */ }
+  }
+
+  if (updated > 0) {
+    // Patch live DATA entries
+    DATA.forEach(o => {
+      if (results[o.name]) Object.assign(o, results[o.name]);
+    });
+    render();
+    status.textContent = `✓ ${updated} updated · ${new Date().toLocaleDateString()}`;
+  } else {
+    status.textContent = '⚠️ No updates (FEC rate limit or IDs changed)';
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Refresh Federal Data';
+}
+
+</script>
+<div id="link-tooltip" onmouseenter="tooltipHovered=true" onmouseleave="hideTooltip()"></div>
+
+<script>
+let tooltipHovered = false;
+let hideTimer = null;
+
+function showTooltip(el, e) {
+  tooltipHovered = false;
+  clearTimeout(hideTimer);
+  const tt = document.getElementById('link-tooltip');
+  const campaign = el.dataset.campaign;
+  const gov = el.dataset.gov;
+  const nolinks = el.dataset.nolinks;
+
+  let html = '';
+  if (campaign) html += `<a class="hover-link-btn" href="${campaign}" target="_blank" rel="noopener">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Campaign</a>`;
+  if (gov) html += `<a class="hover-link-btn" href="${gov}" target="_blank" rel="noopener">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Official</a>`;
+  if (!html) return; // no links — don't show tooltip
+  
+  tt.innerHTML = html;
+  tt.classList.add('visible');
+  const r = el.getBoundingClientRect();
+  tt.style.top  = (r.bottom + window.scrollY + 6) + 'px';
+  tt.style.left = Math.max(8, r.left + window.scrollX) + 'px';
+}
+
+function hideTooltip() {
+  hideTimer = setTimeout(() => {
+    if (!tooltipHovered) document.getElementById('link-tooltip').classList.remove('visible');
+  }, 60);
+}
+</script>
+
+</body>
+</html>
