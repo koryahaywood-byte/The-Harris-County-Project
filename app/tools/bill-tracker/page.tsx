@@ -101,7 +101,9 @@ export default function BillTracker() {
       const data = await res.json();
       if (data.error?.includes("not set")) { setApiMissing(true); setLoading(false); return; }
       const results: Bill[] = data.searchresult
-        ? Object.values(data.searchresult).filter((b: unknown) => typeof b === "object" && b !== null && "bill_id" in b) as Bill[]
+        ? (Object.values(data.searchresult) as unknown[]).filter(
+            (b): b is Bill => typeof b === "object" && b !== null && "bill_id" in b
+          )
         : [];
       setBills(results);
     } catch {
