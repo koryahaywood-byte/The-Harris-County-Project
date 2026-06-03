@@ -5,25 +5,21 @@ const tools = [
     href: "/tools/heat-check",
     name: "Heat Check",
     description: "See how Harris County voted — precinct by precinct. Pick a race and watch the map light up.",
-    icon: "🗺️",
   },
   {
     href: "/tools/where-is-the-dough",
     name: "Where Is the Dough",
     description: "Follow Harris County's money. Where does it come from, where does it go, and who decided.",
-    icon: "💰",
   },
   {
     href: "/tools/civic-calendar",
     name: "Civic Calendar",
     description: "Election dates, filing deadlines, commissioners court meetings, and every date that matters for your vote.",
-    icon: "📅",
   },
   {
     href: "/tools/bill-tracker",
     name: "Bill Tracker",
     description: "See what your Texas state rep and senator actually passed — or didn't — this legislative session.",
-    icon: "📋",
   },
 ];
 
@@ -62,7 +58,6 @@ export default function Home() {
                 href={tool.href}
                 className="bg-white border border-[var(--border)] rounded-xl p-6 hover:shadow-md hover:border-[var(--accent-light)] transition-all group"
               >
-                <div className="text-3xl mb-3">{tool.icon}</div>
                 <h3 className="text-lg font-bold text-[var(--accent)] mb-2 group-hover:text-[var(--accent-light)]">
                   {tool.name}
                 </h3>

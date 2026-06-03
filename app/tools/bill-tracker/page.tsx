@@ -37,6 +37,7 @@ const REPS: Rep[] = [
   { name: "Carol Alvarado",         district: "SD-6",   chamber: "Senate", party: "D" },
   { name: "Borris Miles",           district: "SD-13",  chamber: "Senate", party: "D" },
   { name: "Molly Cook",             district: "SD-15",  chamber: "Senate", party: "D" },
+  { name: "Paul Bettencourt",       district: "SD-7",   chamber: "Senate", party: "R" },
   // House — Democrats
   { name: "Senfronia Thompson",     district: "HD-141", chamber: "House",  party: "D" },
   { name: "Ann Johnson",            district: "HD-134", chamber: "House",  party: "D" },
@@ -304,7 +305,7 @@ export default function BillTracker() {
                   )}
                   {!loading && bills.length === 0 && !apiMissing && (
                     <div className="p-8 text-center text-[var(--muted)] text-sm">
-                      No bills found. Add your LegiScan API key to load live data.
+                      No bills found for this rep.
                     </div>
                   )}
                   {filteredBills.map(bill => {
