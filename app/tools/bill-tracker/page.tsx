@@ -16,8 +16,9 @@ type Bill = {
   bill_id: number;
   bill_number: string;
   title: string;
-  status: number; // 1=introduced,2=engrossed,3=enrolled,4=passed,5=vetoed,6=failed
-  status_date: string;
+  status: number;
+  last_action: string;
+  last_action_date: string;
   url: string;
 };
 
@@ -112,9 +113,7 @@ export default function BillTracker() {
     setLoading(false);
   }
 
-  const filteredBills = billFilter
-    ? bills.filter(b => b.status === billFilter)
-    : bills;
+  const filteredBills = bills;
 
   const rankMedal = (i: number) =>
     i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}`;
@@ -308,7 +307,13 @@ export default function BillTracker() {
                     </div>
                   )}
                   {filteredBills.map(bill => {
-                    const s = STATUS[bill.status] || STATUS[1];
+                    const action = (bill.last_action || "").toLowerCase();
+                    const s = action.includes("signed") || action.includes("effective") || action.includes("enacted")
+                      ? STATUS[4]
+                      : action.includes("vetoed") ? STATUS[5]
+                      : action.includes("enrolled") || action.includes("passed") ? STATUS[3]
+                      : action.includes("committee") ? STATUS[2]
+                      : STATUS[1];
                     return (
                       <a
                         key={bill.bill_id}
@@ -324,8 +329,8 @@ export default function BillTracker() {
                           </span>
                         </div>
                         <div className="text-xs text-[var(--muted)] mt-1 line-clamp-2">{bill.title}</div>
-                        {bill.status_date && (
-                          <div className="text-xs text-gray-400 mt-1">{bill.status_date}</div>
+                        {bill.last_action && (
+                          <div className="text-xs text-gray-400 mt-1">{bill.last_action_date} · {bill.last_action}</div>
                         )}
                       </a>
                     );
