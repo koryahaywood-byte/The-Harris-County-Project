@@ -11,7 +11,7 @@ async function legiscan(op: string, params: Record<string, string>) {
   url.searchParams.set("key", LEGISCAN_KEY);
   url.searchParams.set("op", op);
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
-  const res = await fetch(url.toString(), { next: { revalidate: 3600 } });
+  const res = await fetch(url.toString(), { cache: "no-store" });
   if (!res.ok) throw new Error(`LegiScan error: ${res.status}`);
   return res.json();
 }

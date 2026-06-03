@@ -96,6 +96,7 @@ export default function BillTracker() {
     setSelectedRep(rep);
     setBills([]);
     setBillFilter(0);
+    setApiMissing(false);
     setLoading(true);
     try {
       const res = await fetch(`/api/bills?action=search&rep=${encodeURIComponent(rep.name)}`);
