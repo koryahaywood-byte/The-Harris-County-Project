@@ -87,6 +87,7 @@ export default function BillTracker() {
   const [loading, setLoading] = useState(false);
   const [apiMissing, setApiMissing] = useState(false);
   const [billFilter, setBillFilter] = useState<number>(0);
+  const [repCounts, setRepCounts] = useState<Record<string, { filed: number; committee: number; passed: number; signed: number }>>({});
 
   const filtered = REPS
     .filter(r => chamber === "all" || r.chamber === chamber)
@@ -109,6 +110,19 @@ export default function BillTracker() {
           )
         : [];
       setBills(results);
+
+      // Tally counts from last_action text
+      let committee = 0, passed = 0, signed = 0;
+      for (const b of results) {
+        const a = (b.last_action || "").toLowerCase();
+        if (a.includes("signed") || a.includes("effective") || a.includes("enacted")) signed++;
+        else if (a.includes("enrolled") || a.includes("passed") || a.includes("reported enrolled")) passed++;
+        else if (a.includes("committee") || a.includes("reported favorably")) committee++;
+      }
+      setRepCounts(prev => ({
+        ...prev,
+        [rep.name]: { filed: results.length, committee, passed, signed },
+      }));
     } catch {
       setBills([]);
     }
@@ -209,7 +223,10 @@ export default function BillTracker() {
                   </thead>
                   <tbody>
                     {filtered.map((rep, i) => {
-                      const pct = statusPct(rep);
+                      const counts = repCounts[rep.name];
+                      const pct = counts
+                        ? { committee: Math.round((counts.committee / counts.filed) * 100), passed: Math.round((counts.passed / counts.filed) * 100), signed: Math.round((counts.signed / counts.filed) * 100) }
+                        : statusPct(rep);
                       const isSelected = selectedRep?.name === rep.name;
                       return (
                         <tr
@@ -242,10 +259,10 @@ export default function BillTracker() {
                               </div>
                             )}
                           </td>
-                          <td className="px-3 py-3 text-right font-mono text-[var(--muted)]">{rep.filed ?? "—"}</td>
-                          <td className="px-3 py-3 text-right font-mono text-blue-600">{rep.committee ?? "—"}</td>
-                          <td className="px-3 py-3 text-right font-mono text-purple-600">{rep.passed ?? "—"}</td>
-                          <td className="px-3 py-3 text-right font-mono font-bold text-green-700">{rep.signed ?? "—"}</td>
+                          <td className="px-3 py-3 text-right font-mono text-[var(--muted)]">{counts ? counts.filed : "—"}</td>
+                          <td className="px-3 py-3 text-right font-mono text-blue-600">{counts ? counts.committee : "—"}</td>
+                          <td className="px-3 py-3 text-right font-mono text-purple-600">{counts ? counts.passed : "—"}</td>
+                          <td className="px-3 py-3 text-right font-mono font-bold text-green-700">{counts ? counts.signed : "—"}</td>
                         </tr>
                       );
                     })}
