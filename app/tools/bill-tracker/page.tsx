@@ -264,35 +264,42 @@ export default function BillTracker() {
         )}
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-2 mb-5">
-          <div className="flex flex-wrap gap-1 items-center">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)] mr-1">Sort</span>
+        <div className="flex flex-wrap gap-x-5 gap-y-2 mb-6">
+          <div className="flex flex-wrap gap-1.5 items-center">
+            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--muted)] mr-0.5">Sort</span>
             {sortOptions.map(({ key, label }) => (
               <button key={key} onClick={() => setSortKey(key)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
-                  sortKey === key ? "bg-[var(--accent)] text-white border-[var(--accent)]" : "bg-white text-[var(--muted)] border-[var(--border)]"
+                style={{ transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)" }}
+                className={`px-3.5 py-1.5 rounded-full text-[11px] font-semibold border ${
+                  sortKey === key
+                    ? "bg-[var(--accent)] text-white border-[var(--accent)] shadow-sm"
+                    : "bg-white text-[var(--muted)] border-[var(--border)] hover:border-[var(--accent)]/40 hover:text-[var(--accent)]"
                 }`}>{label}</button>
             ))}
           </div>
-          <div className="flex gap-1 items-center">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)] mr-1">Chamber</span>
+          <div className="flex gap-1.5 items-center">
+            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--muted)] mr-0.5">Chamber</span>
             {(["all", "House", "Senate"] as const).map(c => (
               <button key={c} onClick={() => setChamber(c)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
-                  chamber === c ? "bg-[var(--accent)] text-white border-[var(--accent)]" : "bg-white text-[var(--muted)] border-[var(--border)]"
+                style={{ transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)" }}
+                className={`px-3.5 py-1.5 rounded-full text-[11px] font-semibold border ${
+                  chamber === c
+                    ? "bg-[var(--accent)] text-white border-[var(--accent)] shadow-sm"
+                    : "bg-white text-[var(--muted)] border-[var(--border)] hover:border-[var(--accent)]/40 hover:text-[var(--accent)]"
                 }`}>{c === "all" ? "All" : c}</button>
             ))}
           </div>
-          <div className="flex gap-1 items-center">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)] mr-1">Party</span>
+          <div className="flex gap-1.5 items-center">
+            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--muted)] mr-0.5">Party</span>
             {(["all", "D", "R"] as const).map(p => (
               <button key={p} onClick={() => setParty(p)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
+                style={{ transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)" }}
+                className={`px-3.5 py-1.5 rounded-full text-[11px] font-semibold border ${
                   party === p
-                    ? p === "D" ? "bg-blue-700 text-white border-blue-700"
-                    : p === "R" ? "bg-red-700 text-white border-red-700"
-                    : "bg-[var(--accent)] text-white border-[var(--accent)]"
-                    : "bg-white text-[var(--muted)] border-[var(--border)]"
+                    ? p === "D" ? "bg-blue-700 text-white border-blue-700 shadow-sm"
+                    : p === "R" ? "bg-red-700 text-white border-red-700 shadow-sm"
+                    : "bg-[var(--accent)] text-white border-[var(--accent)] shadow-sm"
+                    : "bg-white text-[var(--muted)] border-[var(--border)] hover:border-[var(--accent)]/40 hover:text-[var(--accent)]"
                 }`}>{p === "all" ? "All" : p === "D" ? "Dem" : "Rep"}</button>
             ))}
           </div>
