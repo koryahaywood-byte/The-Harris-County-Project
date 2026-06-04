@@ -32,25 +32,15 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // Quick summary for leaderboard pre-load — page 1 only, returns total count
+    // Summary for leaderboard pre-load — fetches all pages for accurate counts
     if (action === "summary" && repName) {
-      const lastName = repName.split(" ").pop() || repName;
-      const data = await legiscan("getSearch", {
-        state: "TX", query: lastName, session_id: String(TX_SESSION_ID), page: "1",
-      });
-      const sr = data.searchresult || {};
-      const summary = sr.summary || {};
-      const bills = extractBills(sr);
-      return NextResponse.json({ total: summary.count ?? bills.length, page_total: summary.page_total ?? 1, bills });
-    }
+      const parts = repName.trim().split(/\s+/);
+      const lastName = parts[parts.length - 1];
+      const firstName = parts[0];
+      const query = `${firstName} ${lastName}`;
 
-    // Full search — fetches all pages for drill-down
-    if (action === "search" && repName) {
-      const lastName = repName.split(" ").pop() || repName;
-
-      // Fetch page 1 to learn page count
       const first = await legiscan("getSearch", {
-        state: "TX", query: lastName, session_id: String(TX_SESSION_ID), page: "1",
+        state: "TX", query, session_id: String(TX_SESSION_ID), page: "1",
       });
       const sr1 = first.searchresult || {};
       const summary = sr1.summary || {};
@@ -59,12 +49,45 @@ export async function GET(req: NextRequest) {
 
       let allBills: BillRecord[] = extractBills(sr1);
 
-      // Fetch remaining pages in parallel (cap at 10 pages = 500 bills)
       if (pageTotal > 1) {
         const pages = Array.from({ length: Math.min(pageTotal, 10) - 1 }, (_, i) => i + 2);
         const rest = await Promise.allSettled(
           pages.map(p => legiscan("getSearch", {
-            state: "TX", query: lastName, session_id: String(TX_SESSION_ID), page: String(p),
+            state: "TX", query, session_id: String(TX_SESSION_ID), page: String(p),
+          }))
+        );
+        for (const r of rest) {
+          if (r.status === "fulfilled") {
+            allBills = allBills.concat(extractBills(r.value.searchresult || {}));
+          }
+        }
+      }
+
+      return NextResponse.json({ total: totalCount, page_total: pageTotal, bills: allBills });
+    }
+
+    // Full search — fetches all pages for drill-down
+    if (action === "search" && repName) {
+      const parts = repName.trim().split(/\s+/);
+      const lastName = parts[parts.length - 1];
+      const firstName = parts[0];
+      const query = `${firstName} ${lastName}`;
+
+      const first = await legiscan("getSearch", {
+        state: "TX", query, session_id: String(TX_SESSION_ID), page: "1",
+      });
+      const sr1 = first.searchresult || {};
+      const summary = sr1.summary || {};
+      const pageTotal: number = summary.page_total ?? 1;
+      const totalCount: number = summary.count ?? 0;
+
+      let allBills: BillRecord[] = extractBills(sr1);
+
+      if (pageTotal > 1) {
+        const pages = Array.from({ length: Math.min(pageTotal, 10) - 1 }, (_, i) => i + 2);
+        const rest = await Promise.allSettled(
+          pages.map(p => legiscan("getSearch", {
+            state: "TX", query, session_id: String(TX_SESSION_ID), page: String(p),
           }))
         );
         for (const r of rest) {
