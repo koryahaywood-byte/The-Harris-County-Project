@@ -77,12 +77,6 @@ export default function Home() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_60%_40%,rgba(37,99,168,0.4),transparent)]" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_50%_at_90%_80%,rgba(125,211,252,0.06),transparent)]" />
 
-        {/* Ambient particles — alive feel */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-          <div className="drift-a absolute w-96 h-96 rounded-full bg-sky-400 blur-[80px] top-[10%] right-[15%]" />
-          <div className="drift-b absolute w-64 h-64 rounded-full bg-blue-300 blur-[60px] bottom-[20%] left-[10%]" />
-          <div className="drift-c absolute w-48 h-48 rounded-full bg-sky-200 blur-[50px] top-[55%] right-[40%]" />
-        </div>
 
         <div className="max-w-5xl mx-auto w-full relative z-10">
           <p className="text-sky-300/70 text-[10px] font-bold uppercase tracking-[0.3em] mb-10 flex items-center gap-2">
