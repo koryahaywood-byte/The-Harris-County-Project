@@ -58,9 +58,9 @@ async function fetchSummary(rep: Rep): Promise<Counts> {
   const counts: Counts = { total: data.total ?? bills.length, committee: 0, passed: 0, law: 0, pct: 0 };
   for (const b of bills) {
     const s = getBillStatus(b.last_action);
-    if (s === "law") counts.law++;
-    else if (s === "passed") counts.passed++;
-    else if (s === "committee") counts.committee++;
+    if (s === "law")       { counts.law++; counts.passed++; counts.committee++; }
+    else if (s === "passed")    { counts.passed++; counts.committee++; }
+    else if (s === "committee") { counts.committee++; }
   }
   counts.pct = counts.total > 0 ? Math.round((counts.law / counts.total) * 100) : 0;
   return counts;

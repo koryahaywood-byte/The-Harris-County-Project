@@ -70,9 +70,9 @@ async function fetchRepCounts(rep: Rep): Promise<Counts> {
   const counts: Counts = { total: data.total ?? bills.length, committee: 0, passed: 0, law: 0 };
   for (const b of bills) {
     const s = getBillStatus(b.last_action);
-    if (s === "law") counts.law++;
-    else if (s === "passed") counts.passed++;
-    else if (s === "committee") counts.committee++;
+    if (s === "law")       { counts.law++; counts.passed++; counts.committee++; }
+    else if (s === "passed")    { counts.passed++; counts.committee++; }
+    else if (s === "committee") { counts.committee++; }
   }
   return counts;
 }
@@ -144,9 +144,9 @@ export default function BillTracker() {
       const counts: Counts = { total: data.total ?? results.length, committee: 0, passed: 0, law: 0 };
       for (const b of results) {
         const s = getBillStatus(b.last_action);
-        if (s === "law") counts.law++;
-        else if (s === "passed") counts.passed++;
-        else if (s === "committee") counts.committee++;
+        if (s === "law")       { counts.law++; counts.passed++; counts.committee++; }
+        else if (s === "passed")    { counts.passed++; counts.committee++; }
+        else if (s === "committee") { counts.committee++; }
       }
       setRepCounts(prev => ({ ...prev, [rep.name]: counts }));
     } catch {
@@ -400,10 +400,10 @@ export default function BillTracker() {
               </div>
 
               <div className="px-4 py-3 border-t border-[var(--border)] bg-gray-50 flex gap-3 text-xs text-[var(--muted)] flex-wrap">
-                <span><span className="inline-block w-2 h-2 rounded bg-gray-400 mr-1" />Filed = total</span>
-                <span><span className="inline-block w-2 h-2 rounded bg-blue-500 mr-1" />Cmte</span>
-                <span><span className="inline-block w-2 h-2 rounded bg-purple-500 mr-1" />Chamber</span>
-                <span><span className="inline-block w-2 h-2 rounded bg-green-500 mr-1" />Law</span>
+                <span><span className="inline-block w-2 h-2 rounded bg-gray-400 mr-1" />Filed = total introduced</span>
+                <span><span className="inline-block w-2 h-2 rounded bg-blue-500 mr-1" />Cmte = reached committee</span>
+                <span><span className="inline-block w-2 h-2 rounded bg-purple-500 mr-1" />Chamber = passed a chamber</span>
+                <span><span className="inline-block w-2 h-2 rounded bg-green-500 mr-1" />Law = signed (cumulative)</span>
                 <span><span className="inline-block w-2 h-2 rounded bg-green-400 mr-1" />Rate = Law ÷ Filed</span>
               </div>
             </div>
