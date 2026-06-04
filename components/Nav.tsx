@@ -18,7 +18,7 @@ export default function Nav() {
     <header className="bg-[var(--accent)] text-white">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" className="text-lg font-bold tracking-wide" style={{ fontFamily: "var(--font-playfair), serif" }}>
-          Harris County Project
+          The Harris County Project
         </Link>
 
         {/* Desktop nav */}

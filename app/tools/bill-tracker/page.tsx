@@ -6,98 +6,97 @@ type Rep = {
   district: string;
   chamber: "House" | "Senate";
   party: "D" | "R";
-  filed?: number;
-  committee?: number;
-  passed?: number;
-  signed?: number;
 };
 
 type Bill = {
   bill_id: number;
   bill_number: string;
   title: string;
-  status: number;
   last_action: string;
   last_action_date: string;
   url: string;
 };
 
-// Status labels from LegiScan
-const STATUS: Record<number, { label: string; color: string }> = {
-  1: { label: "Filed", color: "#6b7280" },
-  2: { label: "Passed Committee", color: "#2563eb" },
-  3: { label: "Passed Chamber", color: "#7c3aed" },
-  4: { label: "Signed into Law", color: "#16a34a" },
-  5: { label: "Vetoed", color: "#dc2626" },
-  6: { label: "Failed", color: "#9ca3af" },
-};
+type BillStatus = "law" | "passed" | "committee" | "filed";
 
-const REPS: Rep[] = [
-  // Senate
-  { name: "Carol Alvarado",         district: "SD-6",   chamber: "Senate", party: "D" },
-  { name: "Borris Miles",           district: "SD-13",  chamber: "Senate", party: "D" },
-  { name: "Molly Cook",             district: "SD-15",  chamber: "Senate", party: "D" },
-  { name: "Paul Bettencourt",       district: "SD-7",   chamber: "Senate", party: "R" },
-  // House — Democrats
-  { name: "Senfronia Thompson",     district: "HD-141", chamber: "House",  party: "D" },
-  { name: "Ann Johnson",            district: "HD-134", chamber: "House",  party: "D" },
-  { name: "Ana Hernandez",          district: "HD-143", chamber: "House",  party: "D" },
-  { name: "Armando Walle",          district: "HD-140", chamber: "House",  party: "D" },
-  { name: "Mary Ann Perez",         district: "HD-144", chamber: "House",  party: "D" },
-  { name: "Harold Dutton",          district: "HD-142", chamber: "House",  party: "D" },
-  { name: "Gene Wu",                district: "HD-137", chamber: "House",  party: "D" },
-  { name: "Jolanda Jones",          district: "HD-147", chamber: "House",  party: "D" },
-  { name: "Hubert Vo",              district: "HD-149", chamber: "House",  party: "D" },
-  { name: "Lauren Ashley Simmons",  district: "HD-146", chamber: "House",  party: "D" },
-  { name: "Alma Allen",             district: "HD-131", chamber: "House",  party: "D" },
-  { name: "Christina Morales",      district: "HD-145", chamber: "House",  party: "D" },
-  { name: "Charlene Ward Johnson",  district: "HD-139", chamber: "House",  party: "D" },
-  { name: "Jon Rosenthal",          district: "HD-135", chamber: "House",  party: "D" },
-  // House — Republicans
-  { name: "Lacey Hull",             district: "HD-138", chamber: "House",  party: "R" },
-  { name: "Tom Oliverson",          district: "HD-130", chamber: "House",  party: "R" },
-  { name: "Dennis Paul",            district: "HD-129", chamber: "House",  party: "R" },
-  { name: "Greg Bonnen",            district: "HD-24",  chamber: "House",  party: "R" },
-  { name: "Mike Schofield",         district: "HD-132", chamber: "House",  party: "R" },
-];
-
-const SORT_OPTIONS = [
-  { value: "signed", label: "↓ Signed into Law" },
-  { value: "passed", label: "↓ Passed Chamber" },
-  { value: "committee", label: "↓ Passed Committee" },
-  { value: "filed", label: "↓ Bills Filed" },
-];
-
-function statusPct(rep: Rep) {
-  const f = rep.filed || 0;
-  if (!f) return null;
-  return {
-    committee: Math.round(((rep.committee || 0) / f) * 100),
-    passed: Math.round(((rep.passed || 0) / f) * 100),
-    signed: Math.round(((rep.signed || 0) / f) * 100),
-  };
+function getBillStatus(last_action: string): BillStatus {
+  const a = (last_action || "").toLowerCase();
+  if (a.includes("effective") || a.includes("signed by governor") || a.includes("enacted")) return "law";
+  if (a.includes("enrolled") || a.includes("passed by") || a.includes("passed senate") || a.includes("passed house")) return "passed";
+  if (a.includes("reported favorably") || a.includes("left pending") || a.includes("committee report")) return "committee";
+  return "filed";
 }
 
+const STATUS_STYLES: Record<BillStatus, { label: string; bg: string; text: string }> = {
+  law:       { label: "Signed into Law",   bg: "#dcfce7", text: "#16a34a" },
+  passed:    { label: "Passed Chamber",    bg: "#ede9fe", text: "#7c3aed" },
+  committee: { label: "Passed Committee",  bg: "#dbeafe", text: "#2563eb" },
+  filed:     { label: "Filed",             bg: "#f3f4f6", text: "#6b7280" },
+};
+
+type Counts = { filed: number; committee: number; passed: number; law: number };
+
+const REPS: Rep[] = [
+  { name: "Carol Alvarado",        district: "SD-6",   chamber: "Senate", party: "D" },
+  { name: "Borris Miles",          district: "SD-13",  chamber: "Senate", party: "D" },
+  { name: "Molly Cook",            district: "SD-15",  chamber: "Senate", party: "D" },
+  { name: "Paul Bettencourt",      district: "SD-7",   chamber: "Senate", party: "R" },
+  { name: "Senfronia Thompson",    district: "HD-141", chamber: "House",  party: "D" },
+  { name: "Ann Johnson",           district: "HD-134", chamber: "House",  party: "D" },
+  { name: "Ana Hernandez",         district: "HD-143", chamber: "House",  party: "D" },
+  { name: "Armando Walle",         district: "HD-140", chamber: "House",  party: "D" },
+  { name: "Mary Ann Perez",        district: "HD-144", chamber: "House",  party: "D" },
+  { name: "Harold Dutton",         district: "HD-142", chamber: "House",  party: "D" },
+  { name: "Gene Wu",               district: "HD-137", chamber: "House",  party: "D" },
+  { name: "Jolanda Jones",         district: "HD-147", chamber: "House",  party: "D" },
+  { name: "Hubert Vo",             district: "HD-149", chamber: "House",  party: "D" },
+  { name: "Lauren Ashley Simmons", district: "HD-146", chamber: "House",  party: "D" },
+  { name: "Alma Allen",            district: "HD-131", chamber: "House",  party: "D" },
+  { name: "Christina Morales",     district: "HD-145", chamber: "House",  party: "D" },
+  { name: "Charlene Ward Johnson", district: "HD-139", chamber: "House",  party: "D" },
+  { name: "Jon Rosenthal",         district: "HD-135", chamber: "House",  party: "D" },
+  { name: "Lacey Hull",            district: "HD-138", chamber: "House",  party: "R" },
+  { name: "Tom Oliverson",         district: "HD-130", chamber: "House",  party: "R" },
+  { name: "Dennis Paul",           district: "HD-129", chamber: "House",  party: "R" },
+  { name: "Greg Bonnen",           district: "HD-24",  chamber: "House",  party: "R" },
+  { name: "Mike Schofield",        district: "HD-132", chamber: "House",  party: "R" },
+];
+
+type SortKey = "law" | "passed" | "committee" | "filed" | "pct";
+
 export default function BillTracker() {
-  const [sortKey, setSortKey] = useState<"filed" | "committee" | "passed" | "signed">("signed");
+  const [sortKey, setSortKey] = useState<SortKey>("law");
   const [chamber, setChamber] = useState<"all" | "House" | "Senate">("all");
   const [party, setParty] = useState<"all" | "D" | "R">("all");
   const [selectedRep, setSelectedRep] = useState<Rep | null>(null);
-  const [bills, setBills] = useState<Bill[]>([]);
+  const [allBills, setAllBills] = useState<Bill[]>([]);
+  const [statusFilter, setStatusFilter] = useState<BillStatus | "all">("all");
   const [loading, setLoading] = useState(false);
   const [apiMissing, setApiMissing] = useState(false);
-  const [billFilter, setBillFilter] = useState<number>(0);
-  const [repCounts, setRepCounts] = useState<Record<string, { filed: number; committee: number; passed: number; signed: number }>>({});
+  const [repCounts, setRepCounts] = useState<Record<string, Counts>>({});
 
+  // Pre-load all reps on mount
   const filtered = REPS
     .filter(r => chamber === "all" || r.chamber === chamber)
     .filter(r => party === "all" || r.party === party)
-    .sort((a, b) => (b[sortKey] || 0) - (a[sortKey] || 0));
+    .sort((a, b) => {
+      const ca = repCounts[a.name];
+      const cb = repCounts[b.name];
+      if (!cb && !ca) return 0;
+      if (!cb) return -1;
+      if (!ca) return 1;
+      if (sortKey === "pct") {
+        const pa = ca.filed ? ca.law / ca.filed : 0;
+        const pb = cb.filed ? cb.law / cb.filed : 0;
+        return pb - pa;
+      }
+      return (cb[sortKey] || 0) - (ca[sortKey] || 0);
+    });
 
   async function loadBills(rep: Rep) {
     setSelectedRep(rep);
-    setBills([]);
-    setBillFilter(0);
+    setAllBills([]);
+    setStatusFilter("all");
     setApiMissing(false);
     setLoading(true);
     try {
@@ -109,30 +108,32 @@ export default function BillTracker() {
             (b): b is Bill => typeof b === "object" && b !== null && "bill_id" in b
           )
         : [];
-      setBills(results);
+      setAllBills(results);
 
-      // Tally counts from last_action text
-      let committee = 0, passed = 0, signed = 0;
+      // Count by status
+      const counts: Counts = { filed: 0, committee: 0, passed: 0, law: 0 };
       for (const b of results) {
-        const a = (b.last_action || "").toLowerCase();
-        if (a.includes("signed") || a.includes("effective") || a.includes("enacted")) signed++;
-        else if (a.includes("enrolled") || a.includes("passed") || a.includes("reported enrolled")) passed++;
-        else if (a.includes("committee") || a.includes("reported favorably")) committee++;
+        const s = getBillStatus(b.last_action);
+        if (s === "law") { counts.law++; counts.passed++; counts.committee++; counts.filed++; }
+        else if (s === "passed") { counts.passed++; counts.committee++; counts.filed++; }
+        else if (s === "committee") { counts.committee++; counts.filed++; }
+        else counts.filed++;
       }
-      setRepCounts(prev => ({
-        ...prev,
-        [rep.name]: { filed: results.length, committee, passed, signed },
-      }));
+      setRepCounts(prev => ({ ...prev, [rep.name]: counts }));
     } catch {
-      setBills([]);
+      setAllBills([]);
     }
     setLoading(false);
   }
 
-  const filteredBills = bills;
+  const displayBills = statusFilter === "all"
+    ? allBills
+    : allBills.filter(b => getBillStatus(b.last_action) === statusFilter);
 
-  const rankMedal = (i: number) =>
-    i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}`;
+  const sortLabels: Record<SortKey, string> = {
+    law: "Signed into Law", passed: "Passed Chamber",
+    committee: "Passed Committee", filed: "Total Filed", pct: "Pass Rate %",
+  };
 
   return (
     <div style={{ fontFamily: "var(--font-inter), sans-serif" }}>
@@ -144,54 +145,63 @@ export default function BillTracker() {
             What did your rep actually do?
           </h1>
           <p className="text-white/70 text-sm max-w-xl">
-            Bills filed, passed out of committee, passed the chamber, and signed into law — ranked by Harris County rep.
+            Bills filed, passed committee, passed chamber, and signed into law. Click any rep to load their bills — counts populate as you go.
           </p>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-8">
         {apiMissing && (
           <div className="bg-amber-50 border border-amber-300 rounded-lg p-4 mb-6 text-sm text-amber-800">
-            <strong>API key not configured.</strong> Add your LegiScan API key to Vercel environment variables as <code className="bg-amber-100 px-1 rounded">LEGISCAN_API_KEY</code> to load live data.{" "}
+            <strong>API key not configured.</strong> Add <code className="bg-amber-100 px-1 rounded">LEGISCAN_API_KEY</code> to Vercel environment variables.{" "}
             <a href="https://legiscan.com/legiscan" target="_blank" className="underline">Get a free key →</a>
           </div>
         )}
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-3 mb-6 items-center">
-          <select
-            className="border border-[var(--border)] rounded-lg px-3 py-2 text-sm bg-white"
-            value={sortKey}
-            onChange={e => setSortKey(e.target.value as typeof sortKey)}
-          >
-            {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
-
-          <div className="flex border border-[var(--border)] rounded-lg overflow-hidden text-sm">
-            {(["all", "House", "Senate"] as const).map(c => (
+        <div className="flex flex-wrap gap-2 mb-6 items-center">
+          {/* Sort */}
+          <div className="flex flex-wrap gap-1">
+            {(Object.entries(sortLabels) as [SortKey, string][]).map(([k, label]) => (
               <button
-                key={c}
-                onClick={() => setChamber(c)}
-                className={`px-4 py-2 ${chamber === c ? "bg-[var(--accent)] text-white" : "bg-white text-[var(--muted)] hover:bg-gray-50"}`}
+                key={k}
+                onClick={() => setSortKey(k)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
+                  sortKey === k
+                    ? "bg-[var(--accent)] text-white border-[var(--accent)]"
+                    : "bg-white text-[var(--muted)] border-[var(--border)] hover:border-[var(--accent)]"
+                }`}
               >
-                {c === "all" ? "All" : c}
+                {label}
               </button>
             ))}
           </div>
 
-          <div className="flex border border-[var(--border)] rounded-lg overflow-hidden text-sm">
+          <div className="h-6 w-px bg-[var(--border)] hidden sm:block" />
+
+          {/* Chamber */}
+          <div className="flex gap-1">
+            {(["all", "House", "Senate"] as const).map(c => (
+              <button key={c} onClick={() => setChamber(c)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
+                  chamber === c ? "bg-[var(--accent)] text-white border-[var(--accent)]" : "bg-white text-[var(--muted)] border-[var(--border)] hover:border-[var(--accent)]"
+                }`}>
+                {c === "all" ? "All Chambers" : c}
+              </button>
+            ))}
+          </div>
+
+          {/* Party */}
+          <div className="flex gap-1">
             {(["all", "D", "R"] as const).map(p => (
-              <button
-                key={p}
-                onClick={() => setParty(p)}
-                className={`px-4 py-2 ${
+              <button key={p} onClick={() => setParty(p)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
                   party === p
-                    ? p === "D" ? "bg-blue-700 text-white"
-                    : p === "R" ? "bg-red-700 text-white"
-                    : "bg-[var(--accent)] text-white"
-                    : "bg-white text-[var(--muted)] hover:bg-gray-50"
-                }`}
-              >
+                    ? p === "D" ? "bg-blue-700 text-white border-blue-700"
+                    : p === "R" ? "bg-red-700 text-white border-red-700"
+                    : "bg-[var(--accent)] text-white border-[var(--accent)]"
+                    : "bg-white text-[var(--muted)] border-[var(--border)] hover:border-[var(--accent)]"
+                }`}>
                 {p === "all" ? "All Parties" : p === "D" ? "Dem" : "Rep"}
               </button>
             ))}
@@ -200,83 +210,67 @@ export default function BillTracker() {
 
         <div className="flex gap-6 flex-col lg:flex-row">
           {/* Leaderboard */}
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <div className="bg-white border border-[var(--border)] rounded-xl overflow-hidden">
               <div className="px-5 py-3 border-b border-[var(--border)] bg-gray-50 flex justify-between items-center">
                 <span className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)]">Leaderboard</span>
-                <span className="text-xs text-[var(--muted)]">{filtered.length} reps</span>
+                <span className="text-xs text-[var(--muted)]">{filtered.length} reps · click to load bills</span>
               </div>
 
-              {filtered.length === 0 ? (
-                <div className="p-8 text-center text-[var(--muted)] text-sm">No results</div>
-              ) : (
-                <table className="w-full text-sm border-collapse">
-                  <thead>
-                    <tr className="text-xs text-[var(--muted)] uppercase tracking-wider border-b border-[var(--border)]">
-                      <th className="px-4 py-2 text-left w-8">#</th>
-                      <th className="px-4 py-2 text-left">Rep</th>
-                      <th className="px-3 py-2 text-right">Filed</th>
-                      <th className="px-3 py-2 text-right">Cmte</th>
-                      <th className="px-3 py-2 text-right">Passed</th>
-                      <th className="px-3 py-2 text-right">Law</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filtered.map((rep, i) => {
-                      const counts = repCounts[rep.name];
-                      const pct = counts
-                        ? { committee: Math.round((counts.committee / counts.filed) * 100), passed: Math.round((counts.passed / counts.filed) * 100), signed: Math.round((counts.signed / counts.filed) * 100) }
-                        : statusPct(rep);
-                      const isSelected = selectedRep?.name === rep.name;
-                      return (
-                        <tr
-                          key={rep.name}
-                          onClick={() => loadBills(rep)}
-                          className={`border-b border-[var(--border)] cursor-pointer transition-colors ${isSelected ? "bg-blue-50" : "hover:bg-gray-50"}`}
-                        >
-                          <td className="px-4 py-3 text-[var(--muted)] text-xs font-mono">{rankMedal(i)}</td>
-                          <td className="px-4 py-3">
-                            <div className="font-semibold text-[var(--accent)]">{rep.name}</div>
-                            <div className="flex gap-2 mt-1">
-                              <span className="text-xs text-[var(--muted)]">{rep.district}</span>
-                              <span className={`text-xs font-bold ${rep.party === "D" ? "text-blue-700" : "text-red-700"}`}>{rep.party}</span>
-                              <span className="text-xs text-[var(--muted)]">{rep.chamber}</span>
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr className="text-xs text-[var(--muted)] uppercase tracking-wider border-b border-[var(--border)] bg-gray-50">
+                    <th className="px-4 py-2 text-left w-8">#</th>
+                    <th className="px-4 py-2 text-left">Rep</th>
+                    <th className="px-3 py-2 text-right">Filed</th>
+                    <th className="px-3 py-2 text-right">Cmte</th>
+                    <th className="px-3 py-2 text-right">Chamber</th>
+                    <th className="px-3 py-2 text-right">Law</th>
+                    <th className="px-3 py-2 text-right">Rate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.map((rep, i) => {
+                    const c = repCounts[rep.name];
+                    const pct = c && c.filed > 0 ? Math.round((c.law / c.filed) * 100) : null;
+                    const isSelected = selectedRep?.name === rep.name;
+                    return (
+                      <tr key={rep.name} onClick={() => loadBills(rep)}
+                        className={`border-b border-[var(--border)] cursor-pointer transition-colors ${isSelected ? "bg-blue-50" : "hover:bg-gray-50"}`}
+                      >
+                        <td className="px-4 py-3 text-[var(--muted)] text-xs font-mono w-8">
+                          {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : i + 1}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="font-semibold text-[var(--accent)] text-sm">{rep.name}</div>
+                          <div className="flex gap-2 mt-0.5">
+                            <span className="text-xs text-[var(--muted)]">{rep.district}</span>
+                            <span className={`text-xs font-bold ${rep.party === "D" ? "text-blue-700" : "text-red-700"}`}>{rep.party}</span>
+                            <span className="text-xs text-[var(--muted)]">{rep.chamber}</span>
+                          </div>
+                          {c && (
+                            <div className="mt-2 w-full bg-gray-100 rounded-full h-1.5">
+                              <div className="bg-green-500 h-1.5 rounded-full transition-all" style={{ width: `${pct}%` }} />
                             </div>
-                            {pct && (
-                              <div className="mt-2 flex gap-1 h-1">
-                                <div className="rounded bg-gray-200 flex-1" title={`${rep.filed} filed`}>
-                                  <div className="h-full rounded bg-gray-400" style={{ width: "100%" }} />
-                                </div>
-                                <div className="rounded bg-blue-100 flex-1">
-                                  <div className="h-full rounded bg-blue-500" style={{ width: `${pct.committee}%` }} />
-                                </div>
-                                <div className="rounded bg-purple-100 flex-1">
-                                  <div className="h-full rounded bg-purple-500" style={{ width: `${pct.passed}%` }} />
-                                </div>
-                                <div className="rounded bg-green-100 flex-1">
-                                  <div className="h-full rounded bg-green-500" style={{ width: `${pct.signed}%` }} />
-                                </div>
-                              </div>
-                            )}
-                          </td>
-                          <td className="px-3 py-3 text-right font-mono text-[var(--muted)]">{counts ? counts.filed : "—"}</td>
-                          <td className="px-3 py-3 text-right font-mono text-blue-600">{counts ? counts.committee : "—"}</td>
-                          <td className="px-3 py-3 text-right font-mono text-purple-600">{counts ? counts.passed : "—"}</td>
-                          <td className="px-3 py-3 text-right font-mono font-bold text-green-700">{counts ? counts.signed : "—"}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              )}
+                          )}
+                        </td>
+                        <td className="px-3 py-3 text-right font-mono text-xs text-[var(--muted)]">{c ? c.filed : <span className="text-gray-300">—</span>}</td>
+                        <td className="px-3 py-3 text-right font-mono text-xs text-blue-600">{c ? c.committee : <span className="text-gray-300">—</span>}</td>
+                        <td className="px-3 py-3 text-right font-mono text-xs text-purple-600">{c ? c.passed : <span className="text-gray-300">—</span>}</td>
+                        <td className="px-3 py-3 text-right font-mono text-xs font-bold text-green-700">{c ? c.law : <span className="text-gray-300">—</span>}</td>
+                        <td className="px-3 py-3 text-right font-mono text-xs text-[var(--muted)]">{pct !== null ? `${pct}%` : <span className="text-gray-300">—</span>}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
 
-              {/* Legend */}
-              <div className="px-4 py-3 border-t border-[var(--border)] bg-gray-50 flex gap-4 text-xs text-[var(--muted)]">
-                <span><span className="inline-block w-2 h-2 rounded bg-gray-400 mr-1" />Filed</span>
-                <span><span className="inline-block w-2 h-2 rounded bg-blue-500 mr-1" />Committee</span>
-                <span><span className="inline-block w-2 h-2 rounded bg-purple-500 mr-1" />Passed</span>
-                <span><span className="inline-block w-2 h-2 rounded bg-green-500 mr-1" />Law</span>
-                <span className="ml-auto italic">Click a rep to see their bills</span>
+              <div className="px-4 py-3 border-t border-[var(--border)] bg-gray-50 flex gap-4 text-xs text-[var(--muted)] flex-wrap">
+                <span><span className="inline-block w-2 h-2 rounded bg-gray-400 mr-1" />Filed = all bills searched by name</span>
+                <span><span className="inline-block w-2 h-2 rounded bg-blue-500 mr-1" />Cmte = passed committee</span>
+                <span><span className="inline-block w-2 h-2 rounded bg-purple-500 mr-1" />Chamber = passed full chamber</span>
+                <span><span className="inline-block w-2 h-2 rounded bg-green-500 mr-1" />Law = signed by Governor</span>
+                <span><span className="inline-block w-2 h-2 rounded bg-green-400 mr-1" />Rate = Law ÷ Filed</span>
               </div>
             </div>
           </div>
@@ -290,25 +284,21 @@ export default function BillTracker() {
                   <div className="text-xs text-[var(--muted)] mt-1">{selectedRep.district} · {selectedRep.chamber}</div>
 
                   {/* Status filter pills */}
-                  {bills.length > 0 && (
+                  {!loading && allBills.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-3">
-                      <button
-                        onClick={() => setBillFilter(0)}
-                        className={`text-xs px-2 py-1 rounded-full border ${billFilter === 0 ? "bg-[var(--accent)] text-white border-[var(--accent)]" : "border-[var(--border)] text-[var(--muted)]"}`}
-                      >
-                        All ({bills.length})
+                      <button onClick={() => setStatusFilter("all")}
+                        className={`text-xs px-2 py-1 rounded-full border transition-colors ${statusFilter === "all" ? "bg-[var(--accent)] text-white border-[var(--accent)]" : "border-[var(--border)] text-[var(--muted)] hover:border-[var(--accent)]"}`}>
+                        All ({allBills.length})
                       </button>
-                      {Object.entries(STATUS).map(([k, v]) => {
-                        const count = bills.filter(b => b.status === Number(k)).length;
+                      {(["law", "passed", "committee", "filed"] as BillStatus[]).map(s => {
+                        const count = allBills.filter(b => getBillStatus(b.last_action) === s).length;
                         if (!count) return null;
+                        const st = STATUS_STYLES[s];
                         return (
-                          <button
-                            key={k}
-                            onClick={() => setBillFilter(Number(k))}
-                            className={`text-xs px-2 py-1 rounded-full border ${billFilter === Number(k) ? "text-white border-transparent" : "border-[var(--border)] text-[var(--muted)]"}`}
-                            style={billFilter === Number(k) ? { background: v.color } : {}}
-                          >
-                            {v.label} ({count})
+                          <button key={s} onClick={() => setStatusFilter(statusFilter === s ? "all" : s)}
+                            className={`text-xs px-2 py-1 rounded-full border transition-colors`}
+                            style={statusFilter === s ? { background: st.text, color: "#fff", borderColor: st.text } : { background: st.bg, color: st.text, borderColor: st.bg }}>
+                            {st.label} ({count})
                           </button>
                         );
                       })}
@@ -316,39 +306,28 @@ export default function BillTracker() {
                   )}
                 </div>
 
-                <div className="overflow-y-auto" style={{ maxHeight: "60vh" }}>
+                <div className="overflow-y-auto" style={{ maxHeight: "65vh" }}>
                   {loading && (
                     <div className="p-8 text-center text-[var(--muted)] text-sm">Loading bills…</div>
                   )}
-                  {!loading && bills.length === 0 && !apiMissing && (
-                    <div className="p-8 text-center text-[var(--muted)] text-sm">
-                      No bills found for this rep.
-                    </div>
+                  {!loading && allBills.length === 0 && (
+                    <div className="p-8 text-center text-[var(--muted)] text-sm">No bills found.</div>
                   )}
-                  {filteredBills.map(bill => {
-                    const action = (bill.last_action || "").toLowerCase();
-                    const s = action.includes("signed") || action.includes("effective") || action.includes("enacted")
-                      ? STATUS[4]
-                      : action.includes("vetoed") ? STATUS[5]
-                      : action.includes("enrolled") || action.includes("passed") ? STATUS[3]
-                      : action.includes("committee") ? STATUS[2]
-                      : STATUS[1];
+                  {!loading && displayBills.map(bill => {
+                    const s = getBillStatus(bill.last_action);
+                    const st = STATUS_STYLES[s];
                     return (
-                      <a
-                        key={bill.bill_id}
-                        href={bill.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block px-4 py-3 border-b border-[var(--border)] hover:bg-gray-50 transition-colors"
-                      >
+                      <a key={bill.bill_id} href={bill.url} target="_blank" rel="noopener noreferrer"
+                        className="block px-4 py-3 border-b border-[var(--border)] hover:bg-gray-50 transition-colors">
                         <div className="flex items-start justify-between gap-2">
                           <span className="font-mono text-xs font-bold text-[var(--accent)]">{bill.bill_number}</span>
-                          <span className="text-xs px-2 py-0.5 rounded-full flex-shrink-0" style={{ background: s.color + "20", color: s.color }}>
-                            {s.label}
+                          <span className="text-xs px-2 py-0.5 rounded-full flex-shrink-0 font-medium"
+                            style={{ background: st.bg, color: st.text }}>
+                            {st.label}
                           </span>
                         </div>
-                        <div className="text-xs text-[var(--muted)] mt-1 line-clamp-2">{bill.title}</div>
-                        {bill.last_action && (
+                        <div className="text-xs text-[var(--muted)] mt-1 leading-relaxed line-clamp-2">{bill.title}</div>
+                        {bill.last_action_date && (
                           <div className="text-xs text-gray-400 mt-1">{bill.last_action_date} · {bill.last_action}</div>
                         )}
                       </a>
@@ -361,7 +340,7 @@ export default function BillTracker() {
         </div>
 
         <p className="text-xs text-[var(--muted)] mt-6">
-          Data: LegiScan · 89th Texas Legislature (2025–2026). Click any rep to view their bills. Numbers update when API syncs.
+          Data: LegiScan · 89th Texas Legislature (2025–2026). Results are searched by rep last name — may include co-sponsorships. Click any rep to load their bills.
         </p>
       </div>
     </div>

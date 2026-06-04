@@ -8,7 +8,7 @@ const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfa
 const dancing = Dancing_Script({ subsets: ["latin"], variable: "--font-dancing" });
 
 export const metadata: Metadata = {
-  title: "Harris County Project",
+  title: "The Harris County Project",
   description: "Civic tools for Harris County residents. They stopped teaching civics — we didn't.",
 };
 

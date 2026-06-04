@@ -29,7 +29,7 @@ export default function Home() {
       {/* Hero */}
       <section className="bg-[var(--accent)] text-white py-24 px-6">
         <div className="max-w-4xl mx-auto">
-          <p className="text-sky-300 text-sm font-semibold uppercase tracking-widest mb-4">Harris County Project</p>
+          <p className="text-sky-300 text-sm font-semibold uppercase tracking-widest mb-4">The Harris County Project</p>
           <h1
             className="text-4xl md:text-6xl font-bold leading-tight mb-6"
             style={{ fontFamily: "var(--font-playfair), serif" }}
