@@ -1,13 +1,33 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const isToolPage = pathname.startsWith("/tools/");
 
+  // ── Tool pages: slim static bar (no float, no overlap with iframe) ──
+  if (isToolPage) {
+    return (
+      <header className="bg-[var(--accent)] text-white">
+        <div className="max-w-7xl mx-auto px-5 py-3 flex items-center gap-3">
+          <Link href="/" className="text-white/50 hover:text-white/80 text-xs transition-colors">
+            ← Toolbox
+          </Link>
+          <span className="text-white/20 text-xs">/</span>
+          <span className="text-white/70 text-xs font-medium" style={{ fontFamily: "var(--font-playfair), serif" }}>
+            The Harris County Project
+          </span>
+        </div>
+      </header>
+    );
+  }
+
+  // ── Home / other pages: floating pill nav ──
   return (
     <>
-      {/* Floating pill nav */}
       <header className="fixed top-4 left-0 right-0 z-50 px-4 flex justify-center pointer-events-none">
         <div className="pointer-events-auto w-full max-w-2xl">
           <div className="flex items-center justify-between bg-[var(--accent)]/95 backdrop-blur-xl text-white rounded-full px-5 py-3 ring-1 ring-white/10 shadow-[0_4px_32px_rgba(26,58,92,0.35)]">
@@ -19,7 +39,6 @@ export default function Nav() {
               The Harris County Project
             </Link>
 
-            {/* Desktop links */}
             <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
               <Link href="/#toolbox" className="text-white/70 hover:text-white transition-colors duration-300">
                 Toolbox
@@ -29,7 +48,6 @@ export default function Nav() {
               </Link>
             </nav>
 
-            {/* Mobile hamburger */}
             <button
               className="md:hidden text-white/80 hover:text-white p-1 relative w-6 h-6 transition-colors"
               onClick={() => setOpen(!open)}
@@ -43,32 +61,24 @@ export default function Nav() {
         </div>
       </header>
 
-      {/* Mobile overlay menu */}
       {open && (
         <div
           className="fixed inset-0 z-40 bg-[var(--accent)]/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 text-white"
           onClick={() => setOpen(false)}
         >
-          <Link
-            href="/#toolbox"
-            onClick={() => setOpen(false)}
+          <Link href="/#toolbox" onClick={() => setOpen(false)}
             className="text-3xl font-bold opacity-0 animate-[fadeUp_0.4s_0.1s_ease_forwards]"
-            style={{ fontFamily: "var(--font-playfair), serif" }}
-          >
+            style={{ fontFamily: "var(--font-playfair), serif" }}>
             Toolbox
           </Link>
-          <Link
-            href="/#about"
-            onClick={() => setOpen(false)}
+          <Link href="/#about" onClick={() => setOpen(false)}
             className="text-3xl font-bold opacity-0 animate-[fadeUp_0.4s_0.2s_ease_forwards]"
-            style={{ fontFamily: "var(--font-playfair), serif" }}
-          >
+            style={{ fontFamily: "var(--font-playfair), serif" }}>
             About
           </Link>
         </div>
       )}
 
-      {/* Spacer so content isn't hidden behind fixed nav */}
       <div className="h-16" />
 
       <style jsx global>{`
