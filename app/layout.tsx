@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Playfair_Display, Dancing_Script, Outfit } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
+import EmailGate from "@/components/EmailGate";
+import ChatWidget from "@/components/ChatWidget";
 
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
@@ -16,8 +18,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${outfit.variable} ${playfair.variable} ${dancing.variable}`}>
       <body className="min-h-screen flex flex-col" style={{ fontFamily: "var(--font-outfit), sans-serif" }}>
+        <EmailGate />
         <Nav />
         <main className="flex-1">{children}</main>
+        <ChatWidget />
         <footer className="border-t border-[var(--border)] py-10 px-6 text-center text-[var(--muted)]">
           <p style={{ fontFamily: "var(--font-dancing), cursive", fontSize: "1.8rem", color: "var(--accent)" }}>
             Built With Wood

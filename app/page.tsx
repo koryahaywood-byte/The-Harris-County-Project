@@ -235,12 +235,22 @@ export default function Home() {
           {/* ── MEDIA ── */}
           <div className="mb-20">
             <SectionLabel>Media</SectionLabel>
+            <div className="mb-4">
+              <ToolCard
+                large
+                tool={{
+                  href: "/tools/tv-station",
+                  name: "TV Station",
+                  description: "Watch Harris County Commissioners Court, Houston City Council, HISD Board, and the Texas Legislature live — all in one place. Streams from official public channels.",
+                  status: "live",
+                }}
+              />
+            </div>
             <ToolCard
-              large
               tool={{
-                href: "/tools/tv-station",
-                name: "TV Station",
-                description: "Watch Harris County Commissioners Court, Houston City Council, HISD Board, and the Texas Legislature live — all in one place. Streams from official public channels.",
+                href: "/blogs",
+                name: "Blogs & Influencers",
+                description: "The best journalists, newsletters, blogs, and civic accounts covering Harris County politics. Curated staff picks and a full directory — start here.",
                 status: "live",
               }}
             />
