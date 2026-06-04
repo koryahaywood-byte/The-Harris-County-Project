@@ -485,6 +485,10 @@
     <button class="party-btn" data-party="D" onclick="onPartyChange(this)">Dem</button>
     <button class="party-btn" data-party="R" onclick="onPartyChange(this)">Rep</button>
   </div>
+  <button id="hcp-share-btn" onclick="openShare()">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+    Share
+  </button>
 </header>
 
 
@@ -1255,6 +1259,98 @@ function hideTooltip() {
     if (!tooltipHovered) document.getElementById('link-tooltip').classList.remove('visible');
   }, 60);
 }
+</script>
+
+<!-- ── Social Share ─────────────────────────────────────────── -->
+<style>
+#hcp-share-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;border:1px solid rgba(181,137,42,0.4);background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.85);font-family:'DM Sans',system-ui,sans-serif;font-size:11px;font-weight:600;letter-spacing:.04em;cursor:pointer;transition:background .15s;white-space:nowrap;flex-shrink:0}
+#hcp-share-btn:hover{background:rgba(181,137,42,0.2);border-color:var(--gold);color:#fff}
+#hcp-share-modal{display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;padding:16px;background:rgba(10,20,35,0.75);backdrop-filter:blur(6px)}
+#hcp-share-modal.open{display:flex}
+.hcp-sm-outer{background:var(--cream);border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.4);max-width:640px;width:100%;border:1px solid var(--linen);position:relative}
+.hcp-sm-inner{margin:8px;border-radius:10px;overflow:hidden;box-shadow:inset 0 1px 4px rgba(0,0,0,0.08)}
+.hcp-sm-preview{background:rgba(26,58,92,0.08);min-height:200px;display:flex;align-items:center;justify-content:center}
+.hcp-sm-preview img{display:block;width:100%}
+.hcp-spinner{display:flex;flex-direction:column;align-items:center;gap:10px;padding:36px}
+.hcp-spin{width:26px;height:26px;border:2px solid var(--turf);border-top-color:transparent;border-radius:50%;animation:hcpspin .7s linear infinite}
+@keyframes hcpspin{to{transform:rotate(360deg)}}
+.hcp-sm-actions{background:var(--ivory);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;border-top:1px solid var(--linen)}
+.hcp-sm-meta p:first-child{font-family:'Playfair Display',Georgia,serif;font-size:14px;font-weight:700;color:var(--turf)}
+.hcp-sm-meta p:last-child{font-size:11px;color:var(--slate);margin-top:2px}
+.hcp-sm-btns{display:flex;gap:6px}
+.hcp-ab{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:9px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;transition:opacity .15s;border:none}
+.hcp-ab:disabled{opacity:.4;cursor:default}
+.hcp-ab.outline{border:1px solid var(--linen-2);color:var(--turf);background:var(--ivory)}
+.hcp-ab.outline:hover:not(:disabled){background:var(--turf-lt)}
+.hcp-ab.navy{background:var(--turf);color:#fff}
+.hcp-ab.navy:hover:not(:disabled){background:var(--turf-2)}
+.hcp-ab.dark{background:#000;color:#fff}
+.hcp-ab.dark:hover:not(:disabled){background:#333}
+.hcp-sm-close{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,0.2);border:none;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.hcp-sm-close:hover{background:rgba(0,0,0,0.4)}
+</style>
+
+<div id="hcp-share-modal">
+  <div class="hcp-sm-outer">
+    <div class="hcp-sm-inner">
+      <div class="hcp-sm-preview" id="hcp-preview">
+        <div class="hcp-spinner"><div class="hcp-spin"></div><p style="font-size:11px;color:var(--slate);font-family:'DM Sans',sans-serif">Generating card…</p></div>
+      </div>
+      <div class="hcp-sm-actions">
+        <div class="hcp-sm-meta"><p>Where the Money Resides</p><p>The Harris County Project</p></div>
+        <div class="hcp-sm-btns">
+          <button class="hcp-ab outline" id="hcp-dl" disabled onclick="hcpDownload()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </button>
+          <button class="hcp-ab navy" id="hcp-sh" disabled onclick="hcpNativeShare()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Share
+          </button>
+          <button class="hcp-ab dark" id="hcp-tw" disabled onclick="hcpTweet()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            Post
+          </button>
+        </div>
+      </div>
+    </div>
+    <button class="hcp-sm-close" onclick="closeShare()">&#x2715;</button>
+  </div>
+</div>
+
+<script>
+const HCP_SHARE={toolName:'Where the Money Resides',section:'Money',description:'Cash-on-hand leaderboard for every Harris County elected official and candidate — federal, state, county, and city. Updated from FEC, TEC & Harris County Clerk filings.'};
+let _hcpUrl=null;
+function _hcpWrap(ctx,text,x,y,maxW,lh){const ws=text.split(' ');let ln='';for(const w of ws){const t=ln?ln+' '+w:w;if(ctx.measureText(t).width>maxW&&ln){ctx.fillText(ln,x,y);y+=lh;ln=w;}else ln=t;}if(ln)ctx.fillText(ln,x,y);}
+function _hcpDraw(){
+  const demC=DATA.filter(d=>d.cash>0&&d.party==='D').reduce((s,d)=>s+d.cash,0);
+  const repC=DATA.filter(d=>d.cash>0&&d.party==='R').reduce((s,d)=>s+d.cash,0);
+  const total=demC+repC;
+  const c=document.createElement('canvas');c.width=1200;c.height=630;const ctx=c.getContext('2d');
+  const g=ctx.createLinearGradient(0,0,1200,630);g.addColorStop(0,'#1a3a5c');g.addColorStop(.55,'#0f2540');g.addColorStop(1,'#1a3a5c');ctx.fillStyle=g;ctx.fillRect(0,0,1200,630);
+  const rg=ctx.createRadialGradient(960,315,0,960,315,520);rg.addColorStop(0,'rgba(37,99,168,0.45)');rg.addColorStop(1,'rgba(37,99,168,0)');ctx.fillStyle=rg;ctx.fillRect(0,0,1200,630);
+  ctx.fillStyle='rgba(181,137,42,0.8)';ctx.font='700 18px system-ui,sans-serif';ctx.fillText('THE HARRIS COUNTY PROJECT · MONEY',72,96);
+  ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font='500 14px system-ui,sans-serif';ctx.textAlign='right';ctx.fillText('the-harris-county-project.vercel.app',1128,96);ctx.textAlign='left';
+  ctx.fillStyle='#fff';ctx.font='700 64px Georgia,serif';ctx.fillText('Where the Money Resides',72,290);
+  ctx.fillStyle='rgba(255,255,255,0.65)';ctx.font='400 21px system-ui,sans-serif';_hcpWrap(ctx,'Cash-on-hand leaderboard for every Harris County elected official and candidate — all levels, both parties.',72,346,760,32);
+  if(total>0){
+    const bx=72,by=430,bw=760,bh=20,dr=Math.round(demC/total*bw);
+    ctx.fillStyle='rgba(255,255,255,0.1)';ctx.fillRect(bx,by,bw,bh);
+    ctx.fillStyle='#1a2744';ctx.fillRect(bx,by,dr,bh);
+    ctx.fillStyle='#5c1414';ctx.fillRect(bx+dr,by,bw-dr,bh);
+    ctx.fillStyle='rgba(147,210,255,0.7)';ctx.font='700 13px system-ui,sans-serif';ctx.fillText('DEM '+formatCash(demC),bx,by-8);
+    ctx.textAlign='right';ctx.fillStyle='rgba(255,160,160,0.8)';ctx.fillText('REP '+formatCash(repC),bx+bw,by-8);ctx.textAlign='left';
+  }
+  ctx.strokeStyle='rgba(255,255,255,0.12)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(72,562);ctx.lineTo(1128,562);ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='500 17px system-ui,sans-serif';ctx.fillText('Civic data for Houston & Harris County',72,597);
+  ctx.fillStyle='rgba(181,137,42,0.7)';ctx.font='700 16px system-ui,sans-serif';ctx.textAlign='right';ctx.fillText('FREE · OPEN · INDEPENDENT',1128,597);ctx.textAlign='left';
+  return c.toDataURL('image/png');
+}
+function openShare(){_hcpUrl=null;document.getElementById('hcp-share-modal').classList.add('open');document.getElementById('hcp-preview').innerHTML='<div class="hcp-spinner"><div class="hcp-spin"></div><p style="font-size:11px;color:var(--slate);font-family:\'DM Sans\',sans-serif">Generating card…</p></div>';['hcp-dl','hcp-sh','hcp-tw'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=true;});setTimeout(()=>{_hcpUrl=_hcpDraw();const img=new Image();img.src=_hcpUrl;document.getElementById('hcp-preview').innerHTML='';document.getElementById('hcp-preview').appendChild(img);['hcp-dl','hcp-sh','hcp-tw'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=false;});},60);}
+function closeShare(){document.getElementById('hcp-share-modal').classList.remove('open');}
+function hcpDownload(){if(!_hcpUrl)return;const a=document.createElement('a');a.download='where-the-money-resides.png';a.href=_hcpUrl;a.click();}
+async function hcpNativeShare(){if(!_hcpUrl)return;try{const res=await fetch(_hcpUrl);const blob=await res.blob();const file=new File([blob],'where-the-money-resides.png',{type:'image/png'});if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({title:'Where the Money Resides · The Harris County Project',files:[file]});return;}}catch(e){}hcpDownload();}
+function hcpTweet(){window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent('Where the Money Resides — Harris County campaign finance leaderboard via The Harris County Project')+'&url='+encodeURIComponent('https://the-harris-county-project.vercel.app'),'_blank');}
 </script>
 
 </body>
