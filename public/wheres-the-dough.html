@@ -352,6 +352,45 @@
     background:var(--cream); letter-spacing:.06em; text-transform:uppercase;
   }
 
+  /* ── Overview (war chest + level breakdown) ── */
+  .overview-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+  @media(max-width:640px){ .overview-grid { grid-template-columns:1fr; } }
+
+  .ov-card { background:var(--ivory); border:1px solid var(--linen); border-radius:4px; padding:16px 18px; }
+  .ov-title { font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--slate); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .ov-title::after { content:''; flex:1; height:1px; background:var(--linen); }
+
+  /* party comparison */
+  .party-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .party-row:last-child { margin-bottom:0; }
+  .pr-label { width:36px; font-size:10px; font-weight:700; letter-spacing:.06em; flex-shrink:0; }
+  .pr-label.d { color:var(--navy); }
+  .pr-label.r { color:var(--crimson); }
+  .pr-bar-wrap { flex:1; height:16px; background:var(--linen); border-radius:2px; overflow:hidden; }
+  .pr-bar { height:100%; border-radius:2px; transition:width .6s cubic-bezier(.4,0,.2,1); }
+  .pr-bar.d { background:var(--navy); }
+  .pr-bar.r { background:var(--crimson); }
+  .pr-amt { width:80px; text-align:right; font-family:'DM Mono',monospace; font-size:12px; font-weight:500; flex-shrink:0; }
+  .pr-amt.d { color:var(--navy); }
+  .pr-amt.r { color:var(--crimson); }
+  .pr-count { width:40px; text-align:right; font-size:10px; color:var(--slate); flex-shrink:0; }
+
+  /* level bars */
+  .lv-row { display:flex; align-items:center; gap:10px; margin-bottom:7px; }
+  .lv-row:last-child { margin-bottom:0; }
+  .lv-label { width:80px; font-size:10px; color:var(--slate); flex-shrink:0; letter-spacing:.02em; }
+  .lv-bar-wrap { flex:1; height:10px; background:var(--linen); border-radius:2px; overflow:hidden; }
+  .lv-bar { height:100%; border-radius:2px; background:var(--turf-2); transition:width .6s cubic-bezier(.4,0,.2,1); }
+  .lv-amt { width:70px; text-align:right; font-family:'DM Mono',monospace; font-size:11px; color:var(--turf); flex-shrink:0; }
+
+  /* spend section */
+  .spend-row { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .spend-row:last-child { margin-bottom:0; }
+  .spend-name { width:140px; font-size:11px; color:var(--charcoal); flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .spend-bar-wrap { flex:1; height:10px; background:var(--linen); border-radius:2px; overflow:hidden; }
+  .spend-bar { height:100%; border-radius:2px; background:#c06060; transition:width .6s cubic-bezier(.4,0,.2,1); }
+  .spend-amt { width:70px; text-align:right; font-family:'DM Mono',monospace; font-size:11px; color:#8a3a3a; flex-shrink:0; }
+
   /* ── Site footer ── */
   .site-footer { margin-top:2rem; text-align:center; }
   .site-footer-sig { font-family:'Pacifico',cursive; font-size:16px; color:var(--slate); }
@@ -435,6 +474,8 @@
       <option value="county">County</option>
       <option value="judges">Judges</option>
       <option value="jps">Justice of the Peace</option>
+      <option value="parties">Party Committees</option>
+      <option value="clubs">Political Clubs</option>
     </select>
     <input class="search-input" id="search-input" type="text" placeholder="Search name or office…" oninput="onFilterChange()">
   </div>
@@ -454,6 +495,7 @@
   <button onclick="fetchFECData()" id="fec-btn">Refresh Federal Data</button>
   <span id="fec-status" style="font-size:11px;color:var(--text-3)">Last: Apr 2026</span>
 </div>
+  <div id="overview-wrap"></div>
   <div class="section-label" id="section-label" style="display:none"></div>
   <div id="lb-wrap"></div>
   <div class="site-footer">
@@ -604,6 +646,20 @@ const DATA = [
   { name:'Wanda Adams',           office:'JP PCT 7, Place 1',       level:'jps',      party:'D', cash:0, asOf:'' }, /* file 2026156 */
   { name:'Markia Bordeaux',       office:'JP PCT 7, Place 2',       level:'jps',      party:'D', cash:0, asOf:'', incumbent:true  }, /* file 2026149 */
 
+  /* ── PARTY COMMITTEES & CLUBS ── */
+  /* Level "parties" = official party committees; "clubs" = affiliated political clubs */
+  /* Look up file numbers at ethics.harrisvotes.com / FEC for federal party accounts */
+  { name:'Harris County Democratic Party',    office:'County Party Committee',      level:'parties', party:'D', cash:0, asOf:'' },
+  { name:'Harris County Republican Party',    office:'County Party Committee',      level:'parties', party:'R', cash:0, asOf:'' },
+  { name:'Texas Democratic Party',            office:'State Party Committee',       level:'parties', party:'D', cash:0, asOf:'' },
+  { name:'Texas Republican Party',            office:'State Party Committee',       level:'parties', party:'R', cash:0, asOf:'' },
+  { name:'Houston Area Democrats (HAD)',      office:'Democratic Club',             level:'clubs',   party:'D', cash:0, asOf:'' },
+  { name:'Houston Young Democrats',           office:'Democratic Club',             level:'clubs',   party:'D', cash:0, asOf:'' },
+  { name:'Harris County Democratic Women',    office:'Democratic Club',             level:'clubs',   party:'D', cash:0, asOf:'' },
+  { name:'East Harris County Dems',           office:'Democratic Club',             level:'clubs',   party:'D', cash:0, asOf:'' },
+  { name:'West Houston Republicans',          office:'Republican Club',             level:'clubs',   party:'R', cash:0, asOf:'' },
+  { name:'Houston Young Republicans',         office:'Republican Club',             level:'clubs',   party:'R', cash:0, asOf:'' },
+
   /* ── CHALLENGERS — from Jan/Feb 2026 Harris County filings ── */
   /* County Judge runoffs — May 26 */
   { name:'Letitia Plummer',        office:'County Judge (D runoff)',  level:'county',   party:'D', cash:0,       asOf:'', incumbent:false },
@@ -633,7 +689,8 @@ const DATA = [
 
 const LEVEL_LABELS = {
   federal:'Federal', state:'State', houston:'City of Houston',
-  county:'County', judges:'Judges', jps:'Justice of the Peace'
+  county:'County', judges:'Judges', jps:'Justice of the Peace',
+  parties:'Party Committees', clubs:'Political Clubs'
 };
 
 let activeLevel = 'summary';
@@ -923,6 +980,7 @@ function renderPending(pending) {
 }
 
 function render() {
+  renderOverview();
   const all     = getFiltered();
   const withData = getSorted(all.filter(o => o.cash > 0));
   const pending  = all.filter(o => o.cash === 0).sort((a,b) => a.name.localeCompare(b.name));
@@ -962,6 +1020,89 @@ function render() {
       ${latest ? `<div class="lb-footer"><span>&#128197; Most recent data: ${latest}</span><span>${ranked.length} shown</span></div>` : ''}
     </div>` +
     renderPending(pending);
+}
+
+/* ── Overview: party war chest + level breakdown + top spenders ── */
+function renderOverview() {
+  const ow = document.getElementById('overview-wrap');
+  if (!ow) return;
+
+  // Only show in summary (all-levels) view
+  if (activeLevel !== 'summary') { ow.innerHTML = ''; return; }
+
+  const withCash = DATA.filter(d => d.cash > 0);
+
+  // Party totals
+  const demCash = withCash.filter(d => d.party === 'D').reduce((s, d) => s + d.cash, 0);
+  const repCash = withCash.filter(d => d.party === 'R').reduce((s, d) => s + d.cash, 0);
+  const demCount = withCash.filter(d => d.party === 'D').length;
+  const repCount = withCash.filter(d => d.party === 'R').length;
+  const partyMax = Math.max(demCash, repCash, 1);
+
+  const partyHtml = `
+    <div class="ov-card">
+      <div class="ov-title">Party War Chests</div>
+      <div class="party-row">
+        <span class="pr-label d">DEM</span>
+        <div class="pr-bar-wrap"><div class="pr-bar d" style="width:${Math.round(demCash/partyMax*100)}%"></div></div>
+        <span class="pr-amt d">${formatCash(demCash)}</span>
+        <span class="pr-count">${demCount} w/ data</span>
+      </div>
+      <div class="party-row">
+        <span class="pr-label r">REP</span>
+        <div class="pr-bar-wrap"><div class="pr-bar r" style="width:${Math.round(repCash/partyMax*100)}%"></div></div>
+        <span class="pr-amt r">${formatCash(repCash)}</span>
+        <span class="pr-count">${repCount} w/ data</span>
+      </div>
+      <div style="margin-top:12px;font-size:10px;color:var(--slate);line-height:1.5">
+        ${demCash > repCash
+          ? `Democrats hold <strong style="color:var(--navy)">${formatCash(demCash - repCash)}</strong> more in aggregate cash on hand.`
+          : repCash > demCash
+          ? `Republicans hold <strong style="color:var(--crimson)">${formatCash(repCash - demCash)}</strong> more in aggregate cash on hand.`
+          : `Both parties at parity.`}
+        <span style="color:var(--linen-2);margin-left:6px">Excludes entries with no data filed.</span>
+      </div>
+    </div>`;
+
+  // Level breakdown
+  const levels = ['federal','state','houston','county','judges','jps'];
+  const lvTotals = levels.map(lv => ({
+    lv, label: LEVEL_LABELS[lv],
+    cash: withCash.filter(d => d.level === lv).reduce((s, d) => s + d.cash, 0)
+  })).filter(x => x.cash > 0).sort((a, b) => b.cash - a.cash);
+  const lvMax = lvTotals[0]?.cash || 1;
+
+  const levelHtml = `
+    <div class="ov-card">
+      <div class="ov-title">Cash by Level</div>
+      ${lvTotals.map(x => `
+        <div class="lv-row">
+          <span class="lv-label">${x.label}</span>
+          <div class="lv-bar-wrap"><div class="lv-bar" style="width:${Math.round(x.cash/lvMax*100)}%"></div></div>
+          <span class="lv-amt">${formatCash(x.cash)}</span>
+        </div>`).join('')}
+    </div>`;
+
+  // Top 10 spenders
+  const spenders = DATA.filter(d => (d.spent || 0) > 0)
+    .sort((a, b) => (b.spent || 0) - (a.spent || 0))
+    .slice(0, 10);
+  const spendMax = spenders[0]?.spent || 1;
+
+  const spendHtml = spenders.length ? `
+    <div class="ov-card" style="grid-column:1/-1">
+      <div class="ov-title">Top 10 Spenders This Cycle</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 24px">
+        ${spenders.map(o => `
+          <div class="spend-row">
+            <span class="spend-name" title="${o.name}">${o.name.split(' ').pop()}</span>
+            <div class="spend-bar-wrap"><div class="spend-bar" style="width:${Math.round((o.spent||0)/spendMax*100)}%"></div></div>
+            <span class="spend-amt">${formatCash(o.spent||0)}</span>
+          </div>`).join('')}
+      </div>
+    </div>` : '';
+
+  ow.innerHTML = `<div class="overview-grid">${partyHtml}${levelHtml}</div>${spendHtml ? `<div class="overview-grid">${spendHtml}</div>` : ''}`;
 }
 
 function onFilterChange() {
