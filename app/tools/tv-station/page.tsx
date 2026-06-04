@@ -9,7 +9,7 @@ interface Stream {
   livePageUrl: string;
   scheduleUrl: string;
   schedule: string;
-  category: "County" | "City" | "HISD" | "State";
+  category: "County" | "City" | "HISD" | "State" | "Federal";
   live?: boolean;
 }
 
@@ -65,6 +65,26 @@ const STREAMS: Stream[] = [
     category: "State",
   },
   {
+    id: "us-house",
+    name: "U.S. House of Representatives",
+    body: "119th Congress",
+    embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCoJFNsHfkjKJHevx6dv_jPQ",
+    livePageUrl: "https://live.house.gov",
+    scheduleUrl: "https://www.house.gov/legislative-activity",
+    schedule: "When Congress is in session — Mon–Fri",
+    category: "Federal",
+  },
+  {
+    id: "us-senate",
+    name: "U.S. Senate",
+    body: "119th Congress",
+    embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCddiUEpeqJcYeBxX1IVBKvQ",
+    livePageUrl: "https://www.senate.gov/general/streaming.htm",
+    scheduleUrl: "https://www.senate.gov/legislative/LIS/floor_activity/CurrentActivity.htm",
+    schedule: "When Congress is in session — Mon–Fri",
+    category: "Federal",
+  },
+  {
     id: "hcphd",
     name: "Harris County Public Health",
     body: "HCPH Advisory Board",
@@ -81,9 +101,10 @@ const CATEGORY_COLOR = {
   City:   { bg: "bg-emerald-100", text: "text-emerald-700", border: "border-emerald-200" },
   HISD:   { bg: "bg-rose-100", text: "text-rose-700", border: "border-rose-200" },
   State:  { bg: "bg-violet-100", text: "text-violet-700", border: "border-violet-200" },
+  Federal: { bg: "bg-sky-100", text: "text-sky-700", border: "border-sky-200" },
 };
 
-const CATEGORIES = ["All", "County", "City", "HISD", "State"] as const;
+const CATEGORIES = ["All", "County", "City", "HISD", "State", "Federal"] as const;
 type Category = (typeof CATEGORIES)[number];
 
 export default function TVStation() {
@@ -223,7 +244,7 @@ export default function TVStation() {
                     rel="noopener noreferrer"
                     className="text-xs font-semibold text-white/60 hover:text-white transition-colors underline underline-offset-2"
                   >
-                    Open in YouTube →
+                    Watch Live →
                   </a>
                   <a
                     href={activeStream.scheduleUrl}
