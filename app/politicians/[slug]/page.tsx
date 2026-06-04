@@ -105,9 +105,9 @@ export default function PoliticianProfile() {
 
           <div className="flex items-end gap-6 pb-0">
             {/* Avatar */}
-            <div className="w-20 h-20 md:w-28 md:h-28 rounded-2xl bg-white/20 flex items-center justify-center text-3xl md:text-4xl font-bold text-white flex-shrink-0 overflow-hidden ring-2 ring-white/20 mb-6">
+            <div className="w-24 h-24 md:w-36 md:h-36 rounded-2xl bg-white/20 flex items-center justify-center text-3xl md:text-4xl font-bold text-white flex-shrink-0 overflow-hidden ring-2 ring-white/20 mb-6">
               {pol.photo
-                ? <img src={pol.photo} alt={pol.name} className="w-full h-full object-cover" onError={(e) => { const t = e.target as HTMLImageElement; t.style.display="none"; }} />
+                ? <img src={pol.photo} alt={pol.name} className="w-full h-full object-cover object-top" onError={(e) => { const t = e.target as HTMLImageElement; t.style.display="none"; }} />
                 : <span style={{ fontFamily: "var(--font-playfair), serif" }}>{pol.name.split(" ").map(n => n[0]).slice(0,2).join("")}</span>
               }
             </div>
