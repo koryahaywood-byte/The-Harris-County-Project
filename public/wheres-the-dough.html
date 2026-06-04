@@ -737,7 +737,7 @@ function cashStory(o, allData) {
       } else if (maxPeer > 0 && o.cash < maxPeer * 0.5) {
         peerNote = ' Trails the frontrunner ' + (maxPeer/o.cash).toFixed(1) + '-to-1 in this race.';
       } else if (maxPeer > 0 && Math.abs(o.cash - maxPeer) < maxPeer * 0.15) {
-        peerNote = ' Running neck and neck with ' + topPeer.name.split(' ').pop() + '. Money alone won't decide this one.';
+        peerNote = ' Running neck and neck with ' + topPeer.name.split(' ').pop() + ". Money alone won’t decide this one.";
       }
     }
   }

@@ -406,7 +406,7 @@ export default function BillTracker() {
           {selectedRep && (
             <div className="hidden lg:block w-96 flex-shrink-0">
               <div className="bg-white border border-[var(--border)] rounded-xl overflow-hidden sticky top-4" style={{ maxHeight: "80vh" }}>
-                <DrillDown />
+                {DrillDown()}
               </div>
             </div>
           )}
@@ -423,7 +423,7 @@ export default function BillTracker() {
           <div className="fixed inset-0 bg-black/40 z-40 lg:hidden" onClick={() => setSheetOpen(false)} />
           <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white rounded-t-2xl shadow-2xl flex flex-col" style={{ maxHeight: "80dvh" }}>
             <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mt-3 mb-1 flex-shrink-0" />
-            <DrillDown />
+            {DrillDown()}
           </div>
         </>
       )}
