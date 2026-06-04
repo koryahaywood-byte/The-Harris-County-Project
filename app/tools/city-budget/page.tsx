@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import ShareButton from "@/components/ShareButton";
 
 /* ─── Houston City Budget FY2025 (~$6.48B) ──────────────────────────────── */
 interface BudgetLine {
@@ -112,6 +113,12 @@ export default function CityBudget() {
           <p className="text-white/70 text-sm max-w-lg">
             Where does Houston spend its $6.5 billion? Department-by-department breakdown plus each council member&apos;s district discretionary spending. FY2025.
           </p>
+          <ShareButton
+            toolName="Houston City Budget"
+            section="Money"
+            description="Where does Houston spend its $6.5B? Department breakdown + council member discretionary spending. FY2025."
+            stats={[{ label: "Total Budget", value: "$6.5B" }, { label: "Fiscal Year", value: "FY2025" }]}
+          />
           <div className="mt-5 flex gap-4 flex-wrap">
             <div className="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-3">
               <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">Total Budget</p>

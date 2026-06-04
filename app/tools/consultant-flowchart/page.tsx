@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import ShareButton from "@/components/ShareButton";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 type ConsultantRole =
@@ -258,6 +259,11 @@ export default function ConsultantFlowchart() {
           <p className="text-white/70 text-sm max-w-lg">
             Who are the political consultants behind Harris County campaigns? Click a consultant to see every client they&apos;ve worked for.
           </p>
+          <ShareButton
+            toolName="Consultant Flowchart"
+            section="Elections"
+            description="Who are the political consultants behind Harris County campaigns? Every consultant-to-client connection, mapped."
+          />
         </div>
       </div>
 

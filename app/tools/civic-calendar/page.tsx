@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import ShareButton from "@/components/ShareButton";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 type Category = "All" | "Elections" | "Legislature" | "Courts" | "City Council" | "HISD";
@@ -554,6 +555,11 @@ export default function CivicCalendar() {
           <p className="text-white/70 text-sm max-w-lg">
             Election days, voter registration deadlines, commissioners court, city council, HISD board — every date that matters. Add any event directly to your calendar.
           </p>
+          <ShareButton
+            toolName="Civic Calendar"
+            section="Community"
+            description="Election days, voter registration deadlines, commissioners court, city council, HISD board — every date that matters."
+          />
 
           {/* Next up pill */}
           {upcoming[0] && (

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import ShareButton from "@/components/ShareButton";
 
 type Rep = {
   name: string;
@@ -244,6 +245,12 @@ export default function BillTracker() {
           <p className="text-white/70 text-sm max-w-xl">
             Bills filed, passed committee, passed chamber, and signed into law — for every Harris County state rep. 89th Texas Legislature.
           </p>
+          <ShareButton
+            toolName="Bill Tracker"
+            section="Legislative"
+            description="Bills filed, passed committee, passed chamber, and signed into law — every Harris County state rep. 89th TX Legislature."
+            stats={[{ label: "Reps Tracked", value: "23" }, { label: "Legislature", value: "89th TX" }]}
+          />
           {preloading && <p className="text-sky-300/60 text-xs mt-3 animate-pulse">Loading counts for all reps…</p>}
         </div>
       </div>

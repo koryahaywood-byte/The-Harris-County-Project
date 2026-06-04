@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import ShareButton from "@/components/ShareButton";
 
 /* ─── Budget Data — Harris County FY2025 (~$2.84B) ──────────────────────── */
 interface BudgetLine {
@@ -153,6 +154,12 @@ export default function CountyBudget() {
           <p className="text-white/70 text-sm max-w-lg">
             How Harris County spends your tax dollars — department by department. Plus the top contractors getting county contracts. FY2025.
           </p>
+          <ShareButton
+            toolName="Harris County Budget"
+            section="Money"
+            description="How Harris County spends your tax dollars — department by department. FY2025."
+            stats={[{ label: "Total Budget", value: "$2.84B" }, { label: "Departments", value: "15" }]}
+          />
           <div className="mt-5 flex gap-4">
             <div className="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-3">
               <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">Total Budget</p>

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import ShareButton from "@/components/ShareButton";
 
 type Rep = {
   name: string;
@@ -338,6 +339,12 @@ export default function CongressionalBillTracker() {
           <p className="text-white/70 text-sm max-w-lg">
             What did Harris County&apos;s U.S. Representatives and Senators actually pass in Congress? Ranked by bills signed into law — 119th Congress (2025–2027).
           </p>
+          <ShareButton
+            toolName="Congressional Bill Tracker"
+            section="Legislative"
+            description="What did Harris County's US reps actually pass in Congress? Ranked by bills signed into law — 119th Congress."
+            stats={[{ label: "Congress", value: "119th" }, { label: "Reps Tracked", value: "7" }]}
+          />
         </div>
       </div>
 

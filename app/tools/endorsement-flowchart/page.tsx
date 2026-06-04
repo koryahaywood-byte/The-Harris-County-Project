@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import ShareButton from "@/components/ShareButton";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 interface Endorsement {
@@ -243,6 +244,11 @@ export default function EndorsementFlowchart() {
           <p className="text-white/70 text-sm max-w-lg">
             Who endorsed whom in Harris County races? Click any endorser on the left to highlight which candidates they backed.
           </p>
+          <ShareButton
+            toolName="Endorsement Flowchart"
+            section="Elections"
+            description="Who endorsed whom in Harris County races? Every endorser-to-candidate connection, mapped."
+          />
         </div>
       </div>
 

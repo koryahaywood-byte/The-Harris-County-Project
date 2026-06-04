@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import ShareButton from "@/components/ShareButton";
 
 /* ─── TIRZ Data — City of Houston ───────────────────────────────────────── */
 interface TIRZ {
@@ -118,6 +119,12 @@ export default function TIRZTool() {
           <p className="text-white/70 text-sm max-w-lg mb-4">
             Tax Increment Reinvestment Zones redirect a portion of local property tax growth back into a defined area for infrastructure and development. Houston has {TIRZ_DATA.length}+ active TIRZs.
           </p>
+          <ShareButton
+            toolName="TIRZ Tool"
+            section="Money"
+            description="Tax Increment Reinvestment Zones — Houston's 16 active TIRZs mapped and ranked by revenue captured."
+            stats={[{ label: "Active TIRZs", value: "16" }, { label: "Focus", value: "Houston" }]}
+          />
           <div className="flex gap-4 flex-wrap">
             <div className="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-3">
               <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">Total Tax Increment (shown)</p>
