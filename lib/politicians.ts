@@ -358,13 +358,15 @@ export const POLITICIANS: Politician[] = [
     website: "https://pct3.harriscountytx.gov",
   },
   {
-    slug: "jack-cagle",
-    name: "Jack Cagle",
+    slug: "lesley-briones",
+    name: "Lesley Briones",
     office: "Harris County Commissioner",
     district: "Precinct 4",
     chamber: "County",
-    party: "R",
+    party: "D",
     salary: 182474,
+    photo: "/politicians/lesley-briones.webp",
     website: "https://pct4.harriscountytx.gov",
+    twitter: "LesleyBriones",
   },
 ];
