@@ -151,7 +151,7 @@ export default function Home() {
           </div>
 
           {/* ── LEGISLATIVE ── */}
-          <div>
+          <div className="mb-20">
             <SectionLabel>Legislative</SectionLabel>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <ToolCard
@@ -164,10 +164,33 @@ export default function Home() {
               />
               <ToolCard
                 tool={{
+                  href: "/tools/congressional-bills",
+                  name: "Congressional Bill Tracker",
+                  description: "What did Harris County's U.S. reps and senators actually pass in Congress? Ranked by bills signed into federal law — 119th Congress.",
+                  status: "live",
+                }}
+              />
+            </div>
+          </div>
+
+          {/* ── COMMUNITY ── */}
+          <div>
+            <SectionLabel>Community</SectionLabel>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <ToolCard
+                tool={{
                   href: "/tools/civic-calendar",
                   name: "Civic Calendar",
-                  description: "Election dates, filing deadlines, commissioners court meetings — every date that matters. Add any event straight to your phone's calendar.",
-                  status: "coming",
+                  description: "Election dates, filing deadlines, commissioners court meetings, HISD board — every date that matters. Add any event straight to your phone's calendar.",
+                  status: "live",
+                }}
+              />
+              <ToolCard
+                tool={{
+                  href: "/contact",
+                  name: "Contact & Feedback",
+                  description: "Spot a data error? Have an idea for a new tool? Report a missing civic date? We want to hear from you.",
+                  status: "live",
                 }}
               />
             </div>

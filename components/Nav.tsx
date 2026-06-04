@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const isToolPage = pathname.startsWith("/tools/");
+  const isToolPage = pathname.startsWith("/tools/") || pathname.startsWith("/contact");
 
   // ── Tool pages: slim static bar (no float, no overlap with iframe) ──
   if (isToolPage) {
@@ -43,6 +43,7 @@ export default function Nav() {
               <Link href="/#toolbox" className="text-white/70 hover:text-white transition-colors duration-300">Toolbox</Link>
               <Link href="/politicians" className="text-white/70 hover:text-white transition-colors duration-300">Officials</Link>
               <Link href="/#about" className="text-white/70 hover:text-white transition-colors duration-300">About</Link>
+              <Link href="/contact" className="text-white/70 hover:text-white transition-colors duration-300">Contact</Link>
             </nav>
 
             <button
@@ -68,10 +69,20 @@ export default function Nav() {
             style={{ fontFamily: "var(--font-playfair), serif" }}>
             Toolbox
           </Link>
+          <Link href="/politicians" onClick={() => setOpen(false)}
+            className="text-3xl font-bold opacity-0 animate-[fadeUp_0.4s_0.15s_ease_forwards]"
+            style={{ fontFamily: "var(--font-playfair), serif" }}>
+            Officials
+          </Link>
           <Link href="/#about" onClick={() => setOpen(false)}
             className="text-3xl font-bold opacity-0 animate-[fadeUp_0.4s_0.2s_ease_forwards]"
             style={{ fontFamily: "var(--font-playfair), serif" }}>
             About
+          </Link>
+          <Link href="/contact" onClick={() => setOpen(false)}
+            className="text-3xl font-bold opacity-0 animate-[fadeUp_0.4s_0.25s_ease_forwards]"
+            style={{ fontFamily: "var(--font-playfair), serif" }}>
+            Contact
           </Link>
         </div>
       )}
