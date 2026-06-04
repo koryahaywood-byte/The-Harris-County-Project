@@ -237,7 +237,7 @@ export default function BillTracker() {
       <div className="bg-[var(--accent)] text-white px-6 py-10 relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_80%_50%,rgba(37,99,168,0.4),transparent)]" />
         <div className="max-w-6xl mx-auto relative z-10">
-          <p className="text-sky-300/80 text-[11px] font-bold uppercase tracking-[0.25em] mb-3">📋 Legislative</p>
+          <p className="text-sky-300/80 text-[11px] font-bold uppercase tracking-[0.25em] mb-3">Legislative</p>
           <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-2" style={{ fontFamily: "var(--font-playfair), serif" }}>
             Bill Tracker
           </h1>
@@ -311,7 +311,7 @@ export default function BillTracker() {
                     <button key={rep.name} onClick={() => loadBills(rep)} className={`w-full text-left px-4 py-4 transition-colors active:bg-gray-100 ${isSelected ? "bg-blue-50" : ""}`}>
                       <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-3 min-w-0">
-                          <span className="text-base flex-shrink-0">{i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : <span className="text-xs text-[var(--muted)] font-mono w-5 text-center inline-block">{i+1}</span>}</span>
+                          <span className="text-xs text-[var(--muted)] font-mono w-5 text-center flex-shrink-0">{i + 1}</span>
                           <div className="min-w-0">
                             <div className="font-semibold text-[var(--accent)] text-sm truncate">{rep.name}</div>
                             <div className="flex gap-2 mt-0.5">
@@ -365,7 +365,7 @@ export default function BillTracker() {
                         <tr key={rep.name} onClick={() => loadBills(rep)}
                           className={`border-b border-[var(--border)] cursor-pointer transition-colors ${isSelected ? "bg-blue-50" : "hover:bg-gray-50"}`}>
                           <td className="px-4 py-3 text-[var(--muted)] text-xs font-mono w-8">
-                            {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : i + 1}
+                            {i + 1}
                           </td>
                           <td className="px-4 py-3">
                             <div className="font-semibold text-[var(--accent)] text-sm">{rep.name}</div>

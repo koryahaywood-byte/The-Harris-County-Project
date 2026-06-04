@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="flex-1">{children}</main>
         <footer className="border-t border-[var(--border)] py-10 px-6 text-center text-[var(--muted)]">
           <p style={{ fontFamily: "var(--font-dancing), cursive", fontSize: "1.8rem", color: "var(--accent)" }}>
-            Built By Wood
+            Built With Wood
           </p>
         </footer>
       </body>

@@ -125,13 +125,12 @@ export default function Home() {
 
           {/* ── MONEY ── */}
           <div className="mb-20">
-            <SectionLabel>💰 Money</SectionLabel>
-            {/* Full-width hero card for Where Is the Dough */}
+            <SectionLabel>Money</SectionLabel>
             <ToolCard
               large
               tool={{
                 href: "/tools/where-is-the-dough",
-                name: "Where Is the Dough",
+                name: "Where the Money Resides",
                 description: "Follow the money. See who's funding Harris County politicians, how much they've raised, where it comes from, and where it goes. Donor lists, spending graphs, party and club bank totals.",
                 status: "live",
               }}
@@ -140,7 +139,7 @@ export default function Home() {
 
           {/* ── ELECTIONS ── */}
           <div className="mb-20">
-            <SectionLabel>🗳️ Elections</SectionLabel>
+            <SectionLabel>Elections</SectionLabel>
             <ToolCard
               tool={{
                 href: "/tools/heat-check",
@@ -153,7 +152,7 @@ export default function Home() {
 
           {/* ── LEGISLATIVE ── */}
           <div>
-            <SectionLabel>📋 Legislative</SectionLabel>
+            <SectionLabel>Legislative</SectionLabel>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <ToolCard
                 tool={{

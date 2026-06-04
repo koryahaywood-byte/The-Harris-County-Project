@@ -6,7 +6,7 @@ export default function CivicCalendar() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_80%_50%,rgba(37,99,168,0.4),transparent)]" />
         <div className="max-w-6xl mx-auto relative z-10">
           <p className="text-sky-300/80 text-[11px] font-bold uppercase tracking-[0.25em] mb-3">
-            📋 Legislative
+            Legislative
           </p>
           <h1
             className="text-3xl md:text-4xl font-bold leading-tight mb-2"
@@ -25,8 +25,8 @@ export default function CivicCalendar() {
         {/* Double-bezel card */}
         <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px] max-w-md mx-auto">
           <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-12 flex flex-col items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-[var(--accent)]/8 flex items-center justify-center text-3xl">
-              📅
+            <div className="w-16 h-16 rounded-2xl bg-[var(--accent)]/8 flex items-center justify-center">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
             </div>
             <h2
               className="text-xl font-bold text-[var(--accent)]"

@@ -4,7 +4,7 @@ export default function WhereIsTheDough() {
       <iframe
         src="/wheres-the-dough.html"
         className="flex-1 w-full border-0"
-        title="Where Is the Dough — Harris County Campaign Finance"
+        title="Where the Money Resides — Harris County Campaign Finance"
         allowFullScreen
       />
     </div>

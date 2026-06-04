@@ -36,7 +36,7 @@ export default function PoliticiansIndex() {
                     <div className="rounded-[1.15rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-5 flex items-center gap-4">
                       <div className="w-12 h-12 rounded-full bg-[var(--accent)]/10 flex items-center justify-center text-xl flex-shrink-0 overflow-hidden">
                         {p.photo
-                          ? <img src={p.photo} alt={p.name} className="w-full h-full object-cover" />
+                          ? <img src={p.photo} alt={p.name} className="w-full h-full object-cover" onError={(e) => { const t = e.target as HTMLImageElement; t.style.display="none"; }} />
                           : <span>{p.name.split(" ").map(n => n[0]).slice(0,2).join("")}</span>
                         }
                       </div>

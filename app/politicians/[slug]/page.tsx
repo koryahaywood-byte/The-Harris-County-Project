@@ -107,7 +107,7 @@ export default function PoliticianProfile() {
             {/* Avatar */}
             <div className="w-20 h-20 md:w-28 md:h-28 rounded-2xl bg-white/20 flex items-center justify-center text-3xl md:text-4xl font-bold text-white flex-shrink-0 overflow-hidden ring-2 ring-white/20 mb-6">
               {pol.photo
-                ? <img src={pol.photo} alt={pol.name} className="w-full h-full object-cover" />
+                ? <img src={pol.photo} alt={pol.name} className="w-full h-full object-cover" onError={(e) => { const t = e.target as HTMLImageElement; t.style.display="none"; }} />
                 : <span style={{ fontFamily: "var(--font-playfair), serif" }}>{pol.name.split(" ").map(n => n[0]).slice(0,2).join("")}</span>
               }
             </div>
@@ -283,7 +283,7 @@ export default function PoliticianProfile() {
           <div className="py-8 text-center">
             <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px] max-w-sm mx-auto">
               <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-10 flex flex-col items-center gap-3">
-                <div className="text-3xl">💰</div>
+                <div className="w-10 h-10 rounded-xl bg-[var(--accent)]/8 flex items-center justify-center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v2m0 8v2M9 9h4.5a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3H15"/></svg></div>
                 <h3 className="font-bold text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair), serif" }}>
                   Campaign Finance Coming Soon
                 </h3>

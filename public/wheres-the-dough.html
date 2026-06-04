@@ -5,17 +5,17 @@
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a7f37'/><text y='.9em' font-size='75' x='12'>💰</text></svg>">
   <!-- Open Graph / Social Sharing -->
-  <meta property="og:title" content="Where's the Dough? · Harris County Campaign Finance">
+  <meta property="og:title" content="Where the Money Resides · Harris County Campaign Finance">
   <meta property="og:description" content="Cash-on-hand leaderboard for every Harris County elected official and candidate — all levels, both parties. Updated from FEC, TEC & Harris County Clerk filings.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://placehold.co/1200x630/1a7f37/white?text=Where%27s+the+Dough%3F%0AHarris+County+Campaign+Finance">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Where's the Dough? · Harris County">
+  <meta name="twitter:title" content="Where the Money Resides · Harris County">
   <meta name="twitter:description" content="Real-time campaign cash leaderboard — Harris County officials & candidates, all parties.">
   <!-- Theme color -->
   <meta name="theme-color" content="#1a7f37">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Where's the Dough? · Harris County</title>
+  <title>Where the Money Resides · Harris County</title>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
   @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
@@ -416,7 +416,7 @@
     </div>
     <div class="brand-text">
       <span class="brand-eyebrow">Harris County · Campaign Finance &nbsp;<span id="freshness-badge" style="background:rgba(181,137,42,.2);color:var(--gold);padding:2px 6px;border-radius:2px;font-size:8px;font-weight:600;letter-spacing:.04em">FEC: Apr 2026 · State/Local: Jan 2026</span></span>
-      <span class="brand-title">Where's the Dough?</span>
+      <span class="brand-title">Where the Money Resides</span>
     </div>
   </div>
 
@@ -981,7 +981,11 @@ function onPartyChange(btn) {
   render();
 }
 
-window.addEventListener('DOMContentLoaded', render);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', render);
+} else {
+  render();
+}
 
 /* ── Email Gate Logic ── */
 (function initGate() {
