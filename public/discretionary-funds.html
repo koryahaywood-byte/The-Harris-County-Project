@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Discretionary Funds Map — Houston City Council</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',system-ui,sans-serif;background:#f5f3ef;color:#1a1a1a;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+#header{display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#1a3a5c;border-bottom:1px solid #1e4a7a;height:50px;flex-shrink:0;gap:10px}
+#logo{display:flex;align-items:center;gap:9px}
+#brand{line-height:1}
+#brand-sub{font-size:9px;font-weight:600;color:rgba(125,211,252,0.75);letter-spacing:.1em;text-transform:uppercase;display:block}
+#brand-name{font-family:'Dancing Script',cursive;font-size:20px;font-weight:700;color:#fff;display:block}
+#header-right{display:flex;align-items:center;gap:8px}
+.filter-btn{font-size:11px;font-weight:600;padding:4px 12px;border:1px solid rgba(255,255,255,0.2);border-radius:20px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.05em}
+.filter-btn.on{background:rgba(125,211,252,0.25);color:#fff;border-color:rgba(125,211,252,0.5)}
+.filter-btn:hover:not(.on){background:rgba(255,255,255,0.15);color:#fff}
+#main{display:flex;flex:1;overflow:hidden;position:relative}
+#map{flex:1}
+#sidebar{width:300px;flex-shrink:0;background:#fff;border-left:1px solid #e5e3df;display:flex;flex-direction:column;overflow:hidden}
+#sb-head{padding:10px 14px;border-bottom:1px solid #e5e3df;background:#fafaf8;flex-shrink:0}
+#sb-head h3{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#888}
+#sb-body{overflow-y:auto;flex:1;padding:10px}
+.cm-card{border-radius:14px;border:1px solid #e5e3df;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:all .2s;background:#fff}
+.cm-card:hover{border-color:#2563a8;box-shadow:0 2px 10px rgba(26,58,92,.1)}
+.cm-card.hl{border-color:#1a3a5c;background:#eff6ff;box-shadow:0 2px 12px rgba(26,58,92,.15)}
+.cm-district{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:2px}
+.cm-name{font-size:13px;font-weight:700;color:#1a3a5c;margin-bottom:4px}
+.cm-amount{font-size:18px;font-weight:700;color:#1a3a5c;font-variant-numeric:tabular-nums}
+.cm-party{display:inline-block;width:18px;height:18px;border-radius:50%;font-size:9px;font-weight:700;color:#fff;text-align:center;line-height:18px;margin-left:6px;vertical-align:middle}
+.party-d{background:#1d4ed8}
+.party-r{background:#b91c1c}
+.cm-project{font-size:11px;color:#666;margin-top:4px;line-height:1.4}
+.proj-row{display:flex;align-items:flex-start;gap:6px;margin-top:5px;padding-top:5px;border-top:1px solid #f0eeea}
+.proj-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.proj-name{font-size:11px;font-weight:600;color:#1a1a1a}
+.proj-amt{font-size:10px;color:#2563a8;font-weight:700;white-space:nowrap}
+#tip{position:absolute;z-index:2000;background:rgba(10,28,70,.94);color:#fff;padding:9px 13px;border-radius:8px;font-size:12px;pointer-events:none;display:none;max-width:220px;box-shadow:0 4px 18px rgba(0,0,0,.3)}
+#footer{padding:5px 14px;background:#f5f3ef;border-top:1px solid #ddd9d0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+#fcredit{font-family:'Dancing Script',cursive;font-size:18px;color:#1a3a5c}
+#fsource{font-size:9px;color:#aaa;letter-spacing:.03em}
+.leaflet-control-zoom{border:1px solid #ddd !important;border-radius:6px !important;overflow:hidden}
+@media(max-width:640px){
+  #sidebar{display:none}
+  body{overflow:auto}
+  #main{flex-direction:column}
+  #map{height:60vh}
+}
+</style>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+</head>
+<body>
+<div id="header">
+  <div id="logo">
+    <div id="brand">
+      <span id="brand-sub">Houston City Council · FY2025</span>
+      <span id="brand-name">Discretionary Funds</span>
+    </div>
+  </div>
+  <div id="header-right">
+    <button class="filter-btn on" data-p="all">All</button>
+    <button class="filter-btn" data-p="D">Democrat</button>
+    <button class="filter-btn" data-p="R">Republican</button>
+  </div>
+</div>
+
+<div id="main">
+  <div id="map"></div>
+  <div id="tip"></div>
+  <div id="sidebar">
+    <div id="sb-head"><h3>District Council Members</h3></div>
+    <div id="sb-body" id="cmlist"></div>
+  </div>
+</div>
+
+<div id="footer">
+  <span id="fsource">Source: City of Houston Finance Dept · District Improvement Funds FY2025</span>
+  <span id="fcredit">The Harris County Project</span>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+
+const MEMBERS = [
+  { district:"A", name:"Amy Peck",              party:"R", lat:29.862, lng:-95.561, amountM:1.2,
+    projects:[{name:"Addicks reservoir road repairs",amtK:450},{name:"Eldridge Pkwy lighting",amtK:280},{name:"Bear Creek park trail",amtK:180}]},
+  { district:"B", name:"Tarsha Jackson",        party:"D", lat:29.812, lng:-95.318, amountM:1.2,
+    projects:[{name:"Kashmere Gardens drainage",amtK:500},{name:"Lockwood sidewalks",amtK:220},{name:"Denver Harbor park",amtK:165}]},
+  { district:"C", name:"Abbie Kamin",           party:"D", lat:29.776, lng:-95.407, amountM:1.2,
+    projects:[{name:"Washington Ave streetscaping",amtK:420},{name:"Memorial Dr sidewalks",amtK:310},{name:"Heights trail connector",amtK:215}]},
+  { district:"D", name:"Carolyn Evans-Shabazz", party:"D", lat:29.726, lng:-95.345, amountM:1.2,
+    projects:[{name:"Third Ward crosswalks",amtK:380},{name:"MLK Blvd improvements",amtK:290},{name:"Emancipation Park path",amtK:200}]},
+  { district:"E", name:"Fred Flickinger",       party:"R", lat:29.601, lng:-95.104, amountM:1.2,
+    projects:[{name:"Clear Lake parks",amtK:470},{name:"Bay Area Blvd repaving",amtK:310},{name:"Friendswood Dr drainage",amtK:175}]},
+  { district:"F", name:"Tiffany Thomas",        party:"D", lat:29.736, lng:-95.521, amountM:1.2,
+    projects:[{name:"Westheimer mobility upgrades",amtK:520},{name:"Briargrove sidewalks",amtK:245},{name:"Westwood park",amtK:185}]},
+  { district:"G", name:"Mary Nan Huffman",      party:"R", lat:29.692, lng:-95.442, amountM:1.2,
+    projects:[{name:"Meyerland drainage",amtK:490},{name:"S. Braeswood trail",amtK:260},{name:"Fondren sidewalks",amtK:190}]},
+  { district:"H", name:"Joaquin Martinez",      party:"D", lat:29.800, lng:-95.355, amountM:1.2,
+    projects:[{name:"Near Northside pedestrian safety",amtK:440},{name:"Irvington Ave repaving",amtK:300},{name:"Moody Park lighting",amtK:175}]},
+  { district:"I", name:"Mario Castillo",        party:"D", lat:29.744, lng:-95.322, amountM:1.2,
+    projects:[{name:"East End bike lanes",amtK:510},{name:"Navigation Blvd improvements",amtK:285},{name:"Lawndale Ave drainage",amtK:195}]},
+  { district:"J", name:"Edward Pollard",        party:"D", lat:29.700, lng:-95.530, amountM:1.2,
+    projects:[{name:"Sharpstown park upgrades",amtK:425},{name:"Bellaire Blvd sidewalks",amtK:280},{name:"Gulfton rec center",amtK:235}]},
+  { district:"K", name:"Martha Castex-Tatum",   party:"D", lat:29.715, lng:-95.603, amountM:1.2,
+    projects:[{name:"Alief drainage improvements",amtK:480},{name:"Westpark connector trail",amtK:270},{name:"Braeburn park",amtK:210}]},
+  { district:"AL1", name:"Mike Knox",            party:"R", lat:29.755, lng:-95.380, amountM:0.8,
+    projects:[{name:"Citywide safety infrastructure",amtK:350},{name:"Security camera program",amtK:280}]},
+  { district:"AL2", name:"Willie Davis",         party:"D", lat:29.750, lng:-95.365, amountM:0.8,
+    projects:[{name:"Minority biz development",amtK:330},{name:"Workforce training center",amtK:255}]},
+  { district:"AL3", name:"Twila Carter",         party:"D", lat:29.745, lng:-95.390, amountM:0.8,
+    projects:[{name:"Senior services/transit",amtK:350},{name:"ADA ramp program",amtK:225}]},
+  { district:"AL4", name:"Letitia Plummer",      party:"D", lat:29.740, lng:-95.375, amountM:0.8,
+    projects:[{name:"Youth workforce program",amtK:340},{name:"Community center upgrades",amtK:250}]},
+  { district:"AL5", name:"Sallie Alcorn",        party:"D", lat:29.760, lng:-95.355, amountM:0.8,
+    projects:[{name:"Resilience infrastructure",amtK:360},{name:"Green space program",amtK:220}]},
+];
+
+const map = L.map('map').setView([29.740, -95.420], 10);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+  attribution:'&copy; <a href="https://carto.com/">CARTO</a>',maxZoom:18
+}).addTo(map);
+
+let curFilter = 'all';
+let hlDistrict = null;
+const markers = [];
+
+function markerIcon(party, highlighted){
+  const color = party==='D' ? '#1d4ed8' : '#b91c1c';
+  const size = highlighted ? 20 : 14;
+  return L.divIcon({
+    html:`<div style="width:${size}px;height:${size}px;border-radius:50%;background:${color};border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.25);transition:all .3s"></div>`,
+    className:'',iconSize:[size,size],iconAnchor:[size/2,size/2]
+  });
+}
+
+function renderSidebar(filter){
+  const sb = document.getElementById('sb-body');
+  const visible = MEMBERS.filter(m=> filter==='all' || m.party===filter);
+  sb.innerHTML = visible.map(m=>`
+    <div class="cm-card${hlDistrict===m.district?' hl':''}" onclick="hlMember('${m.district}')">
+      <div class="cm-district">District ${m.district}</div>
+      <div class="cm-name">${m.name}<span class="cm-party party-${m.party.toLowerCase()}">${m.party}</span></div>
+      <div class="cm-amount">$${m.amountM.toFixed(1)}M</div>
+      ${m.projects.map(p=>`
+        <div class="proj-row">
+          <div class="proj-dot" style="background:${m.party==='D'?'#1d4ed8':'#b91c1c'}"></div>
+          <div><div class="proj-name">${p.name}</div></div>
+          <div class="proj-amt" style="margin-left:auto;flex-shrink:0">$${(p.amtK/1000).toFixed(1)}M</div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function buildMarkers(filter){
+  markers.forEach(m=>map.removeLayer(m));
+  markers.length=0;
+  const tip = document.getElementById('tip');
+
+  MEMBERS.filter(m=>filter==='all'||m.party===filter).forEach(m=>{
+    const mk = L.marker([m.lat, m.lng], {icon: markerIcon(m.party, hlDistrict===m.district)}).addTo(map);
+    mk.on('mouseover', function(e){
+      tip.style.display='block';
+      tip.innerHTML=`<div style="font-size:9px;opacity:.6;margin-bottom:2px;text-transform:uppercase;letter-spacing:.08em">District ${m.district}</div><div style="font-weight:700;margin-bottom:4px">${m.name}</div><div style="font-size:14px;font-weight:700">$${m.amountM.toFixed(1)}M</div><div style="font-size:10px;opacity:.7;margin-top:3px">${m.projects.length} active projects</div>`;
+      tip.style.left=(e.originalEvent.clientX+12)+'px';
+      tip.style.top=(e.originalEvent.clientY-10)+'px';
+    });
+    mk.on('mousemove', function(e){
+      tip.style.left=(e.originalEvent.clientX+12)+'px';
+      tip.style.top=(e.originalEvent.clientY-10)+'px';
+    });
+    mk.on('mouseout',()=>tip.style.display='none');
+    mk.on('click',()=>hlMember(m.district));
+    markers.push(mk);
+  });
+}
+
+window.hlMember = function(district){
+  hlDistrict = hlDistrict===district ? null : district;
+  buildMarkers(curFilter);
+  renderSidebar(curFilter);
+  if(hlDistrict){
+    const m = MEMBERS.find(x=>x.district===district);
+    if(m) map.flyTo([m.lat,m.lng],13,{duration:0.8});
+    setTimeout(()=>{
+      const el=document.querySelector('.cm-card.hl');
+      if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'});
+    },100);
+  }
+};
+
+document.querySelectorAll('.filter-btn').forEach(b=>{
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('on'));
+    this.classList.add('on');
+    curFilter=this.dataset.p;
+    buildMarkers(curFilter);
+    renderSidebar(curFilter);
+  });
+});
+
+buildMarkers(curFilter);
+renderSidebar(curFilter);
+});
+</script>
+</body>
+</html>

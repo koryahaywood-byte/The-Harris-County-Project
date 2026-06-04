@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Infrastructure Funding Map — Harris County</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',system-ui,sans-serif;background:#f5f3ef;color:#1a1a1a;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+#header{display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#1a3a5c;border-bottom:1px solid #1e4a7a;min-height:50px;flex-shrink:0;gap:10px;flex-wrap:wrap;padding-top:6px;padding-bottom:6px}
+#brand{line-height:1}
+#brand-sub{font-size:9px;font-weight:600;color:rgba(125,211,252,0.75);letter-spacing:.1em;text-transform:uppercase;display:block}
+#brand-name{font-family:'Dancing Script',cursive;font-size:20px;font-weight:700;color:#fff;display:block}
+#controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.fbtn{font-size:11px;font-weight:600;padding:4px 12px;border:1px solid rgba(255,255,255,0.2);border-radius:20px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.05em}
+.fbtn.on{background:rgba(125,211,252,0.25);color:#fff;border-color:rgba(125,211,252,0.5)}
+.fbtn:hover:not(.on){background:rgba(255,255,255,0.15);color:#fff}
+#main{display:flex;flex:1;overflow:hidden;position:relative}
+#map{flex:1}
+#sidebar{width:310px;flex-shrink:0;background:#fff;border-left:1px solid #e5e3df;display:flex;flex-direction:column;overflow:hidden}
+#sb-head{padding:10px 14px;border-bottom:1px solid #e5e3df;background:#fafaf8;flex-shrink:0}
+#sb-head h3{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#888}
+#sb-total{font-size:22px;font-weight:700;color:#1a3a5c;margin-top:3px}
+#sb-body{overflow-y:auto;flex:1}
+.proj-card{border-bottom:1px solid #f0eeea;padding:10px 14px;cursor:pointer;transition:background .15s}
+.proj-card:hover{background:#f8f7f5}
+.proj-card.hl{background:#eff6ff;border-left:3px solid #1a3a5c}
+.proj-cat{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.proj-name{font-size:12.5px;font-weight:700;color:#1a3a5c;line-height:1.3;margin-bottom:3px}
+.proj-meta{display:flex;gap:8px;align-items:center;font-size:10.5px;color:#888}
+.proj-amt{font-size:14px;font-weight:700;color:#1a3a5c;font-variant-numeric:tabular-nums}
+.proj-source{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;border:1px solid}
+#legend{position:absolute;bottom:34px;left:10px;z-index:1000;background:rgba(255,255,255,.96);border:1px solid #ddd;border-radius:8px;padding:9px 13px;min-width:160px}
+.ltitle{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:#888;margin-bottom:6px}
+.lrow{display:flex;align-items:center;gap:7px;margin-bottom:4px;font-size:11.5px}
+.ldot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+#tip{position:absolute;z-index:2000;background:rgba(10,28,70,.94);color:#fff;padding:9px 13px;border-radius:8px;font-size:12px;pointer-events:none;display:none;max-width:240px;box-shadow:0 4px 18px rgba(0,0,0,.3)}
+#footer{padding:5px 14px;background:#f5f3ef;border-top:1px solid #ddd9d0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+#fcredit{font-family:'Dancing Script',cursive;font-size:18px;color:#1a3a5c}
+#fsource{font-size:9px;color:#aaa;letter-spacing:.03em}
+.leaflet-control-zoom{border:1px solid #ddd !important;border-radius:6px !important;overflow:hidden}
+@media(max-width:640px){
+  #sidebar{display:none}
+  #map{height:60vh}
+  #main{flex-direction:column;overflow:visible}
+  body{overflow:auto}
+}
+</style>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+</head>
+<body>
+<div id="header">
+  <div id="brand">
+    <span id="brand-sub">Harris County · Federal &amp; State Grants</span>
+    <span id="brand-name">Infrastructure Funding Map</span>
+  </div>
+  <div id="controls">
+    <button class="fbtn on" data-cat="all">All</button>
+    <button class="fbtn" data-cat="Flood Control">Flood</button>
+    <button class="fbtn" data-cat="Transportation">Transit</button>
+    <button class="fbtn" data-cat="Housing">Housing</button>
+    <button class="fbtn" data-cat="Health">Health</button>
+    <button class="fbtn" data-cat="Broadband">Broadband</button>
+  </div>
+</div>
+
+<div id="main">
+  <div id="map"></div>
+  <div id="legend">
+    <div class="ltitle">Funding Source</div>
+    <div class="lrow"><div class="ldot" style="background:#0891b2"></div>Federal (IIJA)</div>
+    <div class="lrow"><div class="ldot" style="background:#7c3aed"></div>Federal (CDBG/HUD)</div>
+    <div class="lrow"><div class="ldot" style="background:#16a34a"></div>Federal (EPA/FEMA)</div>
+    <div class="lrow"><div class="ldot" style="background:#d97706"></div>State (TxDOT/GLO)</div>
+    <div class="lrow"><div class="ldot" style="background:#dc2626"></div>Multiple Sources</div>
+  </div>
+  <div id="tip"></div>
+  <div id="sidebar">
+    <div id="sb-head">
+      <h3>Funded Projects</h3>
+      <div id="sb-total">$0M</div>
+    </div>
+    <div id="sb-body"></div>
+  </div>
+</div>
+
+<div id="footer">
+  <span id="fsource">Sources: IIJA, HUD CDBG, FEMA, EPA, TxDOT, GLO · 2021–2025</span>
+  <span id="fcredit">The Harris County Project</span>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+
+const SOURCE_COLOR = {
+  'IIJA':       '#0891b2',
+  'HUD/CDBG':   '#7c3aed',
+  'EPA/FEMA':   '#16a34a',
+  'TxDOT/GLO':  '#d97706',
+  'Multiple':   '#dc2626',
+};
+
+const CAT_COLOR = {
+  'Flood Control':   '#0891b2',
+  'Transportation':  '#d97706',
+  'Housing':         '#7c3aed',
+  'Health':          '#16a34a',
+  'Broadband':       '#0f766e',
+  'Environment':     '#16a34a',
+};
+
+const PROJECTS = [
+  {id:1,  name:"Brays Bayou Flood Mitigation Phase 3",           cat:"Flood Control",   source:"IIJA",      amtM:185, lat:29.698,lng:-95.421, desc:"Channel widening and detention basin expansion protecting 4,200 homes"},
+  {id:2,  name:"Greens Bayou Regional Greenway",                 cat:"Flood Control",   source:"IIJA",      amtM:142, lat:29.832,lng:-95.279, desc:"11-mile trail and flood corridor connecting NE Harris County"},
+  {id:3,  name:"IH-10 Katy Freeway BRT Lanes",                   cat:"Transportation",  source:"IIJA",      amtM:210, lat:29.766,lng:-95.541, desc:"Bus Rapid Transit and managed lanes on I-10 west corridor"},
+  {id:4,  name:"US-59/69 Southwest Freeway Reconstruction",       cat:"Transportation",  source:"TxDOT/GLO", amtM:390, lat:29.700,lng:-95.450, desc:"Mainlane reconstruction and interchange improvements SW Houston"},
+  {id:5,  name:"Hardy Toll Road Extension",                       cat:"Transportation",  source:"Multiple",  amtM:178, lat:29.880,lng:-95.360, desc:"4-mile extension connecting Hardy Toll to SH-99 Grand Pkwy"},
+  {id:6,  name:"Third Ward Affordable Housing",                   cat:"Housing",         source:"HUD/CDBG",  amtM: 48, lat:29.723,lng:-95.350, desc:"320 mixed-income units and community land trust in Third Ward"},
+  {id:7,  name:"Kashmere Gardens Housing Revitalization",         cat:"Housing",         source:"HUD/CDBG",  amtM: 35, lat:29.810,lng:-95.320, desc:"186 affordable rental units and homebuyer assistance program"},
+  {id:8,  name:"Sims Bayou Detention Basin",                      cat:"Flood Control",   source:"EPA/FEMA",  amtM: 96, lat:29.663,lng:-95.380, desc:"560-acre regional detention facility reducing downstream flooding"},
+  {id:9,  name:"Buffalo Bayou Park Expansion",                    cat:"Flood Control",   source:"Multiple",  amtM: 72, lat:29.756,lng:-95.395, desc:"Extending park greenspace and trail system 2 miles westward"},
+  {id:10, name:"Alief-Westwood Broadband Infrastructure",         cat:"Broadband",       source:"IIJA",      amtM: 28, lat:29.700,lng:-95.555, desc:"Fiber-optic last-mile broadband for 14,000 underserved households"},
+  {id:11, name:"North Houston Highway Improvement",               cat:"Transportation",  source:"TxDOT/GLO", amtM:295, lat:29.800,lng:-95.373, desc:"I-45/I-10/US-59 downtown reroute and I-45 North rebuild"},
+  {id:12, name:"San Jacinto River Levee Improvements",            cat:"Flood Control",   source:"EPA/FEMA",  amtM:134, lat:29.950,lng:-95.100, desc:"Levee certification and armoring protecting Lake Houston area"},
+  {id:13, name:"Southeast Harris County Health Campus",           cat:"Health",          source:"HUD/CDBG",  amtM: 62, lat:29.660,lng:-95.230, desc:"Community health center serving 85,000 uninsured residents"},
+  {id:14, name:"Northside Village Drainage & Streets",            cat:"Flood Control",   source:"Multiple",  amtM: 55, lat:29.808,lng:-95.378, desc:"Comprehensive drainage rebuild for 6 neighborhoods in NE Houston"},
+  {id:15, name:"Port of Houston Channel Deepening",               cat:"Transportation",  source:"IIJA",      amtM:420, lat:29.726,lng:-95.049, desc:"Deepening Houston Ship Channel to 46 feet for larger vessels"},
+  {id:16, name:"Gulfton Neighborhood Health Hub",                 cat:"Health",          source:"HUD/CDBG",  amtM: 41, lat:29.698,lng:-95.509, desc:"Multilingual health services for 100,000+ residents in Gulfton"},
+  {id:17, name:"East End Light Rail Extension",                   cat:"Transportation",  source:"Multiple",  amtM:167, lat:29.750,lng:-95.310, desc:"MetroRail Purple Line extension 3.8 miles through East End"},
+  {id:18, name:"Hunting Bayou Stormwater Project",                cat:"Flood Control",   source:"EPA/FEMA",  amtM: 88, lat:29.788,lng:-95.318, desc:"Stormwater tunnels and bayou improvements protecting NE corridor"},
+  {id:19, name:"Kingwood Rural Broadband",                        cat:"Broadband",       source:"IIJA",      amtM: 19, lat:30.040,lng:-95.180, desc:"Fixed wireless and fiber to 8,000 homes in outer Kingwood area"},
+  {id:20, name:"Southwest Multi-Modal Corridor",                  cat:"Transportation",  source:"TxDOT/GLO", amtM:145, lat:29.680,lng:-95.590, desc:"New bus rapid transit and protected bike lanes on Westpark corridor"},
+];
+
+const map = L.map('map').setView([29.760, -95.390], 10);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+  attribution:'&copy; <a href="https://carto.com/">CARTO</a>',maxZoom:18
+}).addTo(map);
+
+let curCat = 'all';
+let hlId = null;
+const markerMap = {};
+
+function getColor(p){ return CAT_COLOR[p.cat] || '#6b7280'; }
+
+function markerIcon(p, hl){
+  const color = getColor(p);
+  const r = Math.max(8, Math.min(22, Math.sqrt(p.amtM) * 1.8));
+  const border = hl ? 3 : 2;
+  return L.circleMarker([p.lat,p.lng],{
+    radius: r, fillColor: color, fillOpacity: hl?0.9:0.7,
+    color:'#fff', weight: border
+  });
+}
+
+function fmt(m){ return m>=1000?`$${(m/1000).toFixed(1)}B`:`$${m}M`; }
+
+function visible(){ return PROJECTS.filter(p=>curCat==='all'||p.cat===curCat); }
+
+function updateTotal(){
+  const total = visible().reduce((s,p)=>s+p.amtM,0);
+  document.getElementById('sb-total').textContent = fmt(total);
+}
+
+function renderSidebar(){
+  const body = document.getElementById('sb-body');
+  const list = visible().sort((a,b)=>b.amtM-a.amtM);
+  body.innerHTML = list.map(p=>{
+    const color = getColor(p);
+    return `<div class="proj-card${hlId===p.id?' hl':''}" onclick="hlProject(${p.id})">
+      <div class="proj-cat" style="color:${color}">${p.cat}</div>
+      <div class="proj-name">${p.name}</div>
+      <div class="proj-meta">
+        <span class="proj-amt">${fmt(p.amtM)}</span>
+        <span class="proj-source" style="color:${SOURCE_COLOR[p.source]||'#888'};border-color:${SOURCE_COLOR[p.source]||'#ddd'};background:${SOURCE_COLOR[p.source]||'#888'}15">${p.source}</span>
+      </div>
+    </div>`;
+  }).join('');
+  updateTotal();
+}
+
+function buildMarkers(){
+  Object.values(markerMap).forEach(m=>map.removeLayer(m));
+  Object.keys(markerMap).forEach(k=>delete markerMap[k]);
+  const tip = document.getElementById('tip');
+
+  visible().forEach(p=>{
+    const mk = markerIcon(p, hlId===p.id).addTo(map);
+    mk.on('mouseover', function(e){
+      tip.style.display='block';
+      tip.innerHTML=`<div style="font-size:9px;opacity:.6;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">${p.cat} · ${p.source}</div><div style="font-weight:700;margin-bottom:4px;line-height:1.3">${p.name}</div><div style="font-size:15px;font-weight:700;margin-bottom:3px">${fmt(p.amtM)}</div><div style="font-size:10px;opacity:.7;line-height:1.4">${p.desc}</div>`;
+      tip.style.left=(e.originalEvent.clientX+12)+'px';
+      tip.style.top=(e.originalEvent.clientY-10)+'px';
+    });
+    mk.on('mousemove',function(e){
+      tip.style.left=(e.originalEvent.clientX+12)+'px';
+      tip.style.top=(e.originalEvent.clientY-10)+'px';
+    });
+    mk.on('mouseout',()=>tip.style.display='none');
+    mk.on('click',()=>hlProject(p.id));
+    markerMap[p.id]=mk;
+  });
+}
+
+window.hlProject = function(id){
+  hlId = hlId===id ? null : id;
+  buildMarkers();
+  renderSidebar();
+  if(hlId){
+    const p=PROJECTS.find(x=>x.id===id);
+    if(p) map.flyTo([p.lat,p.lng],13,{duration:0.8});
+    setTimeout(()=>{
+      const el=document.querySelector('.proj-card.hl');
+      if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'});
+    },100);
+  }
+};
+
+document.querySelectorAll('.fbtn').forEach(b=>{
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('on'));
+    this.classList.add('on');
+    curCat=this.dataset.cat;
+    hlId=null;
+    buildMarkers();
+    renderSidebar();
+  });
+});
+
+buildMarkers();
+renderSidebar();
+});
+</script>
+</body>
+</html>

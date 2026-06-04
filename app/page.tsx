@@ -126,15 +126,53 @@ export default function Home() {
           {/* ── MONEY ── */}
           <div className="mb-20">
             <SectionLabel>Money</SectionLabel>
-            <ToolCard
-              large
-              tool={{
-                href: "/tools/where-is-the-dough",
-                name: "Where the Money Resides",
-                description: "Follow the money. See who's funding Harris County politicians, how much they've raised, where it comes from, and where it goes. Donor lists, spending graphs, party and club bank totals.",
-                status: "live",
-              }}
-            />
+            <div className="mb-4">
+              <ToolCard
+                large
+                tool={{
+                  href: "/tools/where-is-the-dough",
+                  name: "Where the Money Resides",
+                  description: "Follow the money. See who's funding Harris County politicians, how much they've raised, where it comes from, and where it goes. Donor lists, spending graphs, party and club bank totals.",
+                  status: "live",
+                }}
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <ToolCard
+                tool={{
+                  href: "/tools/county-budget",
+                  name: "Harris County Budget",
+                  description: "How Harris County spends your tax dollars — department by department. Plus the top contractors winning county contracts. FY2025.",
+                  status: "live",
+                }}
+              />
+              <ToolCard
+                tool={{
+                  href: "/tools/city-budget",
+                  name: "Houston City Budget",
+                  description: "Where does Houston spend its $6.5 billion? Department breakdown, YoY changes, and each council member's discretionary district funds. FY2025.",
+                  status: "live",
+                }}
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <ToolCard
+                tool={{
+                  href: "/tools/tirz",
+                  name: "TIRZ Tool",
+                  description: "Houston has 27+ Tax Increment Reinvestment Zones redirecting property tax growth. See which neighborhoods have them, how much they collect, and what projects they fund.",
+                  status: "live",
+                }}
+              />
+              <ToolCard
+                tool={{
+                  href: "/tools/infrastructure-funding",
+                  name: "Infrastructure Funding Map",
+                  description: "Where is federal and state infrastructure money landing in Harris County? IIJA, FEMA, HUD, TxDOT — mapped by project.",
+                  status: "live",
+                }}
+              />
+            </div>
           </div>
 
           {/* ── ELECTIONS ── */}
@@ -194,15 +232,37 @@ export default function Home() {
             </div>
           </div>
 
+          {/* ── MEDIA ── */}
+          <div className="mb-20">
+            <SectionLabel>Media</SectionLabel>
+            <ToolCard
+              large
+              tool={{
+                href: "/tools/tv-station",
+                name: "TV Station",
+                description: "Watch Harris County Commissioners Court, Houston City Council, HISD Board, and the Texas Legislature live — all in one place. Streams from official public channels.",
+                status: "live",
+              }}
+            />
+          </div>
+
           {/* ── COMMUNITY ── */}
           <div>
             <SectionLabel>Community</SectionLabel>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <ToolCard
                 tool={{
                   href: "/tools/civic-calendar",
                   name: "Civic Calendar",
                   description: "Election dates, filing deadlines, commissioners court meetings, HISD board — every date that matters. Add any event straight to your phone's calendar.",
+                  status: "live",
+                }}
+              />
+              <ToolCard
+                tool={{
+                  href: "/tools/discretionary-funds",
+                  name: "Discretionary Funds Map",
+                  description: "How is each Houston City Council member spending their district improvement funds? Projects mapped by location across all 11 districts and 5 at-large seats.",
                   status: "live",
                 }}
               />
