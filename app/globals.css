@@ -10,12 +10,71 @@
   --card: #ffffff;
 }
 
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  line-height: 1.6;
 }
 
-/* Smooth scroll */
-html {
-  scroll-behavior: smooth;
+/* Selection */
+::selection {
+  background: #1a3a5c;
+  color: #f5f3ef;
 }
+
+/* Focus rings */
+:focus-visible {
+  outline: 2px solid #2563a8;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Scroll-reveal animation */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.animate-in {
+  opacity: 0;
+}
+.animate-in.visible {
+  animation: fadeUp 0.7s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+/* Stagger children */
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 80ms; }
+.stagger > *:nth-child(3) { animation-delay: 160ms; }
+.stagger > *:nth-child(4) { animation-delay: 240ms; }
+.stagger > *:nth-child(5) { animation-delay: 320ms; }
+.stagger > *:nth-child(6) { animation-delay: 400ms; }
+.stagger > *:nth-child(n+7) { animation-delay: 480ms; }
+
+/* Smooth image rendering */
+img {
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* Scrollbar polish */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ddd9d0; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #1a3a5c40; }
+

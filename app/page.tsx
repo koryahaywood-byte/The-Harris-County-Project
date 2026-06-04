@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ScrollReveal from "@/components/ScrollReveal";
 
 type Tool = {
   href: string;
@@ -53,10 +54,13 @@ function ToolCard({ tool, large }: { tool: Tool; large?: boolean }) {
 // ── Section label ─────────────────────────────────────────────────────────
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-5">
-      <span className="block w-6 h-px bg-[var(--muted)]/40" />
-      {children}
-    </span>
+    <div className="flex items-center gap-3 mb-6">
+      <span className="block w-8 h-px bg-[var(--accent)]/25" />
+      <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--accent)]/50">
+        {children}
+      </span>
+      <span className="flex-1 h-px bg-[var(--border)]" />
+    </div>
   );
 }
 
@@ -65,17 +69,19 @@ export default function Home() {
     <div className="overflow-x-hidden">
 
       {/* ── HERO ─────────────────────────────────────────────────────── */}
-      <section className="bg-[var(--accent)] text-white min-h-[92dvh] flex flex-col justify-center px-6 py-24 md:py-32 relative overflow-hidden">
-        {/* Subtle radial wash */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_60%_40%,rgba(37,99,168,0.35),transparent)]" />
+      <section className="bg-[var(--accent)] text-white min-h-[94dvh] flex flex-col justify-center px-6 py-24 md:py-32 relative overflow-hidden">
+        {/* Multi-layer radial wash */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_60%_40%,rgba(37,99,168,0.4),transparent)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_50%_at_90%_80%,rgba(125,211,252,0.06),transparent)]" />
 
         <div className="max-w-5xl mx-auto w-full relative z-10">
-          <p className="text-sky-300/80 text-[11px] font-bold uppercase tracking-[0.25em] mb-8">
-            The Harris County Project
+          <p className="text-sky-300/70 text-[10px] font-bold uppercase tracking-[0.3em] mb-10 flex items-center gap-2">
+            <span className="w-5 h-px bg-sky-300/40" />
+            Harris County, Texas
           </p>
 
           <h1
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold leading-[1.05] mb-8 max-w-4xl"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.75rem] font-bold leading-[1.03] mb-8 max-w-4xl"
             style={{ fontFamily: "var(--font-playfair), serif" }}
           >
             They stopped
@@ -85,21 +91,41 @@ export default function Home() {
             <span className="text-sky-300">We didn&apos;t.</span>
           </h1>
 
-          <p className="text-white/70 text-lg md:text-xl max-w-xl leading-relaxed mb-12">
+          <p className="text-white/65 text-lg md:text-xl max-w-lg leading-relaxed mb-12" style={{ lineHeight: 1.7 }}>
             A free toolbox for Harris County residents who want to understand
             their government — how it votes, where it spends, and when it decides.
           </p>
 
-          {/* CTA pill */}
+          {/* CTA */}
           <a
             href="#toolbox"
-            className="inline-flex items-center gap-3 bg-sky-300 hover:bg-sky-200 text-[var(--accent)] font-bold rounded-full px-7 py-4 text-sm transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_0_40px_rgba(125,211,252,0.3)] active:scale-[0.98]"
+            className="group inline-flex items-center gap-3 bg-sky-300 hover:bg-sky-200 text-[var(--accent)] font-bold rounded-full px-7 py-4 text-sm transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_0_48px_rgba(125,211,252,0.35)] active:scale-[0.98]"
           >
             Open the Toolbox
-            <span className="inline-flex w-7 h-7 rounded-full bg-[var(--accent)]/15 items-center justify-center text-base translate-y-px">
+            <span className="inline-flex w-7 h-7 rounded-full bg-[var(--accent)]/15 items-center justify-center group-hover:translate-y-0.5 transition-transform duration-500">
               ↓
             </span>
           </a>
+
+          {/* Stat strip */}
+          <div className="mt-16 flex flex-wrap gap-8">
+            {[
+              { value: "18+", label: "Civic tools" },
+              { value: "4.7M", label: "Residents served" },
+              { value: "Free", label: "Always" },
+              { value: "100%", label: "Public data" },
+            ].map(({ value, label }) => (
+              <div key={label}>
+                <p className="text-2xl font-bold text-white leading-none" style={{ fontFamily: "var(--font-playfair), serif" }}>{value}</p>
+                <p className="text-white/45 text-xs font-semibold uppercase tracking-[0.15em] mt-1">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Scroll hint */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 opacity-30">
+          <div className="w-px h-10 bg-white/60" style={{ animation: "pulse 2s ease-in-out infinite" }} />
         </div>
       </section>
 
@@ -108,23 +134,25 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
 
           {/* Toolbox header */}
-          <div className="mb-16 md:mb-20">
+          <ScrollReveal className="mb-16 md:mb-24">
             <SectionLabel>The Toolbox</SectionLabel>
-            <h2
-              className="text-4xl md:text-5xl font-bold text-[var(--accent)] leading-tight max-w-xl"
-              style={{ fontFamily: "var(--font-playfair), serif" }}
-            >
-              Civic tools,
-              <br />
-              all in one place.
-            </h2>
-            <p className="text-[var(--muted)] mt-4 max-w-md leading-relaxed">
-              Built for Harris County. Free, always. All data from public sources.
-            </p>
-          </div>
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+              <h2
+                className="text-4xl md:text-6xl font-bold text-[var(--accent)] leading-[1.05] max-w-xl"
+                style={{ fontFamily: "var(--font-playfair), serif" }}
+              >
+                Civic tools,
+                <br />
+                all in one place.
+              </h2>
+              <p className="text-[var(--muted)] max-w-xs leading-relaxed text-sm md:text-base md:text-right md:pb-2">
+                Built for Harris County.<br />Free, always.<br />All data from public sources.
+              </p>
+            </div>
+          </ScrollReveal>
 
           {/* ── MONEY ── */}
-          <div className="mb-20">
+          <ScrollReveal className="mb-20">
             <SectionLabel>Money</SectionLabel>
             <div className="mb-4">
               <ToolCard
@@ -173,10 +201,10 @@ export default function Home() {
                 }}
               />
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* ── ELECTIONS ── */}
-          <div className="mb-20">
+          <ScrollReveal className="mb-20">
             <SectionLabel>Elections</SectionLabel>
             <div className="mb-4">
               <ToolCard
@@ -207,10 +235,10 @@ export default function Home() {
                 }}
               />
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* ── LEGISLATIVE ── */}
-          <div className="mb-20">
+          <ScrollReveal className="mb-20">
             <SectionLabel>Legislative</SectionLabel>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <ToolCard
@@ -230,10 +258,10 @@ export default function Home() {
                 }}
               />
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* ── MEDIA ── */}
-          <div className="mb-20">
+          <ScrollReveal className="mb-20">
             <SectionLabel>Media</SectionLabel>
             <div className="mb-4">
               <ToolCard
@@ -254,10 +282,10 @@ export default function Home() {
                 status: "live",
               }}
             />
-          </div>
+          </ScrollReveal>
 
           {/* ── COMMUNITY ── */}
-          <div>
+          <ScrollReveal>
             <SectionLabel>Community</SectionLabel>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <ToolCard
@@ -285,28 +313,47 @@ export default function Home() {
                 }}
               />
             </div>
-          </div>
+          </ScrollReveal>
 
         </div>
       </section>
 
       {/* ── ABOUT ──────────────────────────────────────────────────────── */}
-      <section id="about" className="border-t border-[var(--border)] py-28 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <SectionLabel>About</SectionLabel>
+      <section id="about" className="border-t border-[var(--border)] py-28 md:py-40 px-6 bg-[var(--accent)] text-white relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_20%_50%,rgba(37,99,168,0.4),transparent)]" />
+        <ScrollReveal className="max-w-4xl mx-auto relative z-10">
+          <div className="flex items-center gap-3 mb-8">
+            <span className="block w-8 h-px bg-sky-300/30" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-sky-300/60">About</span>
+          </div>
           <h2
-            className="text-3xl md:text-4xl font-bold text-[var(--accent)] mb-6"
+            className="text-4xl md:text-5xl font-bold text-white leading-[1.1] mb-8 max-w-2xl"
             style={{ fontFamily: "var(--font-playfair), serif" }}
           >
             Built for Harris County.
             <br />
-            Free, always.
+            <span className="text-sky-300">Free, always.</span>
           </h2>
-          <p className="text-[var(--muted)] leading-relaxed text-lg max-w-xl mx-auto">
+          <p className="text-white/60 leading-relaxed text-lg max-w-xl" style={{ lineHeight: 1.8 }}>
             This project exists because civic engagement shouldn&apos;t require a lobbyist or
             a law degree. All data comes from public sources. All tools are free to use and share.
           </p>
-        </div>
+          <div className="mt-10 flex flex-wrap gap-4">
+            <Link
+              href="/#toolbox"
+              className="group inline-flex items-center gap-3 bg-sky-300 hover:bg-sky-200 text-[var(--accent)] font-bold rounded-full px-6 py-3.5 text-sm transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_0_36px_rgba(125,211,252,0.3)] active:scale-[0.98]"
+            >
+              Explore the Toolbox
+              <span className="inline-flex w-6 h-6 rounded-full bg-[var(--accent)]/15 items-center justify-center group-hover:translate-x-1 transition-transform duration-500">→</span>
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 text-white/60 hover:text-white font-semibold text-sm transition-colors duration-300 underline underline-offset-4"
+            >
+              Contact us
+            </Link>
+          </div>
+        </ScrollReveal>
       </section>
 
     </div>
