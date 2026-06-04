@@ -61,6 +61,7 @@ const REPS: Rep[] = [
   { name: "Dennis Paul",           district: "HD-129", chamber: "House",  party: "R" },
   { name: "Greg Bonnen",           district: "HD-24",  chamber: "House",  party: "R" },
   { name: "Mike Schofield",        district: "HD-132", chamber: "House",  party: "R" },
+  { name: "Penny Morales Shaw",    district: "HD-148", chamber: "House",  party: "D" },
 ];
 
 async function fetchRepCounts(rep: Rep): Promise<Counts> {
