@@ -1,68 +1,82 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-const tools = [
-  { href: "/tools/heat-check", label: "Heat Check" },
-  { href: "/tools/where-is-the-dough", label: "Where Is the Dough" },
-  { href: "/tools/civic-calendar", label: "Civic Calendar" },
-  { href: "/tools/bill-tracker", label: "Bill Tracker" },
-];
-
 export default function Nav() {
-  const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="bg-[var(--accent)] text-white">
-      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="text-lg font-bold tracking-wide" style={{ fontFamily: "var(--font-playfair), serif" }}>
-          The Harris County Project
-        </Link>
-
-        {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          {tools.map((t) => (
+    <>
+      {/* Floating pill nav */}
+      <header className="fixed top-4 left-0 right-0 z-50 px-4 flex justify-center pointer-events-none">
+        <div className="pointer-events-auto w-full max-w-2xl">
+          <div className="flex items-center justify-between bg-[var(--accent)]/95 backdrop-blur-xl text-white rounded-full px-5 py-3 ring-1 ring-white/10 shadow-[0_4px_32px_rgba(26,58,92,0.35)]">
             <Link
-              key={t.href}
-              href={t.href}
-              className={`transition-colors hover:text-sky-200 ${pathname === t.href ? "text-sky-300 underline underline-offset-4" : "text-white/80"}`}
+              href="/"
+              className="text-sm font-bold tracking-wide leading-none"
+              style={{ fontFamily: "var(--font-playfair), serif" }}
             >
-              {t.label}
+              The Harris County Project
             </Link>
-          ))}
-        </nav>
 
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden text-white p-1"
-          onClick={() => setOpen(!open)}
-          aria-label="Toggle menu"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            {open
-              ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />}
-          </svg>
-        </button>
-      </div>
+            {/* Desktop links */}
+            <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+              <Link href="/#toolbox" className="text-white/70 hover:text-white transition-colors duration-300">
+                Toolbox
+              </Link>
+              <Link href="/#about" className="text-white/70 hover:text-white transition-colors duration-300">
+                About
+              </Link>
+            </nav>
 
-      {/* Mobile menu */}
+            {/* Mobile hamburger */}
+            <button
+              className="md:hidden text-white/80 hover:text-white p-1 relative w-6 h-6 transition-colors"
+              onClick={() => setOpen(!open)}
+              aria-label="Toggle menu"
+            >
+              <span className={`block absolute h-0.5 bg-current w-5 left-0.5 transition-all duration-300 ${open ? "top-2.5 rotate-45" : "top-1.5"}`} />
+              <span className={`block absolute h-0.5 bg-current w-5 left-0.5 top-2.5 transition-all duration-300 ${open ? "opacity-0" : ""}`} />
+              <span className={`block absolute h-0.5 bg-current w-5 left-0.5 transition-all duration-300 ${open ? "top-2.5 -rotate-45" : "top-3.5"}`} />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile overlay menu */}
       {open && (
-        <div className="md:hidden border-t border-white/20 px-6 pb-4 flex flex-col gap-3 text-sm font-medium">
-          {tools.map((t) => (
-            <Link
-              key={t.href}
-              href={t.href}
-              onClick={() => setOpen(false)}
-              className={`py-1 transition-colors hover:text-sky-200 ${pathname === t.href ? "text-sky-300" : "text-white/80"}`}
-            >
-              {t.label}
-            </Link>
-          ))}
+        <div
+          className="fixed inset-0 z-40 bg-[var(--accent)]/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 text-white"
+          onClick={() => setOpen(false)}
+        >
+          <Link
+            href="/#toolbox"
+            onClick={() => setOpen(false)}
+            className="text-3xl font-bold opacity-0 animate-[fadeUp_0.4s_0.1s_ease_forwards]"
+            style={{ fontFamily: "var(--font-playfair), serif" }}
+          >
+            Toolbox
+          </Link>
+          <Link
+            href="/#about"
+            onClick={() => setOpen(false)}
+            className="text-3xl font-bold opacity-0 animate-[fadeUp_0.4s_0.2s_ease_forwards]"
+            style={{ fontFamily: "var(--font-playfair), serif" }}
+          >
+            About
+          </Link>
         </div>
       )}
-    </header>
+
+      {/* Spacer so content isn't hidden behind fixed nav */}
+      <div className="h-16" />
+
+      <style jsx global>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+    </>
   );
 }

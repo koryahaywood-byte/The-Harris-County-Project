@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 const LEGISCAN_KEY = process.env.LEGISCAN_API_KEY || "";
 const BASE = "https://api.legiscan.com/";
-
-// TX 89th Legislature Regular Session 2025
 const TX_SESSION_ID = 2160;
 
 async function legiscan(op: string, params: Record<string, string>) {
@@ -16,9 +14,17 @@ async function legiscan(op: string, params: Record<string, string>) {
   return res.json();
 }
 
+type BillRecord = { bill_id: number; bill_number: string; title: string; last_action: string; last_action_date: string; url: string };
+
+function extractBills(searchresult: Record<string, unknown>): BillRecord[] {
+  return (Object.values(searchresult) as unknown[]).filter(
+    (b): b is BillRecord => typeof b === "object" && b !== null && "bill_id" in b
+  );
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const action = searchParams.get("action") || "leaderboard";
+  const action = searchParams.get("action") || "";
   const repName = searchParams.get("rep") || "";
 
   if (!LEGISCAN_KEY) {
@@ -26,15 +32,49 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    if (action === "search" && repName) {
-      // Search by last name — LegiScan searches bill text/sponsors
+    // Quick summary for leaderboard pre-load — page 1 only, returns total count
+    if (action === "summary" && repName) {
       const lastName = repName.split(" ").pop() || repName;
       const data = await legiscan("getSearch", {
-        state: "TX",
-        query: lastName,
-        session_id: String(TX_SESSION_ID),
+        state: "TX", query: lastName, session_id: String(TX_SESSION_ID), page: "1",
       });
-      return NextResponse.json(data);
+      const sr = data.searchresult || {};
+      const summary = sr.summary || {};
+      const bills = extractBills(sr);
+      return NextResponse.json({ total: summary.count ?? bills.length, page_total: summary.page_total ?? 1, bills });
+    }
+
+    // Full search — fetches all pages for drill-down
+    if (action === "search" && repName) {
+      const lastName = repName.split(" ").pop() || repName;
+
+      // Fetch page 1 to learn page count
+      const first = await legiscan("getSearch", {
+        state: "TX", query: lastName, session_id: String(TX_SESSION_ID), page: "1",
+      });
+      const sr1 = first.searchresult || {};
+      const summary = sr1.summary || {};
+      const pageTotal: number = summary.page_total ?? 1;
+      const totalCount: number = summary.count ?? 0;
+
+      let allBills: BillRecord[] = extractBills(sr1);
+
+      // Fetch remaining pages in parallel (cap at 10 pages = 500 bills)
+      if (pageTotal > 1) {
+        const pages = Array.from({ length: Math.min(pageTotal, 10) - 1 }, (_, i) => i + 2);
+        const rest = await Promise.allSettled(
+          pages.map(p => legiscan("getSearch", {
+            state: "TX", query: lastName, session_id: String(TX_SESSION_ID), page: String(p),
+          }))
+        );
+        for (const r of rest) {
+          if (r.status === "fulfilled") {
+            allBills = allBills.concat(extractBills(r.value.searchresult || {}));
+          }
+        }
+      }
+
+      return NextResponse.json({ bills: allBills, total: totalCount });
     }
 
     if (action === "bill") {
