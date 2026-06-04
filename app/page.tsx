@@ -140,14 +140,35 @@ export default function Home() {
           {/* ── ELECTIONS ── */}
           <div className="mb-20">
             <SectionLabel>Elections</SectionLabel>
-            <ToolCard
-              tool={{
-                href: "/tools/heat-check",
-                name: "Heat Check",
-                description: "See how Harris County voted — precinct by precinct. Pick a race and watch the map light up. Primary, runoff, and general election data.",
-                status: "live",
-              }}
-            />
+            <div className="mb-4">
+              <ToolCard
+                large
+                tool={{
+                  href: "/tools/heat-check",
+                  name: "Heat Check",
+                  description: "See how Harris County voted — precinct by precinct. Pick a race and watch the map light up. Includes charts showing county-wide vote share and margins.",
+                  status: "live",
+                }}
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <ToolCard
+                tool={{
+                  href: "/tools/endorsement-flowchart",
+                  name: "Endorsement Flowchart",
+                  description: "Who endorsed whom in Harris County races? See which unions, orgs, and officials backed which candidates — and who they have in common.",
+                  status: "live",
+                }}
+              />
+              <ToolCard
+                tool={{
+                  href: "/tools/consultant-flowchart",
+                  name: "Consultant Flowchart",
+                  description: "Follow the consultants. See which campaign strategists, pollsters, and ad firms work for which candidates — and how their networks overlap.",
+                  status: "live",
+                }}
+              />
+            </div>
           </div>
 
           {/* ── LEGISLATIVE ── */}

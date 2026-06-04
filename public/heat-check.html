@@ -81,6 +81,27 @@ td.mg{text-align:right}
 #searchbar{padding:6px 9px;border-bottom:1px solid #e5e3df;background:#fafaf8;}
 #precsearch{width:100%;padding:5px 9px;font-size:12px;border:1px solid #ddd;border-radius:5px;outline:none}
 #precsearch:focus{border-color:#1a4fd6}
+/* Sidebar tabs */
+#sbtabs{display:flex;gap:0;border-bottom:1px solid #e5e3df}
+.sbtab{flex:1;padding:7px 6px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#999;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;text-align:center}
+.sbtab.on{color:#1a3a5c;border-bottom-color:#1a3a5c}
+.sbtab:hover:not(.on){color:#444}
+#chartpanel{display:none;padding:12px;overflow-y:auto;flex:1}
+#chartpanel.vis{display:flex;flex-direction:column;gap:14px}
+.cp-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#aaa;margin-bottom:8px}
+.cand-row{margin-bottom:10px}
+.cand-meta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.cand-name{font-size:12px;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.cand-pct{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;color:#1a3a5c}
+.cand-bar-track{height:8px;border-radius:4px;background:#f0eeea;overflow:hidden}
+.cand-bar-fill{height:100%;border-radius:4px;transition:width .6s cubic-bezier(.32,.72,0,1)}
+.cand-votes{font-size:10.5px;color:#888;margin-top:2px;font-variant-numeric:tabular-nums}
+.winner-badge{display:inline-block;font-size:8px;font-weight:700;letter-spacing:.06em;color:#16a34a;background:#dcfce7;border:1px solid #86efac;border-radius:3px;padding:1px 5px;margin-left:5px;vertical-align:middle}
+.cp-divider{height:1px;background:#f0eeea;margin:6px 0}
+.cp-stat{display:flex;justify-content:space-between;align-items:center;font-size:11.5px}
+.cp-stat-label{color:#888}
+.cp-stat-value{font-weight:600;color:#1a3a5c;font-variant-numeric:tabular-nums}
+.cp-runoff-note{font-size:10px;background:#fef3c7;border:1px solid #fcd34d;border-radius:5px;padding:6px 9px;color:#92400e;line-height:1.4}
 </style>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
 </head>
@@ -127,8 +148,15 @@ td.mg{text-align:right}
   <div id="pcount"></div>
   <div id="tip"></div>
   <div id="sidebar">
-    <div id="sbhead"><h3>Precinct Detail</h3><div id="searchbar" style="margin-top:6px"><input id="precsearch" type="text" placeholder="Search precinct #..." oninput="filterPrec(this.value)" style="width:100%;padding:5px 9px;font-size:12px;border:1px solid #ddd;border-radius:5px;outline:none" /></div></div>
+    <div id="sbhead">
+      <div id="sbtabs">
+        <button class="sbtab on" data-tab="precincts" onclick="switchTab('precincts')">Precincts</button>
+        <button class="sbtab" data-tab="charts" onclick="switchTab('charts')">Charts</button>
+      </div>
+      <div id="searchbar"><input id="precsearch" type="text" placeholder="Search precinct #..." oninput="filterPrec(this.value)" /></div>
+    </div>
     <div id="twrap"><div id="tablearea"><div class="empty">Select a race to view results</div></div></div>
+    <div id="chartpanel"><div class="empty">Select a race to view charts</div></div>
   </div>
 </div>
 <div id="footer">
@@ -360,10 +388,94 @@ document.getElementById('catsel').dispatchEvent(new Event('change'));
 document.getElementById('racesel').value='United States Senator';
 loadRace('United States Senator');
 
+// ── Tab switching ──────────────────────────────────────────────────────────
+let curTab='precincts';
+function switchTab(tab){
+  curTab=tab;
+  document.querySelectorAll('.sbtab').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
+  const tw=document.getElementById('twrap');
+  const cp=document.getElementById('chartpanel');
+  const sb=document.getElementById('searchbar');
+  if(tab==='precincts'){
+    tw.style.display=''; cp.classList.remove('vis'); sb.style.display='';
+  } else {
+    tw.style.display='none'; cp.classList.add('vis'); sb.style.display='none';
+    renderCharts();
+  }
+}
+
+// ── Chart rendering ────────────────────────────────────────────────────────
+const CAND_COLORS=['#1d4ed8','#0891b2','#7c3aed','#b45309','#16a34a','#dc2626','#9333ea','#0f766e'];
+
+function renderCharts(){
+  const cp=document.getElementById('chartpanel');
+  if(!curRace||!D[curRace]){cp.innerHTML='<div class="empty">Select a race to view charts</div>';return;}
+  const race=D[curRace];
+  const cands=race.c;
+  const precincts=Object.values(race.p);
+
+  // Compute county-wide totals per candidate
+  const totals=new Array(cands.length).fill(0);
+  let grandTotal=0;
+  for(const prec of precincts){
+    const votes=prec[3];
+    for(let i=0;i<votes.length;i++){totals[i]+=votes[i];grandTotal+=votes[i];}
+  }
+
+  // Sort candidates by votes desc
+  const ranked=cands.map((name,i)=>({name,votes:totals[i],pct:grandTotal>0?totals[i]/grandTotal*100:0,color:CAND_COLORS[i%CAND_COLORS.length]}))
+    .sort((a,b)=>b.votes-a.votes);
+
+  const isRunoff=RUNOFF_RACES.has(curRace);
+  const winner=ranked[0];
+  const margin=ranked.length>1?ranked[0].pct-ranked[1].pct:0;
+
+  let html='';
+
+  // Runoff note
+  if(isRunoff) html+=`<div class="cp-runoff-note">This race went to a runoff. No candidate received more than 50% of the vote.</div>`;
+
+  // Candidate bars
+  html+=`<div><div class="cp-title">County-Wide Vote Share</div>`;
+  for(const c of ranked){
+    html+=`<div class="cand-row">
+      <div class="cand-meta">
+        <span class="cand-name">${c.name}${c===winner?'<span class="winner-badge">WINNER</span>':''}</span>
+        <span class="cand-pct">${c.pct.toFixed(1)}%</span>
+      </div>
+      <div class="cand-bar-track"><div class="cand-bar-fill" style="width:${c.pct}%;background:${c.color}"></div></div>
+      <div class="cand-votes">${c.votes.toLocaleString()} votes</div>
+    </div>`;
+  }
+  html+=`</div>`;
+
+  // Summary stats
+  html+=`<div class="cp-divider"></div>
+  <div><div class="cp-title">Race Summary</div>
+    <div class="cp-stat"><span class="cp-stat-label">Total votes cast</span><span class="cp-stat-value">${grandTotal.toLocaleString()}</span></div>
+    <div class="cp-stat" style="margin-top:5px"><span class="cp-stat-label">Precincts reporting</span><span class="cp-stat-value">${precincts.length}</span></div>
+    <div class="cp-stat" style="margin-top:5px"><span class="cp-stat-label">Winning margin</span><span class="cp-stat-value">${margin.toFixed(1)} pts</span></div>
+    ${ranked.length>1?`<div class="cp-stat" style="margin-top:5px"><span class="cp-stat-label">Runner-up</span><span class="cp-stat-value">${ranked[1].name.split(' ').pop()}</span></div>`:''}
+  </div>`;
+
+  cp.innerHTML=html;
+}
+
+// Re-render charts when race changes and charts tab is active
+const _origLoadRace=loadRace;
+// Wrap loadRace to also refresh charts
+const origLoadRace=window.loadRace||loadRace;
+
 // Expose functions needed by inline HTML handlers
 window.filterPrec=filterPrec;
 window.srt=srt;
 window.hlRow=hlRow;
+window.switchTab=switchTab;
+
+// Hook into race changes to refresh charts panel
+document.getElementById('racesel').addEventListener('change',function(){
+  if(curTab==='charts') setTimeout(renderCharts,50);
+});
 });
 </script>
 </body>
