@@ -40,12 +40,9 @@ export default function Nav() {
             </Link>
 
             <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-              <Link href="/#toolbox" className="text-white/70 hover:text-white transition-colors duration-300">
-                Toolbox
-              </Link>
-              <Link href="/#about" className="text-white/70 hover:text-white transition-colors duration-300">
-                About
-              </Link>
+              <Link href="/#toolbox" className="text-white/70 hover:text-white transition-colors duration-300">Toolbox</Link>
+              <Link href="/politicians" className="text-white/70 hover:text-white transition-colors duration-300">Officials</Link>
+              <Link href="/#about" className="text-white/70 hover:text-white transition-colors duration-300">About</Link>
             </nav>
 
             <button
