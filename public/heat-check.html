@@ -10,21 +10,21 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,sans-serif;background:#f5f4f2;color:#1a1a1a;height:100vh;display:flex;flex-direction:column;overflow:hidden}
-#header{display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#fff;border-bottom:1px solid #e5e3df;height:50px;flex-shrink:0;gap:10px}
+#header{display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#1a3a5c;border-bottom:1px solid #1e4a7a;height:50px;flex-shrink:0;gap:10px}
 #logo{display:flex;align-items:center;gap:9px}
 #logo-mark{width:30px;height:30px;background:linear-gradient(135deg,#1a4fd6,#0d2d6e);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 #logo-mark svg{width:16px;height:16px}
 #brand{line-height:1}
-#brand-sub{font-size:9px;font-weight:500;color:#888;letter-spacing:.08em;text-transform:uppercase;display:block}
-#brand-name{font-family:'Dancing Script',cursive;font-size:21px;font-weight:700;color:#0d2d6e;line-height:1.1;display:block}
+#brand-sub{font-size:9px;font-weight:500;color:rgba(125,211,252,0.75);letter-spacing:.08em;text-transform:uppercase;display:block}
+#brand-name{font-family:'Dancing Script',cursive;font-size:21px;font-weight:700;color:#ffffff;line-height:1.1;display:block}
 #controls{display:flex;align-items:center;gap:7px;flex:1;justify-content:center}
-select{font-size:12.5px;padding:5px 22px 5px 9px;border:1px solid #ddd;border-radius:6px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='5'%3E%3Cpath d='M0 0l5 5 5-5z' fill='%23888'/%3E%3C/svg%3E") no-repeat right 7px center;appearance:none;cursor:pointer;max-width:300px}
-select:focus{outline:none;border-color:#1a4fd6}
-#vtoggle{display:flex;border:1px solid #ddd;border-radius:6px;overflow:hidden;flex-shrink:0}
-.vbtn{padding:5px 11px;font-size:11.5px;font-weight:500;border:none;background:#fff;color:#888;cursor:pointer;transition:all .15s}
-.vbtn+.vbtn{border-left:1px solid #ddd}
-.vbtn.on{background:#0d2d6e;color:#fff}
-.vbtn:hover:not(.on){background:#f0f0f0;color:#1a1a1a}
+select{font-size:12.5px;padding:5px 22px 5px 9px;border:1px solid rgba(255,255,255,0.2);border-radius:6px;background:rgba(255,255,255,0.1) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='5'%3E%3Cpath d='M0 0l5 5 5-5z' fill='%23888'/%3E%3C/svg%3E") no-repeat right 7px center;appearance:none;cursor:pointer;max-width:300px;color:#fff}
+select:focus{outline:none;border-color:rgba(125,211,252,0.8)}
+#vtoggle{display:flex;border:1px solid rgba(255,255,255,0.2);border-radius:6px;overflow:hidden;flex-shrink:0}
+.vbtn{padding:5px 11px;font-size:11.5px;font-weight:500;border:none;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);cursor:pointer;transition:all .15s}
+.vbtn+.vbtn{border-left:1px solid rgba(255,255,255,0.2)}
+.vbtn.on{background:rgba(125,211,252,0.25);color:#fff}
+.vbtn:hover:not(.on){background:rgba(255,255,255,0.15);color:#fff}
 #main{display:flex;flex:1;overflow:hidden;position:relative}
 #map{flex:1}
 #legend{position:absolute;bottom:34px;left:10px;z-index:1000;background:rgba(255,255,255,.96);border:1px solid #ddd;border-radius:8px;padding:9px 13px;min-width:170px;backdrop-filter:blur(4px)}
@@ -49,7 +49,7 @@ select:focus{outline:none;border-color:#1a4fd6}
 table{width:100%;border-collapse:collapse}
 thead th{position:sticky;top:0;background:#fafaf8;padding:6px 9px;text-align:left;font-size:9.5px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #e5e3df;cursor:pointer;white-space:nowrap;user-select:none}
 thead th:hover{color:#333}
-thead th.on{color:#1a4fd6}
+thead th.on{color:#2563a8}
 tbody tr{border-bottom:1px solid #f0eeea;cursor:pointer}
 tbody tr:hover{background:#f8f7f5}
 tbody tr.hl{background:#eff6ff}
@@ -60,8 +60,8 @@ td.mg{text-align:right}
 .mgwrap{display:flex;align-items:center;gap:4px;justify-content:flex-end}
 .mgbar{height:4px;border-radius:2px;min-width:2px}
 .empty{padding:18px;text-align:center;color:#999;font-size:12.5px}
-#footer{display:flex;align-items:center;justify-content:space-between;padding:5px 14px;background:#fff;border-top:1px solid #e5e3df;flex-shrink:0;line-height:1}
-#fcredit{font-family:'Pinyon Script',cursive;font-size:19px;color:#0d2d6e}
+#footer{display:flex;align-items:center;justify-content:space-between;padding:5px 14px;background:#f5f3ef;border-top:1px solid #ddd9d0;flex-shrink:0;line-height:1}
+#fcredit{font-family:'Pinyon Script',cursive;font-size:19px;color:#1a3a5c}
 #femail{font-family:'Alex Brush',cursive;font-size:13px;color:#888;margin-left:12px}
 .leaflet-control-zoom{border:1px solid #ddd !important;border-radius:6px !important;overflow:hidden}
 .leaflet-control-zoom-in,.leaflet-control-zoom-out{width:26px !important;height:26px !important;line-height:26px !important}
@@ -96,8 +96,8 @@ td.mg{text-align:right}
         <path d="M15 10C15 10 13.5 11.5 13.5 12.7C13.5 13.5 14.1 14 15 14C15.9 14 16.5 13.5 16.5 12.7C16.5 11.5 15 10 15 10Z" fill="rgba(255,165,50,0.85)"/>
         <defs>
           <linearGradient id="pingrad" x1="7" y1="3" x2="23" y2="27" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#1a4fd6"/>
-            <stop offset="100%" stop-color="#0d2d6e"/>
+            <stop offset="0%" stop-color="#2563a8"/>
+            <stop offset="100%" stop-color="#1a3a5c"/>
           </linearGradient>
         </defs>
       </svg>
