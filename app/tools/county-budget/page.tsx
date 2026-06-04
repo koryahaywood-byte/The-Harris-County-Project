@@ -2,7 +2,7 @@
 import { useState } from "react";
 import ShareButton from "@/components/ShareButton";
 
-/* ─── Budget Data — Harris County FY2025 (~$2.84B) ──────────────────────── */
+/* ─── Budget Data — Harris County FY2027 Proposed (~$2.84B) ─────────────── */
 interface BudgetLine {
   dept: string;
   category: string;
@@ -175,12 +175,12 @@ export default function CountyBudget() {
             Harris County Budget
           </h1>
           <p className="text-white/70 text-sm max-w-lg">
-            How 4.8 million residents are governed — and what it actually costs. FY2025.
+            How 4.8 million residents are governed — and what it actually costs. FY2027 Proposed.
           </p>
           <ShareButton
             toolName="Harris County Budget"
             section="Money"
-            description="How Harris County spends your tax dollars — department by department. FY2025."
+            description="How Harris County spends your tax dollars — department by department. FY2027 Proposed."
             stats={[{ label: "Total Budget", value: "$2.84B" }, { label: "Departments", value: "15" }]}
           />
           <div className="mt-5 flex flex-wrap gap-3">
@@ -189,8 +189,8 @@ export default function CountyBudget() {
               <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif" }}>${(TOTAL / 1000).toFixed(2)}B</p>
             </div>
             <div className="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-3">
-              <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">FY2025</p>
-              <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif" }}>Adopted</p>
+              <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">FY2027</p>
+              <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif" }}>Proposed</p>
             </div>
             <div className="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-3">
               <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">Residents</p>
@@ -273,7 +273,7 @@ export default function CountyBudget() {
               headline="One in five county dollars goes to the Sheriff."
               body="At $524 million, the Sheriff&rsquo;s Office is the single largest line in the county budget — bigger than all roads, bigger than flood control, bigger than health. That&rsquo;s 18.5% of the entire budget for patrol, detention, court security, and emergency response across a county the size of Rhode Island."
               stat="$524M"
-              statLabel="Sheriff FY2025"
+              statLabel="Sheriff FY2027 Proposed"
               color="#1d4ed8"
               border="#3b82f6"
             />
@@ -293,7 +293,7 @@ export default function CountyBudget() {
               headline="$298 million a year — just to pay for what we already built."
               body="Debt service is the county&rsquo;s third largest expenditure. Every bond passed for roads, flood control, and public buildings comes with an annual interest payment. That $298 million per year funds nothing new — it&rsquo;s the carrying cost of past decisions. As the flood bond draws down, this number will stay elevated through the 2030s."
               stat="$298M"
-              statLabel="Debt service FY2025"
+              statLabel="Debt service FY2027 Proposed"
               color="#6b7280"
               border="#9ca3af"
             />
@@ -327,7 +327,7 @@ export default function CountyBudget() {
                 </svg>
               </button>
             </div>
-            <p className="text-xs text-[var(--muted)] text-center">Source: Harris County FY2025 Adopted Budget. Figures approximate.</p>
+            <p className="text-xs text-[var(--muted)] text-center">Source: Harris County FY2027 Proposed Budget. Figures approximate.</p>
           </div>
         )}
 
@@ -362,7 +362,7 @@ export default function CountyBudget() {
             </div>
 
             <p className="text-xs text-[var(--muted)] mt-4 text-center">
-              Source: Harris County FY2025 Adopted Budget. Figures approximate. YoY = year-over-year change vs FY2024.
+              Source: Harris County FY2027 Proposed Budget. Figures approximate. YoY = year-over-year change vs FY2026.
             </p>
           </div>
         )}
@@ -371,7 +371,7 @@ export default function CountyBudget() {
         {view === "contractors" && (
           <div>
             <p className="text-sm text-[var(--muted)] mb-6">
-              Top vendors by total contract value — Harris County FY2025. Data sourced from Harris County procurement records.
+              Top vendors by total contract value — Harris County FY2027 Proposed. Data sourced from Harris County procurement records.
             </p>
             <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
               <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] overflow-hidden">
@@ -415,7 +415,7 @@ export default function CountyBudget() {
               </div>
             </div>
             <p className="text-xs text-[var(--muted)] mt-4 text-center">
-              Source: Harris County Purchasing Office. FY2025 contract data approximate.{" "}
+              Source: Harris County Purchasing Office. FY2027 proposed contract data approximate.{" "}
               <a href="/contact" className="text-[var(--accent-light)] underline underline-offset-2">Report an error →</a>
             </p>
           </div>
