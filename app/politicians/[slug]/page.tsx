@@ -31,221 +31,259 @@ const STATUS_STYLES: Record<BillStatus, { label: string; bg: string; text: strin
 };
 
 /* ─── Vitruvian Figure SVG ──────────────────────────────────────────────── */
-function VitruvianFigure({
-  slug, photo, party, district, chamber, salary, legiscanName, lawCount, totalBills, loading,
-}: {
-  slug: string; photo?: string; party: string; district: string; chamber: string;
-  salary?: number; legiscanName?: string; lawCount: number; totalBills: number; loading: boolean;
+function VitruvianFigure({ slug, photo, party, legiscanName }: {
+  slug: string; photo?: string; party: string; legiscanName?: string;
 }) {
-  const isD = party === "D";
-  const suit    = isD ? "#1a3a5c" : "#7f1d1d";
-  const suitLt  = isD ? "#2563a8" : "#b91c1c";
-  const accent  = isD ? "#3b82f6" : "#ef4444";
-  const partyLabel = party === "D" ? "DEMOCRAT" : party === "R" ? "REPUBLICAN" : party;
+  const isD   = party === "D";
+  const suit  = isD ? "#1a3a5c" : "#6b1a1a";
+  const suitM = isD ? "#2a4f7a" : "#8b2020";
+  const suitL = isD ? "#3b6fa0" : "#b03030";
+  const accent= isD ? "#3b82f6" : "#ef4444";
 
   return (
     <>
       <style>{`
-        @keyframes vit-breathe { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-2.5px)} }
-        @keyframes vit-arm-l   { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(2deg)} }
-        @keyframes vit-arm-r   { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(-2deg)} }
+        @keyframes vit-breathe { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+        @keyframes vit-arm-l   { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(1.8deg)} }
+        @keyframes vit-arm-r   { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(-1.8deg)} }
         @keyframes vit-ticks   { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-        @keyframes vit-glow    { 0%,100%{opacity:0.5} 50%{opacity:1} }
-        .vit-body  { animation: vit-breathe 3.8s ease-in-out infinite; }
-        .vit-arm-l { animation: vit-arm-l 5.2s ease-in-out infinite; transform-origin: 205px 218px; }
-        .vit-arm-r { animation: vit-arm-r 5.2s ease-in-out infinite 0.8s; transform-origin: 355px 218px; }
-        .vit-ticks { animation: vit-ticks 100s linear infinite; transform-origin: 280px 295px; }
-        .vit-glow  { animation: vit-glow 3.8s ease-in-out infinite; }
+        @keyframes vit-glow    { 0%,100%{opacity:0.4} 50%{opacity:0.85} }
+        .vit-body  { animation: vit-breathe 4s ease-in-out infinite; }
+        .vit-arm-l { animation: vit-arm-l 5.5s ease-in-out infinite; transform-origin: 210px 225px; }
+        .vit-arm-r { animation: vit-arm-r 5.5s ease-in-out infinite 0.9s; transform-origin: 350px 225px; }
+        .vit-ticks { animation: vit-ticks 110s linear infinite; transform-origin: 280px 290px; }
+        .vit-glow  { animation: vit-glow 4s ease-in-out infinite; }
       `}</style>
 
-      <svg viewBox="0 0 560 580" className="w-full select-none" aria-label="Vitruvian figure">
+      <svg viewBox="0 0 560 570" className="w-full select-none" aria-hidden="true">
         <defs>
+          {/* Face clip — large for prominence */}
           <clipPath id={`fc-${slug}`}>
-            <circle cx="280" cy="118" r="47"/>
+            <circle cx="280" cy="115" r="62"/>
           </clipPath>
+
+          {/* Suit jacket 3D gradient — light left shoulder, dark right */}
+          <linearGradient id={`jkt-${slug}`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stopColor={suitL} stopOpacity="1"/>
+            <stop offset="35%"  stopColor={suit}  stopOpacity="1"/>
+            <stop offset="100%" stopColor="#0d1f30" stopOpacity="1"/>
+          </linearGradient>
+
+          {/* Arm gradient — cylindrical top-lit */}
+          <linearGradient id={`arm-${slug}`} x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%"   stopColor={suitM} stopOpacity="1"/>
+            <stop offset="50%"  stopColor={suit}  stopOpacity="1"/>
+            <stop offset="100%" stopColor="#0d1f30" stopOpacity="1"/>
+          </linearGradient>
+
+          {/* Leg gradient */}
+          <linearGradient id={`leg-${slug}`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stopColor={suitM} stopOpacity="1"/>
+            <stop offset="60%"  stopColor={suit}  stopOpacity="1"/>
+            <stop offset="100%" stopColor="#0d1f30" stopOpacity="1"/>
+          </linearGradient>
+
+          {/* Face sphere shading overlay */}
+          <radialGradient id={`face-sh-${slug}`} cx="38%" cy="35%" r="60%">
+            <stop offset="0%"   stopColor="rgba(255,255,255,0.18)"/>
+            <stop offset="70%"  stopColor="rgba(0,0,0,0)"/>
+            <stop offset="100%" stopColor="rgba(0,0,0,0.22)"/>
+          </radialGradient>
+
+          {/* Background glow */}
           <radialGradient id={`gl-${slug}`} cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor={accent} stopOpacity="0.07"/>
+            <stop offset="0%"   stopColor={accent} stopOpacity="0.08"/>
             <stop offset="100%" stopColor={accent} stopOpacity="0"/>
           </radialGradient>
-          <filter id={`shadow-${slug}`}>
-            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor={suit} floodOpacity="0.18"/>
+
+          {/* Drop shadow filter */}
+          <filter id={`fshadow-${slug}`} x="-10%" y="-10%" width="120%" height="130%">
+            <feDropShadow dx="0" dy="6" stdDeviation="8" floodColor={suit} floodOpacity="0.3"/>
+          </filter>
+
+          {/* Soft body shadow on ground */}
+          <filter id={`ground-${slug}`}>
+            <feGaussianBlur stdDeviation="6"/>
           </filter>
         </defs>
 
-        {/* Background pulse */}
-        <circle cx="280" cy="295" r="225" fill={`url(#gl-${slug})`} className="vit-glow"/>
+        {/* Ground shadow ellipse */}
+        <ellipse cx="280" cy="528" rx="85" ry="12" fill={suit} opacity="0.12" filter={`url(#ground-${slug})`}/>
+
+        {/* Glow */}
+        <circle cx="280" cy="290" r="225" fill={`url(#gl-${slug})`} className="vit-glow"/>
 
         {/* Outer square */}
-        <rect x="52" y="68" width="456" height="456" fill="none"
-          stroke="rgba(26,58,92,0.07)" strokeWidth="1" strokeDasharray="5 9"/>
+        <rect x="50" y="62" width="460" height="460" fill="none"
+          stroke="rgba(26,58,92,0.06)" strokeWidth="1" strokeDasharray="5 10"/>
 
         {/* Outer circle */}
-        <circle cx="280" cy="295" r="226" fill="none"
-          stroke="rgba(26,58,92,0.09)" strokeWidth="0.8" strokeDasharray="2 5"/>
+        <circle cx="280" cy="290" r="228" fill="none"
+          stroke="rgba(26,58,92,0.08)" strokeWidth="0.8" strokeDasharray="2 5"/>
 
-        {/* Slowly rotating tick marks */}
+        {/* Rotating ticks */}
         <g className="vit-ticks">
           {Array.from({ length: 72 }, (_, i) => {
             const a = (i * 5 - 90) * Math.PI / 180;
-            const big = i % 9 === 0;
-            const mid = i % 3 === 0;
-            const r1 = 226, r2 = big ? 210 : mid ? 218 : 222;
+            const big = i % 9 === 0, mid = i % 3 === 0;
+            const r1 = 228, r2 = big ? 212 : mid ? 220 : 224;
             return (
               <line key={i}
-                x1={280 + r1 * Math.cos(a)} y1={295 + r1 * Math.sin(a)}
-                x2={280 + r2 * Math.cos(a)} y2={295 + r2 * Math.sin(a)}
-                stroke={`rgba(26,58,92,${big ? 0.28 : mid ? 0.14 : 0.08})`}
+                x1={280 + r1 * Math.cos(a)} y1={290 + r1 * Math.sin(a)}
+                x2={280 + r2 * Math.cos(a)} y2={290 + r2 * Math.sin(a)}
+                stroke={`rgba(26,58,92,${big ? 0.3 : mid ? 0.14 : 0.07})`}
                 strokeWidth={big ? 1.5 : 0.8}
               />
             );
           })}
         </g>
 
-        {/* Inner ring */}
-        <circle cx="280" cy="295" r="192" fill="none"
+        {/* Inner guide ring */}
+        <circle cx="280" cy="290" r="190" fill="none"
           stroke="rgba(26,58,92,0.04)" strokeWidth="0.5"/>
 
-        {/* Axis crosshairs */}
-        <line x1="52" y1="295" x2="508" y2="295" stroke="rgba(26,58,92,0.04)" strokeWidth="0.5"/>
-        <line x1="280" y1="68" x2="280" y2="524" stroke="rgba(26,58,92,0.04)" strokeWidth="0.5"/>
+        {/* Crosshairs */}
+        <line x1="50"  y1="290" x2="510" y2="290" stroke="rgba(26,58,92,0.04)" strokeWidth="0.5"/>
+        <line x1="280" y1="62"  x2="280" y2="522" stroke="rgba(26,58,92,0.04)" strokeWidth="0.5"/>
 
-        {/* ── LEFT ARM ── */}
+        {/* ── LEFT ARM ── (animates from shoulder) */}
         <g className="vit-arm-l">
-          <path d="M205,222 Q140,244 58,272" stroke={suit} strokeWidth="25" strokeLinecap="round" fill="none"/>
-          {/* Cuff detail */}
-          <rect x="48" y="261" width="22" height="14" rx="7" fill="white" opacity="0.15"/>
-          {/* Hand */}
-          <circle cx="52" cy="272" r="15" fill="#d4a87a"/>
-          <path d="M43,268 Q40,274 44,279 Q50,283 57,278 Q61,272 57,267 Q52,263 47,266 Z" fill="#c49060"/>
+          {/* Upper sleeve */}
+          <path d="M210,228 Q168,248 128,262" stroke={`url(#arm-${slug})`} strokeWidth="28" strokeLinecap="round" fill="none"/>
+          {/* Forearm */}
+          <path d="M128,262 Q96,272 68,278" stroke={suit} strokeWidth="24" strokeLinecap="round" fill="none"/>
+          {/* Cuff */}
+          <rect x="55" y="270" width="26" height="13" rx="6" fill="white" opacity="0.85"/>
+          {/* Hand — palm + fingers */}
+          <ellipse cx="55" cy="283" rx="13" ry="10" fill="#d4a87a"/>
+          <rect x="44" y="278" width="7" height="12" rx="3.5" fill="#c49060" transform="rotate(-10 48 284)"/>
+          <rect x="51" y="276" width="7" height="14" rx="3.5" fill="#c9956a" transform="rotate(-3 55 283)"/>
+          <rect x="59" y="277" width="7" height="13" rx="3.5" fill="#c49060" transform="rotate(4 63 283)"/>
+          <rect x="66" y="280" width="6" height="11" rx="3" fill="#bf8f60" transform="rotate(12 69 286)"/>
+          {/* Thumb */}
+          <rect x="41" y="284" width="6" height="10" rx="3" fill="#c49060" transform="rotate(-30 44 289)"/>
         </g>
 
         {/* ── RIGHT ARM ── */}
         <g className="vit-arm-r">
-          <path d="M355,222 Q420,244 502,272" stroke={suit} strokeWidth="25" strokeLinecap="round" fill="none"/>
-          <rect x="490" y="261" width="22" height="14" rx="7" fill="white" opacity="0.15"/>
-          <circle cx="508" cy="272" r="15" fill="#d4a87a"/>
-          <path d="M517,268 Q520,274 516,279 Q510,283 503,278 Q499,272 503,267 Q508,263 513,266 Z" fill="#c49060"/>
+          <path d="M350,228 Q392,248 432,262" stroke={`url(#arm-${slug})`} strokeWidth="28" strokeLinecap="round" fill="none"/>
+          <path d="M432,262 Q464,272 492,278" stroke={suit} strokeWidth="24" strokeLinecap="round" fill="none"/>
+          <rect x="479" y="270" width="26" height="13" rx="6" fill="white" opacity="0.85"/>
+          <ellipse cx="505" cy="283" rx="13" ry="10" fill="#d4a87a"/>
+          <rect x="499" y="278" width="7" height="12" rx="3.5" fill="#bf8f60" transform="rotate(10 502 284)"/>
+          <rect x="502" y="276" width="7" height="14" rx="3.5" fill="#c9956a" transform="rotate(3 505 283)"/>
+          <rect x="494" y="277" width="7" height="13" rx="3.5" fill="#c49060" transform="rotate(-4 497 283)"/>
+          <rect x="487" y="280" width="6" height="11" rx="3" fill="#c49060" transform="rotate(-12 490 286)"/>
+          <rect x="513" y="284" width="6" height="10" rx="3" fill="#c49060" transform="rotate(30 516 289)"/>
         </g>
 
         {/* ── BODY (breathes) ── */}
-        <g className="vit-body">
+        <g className="vit-body" filter={`url(#fshadow-${slug})`}>
 
-          {/* LEFT LEG */}
-          <path d="M258,340 L218,496" stroke={suit} strokeWidth="27" strokeLinecap="round"/>
-          <path d="M208,490 Q195,497 193,503 Q200,510 222,507 Q232,500 225,492 Z" fill="#111827"/>
+          {/* LEFT LEG — with gradient shading */}
+          <path d="M256,340 L214,500" stroke={`url(#leg-${slug})`} strokeWidth="29" strokeLinecap="round"/>
+          {/* Left shoe */}
+          <ellipse cx="209" cy="506" rx="22" ry="11" fill="#111827"/>
+          <ellipse cx="205" cy="504" rx="10" ry="5" fill="#1f2937" opacity="0.6"/>
 
           {/* RIGHT LEG */}
-          <path d="M302,340 L342,496" stroke={suit} strokeWidth="27" strokeLinecap="round"/>
-          <path d="M352,490 Q365,497 367,503 Q360,510 338,507 Q328,500 335,492 Z" fill="#111827"/>
+          <path d="M304,340 L346,500" stroke={`url(#leg-${slug})`} strokeWidth="29" strokeLinecap="round"/>
+          <ellipse cx="351" cy="506" rx="22" ry="11" fill="#111827"/>
+          <ellipse cx="355" cy="504" rx="10" ry="5" fill="#1f2937" opacity="0.6"/>
 
-          {/* JACKET BODY */}
-          <path d="M207,220 C196,226 184,242 182,268 L176,342 L384,342 L378,268 C376,242 364,226 353,220 Z"
-            fill={suit} filter={`url(#shadow-${slug})`}/>
+          {/* JACKET BODY — 3D gradient */}
+          <path d="M208,228 C196,234 182,252 180,278 L174,342 L386,342 L380,278 C378,252 364,234 352,228 Z"
+            fill={`url(#jkt-${slug})`}/>
+
+          {/* Left shoulder highlight */}
+          <ellipse cx="210" cy="235" rx="22" ry="12" fill={suitL} opacity="0.4" transform="rotate(-15 210 235)"/>
+          {/* Right shoulder shadow */}
+          <ellipse cx="350" cy="235" rx="22" ry="12" fill="#0a1520" opacity="0.3" transform="rotate(15 350 235)"/>
+
+          {/* Center chest light */}
+          <ellipse cx="280" cy="265" rx="30" ry="45" fill={suitM} opacity="0.15"/>
 
           {/* SHIRT */}
-          <path d="M264,172 L280,228 L296,172" fill="white" opacity="0.94"/>
+          <path d="M263,175 L280,235 L297,175" fill="white" opacity="0.96"/>
+          {/* Shirt shading */}
+          <path d="M263,175 L272,235 L280,235 L280,175 Z" fill="rgba(0,0,0,0.06)"/>
 
           {/* TIE */}
-          <path d="M277,178 L280,226 L283,178 Q281,174 280,173 Q279,174 277,178 Z" fill={accent} opacity="0.9"/>
-          {/* Tie knot */}
-          <ellipse cx="280" cy="175" rx="5" ry="4" fill={suitLt} opacity="0.8"/>
+          <path d="M276,181 L280,232 L284,181 Q282,176 280,175 Q278,176 276,181 Z" fill={accent} opacity="0.92"/>
+          <path d="M278,181 L280,232 L280,175 Z" fill="rgba(255,255,255,0.15)"/>
+          <ellipse cx="280" cy="178" rx="6" ry="5" fill={suitM}/>
 
           {/* LEFT LAPEL */}
-          <path d="M264,172 L207,220 L222,262 L274,208 Z" fill={suitLt} opacity="0.28"/>
+          <path d="M263,175 L208,228 L224,268 L274,212 Z" fill={suitL} opacity="0.22"/>
+          <path d="M263,175 L208,228 L215,238 Z" fill={suitL} opacity="0.35"/>
           {/* RIGHT LAPEL */}
-          <path d="M296,172 L353,220 L338,262 L286,208 Z" fill={suitLt} opacity="0.28"/>
+          <path d="M297,175 L352,228 L336,268 L286,212 Z" fill="rgba(0,0,0,0.2)"/>
+          <path d="M297,175 L352,228 L345,238 Z" fill="rgba(0,0,0,0.3)"/>
 
-          {/* Jacket buttons */}
-          <circle cx="280" cy="278" r="3.5" fill="rgba(255,255,255,0.25)"/>
-          <circle cx="280" cy="298" r="3.5" fill="rgba(255,255,255,0.25)"/>
-          <circle cx="280" cy="318" r="3.5" fill="rgba(255,255,255,0.25)"/>
+          {/* Buttons */}
+          <circle cx="280" cy="282" r="4" fill="rgba(255,255,255,0.22)"/>
+          <circle cx="280" cy="302" r="4" fill="rgba(255,255,255,0.22)"/>
+          <circle cx="280" cy="322" r="4" fill="rgba(255,255,255,0.22)"/>
 
           {/* Pocket square */}
-          <path d="M210,248 L222,246 L222,256 L210,258 Z" fill="white" opacity="0.15"/>
+          <path d="M208,252 L222,249 L223,260 L208,263 Z" fill="white" opacity="0.18"/>
 
           {/* NECK */}
-          <path d="M266,165 L294,165 L293,180 L267,180 Z" fill="#d4a87a" rx="2"/>
-          {/* Collar */}
-          <path d="M266,174 L280,186 L294,174" fill="white" opacity="0.92"/>
+          <path d="M265,167 L295,167 L294,183 L266,183 Z" fill="#d4a87a"/>
+          {/* Neck shadow */}
+          <path d="M280,167 L295,167 L294,183 L280,183 Z" fill="rgba(0,0,0,0.1)"/>
+          {/* COLLAR */}
+          <path d="M266,180 L280,193 L294,180" fill="white" opacity="0.94"/>
+          <path d="M266,180 L274,189 L280,193 Z" fill="rgba(0,0,0,0.07)"/>
 
-          {/* HEAD */}
-          <circle cx="280" cy="118" r="50" fill="#d4a87a"/>
+          {/* EAR LEFT */}
+          <ellipse cx="218" cy="115" rx="8" ry="12" fill="#c8946a"/>
+          <ellipse cx="219" cy="115" rx="4" ry="7" fill="#bf8a5e" opacity="0.6"/>
+          {/* EAR RIGHT */}
+          <ellipse cx="342" cy="115" rx="8" ry="12" fill="#c8946a"/>
+          <ellipse cx="341" cy="115" rx="4" ry="7" fill="#bf8a5e" opacity="0.6"/>
 
-          {/* PHOTO FACE */}
+          {/* HEAD base */}
+          <circle cx="280" cy="115" r="63" fill="#d4a87a"/>
+
+          {/* PHOTO — large, prominent */}
           {photo && (
             <image
               href={photo}
-              x="230" y="68"
-              width="100" height="100"
+              x="215" y="50"
+              width="130" height="130"
               clipPath={`url(#fc-${slug})`}
               preserveAspectRatio="xMidYTop slice"
             />
           )}
 
-          {/* Subtle head outline */}
-          <circle cx="280" cy="118" r="47" fill="none" stroke={suit} strokeWidth="1.5" opacity="0.2"/>
+          {/* Face sphere shading overlay — adds 3D roundness */}
+          <circle cx="280" cy="115" r="62" fill={`url(#face-sh-${slug})`}/>
 
-          {/* Hair arc */}
-          <path d="M240,92 Q280,68 320,92 Q312,74 280,70 Q248,74 240,92 Z" fill="#2d1a10" opacity="0.55"/>
+          {/* HAIR */}
+          <path d="M236,88 Q256,68 280,64 Q304,68 324,88 Q318,72 280,68 Q242,72 236,88 Z"
+            fill="#2a1a0e" opacity="0.7"/>
+          {/* Hair side left */}
+          <path d="M218,100 Q222,80 236,88 Q228,84 222,96 Z" fill="#2a1a0e" opacity="0.5"/>
+          {/* Hair side right */}
+          <path d="M342,100 Q338,80 324,88 Q332,84 338,96 Z" fill="#2a1a0e" opacity="0.5"/>
 
-          {/* EARS */}
-          <ellipse cx="232" cy="118" rx="7" ry="10" fill="#c49060"/>
-          <ellipse cx="328" cy="118" rx="7" ry="10" fill="#c49060"/>
+          {/* Subtle head outline for depth */}
+          <circle cx="280" cy="115" r="62" fill="none" stroke={suit} strokeWidth="1" opacity="0.15"/>
         </g>
 
-        {/* ── FLOATING STATS ── */}
+        {/* Party badge bottom */}
+        <rect x="220" y="526" width="120" height="28" rx="14"
+          fill={isD ? "#1d4ed8" : "#dc2626"} opacity="0.9"/>
+        <text x="280" y="545" fontFamily="system-ui,sans-serif" fontSize="10.5" fontWeight="700"
+          fill="white" textAnchor="middle" letterSpacing="1.5">
+          {party === "D" ? "DEMOCRAT" : party === "R" ? "REPUBLICAN" : party}
+        </text>
 
-        {/* LEFT — District + Chamber */}
-        <g opacity="0.9">
-          <text x="24" y="252" fontFamily="system-ui,sans-serif" fontSize="8.5" fontWeight="700"
-            letterSpacing="2.5" fill="rgba(26,58,92,0.4)">DISTRICT</text>
-          <text x="24" y="274" fontFamily="Georgia,serif" fontSize="24" fontWeight="800" fill="#1a3a5c">
-            {district}
-          </text>
-          <text x="24" y="290" fontFamily="system-ui,sans-serif" fontSize="11" fontWeight="600"
-            fill="rgba(26,58,92,0.5)">{chamber}</text>
-          <line x1="24" y1="300" x2="82" y2="300"
-            stroke="rgba(26,58,92,0.12)" strokeWidth="1" strokeDasharray="2 4"/>
-        </g>
-
-        {/* RIGHT — Salary + Bills */}
-        <g opacity="0.9">
-          {salary && (
-            <>
-              <text x="536" y="252" fontFamily="system-ui,sans-serif" fontSize="8.5" fontWeight="700"
-                letterSpacing="2.5" fill="rgba(26,58,92,0.4)" textAnchor="end">SALARY / YR</text>
-              <text x="536" y="274" fontFamily="Georgia,serif" fontSize="20" fontWeight="800"
-                fill="#1a3a5c" textAnchor="end">${salary.toLocaleString()}</text>
-            </>
-          )}
-          {legiscanName && (
-            <>
-              <text x="536" y="308" fontFamily="system-ui,sans-serif" fontSize="8.5" fontWeight="700"
-                letterSpacing="2.5" fill="rgba(26,58,92,0.4)" textAnchor="end">INTO LAW</text>
-              <text x="536" y="332" fontFamily="Georgia,serif" fontSize="28" fontWeight="800"
-                fill={isD ? "#1d4ed8" : "#b91c1c"} textAnchor="end">
-                {loading ? "…" : lawCount}
-              </text>
-              {totalBills > 0 && (
-                <text x="536" y="348" fontFamily="system-ui,sans-serif" fontSize="10"
-                  fill="rgba(26,58,92,0.4)" textAnchor="end">of {totalBills} filed</text>
-              )}
-              <line x1="478" y1="332" x2="536" y2="332"
-                stroke="rgba(26,58,92,0.12)" strokeWidth="1" strokeDasharray="2 4"/>
-            </>
-          )}
-        </g>
-
-        {/* PARTY BADGE — bottom */}
-        <rect x="220" y="518" width="120" height="30" rx="15"
-          fill={isD ? "#1d4ed8" : "#dc2626"} opacity="0.88"/>
-        <text x="280" y="538" fontFamily="system-ui,sans-serif" fontSize="11" fontWeight="700"
-          fill="white" textAnchor="middle" letterSpacing="1.5">{partyLabel}</text>
-
-        {/* Legislature label top */}
+        {/* Legislature label */}
         {legiscanName && (
-          <text x="280" y="38" fontFamily="system-ui,sans-serif" fontSize="8.5" fontWeight="700"
-            fill="rgba(26,58,92,0.3)" textAnchor="middle" letterSpacing="3">
+          <text x="280" y="36" fontFamily="system-ui,sans-serif" fontSize="8" fontWeight="700"
+            fill="rgba(26,58,92,0.28)" textAnchor="middle" letterSpacing="3">
             89TH TEXAS LEGISLATURE
           </text>
         )}
@@ -313,20 +351,68 @@ export default function PoliticianProfile() {
         </h1>
       </div>
 
-      {/* ── Vitruvian Figure ───────────────────────────────────────────── */}
-      <div className="max-w-2xl mx-auto px-4">
-        <VitruvianFigure
-          slug={pol.slug}
-          photo={pol.photo}
-          party={pol.party}
-          district={pol.district}
-          chamber={pol.chamber}
-          salary={pol.salary}
-          legiscanName={pol.legiscanName}
-          lawCount={lawBills.length}
-          totalBills={billTotal}
-          loading={loading}
-        />
+      {/* ── Vitruvian Figure + flanking stats ─────────────────────────── */}
+      <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-[200px_1fr_200px] gap-4 items-center">
+
+        {/* LEFT STATS */}
+        <div className="flex md:flex-col gap-3 justify-center">
+          <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] flex-1 md:flex-none">
+            <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-4 py-4">
+              <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-1">District</p>
+              <p className="text-2xl font-bold text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair), serif" }}>
+                {pol.district}
+              </p>
+              <p className="text-xs text-[var(--muted)] mt-0.5">{pol.chamber}</p>
+            </div>
+          </div>
+          <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] flex-1 md:flex-none">
+            <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-4 py-4">
+              <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-1">Party</p>
+              <p className={`text-lg font-bold ${pol.party === "D" ? "text-blue-700" : pol.party === "R" ? "text-red-700" : "text-gray-600"}`}
+                style={{ fontFamily: "var(--font-playfair), serif" }}>
+                {pol.party === "D" ? "Democrat" : pol.party === "R" ? "Republican" : pol.party}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* CENTER FIGURE */}
+        <div>
+          <VitruvianFigure
+            slug={pol.slug}
+            photo={pol.photo}
+            party={pol.party}
+            legiscanName={pol.legiscanName}
+          />
+        </div>
+
+        {/* RIGHT STATS */}
+        <div className="flex md:flex-col gap-3 justify-center">
+          {pol.salary && (
+            <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] flex-1 md:flex-none">
+              <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-4 py-4">
+                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-1">Salary / yr</p>
+                <p className="text-xl font-bold text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair), serif" }}>
+                  ${pol.salary.toLocaleString()}
+                </p>
+              </div>
+            </div>
+          )}
+          {pol.legiscanName && (
+            <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] flex-1 md:flex-none">
+              <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-4 py-4">
+                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-1">Into Law</p>
+                <p className={`text-2xl font-bold ${pol.party === "D" ? "text-blue-700" : "text-red-700"}`}
+                  style={{ fontFamily: "var(--font-playfair), serif" }}>
+                  {loading ? "…" : lawBills.length}
+                </p>
+                {billTotal > 0 && (
+                  <p className="text-[10px] text-[var(--muted)] mt-0.5">of {billTotal} filed</p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ── Social / Links row ─────────────────────────────────────────── */}
