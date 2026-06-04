@@ -8,6 +8,16 @@
   --muted: #6b7280;
   --border: #ddd9d0;
   --card: #ffffff;
+
+  /* Liquid glass tokens */
+  --glass-bg: rgba(255,255,255,0.72);
+  --glass-border: rgba(255,255,255,0.45);
+  --glass-shadow: 0 8px 32px rgba(26,58,92,0.10), 0 1.5px 0 rgba(255,255,255,0.7) inset;
+  --glass-blur: 18px;
+
+  /* Depth tokens */
+  --lift-shadow: 0 20px 60px rgba(26,58,92,0.18), 0 4px 16px rgba(26,58,92,0.10);
+  --lift-shadow-sm: 0 8px 28px rgba(26,58,92,0.13);
 }
 
 html {
@@ -24,41 +34,28 @@ body {
   line-height: 1.6;
 }
 
-/* Selection */
 ::selection {
   background: #1a3a5c;
   color: #f5f3ef;
 }
 
-/* Focus rings */
 :focus-visible {
   outline: 2px solid #2563a8;
   outline-offset: 3px;
   border-radius: 4px;
 }
 
-/* Scroll-reveal animation */
+/* ── Scroll-reveal ────────────────────────────────────────────────────────── */
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(28px);
-    filter: blur(2px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
+  from { opacity: 0; transform: translateY(28px); filter: blur(2px); }
+  to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
 }
 
-.animate-in {
-  opacity: 0;
-}
+.animate-in { opacity: 0; }
 .animate-in.visible {
   animation: fadeUp 0.7s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
-/* Stagger children */
 .stagger > *:nth-child(1) { animation-delay: 0ms; }
 .stagger > *:nth-child(2) { animation-delay: 80ms; }
 .stagger > *:nth-child(3) { animation-delay: 160ms; }
@@ -67,14 +64,66 @@ body {
 .stagger > *:nth-child(6) { animation-delay: 400ms; }
 .stagger > *:nth-child(n+7) { animation-delay: 480ms; }
 
-/* Smooth image rendering */
-img {
-  image-rendering: -webkit-optimize-contrast;
+/* ── Alive animations (2026) ─────────────────────────────────────────────── */
+
+/* Breathing pulse — soft scale/opacity loop for live indicators */
+@keyframes alive-pulse {
+  0%,100% { transform: scale(1);    opacity: 1; }
+  50%      { transform: scale(1.35); opacity: 0.7; }
+}
+.alive-pulse { animation: alive-pulse 2.4s cubic-bezier(0.4,0,0.6,1) infinite; }
+
+/* Halo ring that expands and fades — wraps the pulse dot */
+@keyframes alive-halo {
+  0%   { transform: scale(1);   opacity: 0.5; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+.alive-halo {
+  animation: alive-halo 2.4s cubic-bezier(0.4,0,0.6,1) infinite;
 }
 
-/* Scrollbar polish */
+/* Ambient particle drift — hero background noise */
+@keyframes drift-a {
+  0%,100% { transform: translate(0,0) scale(1);    opacity: 0.06; }
+  33%      { transform: translate(18px,-12px) scale(1.1); opacity: 0.12; }
+  66%      { transform: translate(-8px,20px)  scale(0.95); opacity: 0.08; }
+}
+@keyframes drift-b {
+  0%,100% { transform: translate(0,0) scale(1);    opacity: 0.05; }
+  40%      { transform: translate(-20px,14px) scale(1.08); opacity: 0.10; }
+  70%      { transform: translate(12px,-18px) scale(0.92); opacity: 0.07; }
+}
+@keyframes drift-c {
+  0%,100% { transform: translate(0,0);   opacity: 0.04; }
+  50%      { transform: translate(24px,8px); opacity: 0.09; }
+}
+
+.drift-a { animation: drift-a 18s ease-in-out infinite; }
+.drift-b { animation: drift-b 22s ease-in-out infinite 3s; }
+.drift-c { animation: drift-c 28s ease-in-out infinite 7s; }
+
+/* Liquid glass card */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Card lift on hover — physics feel */
+.card-lift {
+  transition: transform 0.55s cubic-bezier(0.32,0.72,0,1),
+              box-shadow 0.55s cubic-bezier(0.32,0.72,0,1);
+}
+.card-lift:hover {
+  transform: translateY(-4px) scale(1.008);
+  box-shadow: var(--lift-shadow);
+}
+
+img { image-rendering: -webkit-optimize-contrast; }
+
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #ddd9d0; border-radius: 99px; }
 ::-webkit-scrollbar-thumb:hover { background: #1a3a5c40; }
-

@@ -13,7 +13,7 @@ type Tool = {
 function ToolCard({ tool, large }: { tool: Tool; large?: boolean }) {
   const inner = (
     // Outer shell
-    <div className={`group relative rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:ring-[var(--accent-light)] hover:shadow-xl ${tool.status === "coming" ? "opacity-50 pointer-events-none" : "cursor-pointer"}`}>
+    <div className={`group relative rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px] card-lift transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:ring-[var(--accent-light)] ${tool.status === "coming" ? "opacity-50 pointer-events-none" : "cursor-pointer"}`}>
       {/* Inner core */}
       <div className={`rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] ${large ? "p-8 md:p-10" : "p-6"} h-full flex flex-col gap-3`}>
         <div className="flex items-start justify-between gap-3">
@@ -29,7 +29,10 @@ function ToolCard({ tool, large }: { tool: Tool; large?: boolean }) {
             </span>
           )}
           {tool.status === "live" && (
-            <span className="flex-shrink-0 w-2 h-2 rounded-full bg-green-400 mt-2 ring-2 ring-green-100" />
+            <span className="flex-shrink-0 relative flex h-2.5 w-2.5 mt-1.5">
+              <span className="alive-halo absolute inline-flex h-full w-full rounded-full bg-emerald-400" />
+              <span className="alive-pulse relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
+            </span>
           )}
         </div>
         <p className={`text-[var(--muted)] leading-relaxed ${large ? "text-base" : "text-sm"}`}>
@@ -73,6 +76,13 @@ export default function Home() {
         {/* Multi-layer radial wash */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_60%_40%,rgba(37,99,168,0.4),transparent)]" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_50%_at_90%_80%,rgba(125,211,252,0.06),transparent)]" />
+
+        {/* Ambient particles — alive feel */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+          <div className="drift-a absolute w-96 h-96 rounded-full bg-sky-400 blur-[80px] top-[10%] right-[15%]" />
+          <div className="drift-b absolute w-64 h-64 rounded-full bg-blue-300 blur-[60px] bottom-[20%] left-[10%]" />
+          <div className="drift-c absolute w-48 h-48 rounded-full bg-sky-200 blur-[50px] top-[55%] right-[40%]" />
+        </div>
 
         <div className="max-w-5xl mx-auto w-full relative z-10">
           <p className="text-sky-300/70 text-[10px] font-bold uppercase tracking-[0.3em] mb-10 flex items-center gap-2">

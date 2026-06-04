@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 export default function Nav() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen]       = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const isToolPage =
@@ -19,10 +19,19 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  // ── Tool / inner pages: slim static breadcrumb bar ──────────────────────
+  /* ── Inner pages: liquid glass bar ─────────────────────────────────────── */
   if (isToolPage) {
     return (
-      <header className="bg-[var(--accent)] text-white sticky top-0 z-40">
+      <header
+        className="sticky top-0 z-40"
+        style={{
+          background: "rgba(26,58,92,0.75)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          borderBottom: "1px solid rgba(255,255,255,0.10)",
+          boxShadow: "0 1px 0 rgba(255,255,255,0.06) inset, 0 4px 24px rgba(26,58,92,0.22)",
+        }}
+      >
         <div className="max-w-7xl mx-auto px-5 py-3 flex items-center gap-3">
           <Link
             href="/"
@@ -35,25 +44,43 @@ export default function Nav() {
             Toolbox
           </Link>
           <span className="text-white/20 text-xs">/</span>
-          <span className="text-white/60 text-xs font-medium" style={{ fontFamily: "var(--font-playfair), serif" }}>
+          <span className="text-white/55 text-xs font-medium" style={{ fontFamily: "var(--font-playfair), serif" }}>
             The Harris County Project
+          </span>
+
+          {/* Alive indicator */}
+          <span className="ml-auto flex items-center gap-1.5">
+            <span className="relative flex h-2 w-2">
+              <span className="alive-halo absolute inline-flex h-full w-full rounded-full bg-emerald-400" />
+              <span className="alive-pulse relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+            </span>
+            <span className="text-[10px] font-semibold text-white/35 uppercase tracking-[0.18em]">Live</span>
           </span>
         </div>
       </header>
     );
   }
 
-  // ── Home / about pages: floating pill nav ───────────────────────────────
+  /* ── Home: floating pill nav ────────────────────────────────────────────── */
   return (
     <>
       <header className="fixed top-4 left-0 right-0 z-50 px-4 flex justify-center pointer-events-none">
         <div className="pointer-events-auto w-full max-w-2xl">
           <div
-            className={`flex items-center justify-between text-white rounded-full px-5 py-3 ring-1 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-              scrolled
-                ? "bg-[var(--accent)] backdrop-blur-xl ring-white/15 shadow-[0_8px_40px_rgba(26,58,92,0.45)]"
-                : "bg-[var(--accent)]/90 backdrop-blur-xl ring-white/10 shadow-[0_4px_32px_rgba(26,58,92,0.25)]"
-            }`}
+            className="flex items-center justify-between text-white rounded-full px-5 py-3 ring-1 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"
+            style={{
+              background: scrolled
+                ? "rgba(26,58,92,0.92)"
+                : "rgba(26,58,92,0.78)",
+              backdropFilter: "blur(24px)",
+              WebkitBackdropFilter: "blur(24px)",
+              boxShadow: scrolled
+                ? "0 8px 40px rgba(26,58,92,0.45), 0 1px 0 rgba(255,255,255,0.12) inset"
+                : "0 4px 32px rgba(26,58,92,0.25), 0 1px 0 rgba(255,255,255,0.08) inset",
+              border: scrolled
+                ? "1px solid rgba(255,255,255,0.14)"
+                : "1px solid rgba(255,255,255,0.09)",
+            }}
           >
             <Link
               href="/"
@@ -100,15 +127,15 @@ export default function Nav() {
         className={`fixed inset-0 z-40 flex flex-col items-center justify-center gap-7 text-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
           open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
-        style={{ background: "rgba(10,24,48,0.97)", backdropFilter: "blur(20px)" }}
+        style={{ background: "rgba(10,24,48,0.97)", backdropFilter: "blur(24px)" }}
         onClick={() => setOpen(false)}
       >
         {[
-          { href: "/#toolbox", label: "Toolbox", delay: "0.08s" },
+          { href: "/#toolbox", label: "Toolbox",  delay: "0.08s" },
           { href: "/politicians", label: "Officials", delay: "0.14s" },
-          { href: "/blogs", label: "Media", delay: "0.20s" },
-          { href: "/#about", label: "About", delay: "0.26s" },
-          { href: "/contact", label: "Contact", delay: "0.32s" },
+          { href: "/blogs",    label: "Media",     delay: "0.20s" },
+          { href: "/#about",   label: "About",     delay: "0.26s" },
+          { href: "/contact",  label: "Contact",   delay: "0.32s" },
         ].map(({ href, label, delay }) => (
           <Link
             key={href}

@@ -32,93 +32,269 @@ const STATUS_STYLES: Record<BillStatus, { label: string; bg: string; text: strin
 
 type NewsArticle = { title: string; link: string; pubDate: string; source: string };
 
-/* ─── Elegant Portrait ─────────────────────────────────────────────────────── */
-function PoliticianPortrait({ slug, photo, party, name }: {
-  slug: string; photo?: string; party: string; name: string;
+/* ─── Vitruvian Figure ─────────────────────────────────────────────────────
+   Full body SVG. Photo is rendered as an HTML overlay (not inside SVG)
+   so the figure stays symbolic and the portrait stays photographic.
+────────────────────────────────────────────────────────────────────────── */
+function VitruvianFigure({ slug, photo, party, name, legiscanName }: {
+  slug: string; photo?: string; party: string; name: string; legiscanName?: string;
 }) {
-  const isD    = party === "D";
-  const ring   = isD ? "#3b82f6" : "#ef4444";
-  const glow   = isD ? "rgba(59,130,246,0.18)" : "rgba(239,68,68,0.18)";
-  const dim    = isD ? "#1a3a5c" : "#6b1a1a";
+  const isD   = party === "D";
+  const suit  = isD ? "#1a3a5c" : "#6b1a1a";
+  const suitM = isD ? "#2a4f7a" : "#8b2020";
+  const suitL = isD ? "#3b6fa0" : "#b03030";
+  const accent= isD ? "#3b82f6" : "#ef4444";
+  const ringC = isD ? "#60a5fa" : "#f87171";
 
   return (
-    <>
+    <div className="relative select-none" style={{ width: "100%", aspectRatio: "560/600" }}>
       <style>{`
-        @keyframes port-spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-        @keyframes port-glow { 0%,100%{opacity:0.6} 50%{opacity:1} }
-        .port-ring { animation: port-spin 90s linear infinite; transform-origin: 200px 200px; }
-        .port-glow { animation: port-glow 5s ease-in-out infinite; }
+        @keyframes vit-breathe { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+        @keyframes vit-arm-l   { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(1.8deg)} }
+        @keyframes vit-arm-r   { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(-1.8deg)} }
+        @keyframes vit-ticks   { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+        @keyframes vit-glow    { 0%,100%{opacity:0.4} 50%{opacity:0.85} }
+        @keyframes vit-photo-float { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-4px) scale(1.01)} }
+        .vit-body  { animation: vit-breathe 4s ease-in-out infinite; }
+        .vit-arm-l { animation: vit-arm-l 5.5s ease-in-out infinite; transform-origin: 210px 225px; }
+        .vit-arm-r { animation: vit-arm-r 5.5s ease-in-out infinite 0.9s; transform-origin: 350px 225px; }
+        .vit-ticks { animation: vit-ticks 110s linear infinite; transform-origin: 280px 290px; }
+        .vit-glow  { animation: vit-glow 4s ease-in-out infinite; }
+        .vit-photo { animation: vit-photo-float 5s ease-in-out infinite; transform-origin: center; }
       `}</style>
 
-      <div className="relative flex items-center justify-center" style={{ width: 220, height: 220 }}>
-        {/* Decorative geometry — purely background */}
-        <svg viewBox="0 0 400 400" className="absolute inset-0 w-full h-full" aria-hidden="true">
-          {/* Outer soft circle */}
-          <circle cx="200" cy="200" r="190" fill="none" stroke={dim} strokeWidth="0.6" strokeOpacity="0.08" strokeDasharray="3 8"/>
-          {/* Rotating tick ring */}
-          <g className="port-ring">
-            {Array.from({ length: 60 }, (_, i) => {
-              const a = (i * 6 - 90) * Math.PI / 180;
-              const big = i % 5 === 0;
-              const r1 = 190, r2 = big ? 178 : 185;
-              return (
-                <line key={i}
-                  x1={200 + r1 * Math.cos(a)} y1={200 + r1 * Math.sin(a)}
-                  x2={200 + r2 * Math.cos(a)} y2={200 + r2 * Math.sin(a)}
-                  stroke={dim} strokeOpacity={big ? 0.22 : 0.09}
-                  strokeWidth={big ? 1.4 : 0.7}
-                />
-              );
-            })}
-          </g>
-          {/* Inner guide circle */}
-          <circle cx="200" cy="200" r="156" fill="none" stroke={dim} strokeWidth="0.5" strokeOpacity="0.06"/>
-          {/* Crosshair lines */}
-          <line x1="10" y1="200" x2="390" y2="200" stroke={dim} strokeWidth="0.5" strokeOpacity="0.05"/>
-          <line x1="200" y1="10"  x2="200" y2="390" stroke={dim} strokeWidth="0.5" strokeOpacity="0.05"/>
-          {/* Diagonal square (rotated 45) */}
-          <rect x="55" y="55" width="290" height="290" fill="none" stroke={dim} strokeWidth="0.5" strokeOpacity="0.05" transform="rotate(45 200 200)"/>
-          {/* Party color glow ring */}
-          <circle cx="200" cy="200" r="118" fill={glow} className="port-glow"/>
-        </svg>
+      {/* ── SVG Body ── */}
+      <svg viewBox="0 0 560 600" className="w-full h-full" aria-hidden="true">
+        <defs>
+          <linearGradient id={`jkt-${slug}`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stopColor={suitL}/>
+            <stop offset="35%"  stopColor={suit}/>
+            <stop offset="100%" stopColor="#0d1f30"/>
+          </linearGradient>
+          <linearGradient id={`arm-${slug}`} x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%"   stopColor={suitM}/>
+            <stop offset="50%"  stopColor={suit}/>
+            <stop offset="100%" stopColor="#0d1f30"/>
+          </linearGradient>
+          <linearGradient id={`leg-${slug}`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stopColor={suitM}/>
+            <stop offset="60%"  stopColor={suit}/>
+            <stop offset="100%" stopColor="#0d1f30"/>
+          </linearGradient>
+          <radialGradient id={`gl-${slug}`} cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stopColor={accent} stopOpacity="0.08"/>
+            <stop offset="100%" stopColor={accent} stopOpacity="0"/>
+          </radialGradient>
+          <filter id={`fshadow-${slug}`} x="-10%" y="-10%" width="120%" height="130%">
+            <feDropShadow dx="0" dy="6" stdDeviation="8" floodColor={suit} floodOpacity="0.3"/>
+          </filter>
+          <filter id={`ground-${slug}`}>
+            <feGaussianBlur stdDeviation="6"/>
+          </filter>
+        </defs>
 
-        {/* Photo or initial */}
-        <div className="relative z-10 rounded-full overflow-hidden"
+        {/* Ground shadow */}
+        <ellipse cx="280" cy="558" rx="85" ry="12" fill={suit} opacity="0.12" filter={`url(#ground-${slug})`}/>
+
+        {/* Background glow */}
+        <circle cx="280" cy="310" r="225" fill={`url(#gl-${slug})`} className="vit-glow"/>
+
+        {/* Outer square */}
+        <rect x="50" y="85" width="460" height="460" fill="none"
+          stroke="rgba(26,58,92,0.06)" strokeWidth="1" strokeDasharray="5 10"/>
+        {/* Outer circle */}
+        <circle cx="280" cy="312" r="228" fill="none"
+          stroke="rgba(26,58,92,0.08)" strokeWidth="0.8" strokeDasharray="2 5"/>
+        {/* Rotating ticks */}
+        <g className="vit-ticks">
+          {Array.from({ length: 72 }, (_, i) => {
+            const a = (i * 5 - 90) * Math.PI / 180;
+            const big = i % 9 === 0, mid = i % 3 === 0;
+            const r1 = 228, r2 = big ? 212 : mid ? 220 : 224;
+            return (
+              <line key={i}
+                x1={280 + r1 * Math.cos(a)} y1={312 + r1 * Math.sin(a)}
+                x2={280 + r2 * Math.cos(a)} y2={312 + r2 * Math.sin(a)}
+                stroke={`rgba(26,58,92,${big ? 0.3 : mid ? 0.14 : 0.07})`}
+                strokeWidth={big ? 1.5 : 0.8}
+              />
+            );
+          })}
+        </g>
+        {/* Inner guide */}
+        <circle cx="280" cy="312" r="190" fill="none" stroke="rgba(26,58,92,0.04)" strokeWidth="0.5"/>
+        {/* Crosshairs */}
+        <line x1="50" y1="312" x2="510" y2="312" stroke="rgba(26,58,92,0.04)" strokeWidth="0.5"/>
+        <line x1="280" y1="85"  x2="280" y2="545" stroke="rgba(26,58,92,0.04)" strokeWidth="0.5"/>
+
+        {/* ── LEFT ARM ── */}
+        <g className="vit-arm-l">
+          <path d="M210,248 Q168,268 128,282" stroke={`url(#arm-${slug})`} strokeWidth="28" strokeLinecap="round" fill="none"/>
+          <path d="M128,282 Q96,292 68,298" stroke={suit} strokeWidth="24" strokeLinecap="round" fill="none"/>
+          <rect x="55" y="290" width="26" height="13" rx="6" fill="white" opacity="0.85"/>
+          <ellipse cx="55" cy="303" rx="13" ry="10" fill="#d4a87a"/>
+          <rect x="44" y="298" width="7" height="12" rx="3.5" fill="#c49060" transform="rotate(-10 48 304)"/>
+          <rect x="51" y="296" width="7" height="14" rx="3.5" fill="#c9956a" transform="rotate(-3 55 303)"/>
+          <rect x="59" y="297" width="7" height="13" rx="3.5" fill="#c49060" transform="rotate(4 63 303)"/>
+          <rect x="66" y="300" width="6" height="11" rx="3" fill="#bf8f60" transform="rotate(12 69 306)"/>
+          <rect x="41" y="304" width="6" height="10" rx="3" fill="#c49060" transform="rotate(-30 44 309)"/>
+        </g>
+
+        {/* ── RIGHT ARM ── */}
+        <g className="vit-arm-r">
+          <path d="M350,248 Q392,268 432,282" stroke={`url(#arm-${slug})`} strokeWidth="28" strokeLinecap="round" fill="none"/>
+          <path d="M432,282 Q464,292 492,298" stroke={suit} strokeWidth="24" strokeLinecap="round" fill="none"/>
+          <rect x="479" y="290" width="26" height="13" rx="6" fill="white" opacity="0.85"/>
+          <ellipse cx="505" cy="303" rx="13" ry="10" fill="#d4a87a"/>
+          <rect x="499" y="298" width="7" height="12" rx="3.5" fill="#bf8f60" transform="rotate(10 502 304)"/>
+          <rect x="502" y="296" width="7" height="14" rx="3.5" fill="#c9956a" transform="rotate(3 505 303)"/>
+          <rect x="494" y="297" width="7" height="13" rx="3.5" fill="#c49060" transform="rotate(-4 497 303)"/>
+          <rect x="487" y="300" width="6" height="11" rx="3" fill="#c49060" transform="rotate(-12 490 306)"/>
+          <rect x="513" y="304" width="6" height="10" rx="3" fill="#c49060" transform="rotate(30 516 309)"/>
+        </g>
+
+        {/* ── BODY (breathes) ── */}
+        <g className="vit-body" filter={`url(#fshadow-${slug})`}>
+          {/* LEGS */}
+          <path d="M256,362 L214,522" stroke={`url(#leg-${slug})`} strokeWidth="29" strokeLinecap="round"/>
+          <ellipse cx="209" cy="528" rx="22" ry="11" fill="#111827"/>
+          <ellipse cx="205" cy="526" rx="10" ry="5" fill="#1f2937" opacity="0.6"/>
+          <path d="M304,362 L346,522" stroke={`url(#leg-${slug})`} strokeWidth="29" strokeLinecap="round"/>
+          <ellipse cx="351" cy="528" rx="22" ry="11" fill="#111827"/>
+          <ellipse cx="355" cy="526" rx="10" ry="5" fill="#1f2937" opacity="0.6"/>
+
+          {/* JACKET */}
+          <path d="M208,248 C196,254 182,272 180,298 L174,362 L386,362 L380,298 C378,272 364,254 352,248 Z"
+            fill={`url(#jkt-${slug})`}/>
+          <ellipse cx="210" cy="255" rx="22" ry="12" fill={suitL} opacity="0.4" transform="rotate(-15 210 255)"/>
+          <ellipse cx="350" cy="255" rx="22" ry="12" fill="#0a1520" opacity="0.3" transform="rotate(15 350 255)"/>
+          <ellipse cx="280" cy="285" rx="30" ry="45" fill={suitM} opacity="0.15"/>
+
+          {/* SHIRT + TIE */}
+          <path d="M263,195 L280,255 L297,195" fill="white" opacity="0.96"/>
+          <path d="M263,195 L272,255 L280,255 L280,195 Z" fill="rgba(0,0,0,0.06)"/>
+          <path d="M276,201 L280,252 L284,201 Q282,196 280,195 Q278,196 276,201 Z" fill={accent} opacity="0.92"/>
+          <path d="M278,201 L280,252 L280,195 Z" fill="rgba(255,255,255,0.15)"/>
+          <ellipse cx="280" cy="198" rx="6" ry="5" fill={suitM}/>
+
+          {/* LAPELS */}
+          <path d="M263,195 L208,248 L224,288 L274,232 Z" fill={suitL} opacity="0.22"/>
+          <path d="M263,195 L208,248 L215,258 Z" fill={suitL} opacity="0.35"/>
+          <path d="M297,195 L352,248 L336,288 L286,232 Z" fill="rgba(0,0,0,0.2)"/>
+          <path d="M297,195 L352,248 L345,258 Z" fill="rgba(0,0,0,0.3)"/>
+
+          {/* Buttons */}
+          <circle cx="280" cy="302" r="4" fill="rgba(255,255,255,0.22)"/>
+          <circle cx="280" cy="322" r="4" fill="rgba(255,255,255,0.22)"/>
+          <circle cx="280" cy="342" r="4" fill="rgba(255,255,255,0.22)"/>
+
+          {/* Pocket square */}
+          <path d="M208,272 L222,269 L223,280 L208,283 Z" fill="white" opacity="0.18"/>
+
+          {/* NECK */}
+          <path d="M265,187 L295,187 L294,203 L266,203 Z" fill="#d4a87a"/>
+          <path d="M280,187 L295,187 L294,203 L280,203 Z" fill="rgba(0,0,0,0.1)"/>
+
+          {/* COLLAR */}
+          <path d="M266,200 L280,213 L294,200" fill="white" opacity="0.94"/>
+          <path d="M266,200 L274,209 L280,213 Z" fill="rgba(0,0,0,0.07)"/>
+
+          {/* EARS */}
+          <ellipse cx="218" cy="135" rx="8" ry="12" fill="#c8946a"/>
+          <ellipse cx="219" cy="135" rx="4" ry="7" fill="#bf8a5e" opacity="0.6"/>
+          <ellipse cx="342" cy="135" rx="8" ry="12" fill="#c8946a"/>
+          <ellipse cx="341" cy="135" rx="4" ry="7" fill="#bf8a5e" opacity="0.6"/>
+
+          {/* HEAD — clean sphere, no photo inside SVG */}
+          <circle cx="280" cy="135" r="63" fill="#d4a87a"/>
+          {/* Sphere shading for depth */}
+          <circle cx="280" cy="135" r="63">
+            <animate attributeName="opacity" values="1" dur="0s"/>
+          </circle>
+          <radialGradient id={`face-sh-${slug}`} cx="38%" cy="35%" r="60%">
+            <stop offset="0%"   stopColor="rgba(255,255,255,0.22)"/>
+            <stop offset="70%"  stopColor="rgba(0,0,0,0)"/>
+            <stop offset="100%" stopColor="rgba(0,0,0,0.25)"/>
+          </radialGradient>
+          <circle cx="280" cy="135" r="63" fill={`url(#face-sh-${slug})`}/>
+
+          {/* Minimal face features — elegant, not cartoonish */}
+          <ellipse cx="262" cy="132" rx="4.5" ry="5.5" fill="rgba(60,35,20,0.55)"/>
+          <ellipse cx="298" cy="132" rx="4.5" ry="5.5" fill="rgba(60,35,20,0.55)"/>
+          <path d="M268,152 Q280,160 292,152" fill="none" stroke="rgba(60,35,20,0.35)" strokeWidth="2" strokeLinecap="round"/>
+
+          {/* HAIR */}
+          <path d="M236,108 Q256,88 280,84 Q304,88 324,108 Q318,92 280,88 Q242,92 236,108 Z"
+            fill="#2a1a0e" opacity="0.75"/>
+          <path d="M218,120 Q222,100 236,108 Q228,104 222,116 Z" fill="#2a1a0e" opacity="0.55"/>
+          <path d="M342,120 Q338,100 324,108 Q332,104 338,116 Z" fill="#2a1a0e" opacity="0.55"/>
+
+          {/* Head outline */}
+          <circle cx="280" cy="135" r="63" fill="none" stroke={suit} strokeWidth="1" opacity="0.15"/>
+        </g>
+
+        {/* Party badge */}
+        <rect x="220" y="556" width="120" height="28" rx="14"
+          fill={isD ? "#1d4ed8" : "#dc2626"} opacity="0.9"/>
+        <text x="280" y="575" fontFamily="system-ui,sans-serif" fontSize="10.5" fontWeight="700"
+          fill="white" textAnchor="middle" letterSpacing="1.5">
+          {party === "D" ? "DEMOCRAT" : party === "R" ? "REPUBLICAN" : party}
+        </text>
+
+        {/* Legislature label */}
+        {legiscanName && (
+          <text x="280" y="56" fontFamily="system-ui,sans-serif" fontSize="8" fontWeight="700"
+            fill="rgba(26,58,92,0.28)" textAnchor="middle" letterSpacing="3">
+            89TH TEXAS LEGISLATURE
+          </text>
+        )}
+      </svg>
+
+      {/* ── Photo overlay — floats above the SVG head, liquid glass frame ── */}
+      {photo && (
+        <div
+          className="vit-photo absolute pointer-events-none"
           style={{
-            width: 200, height: 200,
-            boxShadow: `0 0 0 4px ${ring}, 0 12px 40px rgba(0,0,0,0.18)`,
-          }}>
-          {photo ? (
+            /* head center: cx=280/560=50%, cy=135/600=22.5%, r=63 */
+            left:   "calc(50% - 13%)",
+            top:    "calc(22.5% - 13%)",
+            width:  "26%",
+            aspectRatio: "1",
+          }}
+        >
+          {/* Liquid glass ring */}
+          <div
+            className="w-full h-full rounded-full overflow-hidden"
+            style={{
+              boxShadow: `0 0 0 3px ${ringC}, 0 0 0 6px rgba(255,255,255,0.55), 0 12px 32px rgba(26,58,92,0.28)`,
+              backdropFilter: "blur(2px)",
+            }}
+          >
             <img
               src={photo}
               alt={name}
               className="w-full h-full object-cover object-top"
               style={{ display: "block" }}
             />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-5xl font-bold text-white"
-              style={{ background: dim }}>
-              {name.split(" ").map(w => w[0]).slice(0, 2).join("")}
-            </div>
-          )}
+          </div>
         </div>
-      </div>
-    </>
+      )}
+    </div>
   );
 }
 
-/* ─── Main Profile Page ─────────────────────────────────────────────────────── */
+/* ─── Main Profile Page ─────────────────────────────────────────────────── */
 type Tab = "bills" | "money" | "news";
 
 export default function PoliticianProfile() {
   const { slug } = useParams<{ slug: string }>();
   const pol = POLITICIANS.find(p => p.slug === slug);
-  const [tab, setTab] = useState<Tab>("bills");
-  const [bills, setBills] = useState<Bill[]>([]);
-  const [billTotal, setBillTotal] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [tab, setTab]               = useState<Tab>("bills");
+  const [bills, setBills]           = useState<Bill[]>([]);
+  const [billTotal, setBillTotal]   = useState(0);
+  const [loading, setLoading]       = useState(false);
   const [statusFilter, setStatusFilter] = useState<BillStatus | "all">("all");
-  const [news, setNews] = useState<NewsArticle[]>([]);
+  const [news, setNews]             = useState<NewsArticle[]>([]);
   const [newsLoading, setNewsLoading] = useState(false);
 
   useEffect(() => {
@@ -149,11 +325,11 @@ export default function PoliticianProfile() {
     </div>
   );
 
-  const isD = pol.party === "D";
+  const isD         = pol.party === "D";
   const lawBills    = bills.filter(b => getBillStatus(b.last_action) === "law");
   const passedBills = bills.filter(b => getBillStatus(b.last_action) === "passed");
   const cmteBills   = bills.filter(b => getBillStatus(b.last_action) === "committee");
-  const pct = billTotal > 0 ? Math.round((lawBills.length / billTotal) * 100) : 0;
+  const pct         = billTotal > 0 ? Math.round((lawBills.length / billTotal) * 100) : 0;
   const displayBills = statusFilter === "all" ? bills : bills.filter(b => getBillStatus(b.last_action) === statusFilter);
 
   const tabs: { id: Tab; label: string }[] = [
@@ -176,42 +352,57 @@ export default function PoliticianProfile() {
         </Link>
       </div>
 
-      {/* ── Hero: portrait + name ─────────────────────────────────────── */}
-      <div className="pt-8 pb-2 flex flex-col items-center text-center px-6">
-        <PoliticianPortrait
-          slug={pol.slug}
-          photo={pol.photo}
-          party={pol.party}
-          name={pol.name}
-        />
-
-        {/* Party badge */}
-        <span className="mt-5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.18em] text-white"
-          style={{ background: isD ? "#1d4ed8" : "#dc2626" }}>
-          {pol.party === "D" ? "Democrat" : pol.party === "R" ? "Republican" : pol.party}
-        </span>
-
-        <h1 className="mt-3 text-4xl md:text-5xl font-bold text-[var(--accent)] leading-tight"
+      {/* ── Name + Office ──────────────────────────────────────────────── */}
+      <div className="text-center px-6 pt-6 pb-2 max-w-3xl mx-auto">
+        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--muted)] mb-2">{pol.office}</p>
+        <h1 className="text-4xl md:text-5xl font-bold text-[var(--accent)] leading-tight"
           style={{ fontFamily: "var(--font-playfair), serif" }}>
           {pol.name}
         </h1>
-        <p className="mt-1.5 text-[11px] font-bold uppercase tracking-[0.22em] text-[var(--muted)]">{pol.office}</p>
+      </div>
 
-        {/* Quick stats row */}
-        <div className="mt-5 flex flex-wrap justify-center gap-3">
-          <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-            <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-5 py-3 text-center">
-              <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-0.5">District</p>
-              <p className="text-xl font-bold text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair), serif" }}>
+      {/* ── Vitruvian Figure + flanking stats ─────────────────────────── */}
+      <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-[200px_1fr_200px] gap-4 items-center">
+
+        {/* LEFT STATS */}
+        <div className="flex md:flex-col gap-3 justify-center">
+          <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] flex-1 md:flex-none card-lift">
+            <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-4 py-4">
+              <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-1">District</p>
+              <p className="text-2xl font-bold text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair), serif" }}>
                 {pol.district}
               </p>
-              <p className="text-[10px] text-[var(--muted)]">{pol.chamber}</p>
+              <p className="text-xs text-[var(--muted)] mt-0.5">{pol.chamber}</p>
             </div>
           </div>
+          <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] flex-1 md:flex-none card-lift">
+            <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-4 py-4">
+              <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-1">Party</p>
+              <p className={`text-lg font-bold ${pol.party === "D" ? "text-blue-700" : pol.party === "R" ? "text-red-700" : "text-gray-600"}`}
+                style={{ fontFamily: "var(--font-playfair), serif" }}>
+                {pol.party === "D" ? "Democrat" : pol.party === "R" ? "Republican" : pol.party}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* CENTER FIGURE */}
+        <div>
+          <VitruvianFigure
+            slug={pol.slug}
+            photo={pol.photo}
+            party={pol.party}
+            name={pol.name}
+            legiscanName={pol.legiscanName}
+          />
+        </div>
+
+        {/* RIGHT STATS */}
+        <div className="flex md:flex-col gap-3 justify-center">
           {pol.salary && (
-            <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-              <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-5 py-3 text-center">
-                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-0.5">Salary / yr</p>
+            <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] flex-1 md:flex-none card-lift">
+              <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-4 py-4">
+                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-1">Salary / yr</p>
                 <p className="text-xl font-bold text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair), serif" }}>
                   ${pol.salary.toLocaleString()}
                 </p>
@@ -219,237 +410,238 @@ export default function PoliticianProfile() {
             </div>
           )}
           {pol.legiscanName && (
-            <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-              <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-5 py-3 text-center">
-                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-0.5">Into Law</p>
-                <p className={`text-xl font-bold ${isD ? "text-blue-700" : "text-red-700"}`}
+            <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] flex-1 md:flex-none card-lift">
+              <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-4 py-4">
+                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-1">Into Law</p>
+                <p className={`text-2xl font-bold ${isD ? "text-blue-700" : "text-red-700"}`}
                   style={{ fontFamily: "var(--font-playfair), serif" }}>
                   {loading ? "…" : lawBills.length}
                 </p>
                 {billTotal > 0 && (
-                  <p className="text-[10px] text-[var(--muted)]">of {billTotal} filed</p>
+                  <p className="text-[10px] text-[var(--muted)] mt-0.5">of {billTotal} filed</p>
                 )}
               </div>
             </div>
           )}
         </div>
+      </div>
 
-        {/* Social / links row */}
-        <div className="mt-4 flex flex-wrap justify-center gap-2">
-          {pol.website && (
-            <a href={pol.website} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[var(--accent)] text-white text-xs font-semibold hover:bg-[var(--accent-light)] transition-colors">
-              Official Website
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
-              </svg>
-            </a>
-          )}
-          {pol.twitter && (
-            <a href={`https://twitter.com/${pol.twitter}`} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white ring-1 ring-[var(--border)] text-[var(--accent)] text-xs font-semibold hover:ring-[var(--accent)] transition-colors">
-              X / Twitter
-            </a>
-          )}
-          {pol.instagram && (
-            <a href={`https://instagram.com/${pol.instagram}`} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white ring-1 ring-[var(--border)] text-[var(--accent)] text-xs font-semibold hover:ring-[var(--accent)] transition-colors">
-              Instagram
-            </a>
-          )}
-          {pol.email && (
-            <a href={`mailto:${pol.email}`}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white ring-1 ring-[var(--border)] text-[var(--accent)] text-xs font-semibold hover:ring-[var(--accent)] transition-colors">
-              Email
-            </a>
-          )}
-        </div>
+      {/* ── Social / Links row ─────────────────────────────────────────── */}
+      <div className="flex flex-wrap justify-center gap-2 px-6 pb-8 -mt-4">
+        {pol.website && (
+          <a href={pol.website} target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[var(--accent)] text-white text-xs font-semibold hover:bg-[var(--accent-light)] transition-colors">
+            Official Website
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
+            </svg>
+          </a>
+        )}
+        {pol.twitter && (
+          <a href={`https://twitter.com/${pol.twitter}`} target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white ring-1 ring-[var(--border)] text-[var(--accent)] text-xs font-semibold hover:ring-[var(--accent)] transition-colors">
+            X / Twitter
+          </a>
+        )}
+        {pol.instagram && (
+          <a href={`https://instagram.com/${pol.instagram}`} target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white ring-1 ring-[var(--border)] text-[var(--accent)] text-xs font-semibold hover:ring-[var(--accent)] transition-colors">
+            Instagram
+          </a>
+        )}
+        {pol.email && (
+          <a href={`mailto:${pol.email}`}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white ring-1 ring-[var(--border)] text-[var(--accent)] text-xs font-semibold hover:ring-[var(--accent)] transition-colors">
+            Email
+          </a>
+        )}
       </div>
 
       {/* ── Tabs + Content ─────────────────────────────────────────────── */}
-      <div className="mt-8 border-t border-[var(--border)]">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="flex gap-1 border-b border-[var(--border)]">
-            {tabs.map(t => (
-              <button key={t.id} onClick={() => setTab(t.id)}
-                className={`px-5 py-3.5 text-sm font-semibold transition-colors border-b-2 -mb-px ${
-                  tab === t.id ? "border-[var(--accent)] text-[var(--accent)]" : "border-transparent text-[var(--muted)] hover:text-[var(--foreground)]"
-                }`}>
-                {t.label}
-              </button>
-            ))}
+      {(pol.legiscanName || pol.salary) && (
+        <div className="border-t border-[var(--border)]">
+          <div className="max-w-5xl mx-auto px-6">
+            <div className="flex gap-1 border-b border-[var(--border)]">
+              {tabs.map(t => (
+                <button key={t.id} onClick={() => setTab(t.id)}
+                  className={`px-5 py-3.5 text-sm font-semibold transition-colors border-b-2 -mb-px ${
+                    tab === t.id ? "border-[var(--accent)] text-[var(--accent)]" : "border-transparent text-[var(--muted)] hover:text-[var(--foreground)]"
+                  }`}>
+                  {t.label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className="max-w-5xl mx-auto px-4 py-8">
+          <div className="max-w-5xl mx-auto px-4 py-8">
 
-          {/* ── BILLS TAB ── */}
-          {tab === "bills" && pol.legiscanName && (
-            <div>
-              {loading ? (
-                <div className="text-center py-16 text-[var(--muted)] text-sm animate-pulse">Loading bills…</div>
-              ) : (
-                <>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-                    {[
-                      { label: "Total Filed",       val: billTotal,         color: "" },
-                      { label: "Passed Committee",  val: cmteBills.length,  color: "text-blue-600" },
-                      { label: "Passed Chamber",    val: passedBills.length, color: "text-violet-600" },
-                      { label: "Signed into Law",   val: lawBills.length,   color: "text-green-600" },
-                    ].map(({ label, val, color }) => (
-                      <div key={label} className="rounded-[1.35rem] bg-white/60 ring-1 ring-black/8 p-[4px]">
-                        <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-4 text-center">
-                          <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--muted)] mb-1">{label}</p>
-                          <p className={`text-2xl font-bold ${color || "text-[var(--accent)]"}`}
-                            style={{ fontFamily: "var(--font-playfair), serif" }}>{val}</p>
+            {/* ── BILLS TAB ── */}
+            {tab === "bills" && pol.legiscanName && (
+              <div>
+                {loading ? (
+                  <div className="text-center py-16 text-[var(--muted)] text-sm animate-pulse">Loading bills…</div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                      {[
+                        { label: "Total Filed",       val: billTotal,         color: "" },
+                        { label: "Passed Committee",  val: cmteBills.length,  color: "text-blue-600" },
+                        { label: "Passed Chamber",    val: passedBills.length, color: "text-violet-600" },
+                        { label: "Signed into Law",   val: lawBills.length,   color: "text-green-600" },
+                      ].map(({ label, val, color }) => (
+                        <div key={label} className="rounded-[1.35rem] bg-white/60 ring-1 ring-black/8 p-[4px]">
+                          <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-4 text-center">
+                            <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--muted)] mb-1">{label}</p>
+                            <p className={`text-2xl font-bold ${color || "text-[var(--accent)]"}`}
+                              style={{ fontFamily: "var(--font-playfair), serif" }}>{val}</p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {billTotal > 0 && (
-                    <div className="mb-6">
-                      <div className="flex justify-between text-xs text-[var(--muted)] mb-1">
-                        <span>Pass rate</span>
-                        <span className="font-bold text-green-600">{pct}%</span>
-                      </div>
-                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-green-500 rounded-full transition-all duration-700"
-                          style={{ width: `${Math.min(pct, 100)}%` }} />
-                      </div>
-                      <p className="text-[11px] text-[var(--muted)] mt-1">89th Texas Legislature · Bills into law ÷ total filed</p>
+                      ))}
                     </div>
-                  )}
 
-                  {bills.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mb-5">
-                      <button onClick={() => setStatusFilter("all")}
-                        style={{ transition: "all 0.3s cubic-bezier(0.4,0,0.2,1)" }}
-                        className={`text-xs px-3 py-1.5 rounded-full border font-semibold ${statusFilter === "all" ? "bg-[var(--accent)] text-white border-[var(--accent)]" : "border-[var(--border)] text-[var(--muted)] hover:border-[var(--accent)]/40"}`}>
-                        All ({bills.length})
-                      </button>
-                      {(["law","passed","committee","filed"] as BillStatus[]).map(s => {
-                        const count = bills.filter(b => getBillStatus(b.last_action) === s).length;
-                        if (!count) return null;
-                        const st = STATUS_STYLES[s];
+                    {billTotal > 0 && (
+                      <div className="mb-6">
+                        <div className="flex justify-between text-xs text-[var(--muted)] mb-1">
+                          <span>Pass rate</span>
+                          <span className="font-bold text-green-600">{pct}%</span>
+                        </div>
+                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-green-500 rounded-full transition-all duration-700"
+                            style={{ width: `${Math.min(pct, 100)}%` }}/>
+                        </div>
+                        <p className="text-[11px] text-[var(--muted)] mt-1">89th Texas Legislature · Bills into law ÷ total filed</p>
+                      </div>
+                    )}
+
+                    {bills.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mb-5">
+                        <button onClick={() => setStatusFilter("all")}
+                          style={{ transition: "all 0.3s cubic-bezier(0.4,0,0.2,1)" }}
+                          className={`text-xs px-3 py-1.5 rounded-full border font-semibold ${statusFilter === "all" ? "bg-[var(--accent)] text-white border-[var(--accent)]" : "border-[var(--border)] text-[var(--muted)] hover:border-[var(--accent)]/40"}`}>
+                          All ({bills.length})
+                        </button>
+                        {(["law","passed","committee","filed"] as BillStatus[]).map(s => {
+                          const count = bills.filter(b => getBillStatus(b.last_action) === s).length;
+                          if (!count) return null;
+                          const st = STATUS_STYLES[s];
+                          return (
+                            <button key={s} onClick={() => setStatusFilter(statusFilter === s ? "all" : s)}
+                              style={{ transition: "all 0.3s cubic-bezier(0.4,0,0.2,1)", ...(statusFilter === s ? { background: st.text, color: "#fff", borderColor: st.text } : { background: st.bg, color: st.text, borderColor: st.bg }) }}
+                              className="text-xs px-3 py-1.5 rounded-full border font-semibold">
+                              {st.label} ({count})
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    <div className="bg-white border border-[var(--border)] rounded-xl overflow-hidden">
+                      {displayBills.length === 0
+                        ? <p className="p-8 text-center text-[var(--muted)] text-sm">No bills found.</p>
+                        : displayBills.map(bill => {
+                          const s = getBillStatus(bill.last_action);
+                          const st = STATUS_STYLES[s];
+                          return (
+                            <a key={bill.bill_id} href={bill.url} target="_blank" rel="noopener noreferrer"
+                              className="block px-5 py-4 border-b border-[var(--border)] last:border-0 hover:bg-gray-50 transition-colors">
+                              <div className="flex items-start justify-between gap-3">
+                                <span className="font-mono text-xs font-bold text-[var(--accent)]">{bill.bill_number}</span>
+                                <span className="text-xs px-2 py-0.5 rounded-full flex-shrink-0 font-medium"
+                                  style={{ background: st.bg, color: st.text }}>{st.label}</span>
+                              </div>
+                              <p className="text-sm text-[var(--foreground)] mt-1 leading-relaxed">{bill.title}</p>
+                              {bill.last_action_date && (
+                                <p className="text-xs text-gray-400 mt-1">{bill.last_action_date} · {bill.last_action}</p>
+                              )}
+                            </a>
+                          );
+                        })
+                      }
+                    </div>
+                    <p className="text-xs text-[var(--muted)] mt-4">Data: LegiScan · 89th Texas Legislature.</p>
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* ── MONEY TAB ── */}
+            {tab === "money" && (
+              <div className="py-4 text-center max-w-sm mx-auto">
+                <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
+                  <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-10 flex flex-col items-center gap-3">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.5">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M12 6v2m0 8v2M9 9h4.5a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3H15"/>
+                    </svg>
+                    <h3 className="font-bold text-[var(--accent)] text-lg" style={{ fontFamily: "var(--font-playfair), serif" }}>
+                      Campaign Finance Coming Soon
+                    </h3>
+                    <p className="text-sm text-[var(--muted)] leading-relaxed">
+                      Donor lists, spending breakdown, and PAC money will connect here once the Where Is the Dough data is wired to profiles.
+                    </p>
+                    <Link href="/tools/where-is-the-dough"
+                      className="mt-2 text-xs font-semibold text-[var(--accent-light)] hover:underline">
+                      See campaign finance tool →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── NEWS TAB ── */}
+            {tab === "news" && (
+              <div>
+                {newsLoading ? (
+                  <div className="text-center py-16 text-[var(--muted)] text-sm animate-pulse">Loading news…</div>
+                ) : news.length === 0 ? (
+                  <div className="text-center py-16 text-[var(--muted)] text-sm">
+                    <p className="font-semibold mb-1">No recent articles found.</p>
+                    <p className="text-xs">Try searching directly on Google News.</p>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-xs text-[var(--muted)] mb-5 font-semibold uppercase tracking-[0.18em]">
+                      Recent Coverage — {pol.name}
+                    </p>
+                    <div className="space-y-3">
+                      {news.map((article, i) => {
+                        const date = article.pubDate
+                          ? new Date(article.pubDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+                          : "";
                         return (
-                          <button key={s} onClick={() => setStatusFilter(statusFilter === s ? "all" : s)}
-                            style={{ transition: "all 0.3s cubic-bezier(0.4,0,0.2,1)", ...(statusFilter === s ? { background: st.text, color: "#fff", borderColor: st.text } : { background: st.bg, color: st.text, borderColor: st.bg }) }}
-                            className="text-xs px-3 py-1.5 rounded-full border font-semibold">
-                            {st.label} ({count})
-                          </button>
+                          <a key={i} href={article.link} target="_blank" rel="noopener noreferrer"
+                            className="block rounded-[1.35rem] bg-white/70 ring-1 ring-black/7 p-[4px] card-lift group">
+                            <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-5 py-4">
+                              <div className="flex items-start justify-between gap-4">
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-semibold text-[var(--foreground)] leading-snug group-hover:text-[var(--accent)] transition-colors line-clamp-2">
+                                    {article.title}
+                                  </p>
+                                  <div className="mt-1.5 flex items-center gap-2 text-[10px] text-[var(--muted)]">
+                                    {article.source && <span className="font-bold text-[var(--accent-light)]">{article.source}</span>}
+                                    {date && article.source && <span>·</span>}
+                                    {date && <span>{date}</span>}
+                                  </div>
+                                </div>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                                  className="flex-shrink-0 text-[var(--muted)] group-hover:text-[var(--accent)] transition-colors mt-0.5">
+                                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
+                                </svg>
+                              </div>
+                            </div>
+                          </a>
                         );
                       })}
                     </div>
-                  )}
-
-                  <div className="bg-white border border-[var(--border)] rounded-xl overflow-hidden">
-                    {displayBills.length === 0
-                      ? <p className="p-8 text-center text-[var(--muted)] text-sm">No bills found.</p>
-                      : displayBills.map(bill => {
-                        const s = getBillStatus(bill.last_action);
-                        const st = STATUS_STYLES[s];
-                        return (
-                          <a key={bill.bill_id} href={bill.url} target="_blank" rel="noopener noreferrer"
-                            className="block px-5 py-4 border-b border-[var(--border)] last:border-0 hover:bg-gray-50 transition-colors">
-                            <div className="flex items-start justify-between gap-3">
-                              <span className="font-mono text-xs font-bold text-[var(--accent)]">{bill.bill_number}</span>
-                              <span className="text-xs px-2 py-0.5 rounded-full flex-shrink-0 font-medium"
-                                style={{ background: st.bg, color: st.text }}>{st.label}</span>
-                            </div>
-                            <p className="text-sm text-[var(--foreground)] mt-1 leading-relaxed">{bill.title}</p>
-                            {bill.last_action_date && (
-                              <p className="text-xs text-gray-400 mt-1">{bill.last_action_date} · {bill.last_action}</p>
-                            )}
-                          </a>
-                        );
-                      })
-                    }
-                  </div>
-                  <p className="text-xs text-[var(--muted)] mt-4">Data: LegiScan · 89th Texas Legislature.</p>
-                </>
-              )}
-            </div>
-          )}
-
-          {/* ── MONEY TAB ── */}
-          {tab === "money" && (
-            <div className="py-4 text-center max-w-sm mx-auto">
-              <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
-                <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-10 flex flex-col items-center gap-3">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.5">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 6v2m0 8v2M9 9h4.5a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3H15"/>
-                  </svg>
-                  <h3 className="font-bold text-[var(--accent)] text-lg" style={{ fontFamily: "var(--font-playfair), serif" }}>
-                    Campaign Finance Coming Soon
-                  </h3>
-                  <p className="text-sm text-[var(--muted)] leading-relaxed">
-                    Donor lists, spending breakdown, and PAC money will connect here once the Where Is the Dough data is wired to profiles.
-                  </p>
-                  <Link href="/tools/where-is-the-dough"
-                    className="mt-2 text-xs font-semibold text-[var(--accent-light)] hover:underline">
-                    See campaign finance tool →
-                  </Link>
-                </div>
+                    <p className="text-xs text-[var(--muted)] mt-5">Source: Google News · Results for &ldquo;{pol.name}&rdquo; Harris County Texas.</p>
+                  </>
+                )}
               </div>
-            </div>
-          )}
+            )}
 
-          {/* ── NEWS TAB ── */}
-          {tab === "news" && (
-            <div>
-              {newsLoading ? (
-                <div className="text-center py-16 text-[var(--muted)] text-sm animate-pulse">Loading news…</div>
-              ) : news.length === 0 ? (
-                <div className="text-center py-16 text-[var(--muted)] text-sm">
-                  <p className="font-semibold mb-1">No recent articles found.</p>
-                  <p className="text-xs">Try searching directly on Google News.</p>
-                </div>
-              ) : (
-                <>
-                  <p className="text-xs text-[var(--muted)] mb-5 font-semibold uppercase tracking-[0.18em]">
-                    Recent Coverage — {pol.name}
-                  </p>
-                  <div className="space-y-3">
-                    {news.map((article, i) => {
-                      const date = article.pubDate
-                        ? new Date(article.pubDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
-                        : "";
-                      return (
-                        <a key={i} href={article.link} target="_blank" rel="noopener noreferrer"
-                          className="block rounded-[1.35rem] bg-white/70 ring-1 ring-black/7 p-[4px] hover:ring-[var(--accent)]/30 transition-all duration-300 group">
-                          <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-5 py-4">
-                            <div className="flex items-start justify-between gap-4">
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-semibold text-[var(--foreground)] leading-snug group-hover:text-[var(--accent)] transition-colors line-clamp-2">
-                                  {article.title}
-                                </p>
-                                <div className="mt-1.5 flex items-center gap-2 text-[10px] text-[var(--muted)]">
-                                  {article.source && (
-                                    <span className="font-bold text-[var(--accent-light)]">{article.source}</span>
-                                  )}
-                                  {date && article.source && <span>·</span>}
-                                  {date && <span>{date}</span>}
-                                </div>
-                              </div>
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 text-[var(--muted)] group-hover:text-[var(--accent)] transition-colors mt-0.5">
-                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
-                              </svg>
-                            </div>
-                          </div>
-                        </a>
-                      );
-                    })}
-                  </div>
-                  <p className="text-xs text-[var(--muted)] mt-5">Source: Google News · Results for &ldquo;{pol.name}&rdquo; Harris County Texas.</p>
-                </>
-              )}
-            </div>
-          )}
-
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
