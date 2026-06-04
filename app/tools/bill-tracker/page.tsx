@@ -172,19 +172,20 @@ export default function BillTracker() {
   return (
     <div style={{ fontFamily: "var(--font-inter), sans-serif" }}>
       {/* Hero */}
-      <div className="bg-[var(--accent)] text-white py-10 px-6">
-        <div className="max-w-6xl mx-auto">
-          <p className="text-sky-300 text-xs font-semibold uppercase tracking-widest mb-2">
-            Bill Tracker · 89th Texas Legislature
+      <div className="bg-[var(--accent)] text-white px-6 py-10 relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_80%_50%,rgba(37,99,168,0.4),transparent)]" />
+        <div className="max-w-6xl mx-auto relative z-10">
+          <p className="text-sky-300/80 text-[11px] font-bold uppercase tracking-[0.25em] mb-3">
+            📋 Legislative
           </p>
-          <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "var(--font-playfair), serif" }}>
-            What did your rep actually do?
+          <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-2" style={{ fontFamily: "var(--font-playfair), serif" }}>
+            Bill Tracker
           </h1>
           <p className="text-white/70 text-sm max-w-xl">
-            Bills filed, passed committee, passed chamber, and signed into law — for every Harris County state rep.
+            Bills filed, passed committee, passed chamber, and signed into law — for every Harris County state rep. 89th Texas Legislature.
           </p>
           {preloading && (
-            <p className="text-sky-300/70 text-xs mt-2 animate-pulse">Loading counts for all reps…</p>
+            <p className="text-sky-300/60 text-xs mt-3 animate-pulse">Loading counts for all reps…</p>
           )}
         </div>
       </div>
