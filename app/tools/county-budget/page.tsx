@@ -175,26 +175,26 @@ export default function CountyBudget() {
             Harris County Budget
           </h1>
           <p className="text-white/70 text-sm max-w-lg">
-            How 4.8 million residents are governed — and what it actually costs. FY2027 Proposed.
+            Harris County is set to cross $3 billion for the first time — with a projected deficit commissioners must close before Oct. 1.
           </p>
           <ShareButton
             toolName="Harris County Budget"
             section="Money"
-            description="How Harris County spends your tax dollars — department by department. FY2027 Proposed."
-            stats={[{ label: "Total Budget", value: "$2.84B" }, { label: "Departments", value: "15" }]}
+            description="Harris County's FY2027 proposed budget tops $3B for the first time — with a $129M–$287M deficit to close."
+            stats={[{ label: "Total Budget", value: "$3B+" }, { label: "Projected Deficit", value: "$129M–$287M" }]}
           />
           <div className="mt-5 flex flex-wrap gap-3">
             <div className="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-3">
               <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">Total Budget</p>
-              <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif" }}>${(TOTAL / 1000).toFixed(2)}B</p>
+              <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif" }}>$3B+</p>
             </div>
             <div className="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-3">
-              <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">FY2027</p>
-              <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif" }}>Proposed</p>
+              <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">Projected Deficit</p>
+              <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif" }}>$129M–$287M</p>
             </div>
             <div className="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-3">
-              <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">Residents</p>
-              <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif" }}>4.8M</p>
+              <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">Consecutive Deficits</p>
+              <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif" }}>5th Year</p>
             </div>
           </div>
         </div>
@@ -261,57 +261,69 @@ export default function CountyBudget() {
               <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[var(--muted)] mb-2">What You Need to Know</p>
               <h2 className="text-3xl md:text-4xl font-bold text-[var(--accent)] leading-tight max-w-2xl"
                 style={{ fontFamily: "var(--font-playfair), serif" }}>
-                Three forces shape every dollar Harris County spends.
+                Harris County just crossed $3 billion — and it&rsquo;s still not enough.
               </h2>
               <p className="mt-3 text-sm text-[var(--muted)] max-w-2xl leading-relaxed">
-                Harris County governs 4.8 million people — the third-largest county in America. Its $2.84 billion budget is pulled in three directions: the weight of public safety, the long bill from Harvey, and the county&rsquo;s debt on decades of growth.
+                For the first time ever, Harris County&rsquo;s budget tops $3 billion. And for the fifth consecutive year, commissioners have to close a deficit before the fiscal year even starts. This is not a one-time problem — budget director Daniel Ramos calls it structural. Here&rsquo;s what&rsquo;s driving it.
               </p>
             </div>
 
             <StoryBeat
-              eyebrow="Move 1 — Public Safety"
-              headline="One in five county dollars goes to the Sheriff."
-              body="At $524 million, the Sheriff&rsquo;s Office is the single largest line in the county budget — bigger than all roads, bigger than flood control, bigger than health. That&rsquo;s 18.5% of the entire budget for patrol, detention, court security, and emergency response across a county the size of Rhode Island."
-              stat="$524M"
-              statLabel="Sheriff FY2027 Proposed"
+              eyebrow="The Deficit — FY2027"
+              headline="Up to $287 million in the hole before October 1."
+              body={`If commissioners keep services exactly as they are today, the projected deficit is $287 million. If they raise property taxes to the maximum allowed under state law — something Judge Lina Hidalgo says she doubts will happen in an election year — the gap narrows to $129 million. Either way, commissioners must pass a balanced budget by law, meaning every dollar of deficit must be cut or found somewhere. And there's also a $27 million gap to close right now, before this fiscal year even ends Sept. 30.`}
+              stat="$287M"
+              statLabel="Worst-case deficit FY2027"
+              color="#dc2626"
+              border="#ef4444"
+            />
+
+            <StoryBeat
+              eyebrow="The Badge Bill"
+              headline="Law enforcement raises are the single biggest driver."
+              body={`Last year, commissioners approved a 24% raise for all Harris County law enforcement to match pay raises Houston Mayor John Whitmire gave HPD officers (36.5% over five years). The problem: officials expected officers to retire and be replaced by cheaper hires — what budget director Ramos called "an escalator." The attrition never materialized. Combined with another round of raises locked in over the next four years, law enforcement salaries account for roughly $73 million in added costs for FY2027 alone. State law also prohibits cutting law enforcement budgets, meaning the county must fund vacant positions — adding another $31 million.`}
+              stat="$73M"
+              statLabel="Law enforcement salary increase"
               color="#1d4ed8"
               border="#3b82f6"
             />
 
             <StoryBeat
-              eyebrow="Move 2 — The Harvey Reckoning"
-              headline="A storm eight years ago is still reshaping how we spend."
-              body="Hurricane Harvey (2017) dumped 60 inches of rain on Harris County and caused $125 billion in damage. Voters responded with a $2.5 billion flood bond. The result: Flood Control is now the fastest-growing major line in the budget — up 12.3% this year to $274 million — as bayou improvements, detention basins, and drainage projects transform the region&rsquo;s relationship with water."
-              stat="+12.3%"
-              statLabel="Flood Control growth"
-              color="#0891b2"
-              border="#22d3ee"
+              eyebrow="The State Constraint"
+              headline="Austin caps how much Harris County can raise — and even Tom Ramsey is frustrated."
+              body={`A state law passed in 2019 limits how much counties can grow their property tax revenue without voter approval. Harris County began projecting deficits in FY2023, two years after the law took effect. Add $68 million in rising benefit and healthcare costs, plus $20 million in inflationary expenses tied to tech services, fleet management, and fuel — some of it driven by the War in Iran — and the math gets brutal fast. Harris County isn't alone: Fort Bend County faces an $80M deficit, Bexar County is warning of a major shortfall. But Harris County's lone Republican commissioner, Tom Ramsey, put it bluntly: "Thank God for Harris County. Otherwise we'd have a problem in the state of Texas."`}
+              stat="5th"
+              statLabel="Consecutive deficit year"
+              color="#7c3aed"
+              border="#a78bfa"
             />
 
-            <StoryBeat
-              eyebrow="Move 3 — The Invisible Bill"
-              headline="$298 million a year — just to pay for what we already built."
-              body="Debt service is the county&rsquo;s third largest expenditure. Every bond passed for roads, flood control, and public buildings comes with an annual interest payment. That $298 million per year funds nothing new — it&rsquo;s the carrying cost of past decisions. As the flood bond draws down, this number will stay elevated through the 2030s."
-              stat="$298M"
-              statLabel="Debt service FY2027 Proposed"
-              color="#6b7280"
-              border="#9ca3af"
-            />
-
-            {/* Bonus: spending context callout */}
+            {/* Quote callout */}
             <div className="rounded-[1.75rem] bg-[var(--accent)]/4 ring-1 ring-[var(--accent)]/10 p-[6px]">
               <div className="rounded-[1.35rem] px-8 py-7">
-                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--accent)] mb-3">By the Numbers</p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--accent)] mb-5">What They Said</p>
+                <div className="space-y-5">
                   {[
-                    { label: "Cost per resident / yr", val: `$${Math.round((TOTAL * 1e6) / 4_800_000).toLocaleString()}` },
-                    { label: "Health + Human Svcs",     val: "$290M" },
-                    { label: "Roads + Flood Control",   val: "$663M" },
-                    { label: "Indigent Defense",         val: "$88M" },
-                  ].map(({ label, val }) => (
-                    <div key={label} className="text-center">
-                      <p className="text-2xl font-bold text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair), serif" }}>{val}</p>
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)] mt-0.5">{label}</p>
+                    {
+                      quote: "This is the lowest possible deficit. That would mean that we set the tax rate basically as high as we can set it within the state constraints. And I don't know that my colleagues will do that in an election year.",
+                      name: "Judge Lina Hidalgo",
+                      role: "Harris County Judge",
+                    },
+                    {
+                      quote: "I think about it like an escalator. The most expensive people retire and fall off, and they're replaced by the cheapest people. Because we didn't have attrition, it was like that escalator went a floor longer.",
+                      name: "Daniel Ramos",
+                      role: "Harris County Budget Director",
+                    },
+                    {
+                      quote: "When people gather in Austin and they talk about the 'problem' that is Harris County — talk to me about the port, talk to me about the Medical Center. So there should be more help.",
+                      name: "Commissioner Tom Ramsey",
+                      role: "Precinct 3 (Republican)",
+                    },
+                  ].map(({ quote, name, role }) => (
+                    <div key={name} className="border-l-2 border-[var(--accent)]/20 pl-5">
+                      <p className="text-sm text-[var(--foreground)] leading-relaxed italic">&ldquo;{quote}&rdquo;</p>
+                      <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--accent)]">{name}</p>
+                      <p className="text-[10px] text-[var(--muted)]">{role}</p>
                     </div>
                   ))}
                 </div>
@@ -327,7 +339,10 @@ export default function CountyBudget() {
                 </svg>
               </button>
             </div>
-            <p className="text-xs text-[var(--muted)] text-center">Source: Harris County FY2027 Proposed Budget. Figures approximate.</p>
+            <p className="text-xs text-[var(--muted)] text-center">
+              Source: Houston Chronicle, May 14, 2026 (John Lomax V) · Harris County Budget Director presentation, Commissioners Court.
+              Department figures estimated; deficit figures confirmed.
+            </p>
           </div>
         )}
 
