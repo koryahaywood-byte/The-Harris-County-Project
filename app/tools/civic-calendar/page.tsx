@@ -401,10 +401,10 @@ function EventCard({ event }: { event: CivicEvent }) {
 
   return (
     <div
-      className={`rounded-[1.75rem] ring-1 p-[5px] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+      className={`rounded-[1.75rem] ring-1 p-[5px] card-lift transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
         event.importance === "high"
-          ? "bg-[var(--accent)]/5 ring-[var(--accent)]/20 hover:ring-[var(--accent)]/40 hover:shadow-lg"
-          : "bg-white/60 ring-black/8 hover:ring-[var(--accent-light)] hover:shadow-md"
+          ? "bg-[var(--accent)]/5 ring-[var(--accent)]/20 hover:ring-[var(--accent)]/40"
+          : "bg-white/60 ring-black/8 hover:ring-[var(--accent-light)]"
       } ${isPast ? "opacity-50" : ""}`}
     >
       <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-5">

@@ -43,10 +43,10 @@ function TIRZCard({ tirz, selected, onClick }: { tirz: TIRZ; selected: boolean; 
   return (
     <button
       onClick={onClick}
-      className={`text-left rounded-[1.35rem] ring-1 p-[4px] w-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+      className={`text-left rounded-[1.35rem] ring-1 p-[4px] w-full card-lift transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
         selected
           ? "ring-[var(--accent)] bg-[var(--accent)]/5 shadow-lg"
-          : "ring-black/8 bg-white/60 hover:ring-[var(--accent-light)] hover:shadow-md"
+          : "ring-black/8 bg-white/60 hover:ring-[var(--accent-light)]"
       }`}
     >
       <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-4 py-3">

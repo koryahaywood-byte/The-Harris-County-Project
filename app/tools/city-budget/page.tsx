@@ -423,7 +423,7 @@ export default function CityBudget() {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {COUNCIL.map((cm) => (
-                <div key={cm.district} className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[5px] hover:ring-[var(--accent-light)] hover:shadow-md transition-all duration-500">
+                <div key={cm.district} className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[5px] card-lift hover:ring-[var(--accent-light)] transition-all duration-500">
                   <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-5">
                     <div className="flex items-start justify-between mb-3">
                       <div>

@@ -236,7 +236,7 @@ export default function BillTracker() {
   return (
     <div>
       {/* Hero */}
-      <div className="bg-[var(--accent)] text-white px-6 py-10 relative overflow-hidden">
+      <div className="bg-[var(--accent)] text-white px-6 py-16 md:py-24 relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_80%_50%,rgba(37,99,168,0.4),transparent)]" />
         <div className="max-w-6xl mx-auto relative z-10">
           <p className="text-sky-300/80 text-[11px] font-bold uppercase tracking-[0.25em] mb-3">Legislative</p>
@@ -310,7 +310,7 @@ export default function BillTracker() {
         <div className="flex gap-6 flex-col lg:flex-row">
           {/* Leaderboard */}
           <div className="flex-1 min-w-0">
-            <div className="bg-white border border-[var(--border)] rounded-xl overflow-hidden">
+            <div className="bg-white border border-[var(--border)] rounded-xl overflow-hidden card-lift">
               <div className="px-5 py-3 border-b border-[var(--border)] bg-gray-50 flex justify-between items-center">
                 <span className="text-xs font-bold uppercase tracking-widest text-[var(--muted)]">Leaderboard</span>
                 <span className="text-xs text-[var(--muted)]">{filtered.length} reps · tap to see bills</span>

@@ -83,7 +83,7 @@ function StoryBeat({
   stat: string; statLabel: string; color: string; border: string;
 }) {
   return (
-    <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
+    <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px] card-lift">
       <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-8 py-8"
         style={{ borderLeft: `4px solid ${border}` }}>
         <p className="text-[10px] font-bold uppercase tracking-[0.22em] mb-3" style={{ color }}>{eyebrow}</p>

@@ -128,7 +128,7 @@ export default function TVStation() {
             </h1>
           </div>
           <span className="hidden sm:flex items-center gap-1.5 bg-white/10 ring-1 ring-white/20 rounded-full px-3 py-1 text-[10px] font-semibold text-white/80">
-            <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
+            <span className="relative flex h-1.5 w-1.5"><span className="alive-halo absolute inline-flex h-full w-full rounded-full bg-red-400" /><span className="alive-pulse relative inline-flex h-1.5 w-1.5 rounded-full bg-red-400" /></span>
             Live streams from public meetings
           </span>
         </div>

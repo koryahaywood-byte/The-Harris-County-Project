@@ -101,7 +101,7 @@ function ConsultantCard({
       className={`group text-left rounded-[1.35rem] ring-1 p-[4px] w-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
         selected
           ? "ring-[var(--accent)] shadow-lg scale-[1.01]"
-          : "ring-black/8 hover:ring-[var(--accent-light)] hover:shadow-md"
+          : "card-lift ring-black/8 hover:ring-[var(--accent-light)]"
       }`}
       style={{ background: selected ? "rgba(26,58,92,0.04)" : "rgba(255,255,255,0.6)" }}
     >

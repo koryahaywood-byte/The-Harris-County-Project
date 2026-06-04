@@ -98,10 +98,10 @@ function RepRow({
 
   return (
     <div
-      className={`rounded-[1.75rem] ring-1 p-[5px] cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+      className={`rounded-[1.75rem] ring-1 p-[5px] cursor-pointer card-lift transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
         active
           ? "ring-[var(--accent)] bg-[var(--accent)]/5 shadow-lg"
-          : "ring-black/8 bg-white/60 hover:ring-[var(--accent-light)] hover:shadow-md"
+          : "ring-black/8 bg-white/60 hover:ring-[var(--accent-light)]"
       }`}
       onClick={onClick}
     >
