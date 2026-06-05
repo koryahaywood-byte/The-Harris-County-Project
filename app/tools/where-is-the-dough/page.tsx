@@ -249,28 +249,34 @@ export default function WhereIsTheDough() {
               </div>
             ))}
 
-            {/* Party bank */}
-            <div className="rounded-[1.75rem] bg-[var(--accent)]/4 ring-1 ring-[var(--accent)]/10 p-[6px]">
-              <div className="rounded-[1.35rem] px-8 py-7">
-                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--accent)] mb-5">The Bank Split</p>
-                <div className="flex flex-col gap-4">
-                  {[
-                    { label: "Democrats", total: demTotal, color: "#3b82f6", textColor: "text-blue-700" },
-                    { label: "Republicans", total: repTotal, color: "#ef4444", textColor: "text-red-700" },
-                  ].map(({ label, total, color, textColor }) => (
-                    <div key={label}>
-                      <div className="flex justify-between text-sm mb-1.5">
-                        <span className={`font-bold ${textColor}`}>{label}</span>
-                        <span className={`font-bold ${textColor}`}>{fmt(total)}</span>
-                      </div>
-                      <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-full rounded-full transition-all duration-700" style={{ width: `${(total / totalPool) * 100}%`, background: color }}/>
-                      </div>
-                      <p className="text-[10px] text-[var(--muted)] mt-1">{((total / totalPool) * 100).toFixed(0)}% of all tracked cash</p>
-                    </div>
-                  ))}
+            {/* Monarch party split bar */}
+            <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
+              <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-8 py-7">
+                <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-[var(--muted)] mb-5">The Bank Split</p>
+                {/* Labels */}
+                <div className="flex justify-between items-end mb-3">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-blue-600 mb-0.5">Democrats</p>
+                    <p className="text-3xl font-bold text-blue-700"
+                      style={{ fontFamily: "var(--font-playfair), serif" }}>{fmt(demTotal)}</p>
+                    <p className="text-[10px] text-blue-500 mt-0.5">{((demTotal / totalPool) * 100).toFixed(0)}% of tracked cash</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-red-600 mb-0.5">Republicans</p>
+                    <p className="text-3xl font-bold text-red-700"
+                      style={{ fontFamily: "var(--font-playfair), serif" }}>{fmt(repTotal)}</p>
+                    <p className="text-[10px] text-red-500 mt-0.5">{((repTotal / totalPool) * 100).toFixed(0)}% of tracked cash</p>
+                  </div>
                 </div>
-                <p className="text-xs text-[var(--muted)] mt-5">Note: Abbott&rsquo;s $105M war chest dominates the Republican total. County-level Republican candidates hold substantially less.</p>
+                {/* Single split pill bar */}
+                <div className="h-6 rounded-full overflow-hidden flex">
+                  <div className="h-full bg-gradient-to-r from-blue-600 to-blue-500 transition-all duration-1000 rounded-l-full"
+                    style={{ width: `${(demTotal / totalPool) * 100}%` }}/>
+                  <div className="h-full bg-gradient-to-r from-red-500 to-red-600 flex-1 transition-all duration-1000 rounded-r-full"/>
+                </div>
+                <p className="text-[10px] text-[var(--muted)] mt-4">
+                  Note: Abbott&rsquo;s $105M war chest dominates the Republican total. County-level Republican candidates hold substantially less.
+                </p>
               </div>
             </div>
 
@@ -310,25 +316,39 @@ export default function WhereIsTheDough() {
                 ) : filtered.map((c, i) => {
                   const isD = c.party === "D";
                   const pct = Math.min((c.cash / maxCash) * 100, 100);
+                  const initials = c.name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase();
+                  const rankColor = i === 0 ? "text-amber-500" : i === 1 ? "text-gray-400" : i === 2 ? "text-amber-700" : "text-[var(--muted)]";
                   return (
                     <div key={`${c.name}-${i}`}
-                      className="flex items-center gap-3 px-5 py-3.5 border-b border-[var(--border)] last:border-0 hover:bg-[var(--accent)]/3 transition-colors duration-200">
-                      <span className={`w-8 flex-shrink-0 text-center text-xs font-bold ${i===0?"text-amber-500":i===1?"text-gray-400":i===2?"text-amber-700":"text-[var(--muted)]"}`}>{i+1}</span>
+                      className="flex items-center gap-4 px-5 py-4 border-b border-[var(--border)] last:border-0 hover:bg-black/[0.018] transition-colors duration-200">
+                      {/* Rank */}
+                      <span className={`w-6 flex-shrink-0 text-center text-xs font-bold ${rankColor}`}>{i + 1}</span>
+                      {/* Avatar */}
+                      <div
+                        className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-white text-[11px] font-bold"
+                        style={{ background: isD ? "#3b82f6" : "#ef4444" }}>
+                        {initials}
+                      </div>
+                      {/* Name + bar */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
+                        <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
                           <span className="font-semibold text-sm text-[var(--foreground)] leading-tight">{c.name}</span>
-                          <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full ${isD?"bg-blue-100 text-blue-700":"bg-red-100 text-red-700"}`}>{c.party}</span>
-                          {c.incumbent && <span className="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">★ Inc</span>}
+                          <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full ${isD ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"}`}>{c.party}</span>
+                          {c.incumbent && <span className="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Inc</span>}
                         </div>
-                        <p className="text-[11px] text-[var(--muted)] truncate">{c.office}</p>
-                      </div>
-                      <div className="w-28 flex-shrink-0 hidden sm:block">
-                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                          <div className="h-full rounded-full transition-all duration-700" style={{ width: `${pct}%`, background: isD ? "#3b82f6" : "#ef4444" }}/>
+                        <p className="text-[10px] text-[var(--muted)] truncate mb-2">{c.office}</p>
+                        {/* Monarch pill bar */}
+                        <div className="h-2 bg-black/[0.05] rounded-full overflow-hidden max-w-xs hidden sm:block">
+                          <div className="h-full rounded-full transition-all duration-700"
+                            style={{ width: `${pct}%`, background: `linear-gradient(90deg,${isD ? "#3b82f6cc" : "#ef4444cc"},${isD ? "#3b82f6" : "#ef4444"})` }}/>
                         </div>
                       </div>
-                      <span className={`w-24 text-right flex-shrink-0 text-sm font-bold ${isD?"text-blue-600":"text-red-600"}`}>{fmt(c.cash)}</span>
-                      <span className="w-20 text-right flex-shrink-0 text-[10px] text-[var(--muted)] hidden md:block">{c.asOf}</span>
+                      {/* Cash + date */}
+                      <div className="flex-shrink-0 text-right">
+                        <p className={`text-base font-bold ${isD ? "text-blue-600" : "text-red-600"}`}
+                          style={{ fontFamily: "var(--font-playfair), serif" }}>{fmt(c.cash)}</p>
+                        <p className="text-[10px] text-[var(--muted)] mt-0.5 hidden md:block">{c.asOf}</p>
+                      </div>
                     </div>
                   );
                 })}

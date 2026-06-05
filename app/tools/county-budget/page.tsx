@@ -113,30 +113,74 @@ function StoryBeat({
   );
 }
 
-/* ─── Bar chart component ─────────────────────────────────────────────────── */
-function BudgetBar({ line, max }: { line: BudgetLine; max: number }) {
+/* ─── Monarch-style bar ──────────────────────────────────────────────────── */
+function MonarchBudgetBar({ line, max }: { line: BudgetLine; max: number }) {
   const pct = (line.amount / max) * 100;
   const color = CAT_COLOR[line.category] ?? "#9ca3af";
+  const up = line.change > 0;
   return (
-    <div className="group flex items-center gap-3 py-2.5 px-4 hover:bg-[var(--accent)]/3 rounded-xl transition-colors duration-300">
-      <div className="w-44 flex-shrink-0 hidden sm:block">
-        <p className="text-xs font-semibold text-[var(--foreground)] leading-tight truncate">{line.dept}</p>
-        <p className="text-[10px] text-[var(--muted)]">{line.category}</p>
+    <div className="group px-5 py-4 hover:bg-black/[0.02] rounded-2xl transition-all duration-300 cursor-default">
+      <div className="flex items-start justify-between gap-4 mb-3">
+        <div className="flex items-start gap-2.5 min-w-0 flex-1">
+          <span className="w-3 h-3 rounded-full flex-shrink-0 mt-[3px]" style={{ background: color }}/>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-[var(--foreground)] leading-tight">{line.dept}</p>
+            <p className="text-[10px] text-[var(--muted)] mt-0.5">{line.category}</p>
+          </div>
+        </div>
+        <div className="flex-shrink-0 text-right">
+          <p className="text-base font-bold text-[var(--accent)]"
+            style={{ fontFamily: "var(--font-playfair), serif" }}>{fmt(line.amount)}</p>
+          <span className={`inline-flex items-center gap-0.5 text-[10px] font-bold ${
+            up ? "text-emerald-600" : line.change < 0 ? "text-red-500" : "text-[var(--muted)]"
+          }`}>
+            {up ? "▲" : line.change < 0 ? "▼" : "—"} {Math.abs(line.change).toFixed(1)}%
+          </span>
+        </div>
       </div>
-      <div className="sm:hidden w-32 flex-shrink-0">
-        <p className="text-xs font-semibold text-[var(--foreground)] leading-tight">{line.dept.split(" ")[0]}</p>
+      {/* Pill bar */}
+      <div className="h-2.5 bg-black/[0.05] rounded-full overflow-hidden">
+        <div className="h-full rounded-full"
+          style={{ width: `${pct}%`, background: `linear-gradient(90deg,${color}cc,${color})`,
+            transition: "width 0.9s cubic-bezier(0.22,1,0.36,1)" }}/>
       </div>
-      <div className="flex-1 h-6 bg-gray-100 rounded-full overflow-hidden relative">
-        <div className="h-full rounded-full transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"
-          style={{ width: `${pct}%`, background: color }}/>
+      {/* Description on hover */}
+      <div className="overflow-hidden max-h-0 group-hover:max-h-10 transition-all duration-300">
+        <p className="text-[10px] text-[var(--muted)] mt-2 leading-relaxed">{line.description}</p>
       </div>
-      <div className="w-16 text-right flex-shrink-0">
-        <p className="text-xs font-bold text-[var(--accent)]">{fmt(line.amount)}</p>
-      </div>
-      <div className="w-14 text-right flex-shrink-0 hidden md:block">
-        <span className={`text-[10px] font-bold ${line.change > 5 ? "text-emerald-600" : line.change < 0 ? "text-red-500" : "text-[var(--muted)]"}`}>
-          {line.change > 0 ? "+" : ""}{line.change}%
-        </span>
+    </div>
+  );
+}
+
+/* ─── Stacked category bar ───────────────────────────────────────────────── */
+function CategoryStackedBar({ byCategory, total }: { byCategory: Record<string, number>; total: number }) {
+  const sorted = Object.entries(byCategory).sort((a, b) => b[1] - a[1]);
+  return (
+    <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px] mb-8">
+      <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-6">
+        <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-[var(--muted)] mb-4">Spending by Category</p>
+        {/* Proportional stacked bar */}
+        <div className="h-5 rounded-full flex overflow-hidden mb-5 gap-[2px]">
+          {sorted.map(([cat, amt]) => (
+            <div key={cat}
+              className="h-full transition-all duration-700"
+              style={{ width: `${(amt / total) * 100}%`, background: CAT_COLOR[cat] ?? "#9ca3af",
+                minWidth: amt / total > 0.008 ? 3 : 0 }}
+              title={`${cat}: ${fmt(amt)}`}
+            />
+          ))}
+        </div>
+        {/* Legend */}
+        <div className="flex flex-wrap gap-x-5 gap-y-2">
+          {sorted.map(([cat, amt]) => (
+            <div key={cat} className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: CAT_COLOR[cat] ?? "#9ca3af" }}/>
+              <span className="text-[10px] font-medium text-[var(--muted)]">{cat}</span>
+              <span className="text-[10px] font-bold text-[var(--accent)]">{fmt(amt)}</span>
+              <span className="text-[10px] text-[var(--muted)]/60">{((amt / total) * 100).toFixed(0)}%</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -370,29 +414,14 @@ export default function CountyBudget() {
         {/* ── BUDGET BREAKDOWN TAB ──────────────────────────────────────── */}
         {view === "budget" && (
           <div>
-            <div className="flex flex-wrap gap-3 mb-8">
-              {Object.entries(byCategory).sort((a, b) => b[1] - a[1]).map(([cat, amt]) => (
-                <div key={cat} className="rounded-[1.35rem] bg-white/60 ring-1 ring-black/8 p-[4px]">
-                  <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-4 py-2.5 flex items-center gap-2.5">
-                    <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: CAT_COLOR[cat] ?? "#9ca3af" }}/>
-                    <span className="text-xs font-semibold text-[var(--foreground)]">{cat}</span>
-                    <span className="text-xs font-bold text-[var(--accent)]">{fmt(amt)}</span>
-                    <span className="text-[10px] text-[var(--muted)]">{((amt / TOTAL) * 100).toFixed(0)}%</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+            {/* Monarch stacked category bar */}
+            <CategoryStackedBar byCategory={byCategory} total={TOTAL} />
 
+            {/* Monarch department bars */}
             <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
-              <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] py-3">
-                <div className="flex items-center gap-3 px-4 pb-2 border-b border-[var(--border)]">
-                  <span className="w-44 flex-shrink-0 hidden sm:block text-[10px] font-bold uppercase tracking-widest text-[var(--muted)]">Department</span>
-                  <span className="flex-1 text-[10px] font-bold uppercase tracking-widest text-[var(--muted)]">Share of Budget</span>
-                  <span className="w-16 text-right flex-shrink-0 text-[10px] font-bold uppercase tracking-widest text-[var(--muted)]">Amount</span>
-                  <span className="w-14 text-right flex-shrink-0 hidden md:block text-[10px] font-bold uppercase tracking-widest text-[var(--muted)]">YoY</span>
-                </div>
+              <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] py-2">
                 {sortedBudget.map(line => (
-                  <BudgetBar key={line.dept} line={line} max={maxAmount}/>
+                  <MonarchBudgetBar key={line.dept} line={line} max={maxAmount}/>
                 ))}
               </div>
             </div>
