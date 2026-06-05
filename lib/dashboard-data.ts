@@ -58,47 +58,6 @@ async function fetchMarketIndex(symbol: string, name: string): Promise<MarketInd
   }
 }
 
-async function getWikipediaImage(topic: string, fallback: string): Promise<string> {
-  try {
-    const res = await fetch(
-      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topic)}`,
-      {
-        next: { revalidate: 86400 },
-        headers: { "User-Agent": "HarrisCountyProject/1.0 (dapr@theharriscountyproject.com)" },
-      }
-    );
-    if (!res.ok) return fallback;
-    const data = await res.json();
-    const thumb: string | undefined = data?.thumbnail?.source;
-    if (!thumb) return fallback;
-    return thumb;
-  } catch {
-    return fallback;
-  }
-}
-
-async function fetchOgImage(googleNewsUrl: string, fallback: string): Promise<string> {
-  try {
-    const res = await fetch(googleNewsUrl, {
-      redirect: "follow",
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; HarrisCountyProject/1.0)" },
-      next: { revalidate: 3600 },
-    });
-    if (!res.ok) return fallback;
-    // If the redirect kept us on Google's domain, the article page isn't accessible server-side
-    if (res.url.includes("google.com") || res.url.includes("gstatic.com")) return fallback;
-    const html = await res.text();
-    const match = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
-                ?? html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
-    const url = match?.[1];
-    if (!url || !url.startsWith("http")) return fallback;
-    // Skip google/gstatic images (e.g. the Google News logo)
-    if (url.includes("google.com") || url.includes("gstatic.com")) return fallback;
-    return url;
-  } catch {
-    return fallback;
-  }
-}
 
 function isTodayDate(pubDate: string, todayStr: string): boolean {
   if (!pubDate) return false;
@@ -109,19 +68,23 @@ function isTodayDate(pubDate: string, todayStr: string): boolean {
   }
 }
 
-function parseAllItems(xml: string): Array<{ title: string; link: string; source: string; pubDate: string }> {
-  const items: Array<{ title: string; link: string; source: string; pubDate: string }> = [];
+function parseBingItems(xml: string): Array<{ title: string; link: string; source: string; pubDate: string; image: string | null }> {
+  const items: Array<{ title: string; link: string; source: string; pubDate: string; image: string | null }> = [];
   const itemRe = /<item>([\s\S]*?)<\/item>/g;
   let m;
   while ((m = itemRe.exec(xml)) !== null) {
     const item = m[1];
     const title = item.match(/<title>([\s\S]*?)<\/title>/)?.[1]
       ?.replace(/<!\[CDATA\[|\]\]>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim() ?? "";
-    const link = item.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.trim() ?? "";
+    // Bing RSS links are Bing redirect URLs — extract the real URL from the `url=` param
+    const rawLink = item.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.trim() ?? "";
+    const realUrl = rawLink.match(/[?&]url=([^&]+)/)?.[1];
+    const link = realUrl ? decodeURIComponent(realUrl) : rawLink;
     const pubDate = item.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1]?.trim() ?? "";
-    const source = item.match(/<source[^>]*>([\s\S]*?)<\/source>/)?.[1]
-      ?.replace(/<!\[CDATA\[|\]\]>/g, "").trim() ?? "";
-    if (title && link) items.push({ title, link, source, pubDate });
+    const source = item.match(/<News:Source>([\s\S]*?)<\/News:Source>/)?.[1]?.trim() ?? "";
+    // Bing includes <News:Image> with a direct CDN thumbnail URL
+    const image = item.match(/<News:Image>([\s\S]*?)<\/News:Image>/)?.[1]?.trim() ?? null;
+    if (title && link) items.push({ title, link, source, pubDate, image });
   }
   return items;
 }
@@ -129,29 +92,20 @@ function parseAllItems(xml: string): Array<{ title: string; link: string; source
 export async function fetchTopStory(
   query: string,
   todayStr: string,
-): Promise<{ title: string; link: string; source: string; pubDate: string; isToday: boolean } | null> {
+): Promise<{ title: string; link: string; source: string; pubDate: string; image: string | null; isToday: boolean } | null> {
   try {
-    const q = encodeURIComponent(`${query} after:${todayStr}`);
+    const q = encodeURIComponent(query);
     const res = await fetch(
-      `https://news.google.com/rss/search?q=${q}&hl=en-US&gl=US&ceid=US:en`,
-      { next: { revalidate: 1800 } }
+      `https://www.bing.com/news/search?q=${q}&format=rss`,
+      {
+        next: { revalidate: 1800 },
+        headers: { "User-Agent": "Mozilla/5.0 (compatible; HarrisCountyProject/1.0)" },
+      }
     );
     if (!res.ok) return null;
     const xml = await res.text();
-    const items = parseAllItems(xml);
-
-    if (items.length === 0) {
-      const q2 = encodeURIComponent(query);
-      const res2 = await fetch(
-        `https://news.google.com/rss/search?q=${q2}&hl=en-US&gl=US&ceid=US:en`,
-        { next: { revalidate: 3600 } }
-      );
-      if (!res2.ok) return null;
-      const xml2 = await res2.text();
-      const items2 = parseAllItems(xml2);
-      if (items2.length === 0) return null;
-      return { ...items2[0], isToday: false };
-    }
+    const items = parseBingItems(xml);
+    if (items.length === 0) return null;
 
     const todayItems = items.filter(i => isTodayDate(i.pubDate, todayStr));
     const candidate = todayItems[0] ?? items[0];
@@ -177,16 +131,10 @@ export async function getDashboardData(): Promise<DashboardData> {
     ]),
   ]);
 
-  // Fetch OG images from each article in parallel, falling back to landmark photos
-  const [fedImg, stateImg, localImg] = await Promise.all([
-    federalRaw ? fetchOgImage(federalRaw.link, FALLBACK_IMAGES.federal) : Promise.resolve(FALLBACK_IMAGES.federal),
-    stateRaw   ? fetchOgImage(stateRaw.link,   FALLBACK_IMAGES.state)   : Promise.resolve(FALLBACK_IMAGES.state),
-    localRaw   ? fetchOgImage(localRaw.link,   FALLBACK_IMAGES.local)   : Promise.resolve(FALLBACK_IMAGES.local),
-  ]);
-
-  const federal = federalRaw ? { ...federalRaw, image: fedImg } : null;
-  const state   = stateRaw   ? { ...stateRaw,   image: stateImg } : null;
-  const local   = localRaw   ? { ...localRaw,   image: localImg } : null;
+  // Bing RSS includes <News:Image> CDN thumbnails directly — use them, fall back to landmark
+  const federal = federalRaw ? { ...federalRaw, image: federalRaw.image ?? FALLBACK_IMAGES.federal } : null;
+  const state   = stateRaw   ? { ...stateRaw,   image: stateRaw.image   ?? FALLBACK_IMAGES.state   } : null;
+  const local   = localRaw   ? { ...localRaw,   image: localRaw.image   ?? FALLBACK_IMAGES.local   } : null;
 
   const todayEvents = EVENTS.filter((e) => {
     if (e.endDate) return e.date <= todayStr && e.endDate >= todayStr;
