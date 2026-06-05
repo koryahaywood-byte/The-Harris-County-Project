@@ -1,9 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FINANCE_DATA, fmt, type CandidateFinance } from "@/lib/campaign-finance";
+import type { FECCandidate } from "@/app/api/finance/fec/route";
 
 type Candidate = CandidateFinance;
-const DATA = FINANCE_DATA.filter((d) => d.name !== "Edward Pollard");
 
 type Tab   = "story" | "leaderboard";
 type Level = "all" | "federal" | "state" | "houston" | "county";
@@ -17,6 +17,27 @@ export default function WhereIsTheDough() {
   const [level, setLevel] = useState<Level>("all");
   const [party, setParty] = useState<"all" | "D" | "R">("all");
   const [search, setSearch] = useState("");
+  const [liveData, setLiveData] = useState<FECCandidate[]>([]);
+  const [fecFetchedAt, setFecFetchedAt] = useState<string>("");
+
+  useEffect(() => {
+    fetch("/api/finance/fec")
+      .then(r => r.json())
+      .then(({ results, fetchedAt }: { results: FECCandidate[]; fetchedAt: string }) => {
+        setLiveData(results.filter(r => r.dataSource === "live"));
+        setFecFetchedAt(fetchedAt);
+      })
+      .catch(() => {/* fall through to static data */});
+  }, []);
+
+  // Merge live FEC data over static hardcoded data
+  const BASE = FINANCE_DATA.filter((d) => d.name !== "Edward Pollard");
+  const DATA: Candidate[] = BASE.map(d => {
+    if (d.level !== "federal") return d;
+    const live = liveData.find(l => l.name === d.name);
+    if (!live) return d;
+    return { ...d, cash: live.cash, raised: live.raised, spent: live.spent, asOf: live.asOf };
+  });
 
   const withCash  = DATA.filter(d => d.cash > 0);
   const demTotal  = withCash.filter(d => d.party === "D").reduce((s, d) => s + d.cash, 0);
@@ -56,6 +77,12 @@ export default function WhereIsTheDough() {
           <p className="text-white/70 text-sm max-w-lg">
             Cash-on-hand for every Harris County official, candidate, and challenger. TEC &amp; FEC filings.
           </p>
+          {liveData.length > 0 && (
+            <p className="mt-2 text-[11px] text-sky-300/80 flex items-center gap-1.5">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-sky-400 alive-pulse" />
+              Federal figures live from FEC &mdash; updated {new Date(fecFetchedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
+            </p>
+          )}
           <div className="mt-5 flex flex-wrap gap-3">
             {[
               { label: "Democrat Total",    val: fmt(demTotal),         color: "#93c5fd" },
@@ -256,7 +283,7 @@ export default function WhereIsTheDough() {
               </div>
             </div>
             <p className="text-xs text-[var(--muted)] mt-4 text-center">
-              Source: Texas Ethics Commission (TEC) · FEC. Cash on hand as of most recent filing. Figures may lag by 6 months.{" "}
+              Federal: FEC live data{liveData.length > 0 ? " (auto-refreshed)" : " (cached — check back shortly)"}. State/County/City: Texas Ethics Commission semi-annual reports. Cash on hand as of most recent filing.{" "}
               <a href="/contact" className="text-[var(--accent-light)] underline underline-offset-2">Report an error →</a>
             </p>
           </div>
