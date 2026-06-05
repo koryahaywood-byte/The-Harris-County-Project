@@ -101,8 +101,12 @@ const ROWS: { section: string; tools: Tool[] }[] = [
 function BrowseCard({ tool }: { tool: Tool }) {
   const card = (
     <div
-      className={`group relative flex-shrink-0 w-[230px] rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 hover:shadow-xl ${tool.status === "coming" ? "opacity-40 pointer-events-none" : ""}`}
-      style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.07)" }}
+      className={`group relative flex-shrink-0 w-[230px] rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-2 hover:shadow-[0_14px_36px_rgba(26,58,92,0.18),0_4px_8px_rgba(0,0,0,0.07)] ${tool.status === "coming" ? "opacity-40 pointer-events-none" : ""}`}
+      style={{
+        background: "#fff",
+        border: "1px solid rgba(0,0,0,0.06)",
+        boxShadow: "0 2px 8px rgba(26,58,92,0.08), 0 1px 2px rgba(0,0,0,0.04)",
+      }}
     >
       {/* Cover */}
       <div
@@ -225,7 +229,17 @@ export default function Home() {
       <DashboardWidget />
 
       {/* ── TOOLBOX ──────────────────────────────────────────────── */}
-      <section id="toolbox" className="pt-16 pb-24" style={{ background: "#f5f3ef" }}>
+      <section
+        id="toolbox"
+        className="pt-16 pb-24"
+        style={{
+          background: "#f5f3ef",
+          backgroundImage: `
+            radial-gradient(circle, rgba(26,58,92,0.07) 1.5px, transparent 1.5px)
+          `,
+          backgroundSize: "28px 28px",
+        }}
+      >
         <div className="max-w-7xl mx-auto px-6 mb-10">
           <ToolboxOpener />
         </div>

@@ -21,46 +21,17 @@ export interface DashboardData {
   nextElection:  { title: string; date: string; daysAway: number } | null;
 }
 
-// Fetch the OG image from a news article URL (server-side, follows redirects)
-async function fetchOGImage(url: string): Promise<string | null> {
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 4000);
-    const res = await fetch(url, {
-      signal: controller.signal,
-      redirect: "follow",
-      headers: {
-        "User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
-        "Accept": "text/html",
-      },
-    });
-    clearTimeout(timeout);
-    if (!res.ok) return null;
-    // Only read the first 12KB — og:image is always in <head>
-    const reader = res.body?.getReader();
-    if (!reader) return null;
-    let html = "";
-    while (html.length < 12000) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      html += new TextDecoder().decode(value);
-    }
-    reader.cancel();
-    const match =
-      html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ??
-      html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i) ??
-      html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i);
-    return match?.[1] ?? null;
-  } catch {
-    return null;
-  }
-}
+// Contextual fallback images per tier — reliable Wikimedia Commons photos
+const TIER_IMAGES: Record<string, string> = {
+  federal: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/US_Capitol_Building_at_night_Jan_2006.jpg/1200px-US_Capitol_Building_at_night_Jan_2006.jpg",
+  state:   "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Texas_State_Capitol_at_sunset.jpg/1200px-Texas_State_Capitol_at_sunset.jpg",
+  local:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Houston_night_skyline_composite.jpg/1200px-Houston_night_skyline_composite.jpg",
+};
 
 function isTodayDate(pubDate: string, todayStr: string): boolean {
   if (!pubDate) return false;
   try {
-    const d = new Date(pubDate);
-    return d.toISOString().slice(0, 10) === todayStr;
+    return new Date(pubDate).toISOString().slice(0, 10) === todayStr;
   } catch {
     return false;
   }
@@ -74,36 +45,51 @@ function parseAllItems(xml: string): Array<{ title: string; link: string; source
     const item = m[1];
     const title = item.match(/<title>([\s\S]*?)<\/title>/)?.[1]
       ?.replace(/<!\[CDATA\[|\]\]>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim() ?? "";
-    const link  = item.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.trim() ?? "";
+    const link = item.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.trim() ?? "";
     const pubDate = item.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1]?.trim() ?? "";
-    const source  = item.match(/<source[^>]*>([\s\S]*?)<\/source>/)?.[1]
+    const source = item.match(/<source[^>]*>([\s\S]*?)<\/source>/)?.[1]
       ?.replace(/<!\[CDATA\[|\]\]>/g, "").trim() ?? "";
     if (title && link) items.push({ title, link, source, pubDate });
   }
   return items;
 }
 
-export async function fetchTopStory(query: string, todayStr: string): Promise<NewsStory | null> {
+export async function fetchTopStory(
+  query: string,
+  todayStr: string,
+  tier: "federal" | "state" | "local"
+): Promise<NewsStory | null> {
   try {
-    const q = encodeURIComponent(query);
+    // Add `after:` filter so Google News returns only articles from today/recent
+    const afterDate = todayStr; // YYYY-MM-DD
+    const q = encodeURIComponent(`${query} after:${afterDate}`);
     const res = await fetch(
       `https://news.google.com/rss/search?q=${q}&hl=en-US&gl=US&ceid=US:en`,
-      { next: { revalidate: 3600 } }
+      { next: { revalidate: 1800 } } // 30-min cache for freshness
     );
     if (!res.ok) return null;
     const xml = await res.text();
     const items = parseAllItems(xml);
-    if (items.length === 0) return null;
+    if (items.length === 0) {
+      // Fallback: try without the date filter if no results today
+      const q2 = encodeURIComponent(query);
+      const res2 = await fetch(
+        `https://news.google.com/rss/search?q=${q2}&hl=en-US&gl=US&ceid=US:en`,
+        { next: { revalidate: 3600 } }
+      );
+      if (!res2.ok) return null;
+      const xml2 = await res2.text();
+      const items2 = parseAllItems(xml2);
+      if (items2.length === 0) return null;
+      const best = items2[0];
+      return { ...best, image: TIER_IMAGES[tier], isToday: false };
+    }
 
-    // Prefer today's stories; fall back to most recent if none today
     const todayItems = items.filter(i => isTodayDate(i.pubDate, todayStr));
     const candidate = todayItems[0] ?? items[0];
     const isToday = isTodayDate(candidate.pubDate, todayStr);
 
-    // Fetch OG image in parallel — non-blocking (returns null on timeout)
-    const image = await fetchOGImage(candidate.link);
-
-    return { ...candidate, image, isToday };
+    return { ...candidate, image: TIER_IMAGES[tier], isToday };
   } catch {
     return null;
   }
@@ -113,9 +99,9 @@ export async function getDashboardData(): Promise<DashboardData> {
   const todayStr = new Date().toISOString().slice(0, 10);
 
   const [federal, state, local] = await Promise.all([
-    fetchTopStory("US federal government politics Congress White House", todayStr),
-    fetchTopStory("Texas politics government Austin legislature 2026", todayStr),
-    fetchTopStory("Houston Harris County politics local government 2026", todayStr),
+    fetchTopStory("US Congress White House federal politics", todayStr, "federal"),
+    fetchTopStory("Texas Austin legislature politics 2026", todayStr, "state"),
+    fetchTopStory("Houston Harris County local politics government", todayStr, "local"),
   ]);
 
   const todayEvents = EVENTS.filter((e) => {

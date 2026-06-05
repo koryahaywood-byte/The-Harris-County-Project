@@ -338,7 +338,7 @@ function SeatPortrait({
 
       {/* Data note */}
       <div className="rounded-xl px-4 py-3 text-[10px] leading-relaxed" style={{ background: "rgba(26,58,92,0.05)", color: "#6b7280" }}>
-        Demographic data is illustrative — approximate averages from Census ACS5. District-to-precinct crosswalk for Congressional and City Council seats pending TX Legislative Council data integration.
+        <strong style={{ color: "#1a3a5c" }}>About this data:</strong> Demographics shown are <em>registered voter composition</em> from Census ACS5 — not actual voter turnout demographics. To show who actually shows up to vote by race and gender, we need the Harris County Clerk voter history file (available post-election). District boundaries are approximate pending TX Legislative Council crosswalk integration.
       </div>
     </div>
   );
