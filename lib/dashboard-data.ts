@@ -77,6 +77,27 @@ async function getWikipediaImage(topic: string, fallback: string): Promise<strin
   }
 }
 
+async function fetchOgImage(googleNewsUrl: string, fallback: string): Promise<string> {
+  try {
+    // Google News links redirect to the real article — follow the redirect
+    const res = await fetch(googleNewsUrl, {
+      redirect: "follow",
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; HarrisCountyProject/1.0)" },
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return fallback;
+    const html = await res.text();
+    // Pull og:image meta tag
+    const match = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
+                ?? html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
+    const url = match?.[1];
+    if (!url || !url.startsWith("http")) return fallback;
+    return url;
+  } catch {
+    return fallback;
+  }
+}
+
 function isTodayDate(pubDate: string, todayStr: string): boolean {
   if (!pubDate) return false;
   try {
@@ -106,8 +127,7 @@ function parseAllItems(xml: string): Array<{ title: string; link: string; source
 export async function fetchTopStory(
   query: string,
   todayStr: string,
-  image: string | null
-): Promise<NewsStory | null> {
+): Promise<{ title: string; link: string; source: string; pubDate: string; isToday: boolean } | null> {
   try {
     const q = encodeURIComponent(`${query} after:${todayStr}`);
     const res = await fetch(
@@ -119,7 +139,6 @@ export async function fetchTopStory(
     const items = parseAllItems(xml);
 
     if (items.length === 0) {
-      // No stories today — fall back to most recent without date filter
       const q2 = encodeURIComponent(query);
       const res2 = await fetch(
         `https://news.google.com/rss/search?q=${q2}&hl=en-US&gl=US&ceid=US:en`,
@@ -129,12 +148,12 @@ export async function fetchTopStory(
       const xml2 = await res2.text();
       const items2 = parseAllItems(xml2);
       if (items2.length === 0) return null;
-      return { ...items2[0], image, isToday: false };
+      return { ...items2[0], isToday: false };
     }
 
     const todayItems = items.filter(i => isTodayDate(i.pubDate, todayStr));
     const candidate = todayItems[0] ?? items[0];
-    return { ...candidate, image, isToday: isTodayDate(candidate.pubDate, todayStr) };
+    return { ...candidate, isToday: isTodayDate(candidate.pubDate, todayStr) };
   } catch {
     return null;
   }
@@ -143,16 +162,11 @@ export async function fetchTopStory(
 export async function getDashboardData(): Promise<DashboardData> {
   const todayStr = new Date().toISOString().slice(0, 10);
 
-  // Fetch Wikipedia images, news stories, and market data in parallel
-  const [wikiImgs, federalStory, stateStory, localStory, rawMarkets] = await Promise.all([
-    Promise.all([
-      getWikipediaImage("United_States_Capitol", FALLBACK_IMAGES.federal),
-      getWikipediaImage("Texas_State_Capitol",   FALLBACK_IMAGES.state),
-      getWikipediaImage("Houston",               FALLBACK_IMAGES.local),
-    ]),
-    fetchTopStory("US Congress White House federal politics", todayStr, null),
-    fetchTopStory("Texas Austin legislature politics 2026", todayStr, null),
-    fetchTopStory("Houston Harris County local politics government", todayStr, null),
+  // Fetch news stories and market data in parallel
+  const [federalRaw, stateRaw, localRaw, rawMarkets] = await Promise.all([
+    fetchTopStory("US Congress White House federal politics", todayStr),
+    fetchTopStory("Texas Austin legislature politics 2026", todayStr),
+    fetchTopStory("Houston Harris County local politics government", todayStr),
     Promise.all([
       fetchMarketIndex("^DJI",  "Dow Jones"),
       fetchMarketIndex("^GSPC", "S&P 500"),
@@ -161,11 +175,16 @@ export async function getDashboardData(): Promise<DashboardData> {
     ]),
   ]);
 
-  const [fedImg, stateImg, localImg] = wikiImgs;
+  // Fetch OG images from each article in parallel, falling back to landmark photos
+  const [fedImg, stateImg, localImg] = await Promise.all([
+    federalRaw ? fetchOgImage(federalRaw.link, FALLBACK_IMAGES.federal) : Promise.resolve(FALLBACK_IMAGES.federal),
+    stateRaw   ? fetchOgImage(stateRaw.link,   FALLBACK_IMAGES.state)   : Promise.resolve(FALLBACK_IMAGES.state),
+    localRaw   ? fetchOgImage(localRaw.link,   FALLBACK_IMAGES.local)   : Promise.resolve(FALLBACK_IMAGES.local),
+  ]);
 
-  const federal = federalStory ? { ...federalStory, image: fedImg } : null;
-  const state   = stateStory   ? { ...stateStory,   image: stateImg } : null;
-  const local   = localStory   ? { ...localStory,   image: localImg } : null;
+  const federal = federalRaw ? { ...federalRaw, image: fedImg } : null;
+  const state   = stateRaw   ? { ...stateRaw,   image: stateImg } : null;
+  const local   = localRaw   ? { ...localRaw,   image: localImg } : null;
 
   const todayEvents = EVENTS.filter((e) => {
     if (e.endDate) return e.date <= todayStr && e.endDate >= todayStr;
