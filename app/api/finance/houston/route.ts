@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { PDFDocument } from "pdf-lib";
 
+// Allow up to 5 minutes — Vercel cron uses this route, which needs time for 17 sequential scrapes
+export const maxDuration = 300;
+
 const COH_SEARCH  = "https://cohweb.houstontx.gov/CampaignFinanceWeb/CFRwebsiteSimpleSearch.aspx";
 const COH_RESULTS = "https://cohweb.houstontx.gov/CampaignFinanceWeb/CFRwebsiteSimpleSearchResult.aspx";
 
@@ -56,7 +59,18 @@ async function getFormTokens(url: string, cookies = ""): Promise<FormTokens> {
   });
   const html = await res.text();
   const rawCookies = res.headers.get("set-cookie") ?? "";
-  const sessionCookie = rawCookies.match(/ASP\.NET_SessionId=[^;]+/)?.[0] ?? cookies;
+
+  // Collect ALL cookies the site sets — session + anonymous token both required
+  const parts: string[] = [];
+  for (const match of rawCookies.matchAll(/([A-Za-z_.][A-Za-z0-9_.]*=[^;,]+)/g)) {
+    const kv = match[1].trim();
+    if (!kv.toLowerCase().startsWith("path") && !kv.toLowerCase().startsWith("domain") &&
+        !kv.toLowerCase().startsWith("expires") && !kv.toLowerCase().startsWith("samesite") &&
+        !kv.toLowerCase().startsWith("httponly") && !kv.toLowerCase().startsWith("secure")) {
+      parts.push(kv);
+    }
+  }
+  const allCookies = parts.length > 0 ? parts.join("; ") : cookies;
 
   const get = (name: string) => html.match(new RegExp(`name="${name}"[^>]*value="([^"]*)"`, "s"))?.[1] ?? "";
 
@@ -64,7 +78,7 @@ async function getFormTokens(url: string, cookies = ""): Promise<FormTokens> {
     viewState:       get("__VIEWSTATE"),
     viewStateGen:    get("__VIEWSTATEGENERATOR"),
     eventValidation: get("__EVENTVALIDATION"),
-    cookies:         sessionCookie,
+    cookies:         allCookies,
   };
 }
 
@@ -93,8 +107,20 @@ async function searchAndGetRows(
     cache:    "no-store",
   });
 
-  const newCookies = searchRes.headers.get("set-cookie")?.match(/ASP\.NET_SessionId=[^;]+/)?.[0] ?? tokens.cookies;
-  tokens.cookies = newCookies;
+  // Keep all cookies from redirect response too
+  const redirectCookieHeader = searchRes.headers.get("set-cookie") ?? "";
+  if (redirectCookieHeader) {
+    const updatedParts: string[] = [];
+    for (const match of redirectCookieHeader.matchAll(/([A-Za-z_.][A-Za-z0-9_.]*=[^;,]+)/g)) {
+      const kv = match[1].trim();
+      const key = kv.toLowerCase();
+      if (!key.startsWith("path") && !key.startsWith("domain") && !key.startsWith("expires") &&
+          !key.startsWith("samesite") && !key.startsWith("httponly") && !key.startsWith("secure")) {
+        updatedParts.push(kv);
+      }
+    }
+    if (updatedParts.length) tokens.cookies = updatedParts.join("; ");
+  }
 
   const resultsRes = await fetch(COH_RESULTS, {
     headers: { Cookie: tokens.cookies },
@@ -112,9 +138,9 @@ async function searchAndGetRows(
   tokens.viewStateGen    = vgMatch?.[1] ?? "";
   tokens.eventValidation = evMatch?.[1] ?? "";
 
-  // Find all rows: PDF link + date + reportId
-  // Row pattern: Select$N ... date ... reportId
-  const rowRegex = /Select\$(\d+)[^]*?<font[^>]*>(\d{2}\/\d{2}\/\d{4}[^<]*)<\/font>[^]*?<font[^>]*>(\d+)<\/font>/g;
+  // Find all rows — match Select$N then grab nearest date (MM/DD/YYYY) and report ID number
+  // Two patterns: old <font> tags and newer <span>/<td> markup
+  const rowRegex = /Select\$(\d+)[\s\S]{0,600}?(\d{2}\/\d{2}\/\d{4})[\s\S]{0,400}?(?:<[^>]+>)*(\d{5,})/g;
   const rows: { rowIndex: number; date: string; reportId: string }[] = [];
   for (const m of html.matchAll(rowRegex)) {
     rows.push({ rowIndex: parseInt(m[1]), date: m[2].trim(), reportId: m[3] });
@@ -253,55 +279,47 @@ export async function GET() {
   const results: COHCandidate[] = [];
   const seen = new Set<string>();
 
-  // Get initial form tokens once
-  let tokens: FormTokens;
-  try {
-    tokens = await getFormTokens(COH_SEARCH);
-  } catch {
-    return NextResponse.json({ error: "Failed to load COH search page", results: [], fetchedAt }, { status: 500 });
+  // Each candidate needs its own fresh session — run in parallel, 4 at a time
+  const unique = COH_CANDIDATES.filter((c) => {
+    if (seen.has(c.name)) return false;
+    seen.add(c.name);
+    return true;
+  });
+
+  async function fetchOne(cand: typeof COH_CANDIDATES[0]): Promise<COHCandidate> {
+    const tokens = await getFormTokens(COH_SEARCH);
+    const row = await searchAndGetRows(cand.last, cand.first, tokens);
+    if (!row) throw new Error("No filings found");
+    const pdfBytes = await downloadPdf(row.rowIndex, tokens);
+    const fin = await extractFinancials(pdfBytes);
+    return {
+      name: cand.name, office: cand.office, level: "houston", party: cand.party,
+      cash: fin.cash, raised: fin.raised, spent: fin.spent, loans: fin.loans,
+      asOf: fin.asOf, filingDate: row.date, incumbent: cand.incumbent,
+      filingUrl: COH_RESULTS, dataSource: "live", fetchedAt,
+    };
   }
 
-  for (const cand of COH_CANDIDATES) {
-    if (seen.has(cand.name)) continue;
-    seen.add(cand.name);
-
-    try {
-      const row = await searchAndGetRows(cand.last, cand.first, tokens);
-      if (!row) throw new Error("No filings found");
-
-      const pdfBytes = await downloadPdf(row.rowIndex, tokens);
-      const fin = await extractFinancials(pdfBytes);
-
-      results.push({
-        name:        cand.name,
-        office:      cand.office,
-        level:       "houston",
-        party:       cand.party,
-        cash:        fin.cash,
-        raised:      fin.raised,
-        spent:       fin.spent,
-        loans:       fin.loans,
-        asOf:        fin.asOf,
-        filingDate:  row.date,
-        incumbent:   cand.incumbent,
-        filingUrl:   COH_RESULTS,
-        dataSource:  "live",
-        fetchedAt,
-      });
-    } catch (err) {
-      results.push({
-        name: cand.name, office: cand.office, level: "houston", party: cand.party,
-        cash: 0, raised: 0, spent: 0, loans: 0,
-        asOf: "N/A", filingDate: "N/A", incumbent: cand.incumbent,
-        filingUrl: COH_SEARCH, dataSource: "error", fetchedAt,
-      });
-      console.error(`COH scrape failed for ${cand.name}:`, err);
+  // Concurrency-limited parallel fetch: 4 at a time
+  const BATCH = 4;
+  for (let i = 0; i < unique.length; i += BATCH) {
+    const batch = unique.slice(i, i + BATCH);
+    const settled = await Promise.allSettled(batch.map(fetchOne));
+    for (let j = 0; j < batch.length; j++) {
+      const cand = batch[j];
+      const res = settled[j];
+      if (res.status === "fulfilled") {
+        results.push(res.value);
+      } else {
+        results.push({
+          name: cand.name, office: cand.office, level: "houston", party: cand.party,
+          cash: 0, raised: 0, spent: 0, loans: 0,
+          asOf: "N/A", filingDate: "N/A", incumbent: cand.incumbent,
+          filingUrl: COH_SEARCH, dataSource: "error", fetchedAt,
+        });
+        console.error(`COH scrape failed for ${cand.name}:`, res.reason);
+      }
     }
-
-    // Re-get tokens for next search (ASP.NET session state)
-    try {
-      tokens = await getFormTokens(COH_SEARCH, tokens.cookies);
-    } catch { /* continue with existing tokens */ }
   }
 
   results.sort((a, b) => b.cash - a.cash);
