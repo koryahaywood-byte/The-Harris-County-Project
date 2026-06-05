@@ -1,6 +1,5 @@
 // Shared data-fetching logic for the dashboard widget.
 // Called directly by DashboardWidget (server component) and re-exported by the API route.
-// Avoids the Next.js anti-pattern of server components self-fetching their own API routes.
 
 import { EVENTS } from "@/lib/civic-events";
 
@@ -10,6 +9,7 @@ export interface NewsStory {
   source: string;
   pubDate: string;
   image: string | null;
+  isToday: boolean;
 }
 
 export interface DashboardData {
@@ -21,30 +21,69 @@ export interface DashboardData {
   nextElection:  { title: string; date: string; daysAway: number } | null;
 }
 
-function parseImage(description: string): string | null {
-  const decoded = description
-    .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&").replace(/&quot;/g, '"');
-  const match = decoded.match(/<img[^>]+src=["']([^"']+)["']/i);
-  return match?.[1] ?? null;
+// Fetch the OG image from a news article URL (server-side, follows redirects)
+async function fetchOGImage(url: string): Promise<string | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+    const res = await fetch(url, {
+      signal: controller.signal,
+      redirect: "follow",
+      headers: {
+        "User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+        "Accept": "text/html",
+      },
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    // Only read the first 12KB — og:image is always in <head>
+    const reader = res.body?.getReader();
+    if (!reader) return null;
+    let html = "";
+    while (html.length < 12000) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      html += new TextDecoder().decode(value);
+    }
+    reader.cancel();
+    const match =
+      html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ??
+      html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i) ??
+      html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i);
+    return match?.[1] ?? null;
+  } catch {
+    return null;
+  }
 }
 
-function parseItem(xml: string): NewsStory | null {
-  const itemMatch = xml.match(/<item>([\s\S]*?)<\/item>/);
-  if (!itemMatch) return null;
-  const item = itemMatch[1];
-  const title = item.match(/<title>([\s\S]*?)<\/title>/)?.[1]
-    ?.replace(/<!\[CDATA\[|\]\]>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim() ?? "";
-  const link  = item.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.trim() ?? "";
-  const pubDate = item.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1]?.trim() ?? "";
-  const source  = item.match(/<source[^>]*>([\s\S]*?)<\/source>/)?.[1]
-    ?.replace(/<!\[CDATA\[|\]\]>/g, "").trim() ?? "";
-  const description = item.match(/<description>([\s\S]*?)<\/description>/)?.[1]
-    ?.replace(/<!\[CDATA\[|\]\]>/g, "") ?? "";
-  if (!title || !link) return null;
-  return { title, link, source, pubDate, image: parseImage(description) };
+function isTodayDate(pubDate: string, todayStr: string): boolean {
+  if (!pubDate) return false;
+  try {
+    const d = new Date(pubDate);
+    return d.toISOString().slice(0, 10) === todayStr;
+  } catch {
+    return false;
+  }
 }
 
-export async function fetchTopStory(query: string): Promise<NewsStory | null> {
+function parseAllItems(xml: string): Array<{ title: string; link: string; source: string; pubDate: string }> {
+  const items: Array<{ title: string; link: string; source: string; pubDate: string }> = [];
+  const itemRe = /<item>([\s\S]*?)<\/item>/g;
+  let m;
+  while ((m = itemRe.exec(xml)) !== null) {
+    const item = m[1];
+    const title = item.match(/<title>([\s\S]*?)<\/title>/)?.[1]
+      ?.replace(/<!\[CDATA\[|\]\]>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim() ?? "";
+    const link  = item.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.trim() ?? "";
+    const pubDate = item.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1]?.trim() ?? "";
+    const source  = item.match(/<source[^>]*>([\s\S]*?)<\/source>/)?.[1]
+      ?.replace(/<!\[CDATA\[|\]\]>/g, "").trim() ?? "";
+    if (title && link) items.push({ title, link, source, pubDate });
+  }
+  return items;
+}
+
+export async function fetchTopStory(query: string, todayStr: string): Promise<NewsStory | null> {
   try {
     const q = encodeURIComponent(query);
     const res = await fetch(
@@ -52,44 +91,56 @@ export async function fetchTopStory(query: string): Promise<NewsStory | null> {
       { next: { revalidate: 3600 } }
     );
     if (!res.ok) return null;
-    return parseItem(await res.text());
+    const xml = await res.text();
+    const items = parseAllItems(xml);
+    if (items.length === 0) return null;
+
+    // Prefer today's stories; fall back to most recent if none today
+    const todayItems = items.filter(i => isTodayDate(i.pubDate, todayStr));
+    const candidate = todayItems[0] ?? items[0];
+    const isToday = isTodayDate(candidate.pubDate, todayStr);
+
+    // Fetch OG image in parallel — non-blocking (returns null on timeout)
+    const image = await fetchOGImage(candidate.link);
+
+    return { ...candidate, image, isToday };
   } catch {
     return null;
   }
 }
 
 export async function getDashboardData(): Promise<DashboardData> {
-  const today = new Date().toISOString().slice(0, 10);
+  const todayStr = new Date().toISOString().slice(0, 10);
 
   const [federal, state, local] = await Promise.all([
-    fetchTopStory("US federal government politics Congress White House"),
-    fetchTopStory("Texas politics government Austin legislature 2026"),
-    fetchTopStory("Houston Harris County politics local government 2026"),
+    fetchTopStory("US federal government politics Congress White House", todayStr),
+    fetchTopStory("Texas politics government Austin legislature 2026", todayStr),
+    fetchTopStory("Houston Harris County politics local government 2026", todayStr),
   ]);
 
   const todayEvents = EVENTS.filter((e) => {
-    if (e.endDate) return e.date <= today && e.endDate >= today;
-    return e.date === today;
+    if (e.endDate) return e.date <= todayStr && e.endDate >= todayStr;
+    return e.date === todayStr;
   }).map((e) => ({ title: e.title, category: e.category, description: e.description }));
 
   const future = EVENTS
-    .filter((e) => (e.endDate ? e.endDate : e.date) >= today && e.date > today)
+    .filter((e) => (e.endDate ? e.endDate : e.date) >= todayStr && e.date > todayStr)
     .sort((a, b) => a.date.localeCompare(b.date));
   const next = future[0] ?? null;
   const upcomingEvent = next ? {
     title: next.title,
     date: next.date,
-    daysAway: Math.ceil((new Date(next.date).getTime() - new Date(today).getTime()) / 86400000),
+    daysAway: Math.ceil((new Date(next.date).getTime() - new Date(todayStr).getTime()) / 86400000),
     category: next.category,
   } : null;
 
   const nextElectionEvent = EVENTS
-    .filter((e) => e.category === "Elections" && e.importance === "high" && e.date > today)
+    .filter((e) => e.category === "Elections" && e.importance === "high" && e.date > todayStr)
     .sort((a, b) => a.date.localeCompare(b.date))[0] ?? null;
   const nextElection = nextElectionEvent ? {
     title: nextElectionEvent.title,
     date: nextElectionEvent.date,
-    daysAway: Math.ceil((new Date(nextElectionEvent.date).getTime() - new Date(today).getTime()) / 86400000),
+    daysAway: Math.ceil((new Date(nextElectionEvent.date).getTime() - new Date(todayStr).getTime()) / 86400000),
   } : null;
 
   return { federal, state, local, todayEvents, upcomingEvent, nextElection };

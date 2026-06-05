@@ -34,8 +34,9 @@ const TIER_GRADIENTS = [
   "linear-gradient(135deg, #1a3a5c 0%, #7c3aed 100%)",
 ];
 
-function NewsCard({ story, tier, label }: { story: NewsStory | null; tier: string; label: string; idx: number }) {
+function NewsCard({ story, tier }: { story: NewsStory | null; tier: string; label: string; idx: number }) {
   const gradient = TIER_GRADIENTS[["Federal", "Texas", "Local"].indexOf(tier)] ?? TIER_GRADIENTS[0];
+  const noStoryToday = story && !story.isToday;
   return (
     <div className="group relative rounded-[1.5rem] overflow-hidden bg-white ring-1 ring-black/8 card-lift flex flex-col min-h-[340px]">
       {/* Photo area */}
@@ -51,10 +52,15 @@ function NewsCard({ story, tier, label }: { story: NewsStory | null; tier: strin
           <div className="w-full h-full" style={{ background: gradient }} />
         )}
         {/* Tier badge */}
-        <div className="absolute top-3 left-3">
+        <div className="absolute top-3 left-3 flex items-center gap-2">
           <span className="text-[10px] font-bold uppercase tracking-[0.2em] bg-white/90 backdrop-blur-sm text-[var(--accent)] px-3 py-1.5 rounded-full shadow-sm">
             {tier}
           </span>
+          {noStoryToday && (
+            <span className="text-[9px] font-semibold bg-amber-100/90 text-amber-700 px-2 py-1 rounded-full shadow-sm">
+              Recent
+            </span>
+          )}
         </div>
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
