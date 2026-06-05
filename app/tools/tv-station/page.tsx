@@ -10,48 +10,63 @@ interface Stream {
   scheduleUrl: string;
   schedule: string;
   category: "County" | "City" | "HISD" | "State" | "Federal";
-  live?: boolean;
+  description: string;
 }
 
 const STREAMS: Stream[] = [
   {
     id: "hc-court",
-    name: "Harris County Commissioners Court",
-    body: "Commissioners Court",
-    embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCmFqNWQaAU0rGpSRIHhO7LA",
+    name: "Commissioners Court",
+    body: "Harris County",
+    embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCmFqNWQaAU0rGpSRIHhO7LA&autoplay=1",
     livePageUrl: "https://www.youtube.com/@HarrisCountyTX/streams",
     scheduleUrl: "https://harriscountytx.gov/commissioners-court",
-    schedule: "1st & 3rd Tuesday of each month, 10 AM",
+    schedule: "1st & 3rd Tuesday · 10 AM",
+    description: "Budget, contracts, and county policy decisions",
+    category: "County",
+  },
+  {
+    id: "hcphd",
+    name: "Public Health Advisory",
+    body: "Harris County",
+    embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCJ3gT_bDDjT6eE5k4bD3Vtw&autoplay=1",
+    livePageUrl: "https://www.youtube.com/@HarrisCountyPublicHealth/streams",
+    scheduleUrl: "https://publichealth.harriscountytx.gov",
+    schedule: "Monthly · check schedule",
+    description: "Public health policy and advisory board sessions",
     category: "County",
   },
   {
     id: "houston-council",
-    name: "Houston City Council",
+    name: "City Council",
     body: "City of Houston",
-    embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCkE7l3FRhvnvQVQSnPJlqjQ",
+    embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCkE7l3FRhvnvQVQSnPJlqjQ&autoplay=1",
     livePageUrl: "https://www.youtube.com/@CityofHouston/streams",
     scheduleUrl: "https://www.houstontx.gov/citysec/council.html",
-    schedule: "Every Wednesday, 9 AM",
+    schedule: "Every Wednesday · 9 AM",
+    description: "Houston city ordinances, budgets, and resolutions",
     category: "City",
   },
   {
     id: "hisd-board",
-    name: "HISD Board of Managers",
+    name: "Board of Managers",
     body: "Houston ISD",
-    embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCCZYnGWGDmOqm2SCMKS3fgg",
+    embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCCZYnGWGDmOqm2SCMKS3fgg&autoplay=1",
     livePageUrl: "https://www.youtube.com/@HoustonISD/streams",
     scheduleUrl: "https://www.houstonisd.org/boardmeeting",
-    schedule: "2nd Thursday of each month, 5 PM",
+    schedule: "2nd Thursday · 5 PM",
+    description: "HISD governance, policy, and superintendent oversight",
     category: "HISD",
   },
   {
     id: "tx-house",
-    name: "Texas House of Representatives",
+    name: "Texas House",
     body: "TX Legislature",
     embedUrl: "https://tlchouse.granicus.com/MediaPlayer.php?camera_id=1",
     livePageUrl: "https://house.texas.gov/video/",
     scheduleUrl: "https://capitol.texas.gov/tlodocs/",
-    schedule: "When legislature is in session (odd years, Jan–Jun)",
+    schedule: "Session: Jan–Jun odd years",
+    description: "House floor proceedings and committee hearings",
     category: "State",
   },
   {
@@ -61,204 +76,244 @@ const STREAMS: Stream[] = [
     embedUrl: "https://tlcsenate.granicus.com/MediaPlayer.php?camera_id=1",
     livePageUrl: "https://senate.texas.gov/video.php",
     scheduleUrl: "https://capitol.texas.gov/tlodocs/",
-    schedule: "When legislature is in session (odd years, Jan–Jun)",
+    schedule: "Session: Jan–Jun odd years",
+    description: "Senate floor proceedings and committee hearings",
     category: "State",
   },
   {
     id: "us-house",
-    name: "U.S. House of Representatives",
+    name: "U.S. House",
     body: "119th Congress",
-    embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCoJFNsHfkjKJHevx6dv_jPQ",
+    embedUrl: "",
     livePageUrl: "https://live.house.gov",
     scheduleUrl: "https://www.house.gov/legislative-activity",
-    schedule: "When Congress is in session — Mon–Fri",
+    schedule: "When Congress is in session",
+    description: "House floor proceedings — opens on live.house.gov",
     category: "Federal",
   },
   {
     id: "us-senate",
     name: "U.S. Senate",
     body: "119th Congress",
-    embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCddiUEpeqJcYeBxX1IVBKvQ",
+    embedUrl: "",
     livePageUrl: "https://www.senate.gov/general/streaming.htm",
     scheduleUrl: "https://www.senate.gov/legislative/LIS/floor_activity/CurrentActivity.htm",
-    schedule: "When Congress is in session — Mon–Fri",
+    schedule: "When Congress is in session",
+    description: "Senate floor proceedings — opens on senate.gov",
     category: "Federal",
-  },
-  {
-    id: "hcphd",
-    name: "Harris County Public Health",
-    body: "HCPH Advisory Board",
-    embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCJ3gT_bDDjT6eE5k4bD3Vtw",
-    livePageUrl: "https://www.youtube.com/@HarrisCountyPublicHealth/streams",
-    scheduleUrl: "https://publichealth.harriscountytx.gov",
-    schedule: "Monthly, check schedule",
-    category: "County",
   },
 ];
 
-const CATEGORY_COLOR = {
-  County: { bg: "bg-amber-100", text: "text-amber-700", border: "border-amber-200" },
-  City:   { bg: "bg-emerald-100", text: "text-emerald-700", border: "border-emerald-200" },
-  HISD:   { bg: "bg-rose-100", text: "text-rose-700", border: "border-rose-200" },
-  State:  { bg: "bg-violet-100", text: "text-violet-700", border: "border-violet-200" },
-  Federal: { bg: "bg-sky-100", text: "text-sky-700", border: "border-sky-200" },
+const CAT_ACCENT: Record<string, string> = {
+  County:  "#f59e0b",
+  City:    "#10b981",
+  HISD:    "#f43f5e",
+  State:   "#8b5cf6",
+  Federal: "#38bdf8",
 };
 
-const CATEGORIES = ["All", "County", "City", "HISD", "State", "Federal"] as const;
-type Category = (typeof CATEGORIES)[number];
+const CATEGORY_ORDER = ["County", "City", "HISD", "State", "Federal"] as const;
 
 export default function TVStation() {
   const [active, setActive] = useState<string>(STREAMS[0].id);
-  const [catFilter, setCatFilter] = useState<Category>("All");
-  const [embedError, setEmbedError] = useState<Set<string>>(new Set());
-
-  const visible = STREAMS.filter((s) => catFilter === "All" || s.category === catFilter);
   const activeStream = STREAMS.find((s) => s.id === active) ?? STREAMS[0];
+  const accent = CAT_ACCENT[activeStream.category] ?? "#fff";
+  const noEmbed = !activeStream.embedUrl;
 
   return (
-    <div className="flex flex-col" style={{ height: "calc(100dvh - 41px)" }}>
-      {/* ── Header ──────────────────────────────────────────────────── */}
-      <div className="bg-[var(--accent)] text-white px-5 py-3 flex-shrink-0 flex items-center justify-between gap-4 relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_120%_at_80%_50%,rgba(37,99,168,0.4),transparent)]" />
-        <div className="relative z-10 flex items-center gap-3">
+    <div
+      className="flex flex-col overflow-hidden"
+      style={{ height: "calc(100dvh - 41px)", background: "#0a0a0a", color: "#fff" }}
+    >
+      <style>{`
+        @keyframes atv-focus { from { box-shadow: 0 0 0 0 var(--ac); } to { box-shadow: 0 0 0 3px var(--ac); } }
+        .ch-row { scrollbar-width: none; }
+        .ch-row::-webkit-scrollbar { display: none; }
+      `}</style>
+
+      {/* ── Top bar ─────────────────────────────────────────────────────── */}
+      <div
+        className="flex-shrink-0 flex items-center justify-between px-6 py-3 gap-4"
+        style={{
+          background: "rgba(10,10,10,0.85)",
+          backdropFilter: "blur(20px)",
+          borderBottom: "1px solid rgba(255,255,255,0.07)",
+        }}
+      >
+        <div className="flex items-center gap-3">
           <div>
-            <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-[0.25em] leading-none">Media</p>
-            <h1 className="text-lg font-bold leading-tight" style={{ fontFamily: "var(--font-playfair), serif" }}>
+            <p className="text-[9px] font-bold uppercase tracking-[0.28em] opacity-40">Media</p>
+            <h1 className="text-base font-bold leading-tight" style={{ fontFamily: "var(--font-playfair), serif" }}>
               TV Station
             </h1>
           </div>
-          <span className="hidden sm:flex items-center gap-1.5 bg-white/10 ring-1 ring-white/20 rounded-full px-3 py-1 text-[10px] font-semibold text-white/80">
-            <span className="relative flex h-1.5 w-1.5"><span className="alive-halo absolute inline-flex h-full w-full rounded-full bg-red-400" /><span className="alive-pulse relative inline-flex h-1.5 w-1.5 rounded-full bg-red-400" /></span>
-            Live streams from public meetings
+          <span className="hidden sm:flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-semibold"
+            style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)" }}>
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="alive-halo absolute inline-flex h-full w-full rounded-full bg-red-400"/>
+              <span className="alive-pulse relative inline-flex h-1.5 w-1.5 rounded-full bg-red-400"/>
+            </span>
+            Public meeting streams
           </span>
         </div>
-        {/* Category filter */}
-        <div className="relative z-10 flex gap-1.5 overflow-x-auto scrollbar-none">
-          {CATEGORIES.map((c) => (
-            <button
-              key={c}
-              onClick={() => setCatFilter(c)}
-              className={`flex-shrink-0 text-[10px] font-bold uppercase tracking-[0.1em] px-3 py-1.5 rounded-full transition-all duration-500 ${
-                catFilter === c
-                  ? "bg-white/20 text-white ring-1 ring-white/30"
-                  : "text-white/60 hover:text-white hover:bg-white/10"
-              }`}
-            >
-              {c}
-            </button>
-          ))}
+
+        {/* Now playing label */}
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: accent }}/>
+          <span className="text-xs font-semibold opacity-70 truncate max-w-[200px]">{activeStream.body} · {activeStream.name}</span>
         </div>
       </div>
 
-      {/* ── Main layout ──────────────────────────────────────────────── */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Stream list sidebar */}
-        <div className="w-72 flex-shrink-0 border-r border-[var(--border)] bg-white overflow-y-auto">
-          {visible.map((stream) => {
-            const cat = CATEGORY_COLOR[stream.category];
-            const isActive = active === stream.id;
-            return (
-              <button
-                key={stream.id}
-                onClick={() => { setActive(stream.id); setEmbedError((p) => { const n = new Set(p); n.delete(stream.id); return n; }); }}
-                className={`w-full text-left px-4 py-4 border-b border-[var(--border)] transition-all duration-300 ${
-                  isActive ? "bg-[var(--accent)]/5 border-l-2 border-l-[var(--accent)]" : "hover:bg-gray-50 border-l-2 border-l-transparent"
-                }`}
-              >
-                <div className="flex items-start justify-between gap-2 mb-1.5">
-                  <p className={`font-bold text-sm leading-snug ${isActive ? "text-[var(--accent)]" : "text-[var(--foreground)]"}`} style={{ fontFamily: "var(--font-playfair), serif" }}>
-                    {stream.name}
-                  </p>
-                  <span className={`flex-shrink-0 text-[9px] font-bold uppercase tracking-[0.1em] px-2 py-0.5 rounded-full border ${cat.bg} ${cat.text} ${cat.border}`}>
-                    {stream.category}
-                  </span>
-                </div>
-                <p className="text-[11px] text-[var(--muted)] leading-snug">{stream.schedule}</p>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Stream viewport */}
-        <div className="flex-1 flex flex-col overflow-hidden bg-[#0d0d0d]">
-          {embedError.has(activeStream.id) ? (
-            // Fallback when embed is blocked
-            <div className="flex-1 flex flex-col items-center justify-center gap-6 px-8 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
-                  <rect x="2" y="7" width="20" height="14" rx="2"/>
-                  <path d="M16 3l-4 4-4-4"/>
-                  <circle cx="12" cy="14" r="2"/>
+      {/* ── Video viewport ──────────────────────────────────────────────── */}
+      <div className="flex-shrink-0 relative" style={{ height: "52vh", background: "#000" }}>
+        {noEmbed ? (
+          /* Federal streams — can't embed, open externally */
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 px-8 text-center"
+            style={{ background: `radial-gradient(ellipse 70% 60% at 50% 50%, ${accent}18, #000)` }}>
+            <div className="w-16 h-16 rounded-[1.25rem] flex items-center justify-center"
+              style={{ background: "rgba(255,255,255,0.08)", boxShadow: `0 0 0 1px ${accent}40` }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="1.5">
+                <rect x="2" y="7" width="20" height="14" rx="2"/>
+                <path d="M16 3l-4 4-4-4"/>
+                <circle cx="12" cy="14" r="2"/>
+              </svg>
+            </div>
+            <div>
+              <p className="text-white/40 text-[11px] font-bold uppercase tracking-[0.2em] mb-1">{activeStream.body}</p>
+              <h2 className="text-white font-bold text-2xl mb-1" style={{ fontFamily: "var(--font-playfair), serif" }}>
+                {activeStream.name}
+              </h2>
+              <p className="text-white/40 text-sm">{activeStream.description}</p>
+              <p className="text-white/25 text-xs mt-1">{activeStream.schedule}</p>
+            </div>
+            <div className="flex gap-3 flex-wrap justify-center">
+              <a href={activeStream.livePageUrl} target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 font-bold rounded-full px-6 py-2.5 text-sm transition-all duration-500 hover:opacity-90 active:scale-[0.97]"
+                style={{ background: accent, color: "#000" }}>
+                Watch Live
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
                 </svg>
+              </a>
+              <a href={activeStream.scheduleUrl} target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold transition-all duration-500 hover:opacity-80"
+                style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)" }}>
+                View Schedule
+              </a>
+            </div>
+          </div>
+        ) : (
+          <>
+            <iframe
+              key={activeStream.id}
+              src={activeStream.embedUrl}
+              className="absolute inset-0 w-full h-full border-0"
+              title={activeStream.name}
+              allowFullScreen
+              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+            />
+            {/* Cinematic vignette overlay */}
+            <div className="pointer-events-none absolute inset-0"
+              style={{ boxShadow: "inset 0 0 80px rgba(0,0,0,0.5), inset 0 -40px 60px rgba(10,10,10,0.8)" }}/>
+          </>
+        )}
+
+        {/* Corner info badge */}
+        {!noEmbed && (
+          <div className="absolute top-3 left-3 pointer-events-none flex items-center gap-2 rounded-full px-3 py-1.5"
+            style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)" }}>
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="alive-halo absolute inline-flex h-full w-full rounded-full" style={{ background: accent }}/>
+              <span className="alive-pulse relative inline-flex h-1.5 w-1.5 rounded-full" style={{ background: accent }}/>
+            </span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.15em]" style={{ color: accent }}>
+              {activeStream.body}
+            </span>
+            <span className="text-[10px] text-white/50 font-medium">{activeStream.name}</span>
+          </div>
+        )}
+      </div>
+
+      {/* ── Channel rows (Apple TV style) ───────────────────────────────── */}
+      <div className="flex-1 overflow-y-auto py-4"
+        style={{ background: "linear-gradient(to bottom, #0a0a0a 0%, #111 100%)" }}>
+        {CATEGORY_ORDER.map((cat) => {
+          const catStreams = STREAMS.filter((s) => s.category === cat);
+          if (!catStreams.length) return null;
+          const catAccent = CAT_ACCENT[cat];
+          return (
+            <div key={cat} className="mb-5">
+              {/* Row label */}
+              <div className="flex items-center gap-2 px-6 mb-2.5">
+                <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: catAccent }}/>
+                <span className="text-[10px] font-bold uppercase tracking-[0.22em]"
+                  style={{ color: "rgba(255,255,255,0.45)" }}>
+                  {cat}
+                </span>
               </div>
-              <div>
-                <h2 className="text-white font-bold text-xl mb-2" style={{ fontFamily: "var(--font-playfair), serif" }}>
-                  {activeStream.name}
-                </h2>
-                <p className="text-white/50 text-sm mb-1">{activeStream.schedule}</p>
-                <p className="text-white/40 text-xs mb-6">
-                  This stream can&apos;t be embedded directly. Watch it on the official page.
-                </p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <a
-                  href={activeStream.livePageUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-3 bg-white text-[var(--accent)] font-bold rounded-full px-6 py-3 text-sm transition-all duration-500 hover:shadow-lg active:scale-[0.98]"
-                >
-                  Watch Live
-                  <span className="inline-flex w-6 h-6 rounded-full bg-[var(--accent)]/10 items-center justify-center group-hover:translate-x-1 transition-transform duration-500">→</span>
-                </a>
-                <a
-                  href={activeStream.scheduleUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold rounded-full px-6 py-3 transition-all duration-500"
-                >
-                  View Schedule
-                </a>
+
+              {/* Horizontal scroll row */}
+              <div className="ch-row flex gap-3 px-6 overflow-x-auto pb-1">
+                {catStreams.map((stream) => {
+                  const isActive = active === stream.id;
+                  return (
+                    <button
+                      key={stream.id}
+                      onClick={() => setActive(stream.id)}
+                      className="flex-shrink-0 w-56 text-left rounded-2xl p-4 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                      style={{
+                        background: isActive
+                          ? `linear-gradient(135deg, ${catAccent}22, ${catAccent}10)`
+                          : "rgba(255,255,255,0.05)",
+                        boxShadow: isActive
+                          ? `0 0 0 1.5px ${catAccent}, 0 8px 24px ${catAccent}22`
+                          : "0 0 0 1px rgba(255,255,255,0.08)",
+                        transform: isActive ? "scale(1.02)" : "scale(1)",
+                      }}
+                    >
+                      {/* Channel icon + name */}
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+                          style={{ background: isActive ? `${catAccent}30` : "rgba(255,255,255,0.07)" }}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke={isActive ? catAccent : "rgba(255,255,255,0.5)"} strokeWidth="1.8">
+                            <rect x="2" y="7" width="20" height="14" rx="2"/>
+                            <path d="M16 3l-4 4-4-4"/>
+                          </svg>
+                        </div>
+                        {isActive && (
+                          <span className="relative flex h-1.5 w-1.5 mt-1 flex-shrink-0">
+                            <span className="alive-halo absolute inline-flex h-full w-full rounded-full" style={{ background: catAccent }}/>
+                            <span className="alive-pulse relative inline-flex h-1.5 w-1.5 rounded-full" style={{ background: catAccent }}/>
+                          </span>
+                        )}
+                      </div>
+
+                      <p className="text-[10px] font-bold uppercase tracking-[0.15em] mb-0.5"
+                        style={{ color: isActive ? catAccent : "rgba(255,255,255,0.35)" }}>
+                        {stream.body}
+                      </p>
+                      <p className="font-bold text-sm leading-snug text-white"
+                        style={{ fontFamily: "var(--font-playfair), serif" }}>
+                        {stream.name}
+                      </p>
+                      <p className="text-[11px] mt-1.5 leading-snug"
+                        style={{ color: "rgba(255,255,255,0.35)" }}>
+                        {stream.schedule}
+                      </p>
+                    </button>
+                  );
+                })}
               </div>
             </div>
-          ) : (
-            <>
-              <iframe
-                key={activeStream.id}
-                src={activeStream.embedUrl}
-                className="flex-1 w-full border-0"
-                title={activeStream.name}
-                allowFullScreen
-                allow="autoplay; encrypted-media"
-                onError={() => setEmbedError((p) => new Set([...p, activeStream.id]))}
-              />
-              {/* Bottom bar */}
-              <div className="flex-shrink-0 bg-[#111] border-t border-white/10 px-5 py-2.5 flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-white font-semibold text-sm">{activeStream.name}</p>
-                  <p className="text-white/40 text-xs">{activeStream.schedule}</p>
-                </div>
-                <div className="flex gap-2">
-                  <a
-                    href={activeStream.livePageUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs font-semibold text-white/60 hover:text-white transition-colors underline underline-offset-2"
-                  >
-                    Watch Live →
-                  </a>
-                  <a
-                    href={activeStream.scheduleUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs font-semibold text-white/60 hover:text-white transition-colors underline underline-offset-2 ml-3"
-                  >
-                    Schedule
-                  </a>
-                </div>
-              </div>
-            </>
-          )}
-        </div>
+          );
+        })}
+
+        {/* Footer */}
+        <p className="text-center text-[10px] px-6 pb-4 mt-2"
+          style={{ color: "rgba(255,255,255,0.18)" }}>
+          Streams are live during public meetings. YouTube embeds require an active broadcast.
+        </p>
       </div>
     </div>
   );
