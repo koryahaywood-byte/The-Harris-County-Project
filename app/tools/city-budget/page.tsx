@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import ShareButton from "@/components/ShareButton";
 import { SourceBadge, EvidencePanel } from "@/components/SourceBadge";
 
@@ -73,25 +74,26 @@ interface CouncilMember {
   party: "D" | "R" | "NP";
   discretionaryM: number;
   topProject: string;
+  slug?: string;
 }
 
 const COUNCIL: CouncilMember[] = [
-  { district: "District A", name: "Amy Peck",               party: "R",  discretionaryM: 1.2, topProject: "Addicks Reservoir area road repairs" },
-  { district: "District B", name: "Tarsha Jackson",         party: "D",  discretionaryM: 1.2, topProject: "Kashmere Gardens drainage improvements" },
-  { district: "District C", name: "Twila Carter",           party: "D",  discretionaryM: 1.2, topProject: "Washington Ave corridor streetscaping" },
-  { district: "District D", name: "Carolyn Evans-Shabazz",  party: "D",  discretionaryM: 1.2, topProject: "Third Ward sidewalk and crosswalk program" },
-  { district: "District E", name: "Fred Flickinger",        party: "R",  discretionaryM: 1.2, topProject: "Clear Lake area parks improvements" },
-  { district: "District F", name: "Tiffany Thomas",         party: "D",  discretionaryM: 1.2, topProject: "Westheimer corridor mobility upgrades" },
-  { district: "District G", name: "Mary Nan Huffman",       party: "R",  discretionaryM: 1.2, topProject: "Meyerland drainage and trail work" },
-  { district: "District H", name: "Joaquin Martinez",       party: "D",  discretionaryM: 1.2, topProject: "Near Northside pedestrian safety" },
-  { district: "District I", name: "Mario Castillo",         party: "D",  discretionaryM: 1.2, topProject: "East End connectivity and bike lanes" },
-  { district: "District J", name: "Edward Pollard",         party: "D",  discretionaryM: 1.2, topProject: "Sharpstown park and rec upgrades" },
-  { district: "District K", name: "Martha Castex-Tatum",    party: "D",  discretionaryM: 1.2, topProject: "Alief drainage and park improvements" },
-  { district: "At-Large 1", name: "Mike Knox",              party: "R",  discretionaryM: 0.8, topProject: "Citywide public safety infrastructure" },
-  { district: "At-Large 2", name: "Willie Davis",           party: "D",  discretionaryM: 0.8, topProject: "Minority business development initiatives" },
-  { district: "At-Large 3", name: "Letitia Plummer",        party: "D",  discretionaryM: 0.8, topProject: "Youth workforce and community centers" },
-  { district: "At-Large 4", name: "Sallie Alcorn",          party: "D",  discretionaryM: 0.8, topProject: "Resilience and climate infrastructure" },
-  { district: "At-Large 5", name: "Julian Ramirez",         party: "D",  discretionaryM: 0.8, topProject: "Senior services and transit connections" },
+  { district: "District A", name: "Amy Peck",               party: "R",  discretionaryM: 1.2, topProject: "Addicks Reservoir area road repairs",          slug: "amy-peck" },
+  { district: "District B", name: "Tarsha Jackson",         party: "D",  discretionaryM: 1.2, topProject: "Kashmere Gardens drainage improvements",        slug: "tarsha-jackson" },
+  { district: "District C", name: "Joe Panzarella",         party: "R",  discretionaryM: 1.2, topProject: "Washington Ave corridor streetscaping",         slug: "joe-panzarella" },
+  { district: "District D", name: "Carolyn Evans-Shabazz",  party: "D",  discretionaryM: 1.2, topProject: "Third Ward sidewalk and crosswalk program",     slug: "carolyn-evans-shabazz" },
+  { district: "District E", name: "Fred Flickinger",        party: "R",  discretionaryM: 1.2, topProject: "Clear Lake area parks improvements",            slug: "fred-flickinger" },
+  { district: "District F", name: "Tiffany Thomas",         party: "D",  discretionaryM: 1.2, topProject: "Westheimer corridor mobility upgrades",         slug: "tiffany-thomas" },
+  { district: "District G", name: "Mary Nan Huffman",       party: "R",  discretionaryM: 1.2, topProject: "Meyerland drainage and trail work",             slug: "mary-nan-huffman" },
+  { district: "District H", name: "Mario Castillo",         party: "D",  discretionaryM: 1.2, topProject: "Near Northside pedestrian safety",             slug: "mario-castillo" },
+  { district: "District I", name: "Joaquin Martinez",       party: "D",  discretionaryM: 1.2, topProject: "East End connectivity and bike lanes",          slug: "joaquin-martinez" },
+  { district: "District J", name: "Edward Pollard",         party: "D",  discretionaryM: 1.2, topProject: "Sharpstown park and rec upgrades",             slug: "edward-pollard" },
+  { district: "District K", name: "Martha Castex-Tatum",    party: "D",  discretionaryM: 1.2, topProject: "Alief drainage and park improvements",          slug: "martha-castex-tatum" },
+  { district: "At-Large 1", name: "Julian Ramirez",         party: "R",  discretionaryM: 0.8, topProject: "Citywide public safety infrastructure",         slug: "julian-ramirez" },
+  { district: "At-Large 2", name: "Willie Davis",           party: "D",  discretionaryM: 0.8, topProject: "Minority business development initiatives",     slug: "willie-davis" },
+  { district: "At-Large 3", name: "Twila Carter",           party: "R",  discretionaryM: 0.8, topProject: "Youth workforce and community centers",         slug: "twila-carter" },
+  { district: "At-Large 4", name: "Alejandra Salinas",      party: "D",  discretionaryM: 0.8, topProject: "Resilience and climate infrastructure",         slug: "alejandra-salinas" },
+  { district: "At-Large 5", name: "Sallie Alcorn",          party: "D",  discretionaryM: 0.8, topProject: "Senior services and transit connections",       slug: "sallie-alcorn" },
 ];
 
 const CAT_COLOR: Record<string, string> = {
@@ -432,9 +434,17 @@ export default function CityBudget() {
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--muted)]">{cm.district}</p>
-                        <h3 className="font-bold text-[var(--accent)] text-base leading-tight mt-0.5" style={{ fontFamily: "var(--font-playfair), serif" }}>
-                          {cm.name}
-                        </h3>
+                        {cm.slug ? (
+                          <Link href={`/politicians/${cm.slug}`}
+                            className="font-bold text-[var(--accent)] text-base leading-tight mt-0.5 hover:text-[var(--accent-light)] hover:underline underline-offset-2 transition-colors block"
+                            style={{ fontFamily: "var(--font-playfair), serif" }}>
+                            {cm.name}
+                          </Link>
+                        ) : (
+                          <h3 className="font-bold text-[var(--accent)] text-base leading-tight mt-0.5" style={{ fontFamily: "var(--font-playfair), serif" }}>
+                            {cm.name}
+                          </h3>
+                        )}
                       </div>
                       <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white ${cm.party === "D" ? "bg-blue-700" : cm.party === "R" ? "bg-red-700" : "bg-gray-500"}`}>
                         {cm.party}
