@@ -4,6 +4,7 @@ import { FINANCE_DATA, fmt, type CandidateFinance } from "@/lib/campaign-finance
 import type { FECCandidate } from "@/app/api/finance/fec/route";
 import type { TECCandidate } from "@/app/api/finance/tec/route";
 import type { HCCandidate } from "@/app/api/finance/harris-county/route";
+import type { COHCandidate } from "@/app/api/finance/houston/route";
 
 type Candidate = CandidateFinance;
 
@@ -22,6 +23,7 @@ export default function WhereIsTheDough() {
   const [fecData, setFecData]   = useState<FECCandidate[]>([]);
   const [tecData, setTecData]   = useState<TECCandidate[]>([]);
   const [hcData,  setHcData]    = useState<HCCandidate[]>([]);
+  const [cohData, setCohData]   = useState<COHCandidate[]>([]);
   const [fecFetchedAt, setFecFetchedAt] = useState<string>("");
   const [tecFetchedAt, setTecFetchedAt] = useState<string>("");
 
@@ -48,6 +50,13 @@ export default function WhereIsTheDough() {
         setHcData(results.filter(r => r.dataSource === "live"));
       })
       .catch(() => {});
+
+    fetch("/api/finance/houston")
+      .then(r => r.json())
+      .then(({ results }: { results: COHCandidate[] }) => {
+        setCohData(results.filter(r => r.dataSource === "live"));
+      })
+      .catch(() => {});
   }, []);
 
   // Merge live API data over static hardcoded data
@@ -67,6 +76,11 @@ export default function WhereIsTheDough() {
       const live = hcData.find(l => l.name === d.name);
       if (!live) return d;
       return { ...d, cash: live.cash, raised: live.raised, spent: live.spent, investments: live.investments, loans: live.loans, asOf: live.asOf };
+    }
+    if (d.level === "houston") {
+      const live = cohData.find(l => l.name === d.name);
+      if (!live) return d;
+      return { ...d, cash: live.cash, raised: live.raised, spent: live.spent, loans: live.loans, asOf: live.asOf };
     }
     return d;
   });
@@ -116,6 +130,7 @@ export default function WhereIsTheDough() {
                 fecData.length > 0 ? "Federal: FEC" : null,
                 tecData.length > 0 ? "State: TEC" : null,
                 hcData.length  > 0 ? "County: Harris Clerk" : null,
+                cohData.length > 0 ? "City: Houston COH" : null,
               ].filter(Boolean).join(" · ")} &mdash; live data
               {fecFetchedAt && <span className="text-sky-300/50 ml-1">as of {new Date(fecFetchedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>}
             </p>
