@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import ShareButton from "@/components/ShareButton";
+import { SourceBadge, EvidencePanel } from "@/components/SourceBadge";
 
 /* ─── FY2027 Budget Data ─────────────────────────────────────────────────── */
 interface BudgetLine {
@@ -311,11 +312,11 @@ export default function CityBudget() {
                 </div>
               </div>
 
-              <p className="text-xs text-[var(--muted)] mt-4 text-center">
-                Analysis based on reporting by{" "}
-                <a href="https://htxbudget.com" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 text-[var(--accent-light)]">htxbudget.com</a>
-                {" "}and Houston Public Media. FY27 budget vote pending Council approval.
-              </p>
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                <SourceBadge source={{ label: "htxbudget.com", detail: "Local Insight / OCSI analysis", type: "news", url: "https://htxbudget.com" }} />
+                <SourceBadge source={{ label: "Houston Public Media", detail: "FY27 budget reporting", type: "news" }} />
+                <SourceBadge source={{ label: "City of Houston", detail: "FY2027 Proposed Budget document", type: "government", url: "https://www.houstontx.gov/budget" }} />
+              </div>
             </div>
 
             {/* HPD Spotlight */}
@@ -409,9 +410,12 @@ export default function CityBudget() {
                 ))}
               </div>
             </div>
-            <p className="text-xs text-[var(--muted)] mt-4 text-center">
-              Source: City of Houston FY2027 proposed budget. Enterprise funds shown for context. Figures approximate. Solid Waste shown at utility transfer value.
-            </p>
+            <EvidencePanel className="mt-6" sources={[
+              { label: "City of Houston FY2027 Proposed Budget", detail: "Official budget document — department figures, General Fund", type: "government", url: "https://www.houstontx.gov/budget" },
+              { label: "htxbudget.com / Local Insight", detail: "Three Moves analysis — OCSI civic finance reporting", type: "news", url: "https://htxbudget.com" },
+              { label: "Houston Public Media", detail: "FY27 budget coverage — Chris Hollins Controller objections", type: "news" },
+              { label: "City Controller Chris Hollins", detail: "Issued formal objection to one-time accounting moves", type: "government" },
+            ]} />
           </div>
         )}
 

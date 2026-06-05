@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import ShareButton from "@/components/ShareButton";
+import { SourceBadge } from "@/components/SourceBadge";
 
 type Rep = {
   name: string;
@@ -427,9 +428,11 @@ export default function BillTracker() {
           )}
         </div>
 
-        <p className="text-xs text-[var(--muted)] mt-5">
-          Data: LegiScan · 89th Texas Legislature (2025–2026). Search by last name may include co-sponsorships.
-        </p>
+        <div className="flex flex-wrap items-center gap-2 mt-5">
+          <span className="text-xs text-[var(--muted)]">Search by last name may include co-sponsorships.</span>
+          <SourceBadge source={{ label: "LegiScan", detail: "89th Texas Legislature · 2025–2026", type: "api", url: "https://legiscan.com" }} />
+          <SourceBadge source={{ label: "Texas Legislature Online", detail: "Official bill status", type: "government", url: "https://capitol.texas.gov" }} />
+        </div>
       </div>
 
       {/* Mobile bottom sheet */}

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import ShareButton from "@/components/ShareButton";
+import { SourceBadge, EvidencePanel, type Source } from "@/components/SourceBadge";
 
 /* ─── Budget Data — Harris County FY2027 Proposed (~$2.84B) ─────────────── */
 interface BudgetLine {
@@ -77,10 +78,11 @@ type ContractorSort = "total" | "contracts" | "name";
 
 /* ─── Story beat component ───────────────────────────────────────────────── */
 function StoryBeat({
-  eyebrow, headline, body, stat, statLabel, color, border,
+  eyebrow, headline, body, stat, statLabel, color, border, sources,
 }: {
   eyebrow: string; headline: string; body: string;
   stat: string; statLabel: string; color: string; border: string;
+  sources?: Source[];
 }) {
   return (
     <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px] card-lift">
@@ -99,6 +101,11 @@ function StoryBeat({
               {headline}
             </h3>
             <p className="text-sm text-[var(--muted)] leading-relaxed">{body}</p>
+            {sources && sources.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-3">
+                {sources.map((s, i) => <SourceBadge key={i} source={s} />)}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -276,6 +283,10 @@ export default function CountyBudget() {
               statLabel="Worst-case deficit FY2027"
               color="#dc2626"
               border="#ef4444"
+              sources={[
+                { label: "Houston Chronicle", detail: "May 14, 2026 · John Lomax V", type: "news", url: "https://www.houstonchronicle.com" },
+                { label: "Commissioners Court", detail: "Budget presentation, May 2026", type: "court" },
+              ]}
             />
 
             <StoryBeat
@@ -286,6 +297,10 @@ export default function CountyBudget() {
               statLabel="Law enforcement salary increase"
               color="#1d4ed8"
               border="#3b82f6"
+              sources={[
+                { label: "Houston Chronicle", detail: "May 14, 2026 · John Lomax V", type: "news", url: "https://www.houstonchronicle.com" },
+                { label: "Harris County Budget Dir.", detail: "Daniel Ramos testimony", type: "government" },
+              ]}
             />
 
             <StoryBeat
@@ -296,6 +311,10 @@ export default function CountyBudget() {
               statLabel="Consecutive deficit year"
               color="#7c3aed"
               border="#a78bfa"
+              sources={[
+                { label: "Houston Chronicle", detail: "May 14, 2026 · John Lomax V", type: "news", url: "https://www.houstonchronicle.com" },
+                { label: "Texas HB 3158 (2019)", detail: "Revenue cap law", type: "law" },
+              ]}
             />
 
             {/* Quote callout */}
@@ -339,10 +358,12 @@ export default function CountyBudget() {
                 </svg>
               </button>
             </div>
-            <p className="text-xs text-[var(--muted)] text-center">
-              Source: Houston Chronicle, May 14, 2026 (John Lomax V) · Harris County Budget Director presentation, Commissioners Court.
-              Department figures estimated; deficit figures confirmed.
-            </p>
+            <EvidencePanel sources={[
+              { label: "Houston Chronicle", detail: "May 14, 2026 · John Lomax V — primary reporting on FY2027 budget", type: "news", url: "https://www.houstonchronicle.com" },
+              { label: "Harris County Commissioners Court", detail: "Budget Director Daniel Ramos presentation, May 2026", type: "court" },
+              { label: "Texas HB 3158 (2019)", detail: "State revenue cap law limiting county property tax growth", type: "law" },
+              { label: "Harris County Budget Office", detail: "FY2027 Proposed Budget — department figures", type: "government", url: "https://www.harriscountytx.gov/Budget" },
+            ]} />
           </div>
         )}
 
