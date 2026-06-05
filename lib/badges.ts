@@ -203,6 +203,56 @@ const ALL_BADGES: Array<Badge & { check: (ctx: BadgeContext) => boolean }> = [
     check: ({ pol }) => !!pol.termStart && pol.termStart >= 2023,
   },
 
+  // ── Leadership / Committee badges ───────────────────────────────────────────
+  {
+    id: "committee-chair",
+    name: "Committee Chair",
+    description: "Chairs a legislative committee — controls the agenda and hearings.",
+    tier: "gold",
+    icon: "C",
+    check: ({ pol }) => !!(pol.committeeRoles?.some(r => r.role === "Chair")),
+  },
+  {
+    id: "vice-chair",
+    name: "Vice Chair",
+    description: "Vice chairs a legislative committee.",
+    tier: "silver",
+    icon: "V",
+    check: ({ pol }) => !!(pol.committeeRoles?.some(r => r.role === "Vice Chair")),
+  },
+  {
+    id: "caucus-leader",
+    name: "Caucus Leader",
+    description: "Leads or co-leads a legislative party caucus.",
+    tier: "gold",
+    icon: "L",
+    check: ({ pol }) => !!(pol.roles?.includes("caucus-chair") || pol.roles?.includes("caucus-vice-chair") || pol.roles?.includes("party-leader")),
+  },
+  {
+    id: "dean",
+    name: "Dean of the House",
+    description: "Longest-serving member of the Texas House of Representatives.",
+    tier: "hof",
+    icon: "D",
+    check: ({ pol }) => !!(pol.roles?.includes("dean")),
+  },
+  {
+    id: "the-mayor",
+    name: "The Mayor",
+    description: "Mayor of Houston — leads the nation's 4th largest city.",
+    tier: "hof",
+    icon: "M",
+    check: ({ pol }) => !!(pol.roles?.includes("mayor")),
+  },
+  {
+    id: "county-judge",
+    name: "County Judge",
+    description: "Presides over Commissioners Court — the CEO of Harris County.",
+    tier: "hof",
+    icon: "J",
+    check: ({ pol }) => !!(pol.roles?.includes("county-judge")),
+  },
+
   // ── Misc badges ─────────────────────────────────────────────────────────────
   {
     id: "across-aisle",

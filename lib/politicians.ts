@@ -19,6 +19,12 @@ export type Politician = {
   legiscanName?: string;
   // Year first elected/sworn into current or prior public office
   termStart?: number;
+  // Legislative committees this person sits on
+  committees?: string[];
+  // If they chair or vice-chair a committee
+  committeeRoles?: { committee: string; role: "Chair" | "Vice Chair" }[];
+  // Leadership roles: caucus, party, honorary (dean, etc.)
+  roles?: ("caucus-chair" | "caucus-vice-chair" | "party-leader" | "dean" | "mayor" | "county-judge")[];
   // District racial/ethnic demographics (%, from Census ACS; add to 100)
   demographics?: {
     hispanic: number;
@@ -44,6 +50,8 @@ export const POLITICIANS: Politician[] = [
     website: "https://senate.texas.gov/member.php?d=6",
     twitter: "SenAlvarado",
     legiscanName: "Alvarado",
+    committees: ["Health & Human Services", "Finance", "Nominations"],
+    roles: ["caucus-chair"],
   },
   {
     slug: "borris-miles",
@@ -56,6 +64,7 @@ export const POLITICIANS: Politician[] = [
     photo: "https://senate.texas.gov/members/d13/img/Sen-Miles-2025-Headshot-web.jpg",
     website: "https://senate.texas.gov/member.php?d=13",
     legiscanName: "Miles",
+    committees: ["Natural Resources & Economic Development", "Transportation"],
   },
   {
     slug: "molly-cook",
@@ -68,6 +77,8 @@ export const POLITICIANS: Politician[] = [
     photo: "https://senate.texas.gov/members/d15/img/Cook_88-0807D-014-2025.jpg",
     website: "https://senate.texas.gov/member.php?d=15",
     legiscanName: "Cook",
+    committees: ["Environment & Land Use", "Business & Commerce", "Education"],
+    termStart: 2024,
   },
   {
     slug: "paul-bettencourt",
@@ -80,6 +91,8 @@ export const POLITICIANS: Politician[] = [
     photo: "https://senate.texas.gov/members/d07/img/headshot.jpg",
     website: "https://senate.texas.gov/member.php?d=7",
     legiscanName: "Bettencourt",
+    committees: ["Finance", "Local Government", "Property Tax"],
+    committeeRoles: [{ committee: "Local Government", role: "Chair" }],
   },
   // ── Texas House ──────────────────────────────────────────────────────
   {
@@ -94,6 +107,8 @@ export const POLITICIANS: Politician[] = [
     website: "https://house.texas.gov/members/member-page/?district=141",
     legiscanName: "Thompson",
     termStart: 1973,
+    committees: ["Calendars", "Rules & Resolutions"],
+    roles: ["dean"],
   },
   {
     slug: "ann-johnson",
@@ -106,6 +121,7 @@ export const POLITICIANS: Politician[] = [
     photo: "https://house.texas.gov/images/members/3985.jpg",
     website: "https://house.texas.gov/members/member-page/?district=134",
     legiscanName: "Johnson",
+    committees: ["Criminal Jurisprudence", "Judiciary & Civil Jurisprudence"],
   },
   {
     slug: "ana-hernandez",
@@ -119,6 +135,7 @@ export const POLITICIANS: Politician[] = [
     website: "https://house.texas.gov/members/member-page/?district=143",
     legiscanName: "Hernandez",
     termStart: 2007,
+    committees: ["County Affairs", "Culture, Recreation & Tourism"],
   },
   {
     slug: "armando-walle",
@@ -132,6 +149,8 @@ export const POLITICIANS: Politician[] = [
     website: "https://house.texas.gov/members/member-page/?district=140",
     legiscanName: "Walle",
     termStart: 2009,
+    committees: ["Public Health", "Natural Resources"],
+    committeeRoles: [{ committee: "Public Health", role: "Vice Chair" }],
   },
   {
     slug: "mary-ann-perez",
@@ -145,6 +164,7 @@ export const POLITICIANS: Politician[] = [
     website: "https://house.texas.gov/members/member-page/?district=144",
     legiscanName: "Perez",
     termStart: 2013,
+    committees: ["Transportation", "State Affairs"],
   },
   {
     slug: "harold-dutton",
@@ -158,6 +178,8 @@ export const POLITICIANS: Politician[] = [
     website: "https://house.texas.gov/members/member-page/?district=142",
     legiscanName: "Dutton",
     termStart: 1985,
+    committees: ["Juvenile Justice & Family Issues", "Redistricting"],
+    committeeRoles: [{ committee: "Juvenile Justice & Family Issues", role: "Chair" }],
   },
   {
     slug: "gene-wu",
@@ -171,6 +193,8 @@ export const POLITICIANS: Politician[] = [
     website: "https://house.texas.gov/members/member-page/?district=137",
     legiscanName: "Wu",
     termStart: 2013,
+    committees: ["Judiciary & Civil Jurisprudence", "Technology"],
+    roles: ["caucus-vice-chair"],
   },
   {
     slug: "jolanda-jones",
@@ -183,6 +207,7 @@ export const POLITICIANS: Politician[] = [
     photo: "https://house.texas.gov/images/members/4105.jpg",
     website: "https://house.texas.gov/members/member-page/?district=147",
     legiscanName: "Jones",
+    committees: ["Criminal Jurisprudence", "Appropriations"],
   },
   {
     slug: "hubert-vo",
@@ -196,6 +221,7 @@ export const POLITICIANS: Politician[] = [
     website: "https://house.texas.gov/members/member-page/?district=149",
     legiscanName: "Vo",
     termStart: 2004,
+    committees: ["Appropriations", "Business & Industry"],
   },
   {
     slug: "lauren-ashley-simmons",
@@ -221,6 +247,8 @@ export const POLITICIANS: Politician[] = [
     website: "https://house.texas.gov/members/member-page/?district=131",
     legiscanName: "Allen",
     termStart: 2005,
+    committees: ["Public Education", "Higher Education"],
+    committeeRoles: [{ committee: "Public Education", role: "Vice Chair" }],
   },
   {
     slug: "christina-morales",
@@ -281,6 +309,8 @@ export const POLITICIANS: Politician[] = [
     photo: "https://house.texas.gov/images/members/3535.jpg",
     website: "https://house.texas.gov/members/member-page/?district=130",
     legiscanName: "Oliverson",
+    committees: ["Insurance", "Public Health"],
+    committeeRoles: [{ committee: "Insurance", role: "Chair" }],
   },
   {
     slug: "dennis-paul",
@@ -305,6 +335,8 @@ export const POLITICIANS: Politician[] = [
     photo: "https://house.texas.gov/images/members/2875.jpg",
     website: "https://house.texas.gov/members/member-page/?district=24",
     legiscanName: "Bonnen",
+    committees: ["Appropriations", "Higher Education"],
+    committeeRoles: [{ committee: "Appropriations", role: "Chair" }],
   },
   {
     slug: "mike-schofield",
@@ -329,6 +361,7 @@ export const POLITICIANS: Politician[] = [
     photo: "https://house.texas.gov/images/members/4035.jpg",
     website: "https://house.texas.gov/members/member-page/?district=148",
     legiscanName: "Shaw",
+    committees: ["Public Education", "Culture, Recreation & Tourism"],
   },
   // ── Harris County ─────────────────────────────────────────────────────
   {
@@ -343,6 +376,7 @@ export const POLITICIANS: Politician[] = [
     website: "https://harriscountytx.gov/county-judge",
     twitter: "LinaHidalgoTX",
     termStart: 2019,
+    roles: ["county-judge"],
     demographics: { hispanic: 43, black: 19, white: 27, asian: 8, other: 3, source: "Census ACS 2022 Harris County" },
   },
   {
@@ -411,6 +445,7 @@ export const POLITICIANS: Politician[] = [
     website: "https://www.houstontx.gov/mayor",
     twitter: "JohnWhitmire",
     termStart: 2024,
+    roles: ["mayor"],
   },
   {
     slug: "amy-peck",

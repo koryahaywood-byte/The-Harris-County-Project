@@ -26,6 +26,79 @@ function getBillStatus(a: string): BillStatus {
   return "filed";
 }
 
+// ── Bill category buckets ────────────────────────────────────────────────────
+const BILL_CATEGORIES = [
+  { key: "Healthcare",       color: "#e11d48", keywords: ["health","medical","hospital","insurance","medicaid","medicare","pharmacy","nurse","physician","mental","dental","hospice","substance abuse","behavioral"] },
+  { key: "Education",        color: "#7c3aed", keywords: ["education","school","student","teacher","university","college","campus","academic","literacy","curriculum","tutoring","hisd"] },
+  { key: "Criminal Justice", color: "#1d4ed8", keywords: ["criminal","penal","crime","law enforcement","police","corrections","parole","probation","prison","jail","offense","felony","misdemeanor","trafficking","firearm","weapon","gang","homicide","assault"] },
+  { key: "Housing",          color: "#0d9488", keywords: ["housing","property","rent","homestead","landlord","tenant","mortgage","affordable","eviction","zoning","hoa"] },
+  { key: "Environment",      color: "#16a34a", keywords: ["environment","water","flood","energy","climate","pollution","emissions","air quality","conservation","wildlife","drought","park","tree"] },
+  { key: "Economy",          color: "#d97706", keywords: ["tax","business","employment","wage","economic","commerce","finance","revenue","budget","workforce","workers comp","pension","retirement","bank","loan"] },
+  { key: "Infrastructure",   color: "#6366f1", keywords: ["road","transportation","transit","highway","bridge","utility","infrastructure","broadband","telecommunications","grid","power","toll","port"] },
+  { key: "Government",       color: "#64748b", keywords: ["election","vote","voting","ethics","transparency","government","public official","political","redistricting","open record","lobbying","campaign"] },
+] as const;
+
+type BillCategory = typeof BILL_CATEGORIES[number]["key"] | "Other";
+
+function categorizeBill(title: string): BillCategory {
+  const t = title.toLowerCase();
+  for (const cat of BILL_CATEGORIES) {
+    if (cat.keywords.some(k => t.includes(k))) return cat.key;
+  }
+  return "Other";
+}
+
+function buildCategoryBreakdown(bills: Bill[]): { key: BillCategory; count: number; color: string; pct: number }[] {
+  const counts: Record<BillCategory, number> = {} as Record<BillCategory, number>;
+  for (const b of bills) {
+    const cat = categorizeBill(b.title);
+    counts[cat] = (counts[cat] ?? 0) + 1;
+  }
+  const total = bills.length;
+  const result = Object.entries(counts)
+    .map(([k, count]) => {
+      const catDef = BILL_CATEGORIES.find(c => c.key === k);
+      return { key: k as BillCategory, count, color: catDef?.color ?? "#94a3b8", pct: total > 0 ? count / total : 0 };
+    })
+    .sort((a, b) => b.count - a.count);
+  return result;
+}
+
+// ── SVG Donut ────────────────────────────────────────────────────────────────
+function DonutChart({ data }: { data: { key: BillCategory; count: number; color: string; pct: number }[] }) {
+  const cx = 80, cy = 80, r = 62, ri = 44;
+  let cumAngle = -Math.PI / 2;
+
+  const slices = data.map(d => {
+    const startAngle = cumAngle;
+    const sweep = d.pct * 2 * Math.PI;
+    cumAngle += sweep;
+    const endAngle = cumAngle;
+    const x1 = cx + r * Math.cos(startAngle);
+    const y1 = cy + r * Math.sin(startAngle);
+    const x2 = cx + r * Math.cos(endAngle);
+    const y2 = cy + r * Math.sin(endAngle);
+    const xi1 = cx + ri * Math.cos(endAngle);
+    const yi1 = cy + ri * Math.sin(endAngle);
+    const xi2 = cx + ri * Math.cos(startAngle);
+    const yi2 = cy + ri * Math.sin(startAngle);
+    const large = sweep > Math.PI ? 1 : 0;
+    const path = sweep < 0.001
+      ? ""
+      : `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} L ${xi1} ${yi1} A ${ri} ${ri} 0 ${large} 0 ${xi2} ${yi2} Z`;
+    return { ...d, path };
+  });
+
+  return (
+    <svg viewBox="0 0 160 160" className="w-36 h-36 flex-shrink-0">
+      {slices.map(s => s.path && (
+        <path key={s.key} d={s.path} fill={s.color} stroke="white" strokeWidth="1.5" />
+      ))}
+      <circle cx={cx} cy={cy} r={ri - 2} fill="white" />
+    </svg>
+  );
+}
+
 const STATUS_STYLES: Record<BillStatus, { label: string; bg: string; text: string }> = {
   law:       { label: "Signed into Law",  bg: "#dcfce7", text: "#16a34a" },
   passed:    { label: "Passed Chamber",   bg: "#ede9fe", text: "#7c3aed" },
@@ -991,6 +1064,56 @@ export default function PoliticianProfile() {
                   <div className="text-center py-16 text-[var(--muted)] text-sm animate-pulse">Loading bills…</div>
                 ) : (
                   <>
+                    {/* ── Committees ── */}
+                    {pol.committees && pol.committees.length > 0 && (
+                      <div className="mb-6 rounded-[1.35rem] bg-white/60 ring-1 ring-black/8 p-[4px]">
+                        <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-5">
+                          <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--muted)] mb-3">Committee Assignments</p>
+                          <div className="flex flex-wrap gap-2">
+                            {pol.committees.map(c => {
+                              const role = pol.committeeRoles?.find(r => r.committee === c);
+                              return (
+                                <span key={c} className="inline-flex items-center gap-1.5 text-xs font-medium rounded-full px-3 py-1.5"
+                                  style={{
+                                    background: role?.role === "Chair" ? "#1a3a5c" : role?.role === "Vice Chair" ? "#e0e7ef" : "#f1f5f9",
+                                    color: role?.role === "Chair" ? "#ffffff" : "#1a3a5c",
+                                  }}>
+                                  {role && (
+                                    <span className="text-[9px] font-bold uppercase tracking-wider opacity-70">{role.role}</span>
+                                  )}
+                                  {c}
+                                </span>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ── Bill category donut ── */}
+                    {bills.length > 0 && (() => {
+                      const breakdown = buildCategoryBreakdown(bills);
+                      return (
+                        <div className="mb-6 rounded-[1.35rem] bg-white/60 ring-1 ring-black/8 p-[4px]">
+                          <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-5">
+                            <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--muted)] mb-4">Bills by Focus Area</p>
+                            <div className="flex items-start gap-5">
+                              <DonutChart data={breakdown} />
+                              <div className="flex flex-wrap gap-x-4 gap-y-2 pt-1">
+                                {breakdown.map(d => (
+                                  <div key={d.key} className="flex items-center gap-1.5">
+                                    <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: d.color }} />
+                                    <span className="text-xs text-[var(--muted)]">{d.key}</span>
+                                    <span className="text-xs font-bold text-[var(--accent)]">{Math.round(d.pct * 100)}%</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
+
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                       {[
                         { label: "Total Filed",       val: billTotal,         color: "" },
