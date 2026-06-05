@@ -255,6 +255,16 @@ export default function Home() {
                 }}
               />
             </div>
+            <div className="mb-4">
+              <ToolCard
+                tool={{
+                  href: "/tools/districts",
+                  name: "Districts",
+                  description: "Explore Harris County voting precincts by district — Congressional, State House, State Senate, City Council, and JP. Click any precinct for turnout, demographics, and party participation data.",
+                  status: "live",
+                }}
+              />
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <ToolCard
                 tool={{
