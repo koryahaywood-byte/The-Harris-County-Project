@@ -30,12 +30,11 @@ export interface DashboardData {
   markets: MarketIndex[];
 }
 
-// Wikipedia REST API returns verified, hotlink-safe thumbnail URLs.
-// Cached for 24h since these images rarely change.
-const WIKI_TOPICS: Record<string, string> = {
-  federal: "United_States_Capitol",
-  state:   "Texas_State_Capitol",
-  local:   "Houston",
+// Reliable fallback images — exact URLs returned by Wikipedia REST API (330px, pre-rendered).
+const FALLBACK_IMAGES: Record<string, string> = {
+  federal: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Capitol_Building_Full_View.jpg/330px-Capitol_Building_Full_View.jpg",
+  state:   "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/TexasStateCapitol-2010-01.JPG/330px-TexasStateCapitol-2010-01.JPG",
+  local:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Texas_medical_center.jpg/330px-Texas_medical_center.jpg",
 };
 
 async function fetchMarketIndex(symbol: string, name: string): Promise<MarketIndex | null> {
@@ -59,7 +58,7 @@ async function fetchMarketIndex(symbol: string, name: string): Promise<MarketInd
   }
 }
 
-async function getWikipediaImage(topic: string): Promise<string | null> {
+async function getWikipediaImage(topic: string, fallback: string): Promise<string> {
   try {
     const res = await fetch(
       `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topic)}`,
@@ -68,15 +67,13 @@ async function getWikipediaImage(topic: string): Promise<string | null> {
         headers: { "User-Agent": "HarrisCountyProject/1.0 (dapr@theharriscountyproject.com)" },
       }
     );
-    if (!res.ok) return null;
+    if (!res.ok) return fallback;
     const data = await res.json();
-    // Use the thumbnail CDN URL (hotlink-safe) and bump to 800px wide
     const thumb: string | undefined = data?.thumbnail?.source;
-    if (!thumb) return null;
-    // Replace whatever px width is in the URL with 800px
-    return thumb.replace(/\/\d+px-/, "/800px-");
+    if (!thumb) return fallback;
+    return thumb;
   } catch {
-    return null;
+    return fallback;
   }
 }
 
@@ -149,9 +146,9 @@ export async function getDashboardData(): Promise<DashboardData> {
   // Fetch Wikipedia images, news stories, and market data in parallel
   const [wikiImgs, federalStory, stateStory, localStory, rawMarkets] = await Promise.all([
     Promise.all([
-      getWikipediaImage(WIKI_TOPICS.federal),
-      getWikipediaImage(WIKI_TOPICS.state),
-      getWikipediaImage(WIKI_TOPICS.local),
+      getWikipediaImage("United_States_Capitol", FALLBACK_IMAGES.federal),
+      getWikipediaImage("Texas_State_Capitol",   FALLBACK_IMAGES.state),
+      getWikipediaImage("Houston",               FALLBACK_IMAGES.local),
     ]),
     fetchTopStory("US Congress White House federal politics", todayStr, null),
     fetchTopStory("Texas Austin legislature politics 2026", todayStr, null),
