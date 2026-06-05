@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { FINANCE_DATA, fmt, type CandidateFinance } from "@/lib/campaign-finance";
 import type { FECCandidate } from "@/app/api/finance/fec/route";
+import type { TECCandidate } from "@/app/api/finance/tec/route";
 
 type Candidate = CandidateFinance;
 
@@ -17,26 +18,43 @@ export default function WhereIsTheDough() {
   const [level, setLevel] = useState<Level>("all");
   const [party, setParty] = useState<"all" | "D" | "R">("all");
   const [search, setSearch] = useState("");
-  const [liveData, setLiveData] = useState<FECCandidate[]>([]);
+  const [fecData, setFecData]   = useState<FECCandidate[]>([]);
+  const [tecData, setTecData]   = useState<TECCandidate[]>([]);
   const [fecFetchedAt, setFecFetchedAt] = useState<string>("");
+  const [tecFetchedAt, setTecFetchedAt] = useState<string>("");
 
   useEffect(() => {
     fetch("/api/finance/fec")
       .then(r => r.json())
       .then(({ results, fetchedAt }: { results: FECCandidate[]; fetchedAt: string }) => {
-        setLiveData(results.filter(r => r.dataSource === "live"));
+        setFecData(results.filter(r => r.dataSource === "live"));
         setFecFetchedAt(fetchedAt);
       })
-      .catch(() => {/* fall through to static data */});
+      .catch(() => {});
+
+    fetch("/api/finance/tec")
+      .then(r => r.json())
+      .then(({ results, fetchedAt }: { results: TECCandidate[]; fetchedAt: string }) => {
+        setTecData(results.filter(r => r.dataSource === "live"));
+        setTecFetchedAt(fetchedAt);
+      })
+      .catch(() => {});
   }, []);
 
-  // Merge live FEC data over static hardcoded data
+  // Merge live API data over static hardcoded data
   const BASE = FINANCE_DATA.filter((d) => d.name !== "Edward Pollard");
   const DATA: Candidate[] = BASE.map(d => {
-    if (d.level !== "federal") return d;
-    const live = liveData.find(l => l.name === d.name);
-    if (!live) return d;
-    return { ...d, cash: live.cash, raised: live.raised, spent: live.spent, asOf: live.asOf };
+    if (d.level === "federal") {
+      const live = fecData.find(l => l.name === d.name);
+      if (!live) return d;
+      return { ...d, cash: live.cash, raised: live.raised, spent: live.spent, asOf: live.asOf };
+    }
+    if (d.level === "state") {
+      const live = tecData.find(l => l.name === d.name);
+      if (!live) return d;
+      return { ...d, cash: live.cash, asOf: live.asOf };
+    }
+    return d;
   });
 
   const withCash  = DATA.filter(d => d.cash > 0);
@@ -77,10 +95,14 @@ export default function WhereIsTheDough() {
           <p className="text-white/70 text-sm max-w-lg">
             Cash-on-hand for every Harris County official, candidate, and challenger. TEC &amp; FEC filings.
           </p>
-          {liveData.length > 0 && (
+          {(fecData.length > 0 || tecData.length > 0) && (
             <p className="mt-2 text-[11px] text-sky-300/80 flex items-center gap-1.5">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-sky-400 alive-pulse" />
-              Federal figures live from FEC &mdash; updated {new Date(fecFetchedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
+              {[
+                fecData.length > 0 ? `Federal: FEC live` : null,
+                tecData.length > 0 ? `State: TEC live` : null,
+              ].filter(Boolean).join(" · ")}
+              {fecFetchedAt && <span className="text-sky-300/50 ml-1">&mdash; {new Date(fecFetchedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>}
             </p>
           )}
           <div className="mt-5 flex flex-wrap gap-3">
@@ -283,7 +305,7 @@ export default function WhereIsTheDough() {
               </div>
             </div>
             <p className="text-xs text-[var(--muted)] mt-4 text-center">
-              Federal: FEC live data{liveData.length > 0 ? " (auto-refreshed)" : " (cached — check back shortly)"}. State/County/City: Texas Ethics Commission semi-annual reports. Cash on hand as of most recent filing.{" "}
+              Federal: FEC API (live). State: TEC semi-annual report (live). County: Harris County Clerk filings. City: Houston COH filings. Cash on hand as of most recent filing.{" "}
               <a href="/contact" className="text-[var(--accent-light)] underline underline-offset-2">Report an error →</a>
             </p>
           </div>
