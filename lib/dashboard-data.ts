@@ -21,12 +21,34 @@ export interface DashboardData {
   nextElection:  { title: string; date: string; daysAway: number } | null;
 }
 
-// Contextual fallback images per tier — reliable Wikimedia Commons photos
-const TIER_IMAGES: Record<string, string> = {
-  federal: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/US_Capitol_Building_at_night_Jan_2006.jpg/1200px-US_Capitol_Building_at_night_Jan_2006.jpg",
-  state:   "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Texas_State_Capitol_at_sunset.jpg/1200px-Texas_State_Capitol_at_sunset.jpg",
-  local:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Houston_night_skyline_composite.jpg/1200px-Houston_night_skyline_composite.jpg",
+// Wikipedia REST API returns verified, hotlink-safe thumbnail URLs.
+// Cached for 24h since these images rarely change.
+const WIKI_TOPICS: Record<string, string> = {
+  federal: "United_States_Capitol",
+  state:   "Texas_State_Capitol",
+  local:   "Houston",
 };
+
+async function getWikipediaImage(topic: string): Promise<string | null> {
+  try {
+    const res = await fetch(
+      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topic)}`,
+      {
+        next: { revalidate: 86400 },
+        headers: { "User-Agent": "HarrisCountyProject/1.0 (dapr@theharriscountyproject.com)" },
+      }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    // Use the thumbnail CDN URL (hotlink-safe) and bump to 800px wide
+    const thumb: string | undefined = data?.thumbnail?.source;
+    if (!thumb) return null;
+    // Replace whatever px width is in the URL with 800px
+    return thumb.replace(/\/\d+px-/, "/800px-");
+  } catch {
+    return null;
+  }
+}
 
 function isTodayDate(pubDate: string, todayStr: string): boolean {
   if (!pubDate) return false;
@@ -57,21 +79,20 @@ function parseAllItems(xml: string): Array<{ title: string; link: string; source
 export async function fetchTopStory(
   query: string,
   todayStr: string,
-  tier: "federal" | "state" | "local"
+  image: string | null
 ): Promise<NewsStory | null> {
   try {
-    // Add `after:` filter so Google News returns only articles from today/recent
-    const afterDate = todayStr; // YYYY-MM-DD
-    const q = encodeURIComponent(`${query} after:${afterDate}`);
+    const q = encodeURIComponent(`${query} after:${todayStr}`);
     const res = await fetch(
       `https://news.google.com/rss/search?q=${q}&hl=en-US&gl=US&ceid=US:en`,
-      { next: { revalidate: 1800 } } // 30-min cache for freshness
+      { next: { revalidate: 1800 } }
     );
     if (!res.ok) return null;
     const xml = await res.text();
     const items = parseAllItems(xml);
+
     if (items.length === 0) {
-      // Fallback: try without the date filter if no results today
+      // No stories today — fall back to most recent without date filter
       const q2 = encodeURIComponent(query);
       const res2 = await fetch(
         `https://news.google.com/rss/search?q=${q2}&hl=en-US&gl=US&ceid=US:en`,
@@ -81,15 +102,12 @@ export async function fetchTopStory(
       const xml2 = await res2.text();
       const items2 = parseAllItems(xml2);
       if (items2.length === 0) return null;
-      const best = items2[0];
-      return { ...best, image: TIER_IMAGES[tier], isToday: false };
+      return { ...items2[0], image, isToday: false };
     }
 
     const todayItems = items.filter(i => isTodayDate(i.pubDate, todayStr));
     const candidate = todayItems[0] ?? items[0];
-    const isToday = isTodayDate(candidate.pubDate, todayStr);
-
-    return { ...candidate, image: TIER_IMAGES[tier], isToday };
+    return { ...candidate, image, isToday: isTodayDate(candidate.pubDate, todayStr) };
   } catch {
     return null;
   }
@@ -98,11 +116,23 @@ export async function fetchTopStory(
 export async function getDashboardData(): Promise<DashboardData> {
   const todayStr = new Date().toISOString().slice(0, 10);
 
-  const [federal, state, local] = await Promise.all([
-    fetchTopStory("US Congress White House federal politics", todayStr, "federal"),
-    fetchTopStory("Texas Austin legislature politics 2026", todayStr, "state"),
-    fetchTopStory("Houston Harris County local politics government", todayStr, "local"),
+  // Fetch Wikipedia images and news stories in parallel
+  const [wikiImgs, federalStory, stateStory, localStory] = await Promise.all([
+    Promise.all([
+      getWikipediaImage(WIKI_TOPICS.federal),
+      getWikipediaImage(WIKI_TOPICS.state),
+      getWikipediaImage(WIKI_TOPICS.local),
+    ]),
+    fetchTopStory("US Congress White House federal politics", todayStr, null),
+    fetchTopStory("Texas Austin legislature politics 2026", todayStr, null),
+    fetchTopStory("Houston Harris County local politics government", todayStr, null),
   ]);
+
+  const [fedImg, stateImg, localImg] = wikiImgs;
+
+  const federal = federalStory ? { ...federalStory, image: fedImg } : null;
+  const state   = stateStory   ? { ...stateStory,   image: stateImg } : null;
+  const local   = localStory   ? { ...localStory,   image: localImg } : null;
 
   const todayEvents = EVENTS.filter((e) => {
     if (e.endDate) return e.date <= todayStr && e.endDate >= todayStr;

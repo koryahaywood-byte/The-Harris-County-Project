@@ -232,13 +232,7 @@ export default function Home() {
       <section
         id="toolbox"
         className="pt-16 pb-24"
-        style={{
-          background: "#f5f3ef",
-          backgroundImage: `
-            radial-gradient(circle, rgba(26,58,92,0.07) 1.5px, transparent 1.5px)
-          `,
-          backgroundSize: "28px 28px",
-        }}
+        style={{ background: "#f5f3ef" }}
       >
         <div className="max-w-7xl mx-auto px-6 mb-10">
           <ToolboxOpener />
