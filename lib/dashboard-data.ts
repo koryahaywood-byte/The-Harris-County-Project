@@ -79,19 +79,21 @@ async function getWikipediaImage(topic: string, fallback: string): Promise<strin
 
 async function fetchOgImage(googleNewsUrl: string, fallback: string): Promise<string> {
   try {
-    // Google News links redirect to the real article — follow the redirect
     const res = await fetch(googleNewsUrl, {
       redirect: "follow",
       headers: { "User-Agent": "Mozilla/5.0 (compatible; HarrisCountyProject/1.0)" },
       next: { revalidate: 3600 },
     });
     if (!res.ok) return fallback;
+    // If the redirect kept us on Google's domain, the article page isn't accessible server-side
+    if (res.url.includes("google.com") || res.url.includes("gstatic.com")) return fallback;
     const html = await res.text();
-    // Pull og:image meta tag
     const match = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
                 ?? html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
     const url = match?.[1];
     if (!url || !url.startsWith("http")) return fallback;
+    // Skip google/gstatic images (e.g. the Google News logo)
+    if (url.includes("google.com") || url.includes("gstatic.com")) return fallback;
     return url;
   } catch {
     return fallback;
