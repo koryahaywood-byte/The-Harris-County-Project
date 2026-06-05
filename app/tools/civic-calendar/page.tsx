@@ -1,10 +1,18 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import dynamic from "next/dynamic";
+import type { MapEvent } from "./CivicMap";
+
+const CivicMap = dynamic(() => import("./CivicMap"), { ssr: false, loading: () => (
+  <div className="flex items-center justify-center rounded-2xl animate-pulse" style={{ height: 240, background: "#f0f4f8" }}>
+    <p className="text-xs" style={{ color: "#9ca3af" }}>Loading map…</p>
+  </div>
+) });
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
-type Category = "Elections" | "Legislature" | "Courts" | "City Council" | "HISD";
-type FilterGroup = "all" | "political" | "governmental";
+type Category = "Elections" | "Legislature" | "Courts" | "City Council" | "HISD" | "Civic";
+type FilterGroup = "all" | "political" | "governmental" | "civic";
 
 interface CivicEvent {
   id: string;
@@ -14,6 +22,7 @@ interface CivicEvent {
   category: Category;
   description: string;
   importance: "high" | "normal";
+  location?: { lat: number; lng: number; address: string };
 }
 
 /* ─── Data ───────────────────────────────────────────────────────────────── */
@@ -80,6 +89,53 @@ const EVENTS: CivicEvent[] = [
   { id: "hisd-apr26", title: "HISD Board of Managers Meeting", date: "2026-04-09", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
   { id: "hisd-budget",       title: "HISD Budget Adoption",     date: "2025-06-26", category: "HISD", description: "HISD Board of Managers adopts the annual district budget.", importance: "high" },
   { id: "hisd-back-to-school", title: "HISD First Day of School", date: "2025-08-11", category: "HISD", description: "First day of the 2025-2026 Houston ISD school year.", importance: "normal" },
+
+  // ── Civic / Non-Partisan ──────────────────────────────────────────────────
+  // League of Women Voters Houston — typically 3rd Monday
+  { id: "lwv-jul-25",   title: "LWV Houston Monthly Meeting",     date: "2025-07-21", category: "Civic", description: "League of Women Voters of Houston monthly member meeting. Open to members and prospective members.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-aug-25",   title: "LWV Houston Monthly Meeting",     date: "2025-08-18", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-sep-25",   title: "LWV Houston Monthly Meeting",     date: "2025-09-15", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-oct-25",   title: "LWV Houston Monthly Meeting",     date: "2025-10-20", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-nov-25",   title: "LWV Houston Monthly Meeting",     date: "2025-11-17", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-jan-26",   title: "LWV Houston Monthly Meeting",     date: "2026-01-19", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-voter-reg-26", title: "LWV Voter Registration Drive", date: "2026-01-26", category: "Civic", description: "LWV Houston hosts a voter registration drive ahead of the March primary. Volunteers needed.", importance: "high", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-feb-26",   title: "LWV Houston Monthly Meeting",     date: "2026-02-16", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-mar-26",   title: "LWV Houston Monthly Meeting",     date: "2026-03-16", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-apr-26",   title: "LWV Houston Monthly Meeting",     date: "2026-04-20", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+
+  // TIRZ Board Meetings — quarterly (selected TIRZs)
+  { id: "tirz2-q3-25",  title: "TIRZ 2 (Midtown) Board Meeting",      date: "2025-07-16", category: "Civic", description: "TIRZ 2 Midtown Management District quarterly board meeting. Reviews projects, budgets, and district improvements.", importance: "normal", location: { lat: 29.7440, lng: -95.3800, address: "Midtown Houston (3000 Main St area)" } },
+  { id: "tirz2-q4-25",  title: "TIRZ 2 (Midtown) Board Meeting",      date: "2025-10-15", category: "Civic", description: "TIRZ 2 Midtown Management District quarterly board meeting.", importance: "normal", location: { lat: 29.7440, lng: -95.3800, address: "Midtown Houston (3000 Main St area)" } },
+  { id: "tirz2-q1-26",  title: "TIRZ 2 (Midtown) Board Meeting",      date: "2026-01-21", category: "Civic", description: "TIRZ 2 Midtown Management District quarterly board meeting.", importance: "normal", location: { lat: 29.7440, lng: -95.3800, address: "Midtown Houston (3000 Main St area)" } },
+  { id: "tirz2-q2-26",  title: "TIRZ 2 (Midtown) Board Meeting",      date: "2026-04-15", category: "Civic", description: "TIRZ 2 Midtown Management District quarterly board meeting.", importance: "normal", location: { lat: 29.7440, lng: -95.3800, address: "Midtown Houston (3000 Main St area)" } },
+  { id: "tirz3-q3-25",  title: "TIRZ 3 (Upper Kirby) Board Meeting",  date: "2025-08-20", category: "Civic", description: "TIRZ 3 Upper Kirby District quarterly board meeting. Oversees streetscape, public safety, and business development.", importance: "normal", location: { lat: 29.7330, lng: -95.4300, address: "Upper Kirby District (2500 Kirby Dr area)" } },
+  { id: "tirz3-q4-25",  title: "TIRZ 3 (Upper Kirby) Board Meeting",  date: "2025-11-19", category: "Civic", description: "TIRZ 3 Upper Kirby District quarterly board meeting.", importance: "normal", location: { lat: 29.7330, lng: -95.4300, address: "Upper Kirby District (2500 Kirby Dr area)" } },
+  { id: "tirz3-q1-26",  title: "TIRZ 3 (Upper Kirby) Board Meeting",  date: "2026-02-18", category: "Civic", description: "TIRZ 3 Upper Kirby District quarterly board meeting.", importance: "normal", location: { lat: 29.7330, lng: -95.4300, address: "Upper Kirby District (2500 Kirby Dr area)" } },
+  { id: "tirz16-q3-25", title: "TIRZ 16 (Uptown/Galleria) Board",     date: "2025-09-17", category: "Civic", description: "Uptown Houston TIRZ 16 board meeting. Manages the Uptown District streetscape and mobility improvements.", importance: "normal", location: { lat: 29.7460, lng: -95.4620, address: "Uptown Houston District (1800 Post Oak Blvd)" } },
+  { id: "tirz16-q4-25", title: "TIRZ 16 (Uptown/Galleria) Board",     date: "2025-12-17", category: "Civic", description: "Uptown Houston TIRZ 16 board meeting.", importance: "normal", location: { lat: 29.7460, lng: -95.4620, address: "Uptown Houston District (1800 Post Oak Blvd)" } },
+  { id: "tirz16-q1-26", title: "TIRZ 16 (Uptown/Galleria) Board",     date: "2026-03-18", category: "Civic", description: "Uptown Houston TIRZ 16 board meeting.", importance: "normal", location: { lat: 29.7460, lng: -95.4620, address: "Uptown Houston District (1800 Post Oak Blvd)" } },
+  { id: "tirz26-q3-25", title: "TIRZ 26 (Braeswood/Meyerland) Board", date: "2025-08-13", category: "Civic", description: "TIRZ 26 Braeswood Place/Meyerland quarterly board meeting.", importance: "normal", location: { lat: 29.6910, lng: -95.4530, address: "Braeswood/Meyerland area (4300 S Braeswood Blvd)" } },
+  { id: "tirz26-q1-26", title: "TIRZ 26 (Braeswood/Meyerland) Board", date: "2026-02-11", category: "Civic", description: "TIRZ 26 Braeswood Place/Meyerland quarterly board meeting.", importance: "normal", location: { lat: 29.6910, lng: -95.4530, address: "Braeswood/Meyerland area (4300 S Braeswood Blvd)" } },
+
+  // Super Neighborhood Councils
+  { id: "sn-assembly-jul-25",  title: "Super Neighborhood Assembly",            date: "2025-07-24", category: "Civic", description: "Houston Super Neighborhood Assembly quarterly gathering. Representatives from all 88 recognized super neighborhoods.", importance: "high", location: { lat: 29.7569, lng: -95.3677, address: "Houston City Hall, 901 Bagby St" } },
+  { id: "sn-assembly-oct-25",  title: "Super Neighborhood Assembly",            date: "2025-10-23", category: "Civic", description: "Houston Super Neighborhood Assembly quarterly gathering.", importance: "high", location: { lat: 29.7569, lng: -95.3677, address: "Houston City Hall, 901 Bagby St" } },
+  { id: "sn-assembly-jan-26",  title: "Super Neighborhood Assembly",            date: "2026-01-22", category: "Civic", description: "Houston Super Neighborhood Assembly quarterly gathering.", importance: "high", location: { lat: 29.7569, lng: -95.3677, address: "Houston City Hall, 901 Bagby St" } },
+  { id: "sn-assembly-apr-26",  title: "Super Neighborhood Assembly",            date: "2026-04-23", category: "Civic", description: "Houston Super Neighborhood Assembly quarterly gathering.", importance: "high", location: { lat: 29.7569, lng: -95.3677, address: "Houston City Hall, 901 Bagby St" } },
+  { id: "sn-midtown-aug-25",   title: "SN 23 (Midtown) Council Meeting",       date: "2025-08-27", category: "Civic", description: "Super Neighborhood 23 (Midtown) monthly council meeting. Residents discuss neighborhood issues and city engagement.", importance: "normal", location: { lat: 29.7440, lng: -95.3800, address: "Midtown Houston community room" } },
+  { id: "sn-midtown-sep-25",   title: "SN 23 (Midtown) Council Meeting",       date: "2025-09-24", category: "Civic", description: "Super Neighborhood 23 (Midtown) monthly council meeting.", importance: "normal", location: { lat: 29.7440, lng: -95.3800, address: "Midtown Houston community room" } },
+  { id: "sn-heights-aug-25",   title: "SN 2 (Greater Heights) Council Meeting",date: "2025-08-20", category: "Civic", description: "Super Neighborhood 2 (Greater Heights) monthly council meeting. One of Houston's most active super neighborhoods.", importance: "normal", location: { lat: 29.7950, lng: -95.4120, address: "Houston Heights area (700 Heights Blvd)" } },
+  { id: "sn-heights-sep-25",   title: "SN 2 (Greater Heights) Council Meeting",date: "2025-09-17", category: "Civic", description: "Super Neighborhood 2 (Greater Heights) monthly council meeting.", importance: "normal", location: { lat: 29.7950, lng: -95.4120, address: "Houston Heights area (700 Heights Blvd)" } },
+  { id: "sn-eastend-sep-25",   title: "SN 15 (East End) Council Meeting",      date: "2025-09-23", category: "Civic", description: "Super Neighborhood 15 (East End/Magnolia Park) monthly council meeting.", importance: "normal", location: { lat: 29.7420, lng: -95.3370, address: "East End (7500 Ave B)" } },
+  { id: "sn-eastend-oct-25",   title: "SN 15 (East End) Council Meeting",      date: "2025-10-28", category: "Civic", description: "Super Neighborhood 15 (East End/Magnolia Park) monthly council meeting.", importance: "normal", location: { lat: 29.7420, lng: -95.3370, address: "East End (7500 Ave B)" } },
+  { id: "sn-3rdward-oct-25",   title: "SN 58 (Third Ward) Council Meeting",    date: "2025-10-29", category: "Civic", description: "Super Neighborhood 58 (Third Ward) monthly council meeting.", importance: "normal", location: { lat: 29.7280, lng: -95.3600, address: "Third Ward Houston (3719 Dowling St area)" } },
+
+  // Civic clubs (representative; dates approximate)
+  { id: "rotary-sep-25",       title: "Houston Rotary Club Meeting",            date: "2025-09-09", category: "Civic", description: "Houston Rotary Club weekly luncheon. Open to members and guests. Monthly speakers include elected officials and civic leaders.", importance: "normal", location: { lat: 29.7590, lng: -95.3700, address: "Downtown Houston (Hilton Americas area)" } },
+  { id: "naacp-aug-25",        title: "Houston NAACP Branch Meeting",           date: "2025-08-19", category: "Civic", description: "Houston Branch NAACP monthly membership meeting. Covers civil rights advocacy, voter education, and local issues.", importance: "normal", location: { lat: 29.7560, lng: -95.3580, address: "NAACP Houston office (4805 Mt Vernon St)" } },
+  { id: "naacp-sep-25",        title: "Houston NAACP Branch Meeting",           date: "2025-09-16", category: "Civic", description: "Houston Branch NAACP monthly membership meeting.", importance: "normal", location: { lat: 29.7560, lng: -95.3580, address: "NAACP Houston office (4805 Mt Vernon St)" } },
+  { id: "lulac-aug-25",        title: "LULAC Council Houston Meeting",          date: "2025-08-26", category: "Civic", description: "League of United Latin American Citizens (LULAC) Council Houston monthly meeting. Civic leadership, voter drives, and community advocacy.", importance: "normal", location: { lat: 29.7425, lng: -95.3680, address: "East Houston (2100 Navigation Blvd area)" } },
+  { id: "lulac-sep-25",        title: "LULAC Council Houston Meeting",          date: "2025-09-23", category: "Civic", description: "LULAC Council Houston monthly meeting.", importance: "normal", location: { lat: 29.7425, lng: -95.3680, address: "East Houston (2100 Navigation Blvd area)" } },
 ];
 
 /* ─── Category design tokens ─────────────────────────────────────────────── */
@@ -89,10 +145,12 @@ const CAT_COLOR: Record<Category, string> = {
   Courts:        "#d97706",
   "City Council":"#0d9488",
   HISD:          "#dc2626",
+  Civic:         "#16a34a",
 };
 
 const POLITICAL:     Category[] = ["Elections", "Legislature"];
 const GOVERNMENTAL:  Category[] = ["Courts", "City Council", "HISD"];
+const CIVIC_CATS:    Category[] = ["Civic"];
 
 /* ─── Calendar helpers ───────────────────────────────────────────────────── */
 function daysInMonth(y: number, m: number) { return new Date(y, m + 1, 0).getDate(); }
@@ -251,7 +309,7 @@ export default function CivicCalendar() {
   const [year, setYear]         = useState(now.getFullYear());
   const [month, setMonth]       = useState(now.getMonth());
   const [filter, setFilter]     = useState<FilterGroup>("all");
-  const [cats, setCats]         = useState<Set<Category>>(new Set(["Elections","Legislature","Courts","City Council","HISD"]));
+  const [cats, setCats]         = useState<Set<Category>>(new Set(["Elections","Legislature","Courts","City Council","HISD","Civic"]));
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   function prevMonth() {
@@ -269,9 +327,10 @@ export default function CivicCalendar() {
 
   function applyFilterGroup(g: FilterGroup) {
     setFilter(g);
-    if (g === "all")          setCats(new Set(["Elections","Legislature","Courts","City Council","HISD"]));
+    if (g === "all")          setCats(new Set(["Elections","Legislature","Courts","City Council","HISD","Civic"]));
     if (g === "political")    setCats(new Set(POLITICAL));
     if (g === "governmental") setCats(new Set(GOVERNMENTAL));
+    if (g === "civic")        setCats(new Set(CIVIC_CATS));
   }
 
   function toggleCat(c: Category) {
@@ -308,6 +367,22 @@ export default function CivicCalendar() {
     selectedDate ? (eventMap.get(selectedDate) ?? []) : [],
     [selectedDate, eventMap]
   );
+
+  // Civic map events for current month view
+  const civicMapEvents = useMemo((): MapEvent[] => {
+    const monthStr = `${year}-${String(month + 1).padStart(2, "0")}`;
+    return EVENTS
+      .filter(e => e.category === "Civic" && e.date.startsWith(monthStr) && e.location)
+      .map(e => ({
+        id: e.id,
+        title: e.title,
+        address: e.location!.address,
+        lat: e.location!.lat,
+        lng: e.location!.lng,
+        color: CAT_COLOR.Civic,
+        date: e.date,
+      }));
+  }, [year, month]);
 
   // Upcoming event for "next up" banner
   const today = now.toISOString().split("T")[0];
@@ -389,15 +464,16 @@ export default function CivicCalendar() {
             <div className="p-4">
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "#9ca3af" }}>Filter</p>
               <div className="flex flex-col gap-1.5 mb-4">
-                {([["all","All Events"],["political","Political"],["governmental","Governmental"]] as [FilterGroup,string][]).map(([g,label]) => (
+                {([["all","All Events"],["political","Political"],["governmental","Governmental"],["civic","Civic"]] as [FilterGroup,string][]).map(([g,label]) => (
                   <button key={g} onClick={() => applyFilterGroup(g)}
                     className="text-left px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150"
                     style={filter === g
-                      ? { background: "#1a3a5c", color: "#fff" }
+                      ? { background: g === "civic" ? CAT_COLOR.Civic : "#1a3a5c", color: "#fff" }
                       : { background: "rgba(26,58,92,0.05)", color: "#1a3a5c" }}>
                     {label}
                     {g === "political" && <span className="block text-[9px] font-normal mt-0.5 opacity-60">Elections · Legislature</span>}
                     {g === "governmental" && <span className="block text-[9px] font-normal mt-0.5 opacity-60">Courts · City Council · HISD</span>}
+                    {g === "civic" && <span className="block text-[9px] font-normal mt-0.5 opacity-60">Clubs · TIRZ · Super Neighborhoods</span>}
                   </button>
                 ))}
               </div>
@@ -405,7 +481,7 @@ export default function CivicCalendar() {
               {/* Individual category toggles */}
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: "#9ca3af" }}>Categories</p>
               <div className="flex flex-col gap-1.5">
-                {(["Elections","Legislature","Courts","City Council","HISD"] as Category[]).map(c => {
+                {(["Elections","Legislature","Courts","City Council","HISD","Civic"] as Category[]).map(c => {
                   const on = cats.has(c);
                   return (
                     <button key={c} onClick={() => toggleCat(c)}
@@ -417,6 +493,19 @@ export default function CivicCalendar() {
                   );
                 })}
               </div>
+
+              {/* Civic map — shows when Civic filter active */}
+              {(filter === "civic" || cats.has("Civic")) && (
+                <div className="mt-4">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: CAT_COLOR.Civic }}>
+                    {MONTH_NAMES[month]} Civic Locations
+                  </p>
+                  <CivicMap events={civicMapEvents} />
+                  <p className="text-[9px] mt-1.5" style={{ color: "#9ca3af" }}>
+                    Showing {civicMapEvents.length} civic event{civicMapEvents.length !== 1 ? "s" : ""} this month
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </aside>
@@ -441,10 +530,12 @@ export default function CivicCalendar() {
 
           {/* Mobile filter pills */}
           <div className="flex md:hidden gap-2 mb-4 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
-            {([["all","All"],["political","Political"],["governmental","Governmental"]] as [FilterGroup,string][]).map(([g,label]) => (
+            {([["all","All"],["political","Political"],["governmental","Governmental"],["civic","Civic"]] as [FilterGroup,string][]).map(([g,label]) => (
               <button key={g} onClick={() => applyFilterGroup(g)}
                 className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold"
-                style={filter === g ? { background: "#1a3a5c", color: "#fff" } : { background: "rgba(26,58,92,0.08)", color: "#1a3a5c" }}>
+                style={filter === g
+                  ? { background: g === "civic" ? CAT_COLOR.Civic : "#1a3a5c", color: "#fff" }
+                  : { background: "rgba(26,58,92,0.08)", color: "#1a3a5c" }}>
                 {label}
               </button>
             ))}
@@ -550,8 +641,18 @@ export default function CivicCalendar() {
           )}
 
           {/* Legend */}
+          {/* Mobile civic map */}
+          {(filter === "civic" || cats.has("Civic")) && civicMapEvents.length > 0 && (
+            <div className="md:hidden mt-4 mb-2">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: CAT_COLOR.Civic }}>
+                Civic Locations — {MONTH_NAMES[month]}
+              </p>
+              <CivicMap events={civicMapEvents} />
+            </div>
+          )}
+
           <div className="mt-6 flex flex-wrap gap-3">
-            {(["Elections","Legislature","Courts","City Council","HISD"] as Category[]).map(c => (
+            {(["Elections","Legislature","Courts","City Council","HISD","Civic"] as Category[]).map(c => (
               <span key={c} className="flex items-center gap-1.5 text-xs" style={{ color: "#6b7280" }}>
                 <span className="w-2.5 h-2.5 rounded-sm" style={{ background: CAT_COLOR[c] }}/>
                 {c}

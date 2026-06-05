@@ -17,6 +17,15 @@ export type Politician = {
   legiscanName?: string;
   // Year first elected/sworn into current or prior public office
   termStart?: number;
+  // District racial/ethnic demographics (%, from Census ACS; add to 100)
+  demographics?: {
+    hispanic: number;
+    black: number;
+    white: number;
+    asian: number;
+    other: number;
+    source?: string;
+  };
 };
 
 export const POLITICIANS: Politician[] = [
@@ -332,6 +341,7 @@ export const POLITICIANS: Politician[] = [
     website: "https://harriscountytx.gov/county-judge",
     twitter: "LinaHidalgoTX",
     termStart: 2019,
+    demographics: { hispanic: 43, black: 19, white: 27, asian: 8, other: 3, source: "Census ACS 2022 Harris County" },
   },
   {
     slug: "rodney-ellis",
@@ -345,6 +355,7 @@ export const POLITICIANS: Politician[] = [
     website: "https://pct1.harriscountytx.gov",
     twitter: "RodneyEllis",
     termStart: 1990,
+    demographics: { hispanic: 48, black: 32, white: 11, asian: 5, other: 4, source: "Census ACS 2022 PCT 1" },
   },
   {
     slug: "adrian-garcia",
@@ -358,6 +369,7 @@ export const POLITICIANS: Politician[] = [
     website: "https://www.pct2.com",
     twitter: "AdrianGarciaTX",
     termStart: 2009,
+    demographics: { hispanic: 61, black: 20, white: 11, asian: 5, other: 3, source: "Census ACS 2022 PCT 2" },
   },
   {
     slug: "tom-ramsey",

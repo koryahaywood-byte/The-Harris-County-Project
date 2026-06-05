@@ -292,6 +292,99 @@ function VitruvianFigure({ slug, photo, party, name, legiscanName }: {
   );
 }
 
+/* ─── Demographics Bar ──────────────────────────────────────────────────── */
+function DemographicsBar({ pol }: { pol: import("@/lib/politicians").Politician }) {
+  const d = pol.demographics;
+  if (!d) return null;
+
+  const segments = [
+    { label: "Hispanic",   value: d.hispanic, color: "#f97316" },
+    { label: "Black",      value: d.black,    color: "#8b5cf6" },
+    { label: "White",      value: d.white,    color: "#60a5fa" },
+    { label: "Asian",      value: d.asian,    color: "#34d399" },
+    { label: "Other",      value: d.other,    color: "#9ca3af" },
+  ].filter(s => s.value > 0);
+
+  return (
+    <div className="rounded-2xl overflow-hidden" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>
+      <div className="px-4 pt-3 pb-2">
+        <p className="text-[9px] font-black uppercase tracking-[0.25em] mb-2" style={{ color: "rgba(255,255,255,0.3)" }}>
+          District Demographics
+        </p>
+        {/* Stacked bar */}
+        <div className="flex rounded-full overflow-hidden h-3 mb-3 gap-px">
+          {segments.map(s => (
+            <div key={s.label} style={{ width: `${s.value}%`, background: s.color, transition: "width 0.7s cubic-bezier(0.22,1,0.36,1)" }} />
+          ))}
+        </div>
+        {/* Legend */}
+        <div className="flex flex-wrap gap-x-3 gap-y-1">
+          {segments.map(s => (
+            <span key={s.label} className="flex items-center gap-1 text-[9px] font-semibold" style={{ color: "rgba(255,255,255,0.5)" }}>
+              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: s.color }} />
+              {s.label} {s.value}%
+            </span>
+          ))}
+        </div>
+        {d.source && (
+          <p className="text-[8px] mt-2" style={{ color: "rgba(255,255,255,0.2)" }}>
+            Source: {d.source} · VAN precinct data coming soon
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Social Feed (Twitter/X timeline) ──────────────────────────────────── */
+function SocialFeed({ handle }: { handle: string }) {
+  return (
+    <div className="rounded-2xl overflow-hidden" style={{ background: "#fff", border: "1px solid rgba(26,58,92,0.1)" }}>
+      <div className="px-4 py-3 border-b flex items-center justify-between" style={{ borderColor: "rgba(26,58,92,0.08)" }}>
+        <p className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: "#1a3a5c" }}>
+          Social Feed
+        </p>
+        <a
+          href={`https://twitter.com/${handle}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[10px] font-semibold"
+          style={{ color: "#2563a8" }}
+        >
+          @{handle} →
+        </a>
+      </div>
+      <div style={{ maxHeight: 420, overflow: "auto" }}>
+        {/* Twitter/X timeline embed — no API key needed */}
+        <a
+          className="twitter-timeline"
+          href={`https://twitter.com/${handle}`}
+          data-height="400"
+          data-chrome="noheader nofooter noborders transparent"
+          data-theme="light"
+          data-tweet-limit="5"
+        >
+          Loading tweets…
+        </a>
+        <TwitterScript />
+      </div>
+    </div>
+  );
+}
+
+function TwitterScript() {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((window as any).twttr) { (window as any).twttr.widgets.load(); return; }
+    const s = document.createElement("script");
+    s.src = "https://platform.twitter.com/widgets.js";
+    s.async = true;
+    document.head.appendChild(s);
+  }, []);
+  return null;
+}
+
 /* ─── Attribute Bar ─────────────────────────────────────────────────────── */
 function AttributeBar({ label, value, color, isLoading }: { label: string; value: number; color: string; isLoading?: boolean }) {
   const barRef = useRef<HTMLDivElement>(null);
@@ -381,7 +474,6 @@ function BadgeChip({ badge }: { badge: Badge }) {
 }
 
 /* ─── Main Profile Page ─────────────────────────────────────────────────── */
-type Tab = "bills" | "money" | "news";
 
 export default function PoliticianProfile() {
   const { slug } = useParams<{ slug: string }>();
@@ -457,10 +549,12 @@ export default function PoliticianProfile() {
   const stats = computeStats(pol, financeForStats, billTotal, lawBills.length);
   const badges: Badge[] = computeBadges({ pol, finance: financeForStats, billCount: billTotal, lawCount: lawBills.length });
 
+  type Tab = "bills" | "money" | "news" | "social";
   const tabs: { id: Tab; label: string }[] = [
     ...(pol.legiscanName ? [{ id: "bills" as Tab, label: "Bills" }] : []),
     { id: "money", label: "Money" },
     { id: "news",  label: "News" },
+    ...(pol.twitter ? [{ id: "social" as Tab, label: "Social" }] : []),
   ];
 
   const statOrder = ["warChest", "lawmaker", "influence", "access", "tenure"] as const;
@@ -569,6 +663,9 @@ export default function PoliticianProfile() {
                 />
               ))}
             </div>
+
+            {/* Demographics */}
+            {pol.demographics && <DemographicsBar pol={pol} />}
 
             {/* Social links */}
             <div className="flex flex-wrap gap-2 pt-1">
@@ -914,6 +1011,19 @@ export default function PoliticianProfile() {
                     <p className="text-xs text-[var(--muted)] mt-5">Source: Google News · Results for &ldquo;{pol.name}&rdquo; Harris County Texas.</p>
                   </>
                 )}
+              </div>
+            )}
+
+            {/* ── SOCIAL TAB ── */}
+            {tab === "social" && pol.twitter && (
+              <div className="max-w-2xl">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] mb-4 text-[var(--muted)]">
+                  Social Feed — @{pol.twitter}
+                </p>
+                <SocialFeed handle={pol.twitter} />
+                <p className="text-xs text-[var(--muted)] mt-3">
+                  Timeline from X (Twitter) · Posts by the official
+                </p>
               </div>
             )}
 
