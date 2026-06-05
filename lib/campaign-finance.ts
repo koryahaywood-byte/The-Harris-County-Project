@@ -69,24 +69,24 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Carolyn Evans-Shabazz", office: "City Council District D",        level: "houston",  party: "D", cash: 17235,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Carolyn Evans-Shabazz") },
   { name: "Tarsha Jackson",        office: "City Council District B",        level: "houston",  party: "D", cash: 9689,      asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Tarsha Jackson") },
 
-  // Harris County Justice of the Peace — all file with TEC
-  // Cash figures from most recent TEC semi-annual reports (Jan 2026)
-  { name: "Zinetta Burney",        office: "Justice of the Peace PCT 1 PL 1", level: "county",   party: "D", cash: 42180,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Zinetta Burney") },
-  { name: "Jolanda Jones",         office: "Justice of the Peace PCT 1 PL 2", level: "county",   party: "D", cash: 38450,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Jolanda Jones") },
-  { name: "David Patronella",      office: "Justice of the Peace PCT 2 PL 1", level: "county",   party: "D", cash: 29720,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("David Patronella") },
-  { name: "Gary Polland",          office: "Justice of the Peace PCT 2 PL 2", level: "county",   party: "R", cash: 18340,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Gary Polland") },
-  { name: "Don Coffey",            office: "Justice of the Peace PCT 3 PL 1", level: "county",   party: "R", cash: 14870,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Don Coffey") },
-  { name: "Bill Harmon",           office: "Justice of the Peace PCT 3 PL 2", level: "county",   party: "R", cash: 11290,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Bill Harmon") },
-  { name: "LaShawn Williams",      office: "Justice of the Peace PCT 4 PL 1", level: "county",   party: "D", cash: 22640,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("LaShawn Williams") },
-  { name: "Danny Lacayo",          office: "Justice of the Peace PCT 4 PL 2", level: "county",   party: "D", cash: 9810,      asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Danny Lacayo") },
-  { name: "Russ Ridgway",          office: "Justice of the Peace PCT 5 PL 1", level: "county",   party: "R", cash: 16540,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Russ Ridgway") },
-  { name: "Jeff Williams",         office: "Justice of the Peace PCT 5 PL 2", level: "county",   party: "R", cash: 8930,      asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Jeff Williams") },
-  { name: "Natalia Cornejo-Rash",  office: "Justice of the Peace PCT 6 PL 1", level: "county",   party: "D", cash: 12760,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Natalia Cornejo") },
-  { name: "Roy Bolden",            office: "Justice of the Peace PCT 6 PL 2", level: "county",   party: "D", cash: 7450,      asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Roy Bolden") },
-  { name: "Sherri Cothrun",        office: "Justice of the Peace PCT 7 PL 1", level: "county",   party: "R", cash: 19870,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Sherri Cothrun") },
-  { name: "Larry Standley",        office: "Justice of the Peace PCT 7 PL 2", level: "county",   party: "R", cash: 13210,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Larry Standley") },
-  { name: "Shannon Baldwin",       office: "Justice of the Peace PCT 8 PL 1", level: "county",   party: "D", cash: 31580,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Shannon Baldwin") },
-  { name: "Ronnisha Bowman",       office: "Justice of the Peace PCT 8 PL 2", level: "county",   party: "D", cash: 24190,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Ronnisha Bowman") },
+  // Harris County Justice of the Peace — file at ethics.harrisvotes.com (same as commissioners)
+  // Names verified from jp.hctx.net; cash populated by live HC scrape (page 4 of CFR PDF)
+  { name: "Eric William Carter",   office: "Justice of the Peace PCT 1 PL 1", level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Steve Duble",           office: "Justice of the Peace PCT 1 PL 2", level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Jo Ann Delgado",        office: "Justice of the Peace PCT 2 PL 1", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Dolores Lozano",        office: "Justice of the Peace PCT 2 PL 2", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Joe Stephens",          office: "Justice of the Peace PCT 3 PL 1", level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Lucia Bates",           office: "Justice of the Peace PCT 3 PL 2", level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Lincoln Goodwin",       office: "Justice of the Peace PCT 4 PL 1", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Laryssa Korduba",       office: "Justice of the Peace PCT 4 PL 2", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "James Lombardino",      office: "Justice of the Peace PCT 5 PL 1", level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Bob Wolfe",             office: "Justice of the Peace PCT 5 PL 2", level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Victor Treviño III",    office: "Justice of the Peace PCT 6 PL 1", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Angela D. Rodriguez",   office: "Justice of the Peace PCT 6 PL 2", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Wanda E. Adams",        office: "Justice of the Peace PCT 7 PL 1", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Sharon M. Burney",      office: "Justice of the Peace PCT 7 PL 2", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Holly Williamson",      office: "Justice of the Peace PCT 8 PL 1", level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Louie Ditta",           office: "Justice of the Peace PCT 8 PL 2", level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
 ];
 
 export function getFinanceByName(name: string): CandidateFinance | null {

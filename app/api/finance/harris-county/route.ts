@@ -6,12 +6,31 @@ const HC_BASE = "https://ethics.harrisvotes.com";
 const SEARCH_URL = `${HC_BASE}/CampaignFinanceReports/COR.aspx`;
 
 // Harris County local filers — search name must be "Last, First"
+// All county elected officials file at ethics.harrisvotes.com
 const HC_CANDIDATES = [
-  { searchName: "Ellis, Rodney",    name: "Rodney Ellis",   office: "Commissioner PCT 1", party: "D" as const, incumbent: true },
-  { searchName: "Hidalgo, Lina",    name: "Lina Hidalgo",   office: "County Judge",       party: "D" as const, incumbent: true },
-  { searchName: "Garcia, Adrian",   name: "Adrian Garcia",  office: "Commissioner PCT 2", party: "D" as const, incumbent: true },
-  { searchName: "Ramsey, Tom",      name: "Tom Ramsey",     office: "Commissioner PCT 3", party: "R" as const, incumbent: true },
-  { searchName: "Briones, Lesley",  name: "Lesley Briones", office: "Commissioner PCT 4", party: "D" as const, incumbent: true },
+  // Commissioners Court
+  { searchName: "Ellis, Rodney",       name: "Rodney Ellis",          office: "Commissioner PCT 1",          party: "D" as const, incumbent: true },
+  { searchName: "Hidalgo, Lina",       name: "Lina Hidalgo",          office: "County Judge",                party: "D" as const, incumbent: true },
+  { searchName: "Garcia, Adrian",      name: "Adrian Garcia",         office: "Commissioner PCT 2",          party: "D" as const, incumbent: true },
+  { searchName: "Ramsey, Tom",         name: "Tom Ramsey",            office: "Commissioner PCT 3",          party: "R" as const, incumbent: true },
+  { searchName: "Briones, Lesley",     name: "Lesley Briones",        office: "Commissioner PCT 4",          party: "D" as const, incumbent: true },
+  // Justice of the Peace — sourced from jp.hctx.net
+  { searchName: "Carter, Eric",        name: "Eric William Carter",   office: "Justice of the Peace PCT 1 PL 1", party: "R" as const, incumbent: true },
+  { searchName: "Duble, Steve",        name: "Steve Duble",           office: "Justice of the Peace PCT 1 PL 2", party: "R" as const, incumbent: true },
+  { searchName: "Delgado, Jo Ann",     name: "Jo Ann Delgado",        office: "Justice of the Peace PCT 2 PL 1", party: "D" as const, incumbent: true },
+  { searchName: "Lozano, Dolores",     name: "Dolores Lozano",        office: "Justice of the Peace PCT 2 PL 2", party: "D" as const, incumbent: true },
+  { searchName: "Stephens, Joe",       name: "Joe Stephens",          office: "Justice of the Peace PCT 3 PL 1", party: "R" as const, incumbent: true },
+  { searchName: "Bates, Lucia",        name: "Lucia Bates",           office: "Justice of the Peace PCT 3 PL 2", party: "R" as const, incumbent: true },
+  { searchName: "Goodwin, Lincoln",    name: "Lincoln Goodwin",       office: "Justice of the Peace PCT 4 PL 1", party: "D" as const, incumbent: true },
+  { searchName: "Korduba, Laryssa",    name: "Laryssa Korduba",       office: "Justice of the Peace PCT 4 PL 2", party: "D" as const, incumbent: true },
+  { searchName: "Lombardino, James",   name: "James Lombardino",      office: "Justice of the Peace PCT 5 PL 1", party: "R" as const, incumbent: true },
+  { searchName: "Wolfe, Bob",          name: "Bob Wolfe",             office: "Justice of the Peace PCT 5 PL 2", party: "R" as const, incumbent: true },
+  { searchName: "Trevino, Victor",     name: "Victor Treviño III",    office: "Justice of the Peace PCT 6 PL 1", party: "D" as const, incumbent: true },
+  { searchName: "Rodriguez, Angela",   name: "Angela D. Rodriguez",   office: "Justice of the Peace PCT 6 PL 2", party: "D" as const, incumbent: true },
+  { searchName: "Adams, Wanda",        name: "Wanda E. Adams",        office: "Justice of the Peace PCT 7 PL 1", party: "D" as const, incumbent: true },
+  { searchName: "Burney, Sharon",      name: "Sharon M. Burney",      office: "Justice of the Peace PCT 7 PL 2", party: "D" as const, incumbent: true },
+  { searchName: "Williamson, Holly",   name: "Holly Williamson",      office: "Justice of the Peace PCT 8 PL 1", party: "R" as const, incumbent: true },
+  { searchName: "Ditta, Louie",        name: "Louie Ditta",           office: "Justice of the Peace PCT 8 PL 2", party: "R" as const, incumbent: true },
 ];
 
 export interface HCCandidate {
