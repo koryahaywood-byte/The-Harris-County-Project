@@ -1,5 +1,6 @@
 import Link from "next/link";
-import type { DashboardData, NewsStory } from "@/app/api/dashboard/route";
+import { getDashboardData } from "@/lib/dashboard-data";
+import type { DashboardData, NewsStory } from "@/lib/dashboard-data";
 
 const CAT_COLOR: Record<string, string> = {
   Elections:     "#2563a8",
@@ -93,13 +94,7 @@ function NewsCard({ story, tier, label }: { story: NewsStory | null; tier: strin
 export default async function DashboardWidget() {
   let data: DashboardData | null = null;
   try {
-    const baseUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/dashboard`, {
-      next: { revalidate: 3600 },
-    });
-    if (res.ok) data = await res.json();
+    data = await getDashboardData();
   } catch {
     // silently degrade
   }
