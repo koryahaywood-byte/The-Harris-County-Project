@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import ShareButton from "@/components/ShareButton";
+import { SourceBadge } from "@/components/SourceBadge";
 
 type Rep = {
   name: string;
@@ -46,7 +47,7 @@ const REPS: Rep[] = [
   { name: "Dan Crenshaw",      district: "TX-2",  chamber: "House",  party: "R", role: "U.S. Representative" },
   { name: "Brian Babin",       district: "TX-36", chamber: "House",  party: "R", role: "U.S. Representative" },
   { name: "Wesley Hunt",       district: "TX-38", chamber: "House",  party: "R", role: "U.S. Representative" },
-  { name: "Amanda Edwards",    district: "TX-18", chamber: "House",  party: "D", role: "U.S. Representative" },
+  { name: "Amanda Edwards",    district: "TX-18", chamber: "House",  party: "D", role: "U.S. Representative (CD-18)" },
   { name: "John Cornyn",       district: "TX",    chamber: "Senate", party: "R", role: "U.S. Senator" },
   { name: "Ted Cruz",          district: "TX",    chamber: "Senate", party: "R", role: "U.S. Senator" },
 ];
@@ -422,8 +423,12 @@ export default function CongressionalBillTracker() {
         {/* Note */}
         <div className="mt-8 rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[5px]">
           <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-5 text-center">
+            <div className="flex flex-wrap items-center gap-2 justify-center mb-3">
+              <SourceBadge source={{ label: "LegiScan", detail: "119th U.S. Congress · 2025–2027", type: "api", url: "https://legiscan.com" }} />
+              <SourceBadge source={{ label: "Congress.gov", detail: "Official bill status", type: "government", url: "https://www.congress.gov" }} />
+            </div>
             <p className="text-xs text-[var(--muted)] leading-relaxed">
-              Bill data sourced from LegiScan. Covers sponsored and co-sponsored legislation. Not all Harris County U.S. House districts may be listed.{" "}
+              Covers sponsored and co-sponsored legislation. Not all Harris County U.S. House districts may be listed.{" "}
               <a href="/contact" className="text-[var(--accent-light)] underline underline-offset-2">
                 Report a missing rep →
               </a>

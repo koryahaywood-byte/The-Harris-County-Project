@@ -658,10 +658,16 @@ export default function PoliticianProfile() {
                     </div>
                   )}
 
-                  <div className="text-center pt-1">
+                  <div className="text-center pt-1 flex flex-col sm:flex-row items-center justify-center gap-3">
+                    {finance.filingUrl && (
+                      <a href={finance.filingUrl} target="_blank" rel="noopener noreferrer"
+                        className="text-xs font-semibold text-[var(--accent)] hover:underline">
+                        View {finance.level === "federal" ? "FEC" : "TEC"} filing →
+                      </a>
+                    )}
                     <Link href="/tools/where-is-the-dough"
                       className="text-xs font-semibold text-[var(--accent-light)] hover:underline">
-                      See full campaign finance leaderboard →
+                      Full finance leaderboard →
                     </Link>
                   </div>
                 </div>

@@ -41,6 +41,14 @@ const SOURCES: Source[] = [
   // ── Podcasts ─────────────────────────────────────────────────────────────
   { name: "Texas Standard",             platform: "Podcast",      url: "https://www.texasstandard.org", description: "Daily Texas public radio show. Covers statewide politics, Harris County government, and policy with depth.", tags: ["Daily", "Radio", "Statewide"] },
   { name: "The Breakdown with Mustafa", platform: "YouTube",      url: "https://www.youtube.com/@mustafatameez", description: "Houston political strategist Mustafa Tameez's YouTube channel breaking down Harris County races and strategy.", tags: ["Commentary", "Strategy", "YouTube"] },
+
+  // ── Houston Voices & Influencers ─────────────────────────────────────────
+  { name: "Shea Jordan Smith",          platform: "Instagram",    url: "https://www.instagram.com/sheajordansmith", handle: "@sheajordansmith", description: "Houston civic voice and content creator covering local politics, community news, and Houston culture from a community-first lens.", tags: ["Community", "Houston Culture", "Civic Engagement"], recommended: true },
+  { name: "Black Girls Who Brunch",     platform: "Instagram",    url: "https://www.instagram.com/blackgirlswhobrunch", handle: "@blackgirlswhobrunch", description: "Houston's premier Black women's lifestyle and civic community. Hosts political brunches, candidate forums, and voter activation events.", tags: ["Community", "Women", "Voter Registration"], recommended: true },
+  { name: "Petty Pretty Politics",      platform: "Instagram",    url: "https://www.instagram.com/prettypettypolitics", handle: "@prettypettypolitics", description: "Sharp, unapologetic Houston political commentary cutting through the noise on local races, policy, and political accountability.", tags: ["Commentary", "Houston", "Accountability"] },
+  { name: "Erik Manny",                 platform: "Twitter/X",    url: "https://twitter.com/erikmanny", handle: "@erikmanny", description: "Houston political commentator and media personality with a finger on the pulse of Harris County races and community politics.", tags: ["Commentary", "Harris County", "Media"] },
+  { name: "Charles Blain",             platform: "Twitter/X",    url: "https://twitter.com/CharlesBlain_", handle: "@CharlesBlain_", description: "Conservative Houston political analyst and advocate. Texas-focused commentary on local government, property taxes, and fiscal policy.", tags: ["Conservative", "Fiscal Policy", "Property Tax"] },
+  { name: "iangelcarroll",              platform: "Instagram",    url: "https://www.instagram.com/iangelcarroll", handle: "@iangelcarroll", description: "Houston-based content creator and civic voice bringing Houston politics and culture to a younger, engaged audience.", tags: ["Youth", "Houston Culture", "Community"] },
 ];
 
 const PLATFORM_ICON: Record<string, string> = {
