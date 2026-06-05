@@ -38,11 +38,6 @@ const TYPE_LABELS: Record<DistrictType, string> = {
   "U.S. Congressional": "Congress",
 };
 
-// Which GeoJSON field holds district assignment for TIGER-sourced types
-const TIGER_FIELD: Partial<Record<DistrictType, "sldlst" | "sldust">> = {
-  "TX State House":  "sldlst",
-  "TX State Senate": "sldust",
-};
 
 function generatePrecinctData(precinctId: string): PrecinctDemoData {
   const seed = precinctId.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
@@ -382,28 +377,8 @@ export default function DistrictsPage() {
   // Build the set of highlighted precincts for the selected district
   const highlightedPrecincts = useMemo((): Set<string> => {
     if (!geojson || !selectedDistrict || selectedDistrict === "all") return new Set();
-
-    const tigerField = TIGER_FIELD[selectedType];
-    const features = (geojson as unknown as { features: PrecinctFeature[] }).features;
-
-    if (tigerField) {
-      // Use actual Census TIGER district assignment
-      // State Senate districts are zero-padded 3-digit in TIGER (e.g., "006")
-      // State House districts are also zero-padded (e.g., "148")
-      const padded = selectedDistrict.padStart(3, "0");
-      return new Set(
-        features
-          .filter(f => {
-            const val = f.properties[tigerField];
-            return val === padded || val === selectedDistrict;
-          })
-          .map(f => f.properties.precinct)
-          .filter(Boolean)
-      );
-    }
-
-    // Synthetic assignment for City Council, JP, Congressional
     const opts = DISTRICT_OPTIONS[selectedType];
+    const features = (geojson as unknown as { features: PrecinctFeature[] }).features;
     return new Set(
       features
         .filter(f => {
@@ -571,8 +546,7 @@ export default function DistrictsPage() {
 
             {highlightedPrecincts.size > 0 && (
               <p className="mt-2 text-[11px]" style={{ color: "#9ca3af" }}>
-                {highlightedPrecincts.size} precincts in {selectedType === "TX State House" ? `HD-${selectedDistrict}` : selectedDistrict}.
-                {!TIGER_FIELD[selectedType] && " (Approximate boundaries — official crosswalk pending)"}
+                {highlightedPrecincts.size} precincts highlighted — approximate boundaries (TX Legislative Council crosswalk pending)
               </p>
             )}
           </div>

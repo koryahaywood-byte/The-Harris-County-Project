@@ -231,21 +231,55 @@ function precColor(pd, maxVotes, sortedTotals){
 function recolorMap(){
   if(!gl||!curRace) return;
   const ltitle=document.querySelector('.ltitle');
-  if(ltitle){const vl={'winner':'Winner by Precinct','margin':'Margin of Victory','votes':'Total Votes Cast'};ltitle.innerHTML=(vl[curView]||'Winner by Precinct')+(RUNOFF_RACES.has(curRace)?' <span class="runoff-badge">RUNOFF</span>':'');}
-  const r=D[curRace]; if(!r) return;
-  const maxV=Object.values(r.p).reduce((m,p)=>Math.max(m,p[2]),0);
-  const sortedTotals=Object.values(r.p).filter(p=>p[2]>0).map(p=>p[2]).sort((a,b)=>a-b);
+  if(ltitle){
+    const vl={'winner':'Winner by Precinct','margin':'Margin of Victory','votes':'Total Votes Cast'};
+    const isRunoff=RUNOFF_RACES.has(curRace);
+    const modeLabel=(curElection==='runoff'&&isRunoff)
+      ?`<span class="runoff-badge">RUNOFF MATCHUP</span>`
+      :(isRunoff?`<span class="runoff-badge">RUNOFF</span>`:'');
+    ltitle.innerHTML=(vl[curView]||'Winner by Precinct')+' '+modeLabel;
+  }
+  // Use curPrecs (already transformed to runoff head-to-head if applicable)
+  if(!curPrecs||Object.keys(curPrecs).length===0) return;
+  const maxV=Object.values(curPrecs).reduce((m,p)=>Math.max(m,p[2]),0);
+  const sortedTotals=Object.values(curPrecs).filter(p=>p[2]>0).map(p=>p[2]).sort((a,b)=>a-b);
   gl.eachLayer(layer=>{
     const prec=layer.feature.properties.PREC;
-    const pd=r.p[prec];
+    const pd=curPrecs[prec];
     const {fill,op}=precColor(pd,maxV,sortedTotals);
     layer.setStyle({fillColor:fill, fillOpacity:op, color:'white', weight:0.5, opacity:0.9});
   });
 }
 
+// Build a 2-candidate head-to-head view from primary data for runoff races.
+// Finds the top 2 finishers by total primary votes and re-maps each precinct
+// as a matchup between only those 2, so the map shows geographic strength
+// heading into the runoff.
+function buildRunoffView(r){
+  const totals=r.c.map(()=>0);
+  Object.values(r.p).forEach(p=>{ p[3].forEach((v,i)=>{totals[i]=(totals[i]||0)+v;}); });
+  const ranked=[...totals.map((t,i)=>({t,i}))].sort((a,b)=>b.t-a.t);
+  const top2=[ranked[0].i, ranked[1].i];
+  const newCands=[r.c[top2[0]], r.c[top2[1]]];
+  const newPrecs={};
+  Object.entries(r.p).forEach(([prec,pd])=>{
+    const v0=pd[3][top2[0]]||0, v1=pd[3][top2[1]]||0;
+    const total2=v0+v1;
+    if(total2===0){newPrecs[prec]=[0,0,0,[0,0]];return;}
+    const wi=v0>=v1?0:1;
+    const margin=Math.round(Math.abs(v0-v1)/total2*100)*10;
+    newPrecs[prec]=[wi, margin, total2, [v0,v1]];
+  });
+  return{c:newCands, p:newPrecs, _top2:top2, _primaryTotals:totals};
+}
+
 function loadRace(name){
   curRace=name;
-  const r=D[name]; if(!r) return;
+  const rawR=D[name]; if(!rawR) return;
+  const isRunoff=RUNOFF_RACES.has(name);
+
+  // In runoff mode use top-2 head-to-head view; primary mode uses full data
+  const r=(curElection==='runoff'&&isRunoff) ? buildRunoffView(rawR) : rawR;
   curCands=r.c; curPrecs=r.p;
 
   const totals=curCands.map(()=>0);
@@ -256,12 +290,14 @@ function loadRace(name){
 
   const legEl=document.getElementById('legend');
   const sorted=[...curCands.map((c,i)=>({c,i,t:totals[i]}))].sort((a,b)=>b.t-a.t);
-  const isRunoff=RUNOFF_RACES.has(name);
   const viewLabels={'winner':'Winner by Precinct','margin':'Margin of Victory','votes':'Total Votes Cast'};
-  legEl.innerHTML=`<div class="ltitle">${viewLabels[curView]||'Winner by Precinct'}${isRunoff?' <span class="runoff-badge">RUNOFF</span>':''}</div>`+sorted.map(({c,i,t})=>{
+  const modeLabel=(curElection==='runoff'&&isRunoff)
+    ? `<span class="runoff-badge">RUNOFF MATCHUP</span>`
+    : (isRunoff?`<span class="runoff-badge">RUNOFF</span>`:'');
+  legEl.innerHTML=`<div class="ltitle">${viewLabels[curView]||'Winner by Precinct'} ${modeLabel}</div>`+sorted.map(({c,i,t})=>{
     const pct=grandTotal>0?(t/grandTotal*100).toFixed(1):'0';
     return`<div class="lrow"><div class="ldot" style="background:${pc(i)}"></div><div><div class="lname">${tc(c)}</div><div class="lstats">${pct}% &middot; ${t.toLocaleString()}</div></div></div>`;
-  }).join('');
+  }).join('')+(curElection==='runoff'&&isRunoff?`<div style="font-size:9.5px;color:#92400e;background:#fef3c7;border:1px solid #fcd34d;border-radius:4px;padding:4px 7px;margin-top:7px;line-height:1.4">Primary results for top 2 finishers — showing geographic strength heading into the runoff</div>`:'');
 
   document.getElementById('pcount').textContent=Object.keys(curPrecs).length+' precincts';
 
