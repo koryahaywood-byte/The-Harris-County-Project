@@ -1,0 +1,53 @@
+{
+  "_meta": {
+    "lastChecked": "2026-06-05",
+    "nextCheck": "2026-07-01",
+    "note": "Updated quarterly on Jan 1, Apr 1, Jul 1, Oct 1. Run scripts/check-filing-schedules.ts to refresh."
+  },
+  "tec": {
+    "source": "https://www.ethics.state.tx.us/filinginfo/deadlines/ReportsDue.php",
+    "deadlines": [
+      { "type": "Semi-annual (Jan)", "due": "2026-01-15", "period": "Jul–Dec 2025", "applies": "all C/OH filers" },
+      { "type": "Semi-annual (Jul)", "due": "2026-07-15", "period": "Jan–Jun 2026", "applies": "all C/OH filers" },
+      { "type": "Pre-election (30-day)", "due": "2026-10-06", "period": "General Election Nov 3", "applies": "candidates on ballot" },
+      { "type": "Pre-election (8-day)", "due": "2026-10-26", "period": "General Election Nov 3", "applies": "candidates on ballot" }
+    ]
+  },
+  "fec": {
+    "source": "https://www.fec.gov/help-candidates-and-committees/dates-and-deadlines/",
+    "deadlines": [
+      { "type": "Q1 Quarterly", "due": "2026-04-15", "period": "Jan 1–Mar 31 2026" },
+      { "type": "Q2 Quarterly", "due": "2026-07-15", "period": "Apr 1–Jun 30 2026" },
+      { "type": "Q3 Quarterly", "due": "2026-10-15", "period": "Jul 1–Sep 30 2026" },
+      { "type": "Year-End", "due": "2027-01-31", "period": "Oct 1–Dec 31 2026" },
+      { "type": "Pre-general (12-day)", "due": "2026-10-22", "period": "General Election Nov 3" },
+      { "type": "Post-general", "due": "2026-12-03", "period": "General Election Nov 3" }
+    ]
+  },
+  "harris_county": {
+    "source": "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx",
+    "note": "Follows TEC schedule — same Jan 15 and Jul 15 semi-annual deadlines",
+    "deadlines": [
+      { "type": "Semi-annual (Jan)", "due": "2026-01-15", "period": "Jul–Dec 2025" },
+      { "type": "Semi-annual (Jul)", "due": "2026-07-15", "period": "Jan–Jun 2026" }
+    ]
+  },
+  "houston_coh": {
+    "source": "https://cohweb.houstontx.gov/CampaignFinanceWeb/CFRwebsiteSearch.aspx",
+    "note": "City of Houston has its own schedule — roughly mirrors TEC semi-annual but check annually",
+    "deadlines": [
+      { "type": "Semi-annual (Jan)", "due": "2026-01-15", "period": "Jul–Dec 2025" },
+      { "type": "Semi-annual (Jul)", "due": "2026-07-15", "period": "Jan–Jun 2026" }
+    ]
+  },
+  "refresh_triggers": {
+    "note": "These are the dates our finance scrapers should auto-run (day after deadlines)",
+    "runs": [
+      { "date": "2026-01-16", "sources": ["tec", "harris_county", "houston_coh"], "reason": "Jan semi-annual deadline +1" },
+      { "date": "2026-04-16", "sources": ["fec"], "reason": "FEC Q1 deadline +1" },
+      { "date": "2026-07-16", "sources": ["tec", "harris_county", "houston_coh", "fec"], "reason": "Jul semi-annual + FEC Q2 deadline +1" },
+      { "date": "2026-10-16", "sources": ["fec"], "reason": "FEC Q3 deadline +1" },
+      { "date": "2026-10-27", "sources": ["tec", "harris_county"], "reason": "TEC 8-day pre-general deadline +1" }
+    ]
+  }
+}

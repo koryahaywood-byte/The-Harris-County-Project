@@ -1,0 +1,24 @@
+{
+  "crons": [
+    {
+      "path": "/api/finance/fec",
+      "schedule": "0 9 16 1,4,7,10 *"
+    },
+    {
+      "path": "/api/finance/tec",
+      "schedule": "0 9 16 1,7 *"
+    },
+    {
+      "path": "/api/finance/harris-county",
+      "schedule": "0 10 16 1,7 *"
+    },
+    {
+      "path": "/api/finance/houston",
+      "schedule": "0 11 16 1,7 *"
+    },
+    {
+      "path": "/api/schedule-check",
+      "schedule": "0 8 1 1,4,7,10 *"
+    }
+  ]
+}
