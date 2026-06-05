@@ -3,7 +3,6 @@
 import { useState, useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import type { GeoJsonObject } from "geojson";
-import type { PrecinctFeature } from "./DistrictsMap";
 
 const DistrictsMap = dynamic(() => import("./DistrictsMap"), {
   ssr: false,
@@ -107,7 +106,7 @@ function PrecinctPanel({ precinctId, data }: { precinctId: string; data: Precinc
         <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-0.5" style={{ color: "#2563a8" }}>Selected</p>
           <h2 className="text-xl font-bold" style={{ fontFamily: "var(--font-playfair,serif)", color: "#1a3a5c" }}>
-            Precinct {precinctId}
+            Precinct {parseInt(precinctId, 10)}
           </h2>
         </div>
       </div>
@@ -203,7 +202,6 @@ export default function DistrictsPage() {
   const [selectedType, setSelectedType] = useState<DistrictType>("U.S. Congressional");
   const [selectedDistrict, setSelectedDistrict] = useState<string>("all");
   const [selectedPrecinctId, setSelectedPrecinctId] = useState<string | null>(null);
-  const [selectedPrecinctProps, setSelectedPrecinctProps] = useState<PrecinctFeature["properties"] | null>(null);
 
   useEffect(() => {
     fetch("/api/districts/precincts")
@@ -225,17 +223,10 @@ export default function DistrictsPage() {
     return DEMO_PRECINCT_DATA[selectedPrecinctId] ?? generateDemoData(selectedPrecinctId);
   }, [selectedPrecinctId]);
 
-  function handlePrecinctClick(props: PrecinctFeature["properties"]) {
-    const id = String(props.PRECINCT_N ?? props.PCT_CODE ?? "");
-    setSelectedPrecinctId(id);
-    setSelectedPrecinctProps(props);
-  }
-
   function handleTypeChange(type: DistrictType) {
     setSelectedType(type);
     setSelectedDistrict("all");
     setSelectedPrecinctId(null);
-    setSelectedPrecinctProps(null);
   }
 
   return (
@@ -357,24 +348,17 @@ export default function DistrictsPage() {
                 ) : (
                   <DistrictsMap
                     geojson={geojson}
-                    selectedType={selectedType}
-                    selectedDistrict={selectedDistrict}
-                    onPrecinctClick={handlePrecinctClick}
+                    onPrecinctClick={setSelectedPrecinctId}
                     selectedPrecinct={selectedPrecinctId}
                   />
                 )}
               </div>
             </div>
 
-            {/* Selected precinct info under map (debug) */}
-            {selectedPrecinctProps && (
+            {selectedPrecinctId && (
               <div className="mt-3 rounded-xl px-4 py-2 text-[11px]" style={{ background: "rgba(37,99,168,0.07)", color: "#2563a8" }}>
-                <span className="font-semibold">Precinct {selectedPrecinctId}</span>
-                {selectedPrecinctProps.CONG_DIST && <span className="ml-3">CD-{selectedPrecinctProps.CONG_DIST}</span>}
-                {selectedPrecinctProps.SNDIST && <span className="ml-3">SD-{selectedPrecinctProps.SNDIST}</span>}
-                {selectedPrecinctProps.HDDIST && <span className="ml-3">HD-{selectedPrecinctProps.HDDIST}</span>}
-                {selectedPrecinctProps.JP_PRECINCT && <span className="ml-3">JP-{selectedPrecinctProps.JP_PRECINCT}</span>}
-                {selectedPrecinctProps.CITY_COUNCIL && <span className="ml-3">CC-{selectedPrecinctProps.CITY_COUNCIL}</span>}
+                <span className="font-semibold">Precinct {parseInt(selectedPrecinctId, 10)}</span>
+                <span className="ml-2 opacity-60">(VTD {selectedPrecinctId})</span>
               </div>
             )}
           </div>

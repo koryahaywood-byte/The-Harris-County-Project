@@ -1,21 +1,21 @@
 import { NextResponse } from "next/server";
 
-export const revalidate = 86400; // 24h CDN cache
-
-const ARCGIS_URL =
-  "https://services.arcgis.com/su8ic9KbA7PYVxPS/arcgis/rest/services/Voting_Precincts/FeatureServer/0/query" +
-  "?where=1%3D1" +
-  "&outFields=PRECINCT_N,PCT_CODE,CONG_DIST,SNDIST,HDDIST,JP_PRECINCT,CITY_COUNCIL" +
+// Harris County voting precincts via Census TIGERweb (layer 15 = Voting Districts)
+// maxAllowableOffset=0.003 simplifies vertices server-side → ~236KB (vs 3MB at full precision)
+const TIGERWEB =
+  "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/15/query" +
+  "?where=STATE%3D%2748%27+AND+COUNTY%3D%27201%27" +
+  "&outFields=VTD,NAME" +
   "&f=geojson" +
   "&geometryPrecision=4" +
   "&outSR=4326" +
-  "&resultRecordCount=2000";
+  "&resultRecordCount=1100" +
+  "&maxAllowableOffset=0.003";
 
 export async function GET() {
   try {
-    const res = await fetch(ARCGIS_URL, {
+    const res = await fetch(TIGERWEB, {
       next: { revalidate: 86400 },
-      headers: { "Accept": "application/json" },
     });
 
     if (!res.ok) {
@@ -24,11 +24,20 @@ export async function GET() {
 
     const geojson = await res.json();
 
-    // Return with cache headers
+    // Normalize: rename VTD → precinct for consistency with the rest of the app
+    if (geojson.features) {
+      geojson.features = geojson.features.map((f: { properties: Record<string, unknown>; [key: string]: unknown }) => ({
+        ...f,
+        properties: {
+          precinct: f.properties.VTD,
+          name: f.properties.NAME,
+        },
+      }));
+    }
+
     return NextResponse.json(geojson, {
       headers: {
         "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=3600",
-        "Content-Type": "application/json",
       },
     });
   } catch (err) {
