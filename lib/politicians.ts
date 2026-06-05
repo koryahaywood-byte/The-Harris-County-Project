@@ -15,6 +15,8 @@ export type Politician = {
   email?: string;
   // Bill tracker search name (last name used for LegiScan)
   legiscanName?: string;
+  // Year first elected/sworn into current or prior public office
+  termStart?: number;
 };
 
 export const POLITICIANS: Politician[] = [
@@ -80,6 +82,7 @@ export const POLITICIANS: Politician[] = [
     photo: "https://house.texas.gov/images/members/4630.jpg",
     website: "https://house.texas.gov/members/member-page/?district=141",
     legiscanName: "Thompson",
+    termStart: 1973,
   },
   {
     slug: "ann-johnson",
@@ -104,6 +107,7 @@ export const POLITICIANS: Politician[] = [
     photo: "https://house.texas.gov/images/members/3155.jpg",
     website: "https://house.texas.gov/members/member-page/?district=143",
     legiscanName: "Hernandez",
+    termStart: 2007,
   },
   {
     slug: "armando-walle",
@@ -116,6 +120,7 @@ export const POLITICIANS: Politician[] = [
     photo: "https://house.texas.gov/images/members/4930.jpg",
     website: "https://house.texas.gov/members/member-page/?district=140",
     legiscanName: "Walle",
+    termStart: 2009,
   },
   {
     slug: "mary-ann-perez",
@@ -128,6 +133,7 @@ export const POLITICIANS: Politician[] = [
     photo: "https://house.texas.gov/images/members/2535.jpg",
     website: "https://house.texas.gov/members/member-page/?district=144",
     legiscanName: "Perez",
+    termStart: 2013,
   },
   {
     slug: "harold-dutton",
@@ -140,6 +146,7 @@ export const POLITICIANS: Politician[] = [
     photo: "https://house.texas.gov/images/members/2650.jpg",
     website: "https://house.texas.gov/members/member-page/?district=142",
     legiscanName: "Dutton",
+    termStart: 1985,
   },
   {
     slug: "gene-wu",
@@ -152,6 +159,7 @@ export const POLITICIANS: Politician[] = [
     photo: "https://house.texas.gov/images/members/2865.jpg",
     website: "https://house.texas.gov/members/member-page/?district=137",
     legiscanName: "Wu",
+    termStart: 2013,
   },
   {
     slug: "jolanda-jones",
@@ -176,6 +184,7 @@ export const POLITICIANS: Politician[] = [
     photo: "https://house.texas.gov/images/members/4900.jpg",
     website: "https://house.texas.gov/members/member-page/?district=149",
     legiscanName: "Vo",
+    termStart: 2004,
   },
   {
     slug: "lauren-ashley-simmons",
@@ -200,6 +209,7 @@ export const POLITICIANS: Politician[] = [
     photo: "https://house.texas.gov/images/members/2100.jpg",
     website: "https://house.texas.gov/members/member-page/?district=131",
     legiscanName: "Allen",
+    termStart: 2005,
   },
   {
     slug: "christina-morales",
@@ -321,6 +331,7 @@ export const POLITICIANS: Politician[] = [
     photo: "/politicians/lina-hidalgo.jpg",
     website: "https://harriscountytx.gov/county-judge",
     twitter: "LinaHidalgoTX",
+    termStart: 2019,
   },
   {
     slug: "rodney-ellis",
@@ -333,6 +344,7 @@ export const POLITICIANS: Politician[] = [
     photo: "/politicians/rodney-ellis.jpg",
     website: "https://pct1.harriscountytx.gov",
     twitter: "RodneyEllis",
+    termStart: 1990,
   },
   {
     slug: "adrian-garcia",
@@ -345,6 +357,7 @@ export const POLITICIANS: Politician[] = [
     photo: "/politicians/adrian-garcia.jpg",
     website: "https://www.pct2.com",
     twitter: "AdrianGarciaTX",
+    termStart: 2009,
   },
   {
     slug: "tom-ramsey",
@@ -368,6 +381,7 @@ export const POLITICIANS: Politician[] = [
     photo: "/politicians/lesley-briones.webp",
     website: "https://pct4.harriscountytx.gov",
     twitter: "LesleyBriones",
+    termStart: 2023,
   },
 
   // ── City of Houston ───────────────────────────────────────────────────
@@ -382,6 +396,7 @@ export const POLITICIANS: Politician[] = [
     salary: 275000,
     website: "https://www.houstontx.gov/mayor",
     twitter: "JohnWhitmire",
+    termStart: 2024,
   },
   {
     slug: "amy-peck",

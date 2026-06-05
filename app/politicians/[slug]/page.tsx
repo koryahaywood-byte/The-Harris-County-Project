@@ -1,8 +1,10 @@
 "use client";
 import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { POLITICIANS } from "@/lib/politicians";
 import { getFinanceByName, fmt } from "@/lib/campaign-finance";
+import { computeBadges, TIER_STYLES, type Badge } from "@/lib/badges";
+import { computeStats, STAT_LABELS } from "@/lib/politician-stats";
 import Link from "next/link";
 
 type Bill = {
@@ -290,6 +292,94 @@ function VitruvianFigure({ slug, photo, party, name, legiscanName }: {
   );
 }
 
+/* ─── Attribute Bar ─────────────────────────────────────────────────────── */
+function AttributeBar({ label, value, color, isLoading }: { label: string; value: number; color: string; isLoading?: boolean }) {
+  const barRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    const t = setTimeout(() => setWidth(isLoading ? 0 : value), 80);
+    return () => clearTimeout(t);
+  }, [value, isLoading]);
+
+  const ratingColor = value >= 80 ? "#4ade80" : value >= 60 ? "#facc15" : value >= 40 ? "#fb923c" : "#f87171";
+
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-[10px] font-bold uppercase tracking-[0.15em] w-20 flex-shrink-0 text-right"
+        style={{ color: "rgba(255,255,255,0.45)" }}>
+        {label}
+      </span>
+      <div ref={barRef} className="flex-1 h-2.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
+        <div
+          className="h-full rounded-full"
+          style={{
+            width: `${width}%`,
+            background: `linear-gradient(90deg, ${color}aa, ${color})`,
+            transition: "width 0.9s cubic-bezier(0.22, 1, 0.36, 1)",
+            boxShadow: `0 0 8px ${color}50`,
+          }}
+        />
+      </div>
+      <span
+        className="text-sm font-black w-7 text-right flex-shrink-0"
+        style={{ color: ratingColor, fontFamily: "var(--font-outfit), sans-serif" }}
+      >
+        {isLoading ? "…" : value}
+      </span>
+    </div>
+  );
+}
+
+/* ─── Badge Chip ────────────────────────────────────────────────────────── */
+function BadgeChip({ badge }: { badge: Badge }) {
+  const [hovered, setHovered] = useState(false);
+  const s = TIER_STYLES[badge.tier];
+
+  return (
+    <div
+      className="relative group cursor-default"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {/* Hexagon shape */}
+      <div
+        className="flex flex-col items-center justify-center transition-transform duration-200"
+        style={{
+          width: 54,
+          height: 62,
+          clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+          background: `linear-gradient(160deg, ${s.border}55, ${s.bg})`,
+          border: "none",
+          transform: hovered ? "scale(1.12) translateY(-2px)" : "scale(1)",
+          boxShadow: hovered ? `0 0 18px ${s.glow}` : "none",
+        }}
+      >
+        <span className="text-base font-black" style={{ color: s.text }}>{badge.icon}</span>
+      </div>
+      {/* Badge name */}
+      <p className="text-center text-[8px] font-bold uppercase tracking-[0.08em] mt-1 leading-tight max-w-[60px]"
+        style={{ color: s.text, opacity: 0.85 }}>
+        {badge.name}
+      </p>
+      {/* Tooltip */}
+      {hovered && (
+        <div
+          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-44 rounded-lg px-3 py-2 z-20 pointer-events-none"
+          style={{ background: "#0d1b33", border: `1px solid ${s.border}60`, boxShadow: `0 8px 24px rgba(0,0,0,0.5)` }}
+        >
+          <p className="text-[9px] font-black uppercase tracking-[0.15em] mb-0.5" style={{ color: s.text }}>
+            {s.label} · {badge.name}
+          </p>
+          <p className="text-[10px] leading-relaxed" style={{ color: "rgba(255,255,255,0.65)" }}>
+            {badge.description}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ─── Main Profile Page ─────────────────────────────────────────────────── */
 type Tab = "bills" | "money" | "news";
 
@@ -308,8 +398,9 @@ export default function PoliticianProfile() {
   const [financeLoading, setFinanceLoading] = useState(false);
   const [financeError, setFinanceError] = useState<string | null>(null);
 
+  // Fire finance fetch on mount (needed for OVR + badges in hero)
   useEffect(() => {
-    if (!pol || tab !== "money") return;
+    if (!pol) return;
     if (liveFinance) return;
     setFinanceLoading(true);
     setFinanceError(null);
@@ -321,7 +412,8 @@ export default function PoliticianProfile() {
       })
       .catch((e) => setFinanceError(e.message))
       .finally(() => setFinanceLoading(false));
-  }, [pol, tab, liveFinance]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pol]);
 
   useEffect(() => {
     if (!pol?.legiscanName) return;
@@ -351,12 +443,19 @@ export default function PoliticianProfile() {
     </div>
   );
 
-  const isD         = pol.party === "D";
-  const lawBills    = bills.filter(b => getBillStatus(b.last_action) === "law");
-  const passedBills = bills.filter(b => getBillStatus(b.last_action) === "passed");
-  const cmteBills   = bills.filter(b => getBillStatus(b.last_action) === "committee");
-  const pct         = billTotal > 0 ? Math.round((lawBills.length / billTotal) * 100) : 0;
+  const isD          = pol.party === "D";
+  const accentColor  = isD ? "#3b82f6" : "#ef4444";
+  const accentDark   = isD ? "#1d4ed8" : "#b91c1c";
+  const lawBills     = bills.filter(b => getBillStatus(b.last_action) === "law");
+  const passedBills  = bills.filter(b => getBillStatus(b.last_action) === "passed");
+  const cmteBills    = bills.filter(b => getBillStatus(b.last_action) === "committee");
+  const pct          = billTotal > 0 ? Math.round((lawBills.length / billTotal) * 100) : 0;
   const displayBills = statusFilter === "all" ? bills : bills.filter(b => getBillStatus(b.last_action) === statusFilter);
+
+  const staticFinance = getFinanceByName(pol.name);
+  const financeForStats = liveFinance ?? staticFinance;
+  const stats = computeStats(pol, financeForStats, billTotal, lawBills.length);
+  const badges: Badge[] = computeBadges({ pol, finance: financeForStats, billCount: billTotal, lawCount: lawBills.length });
 
   const tabs: { id: Tab; label: string }[] = [
     ...(pol.legiscanName ? [{ id: "bills" as Tab, label: "Bills" }] : []),
@@ -364,122 +463,167 @@ export default function PoliticianProfile() {
     { id: "news",  label: "News" },
   ];
 
+  const statOrder = ["warChest", "lawmaker", "influence", "access", "tenure"] as const;
+
   return (
     <div className="bg-[var(--background)]">
 
-      {/* ── Breadcrumb ─────────────────────────────────────────────────── */}
-      <div className="px-6 pt-5 pb-0 max-w-5xl mx-auto">
-        <Link href="/politicians"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--muted)] hover:text-[var(--accent)] transition-colors">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M19 12H5M12 5l-7 7 7 7"/>
-          </svg>
-          All Officials
-        </Link>
-      </div>
-
-      {/* ── Name + Office ──────────────────────────────────────────────── */}
-      <div className="text-center px-6 pt-6 pb-2 max-w-3xl mx-auto">
-        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--muted)] mb-2">{pol.office}</p>
-        <h1 className="text-4xl md:text-5xl font-bold text-[var(--accent)] leading-tight"
-          style={{ fontFamily: "var(--font-playfair), serif" }}>
-          {pol.name}
-        </h1>
-      </div>
-
-      {/* ── Vitruvian Figure + flanking stats ─────────────────────────── */}
-      <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-[200px_1fr_200px] gap-4 items-center">
-
-        {/* LEFT STATS */}
-        <div className="flex md:flex-col gap-3 justify-center">
-          <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] flex-1 md:flex-none card-lift">
-            <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-4 py-4">
-              <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-1">District</p>
-              <p className="text-2xl font-bold text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair), serif" }}>
-                {pol.district}
-              </p>
-              <p className="text-xs text-[var(--muted)] mt-0.5">{pol.chamber}</p>
-            </div>
-          </div>
-          <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] flex-1 md:flex-none card-lift">
-            <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-4 py-4">
-              <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-1">Party</p>
-              <p className={`text-lg font-bold ${pol.party === "D" ? "text-blue-700" : pol.party === "R" ? "text-red-700" : "text-gray-600"}`}
-                style={{ fontFamily: "var(--font-playfair), serif" }}>
-                {pol.party === "D" ? "Democrat" : pol.party === "R" ? "Republican" : pol.party}
-              </p>
-            </div>
-          </div>
+      {/* ── NBA 2K Hero ────────────────────────────────────────────────── */}
+      <div
+        style={{
+          background: `linear-gradient(135deg, #0a1628 0%, #0f1f3a 50%, #0d1b33 100%)`,
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {/* Radial glow behind figure */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 0, top: 0, width: "50%", height: "100%",
+            background: `radial-gradient(ellipse 70% 80% at 30% 60%, ${accentColor}18 0%, transparent 70%)`,
+          }}
+        />
+        {/* Top breadcrumb bar */}
+        <div className="relative px-5 pt-5 pb-0 max-w-6xl mx-auto flex items-center justify-between">
+          <Link href="/politicians"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold transition-colors"
+            style={{ color: "rgba(255,255,255,0.45)" }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M19 12H5M12 5l-7 7 7 7"/>
+            </svg>
+            All Officials
+          </Link>
+          {/* Party chip */}
+          <span
+            className="text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full"
+            style={{ background: `${accentColor}25`, color: accentColor, border: `1px solid ${accentColor}50` }}
+          >
+            {pol.party === "D" ? "Democrat" : pol.party === "R" ? "Republican" : pol.party}
+          </span>
         </div>
 
-        {/* CENTER FIGURE */}
-        <div>
-          <VitruvianFigure
-            slug={pol.slug}
-            photo={pol.photo}
-            party={pol.party}
-            name={pol.name}
-            legiscanName={pol.legiscanName}
-          />
-        </div>
+        {/* Main hero grid: figure left, stats right */}
+        <div className="relative max-w-6xl mx-auto px-4 pt-2 pb-6 grid grid-cols-1 md:grid-cols-[340px_1fr] gap-0 md:gap-6 items-end">
 
-        {/* RIGHT STATS */}
-        <div className="flex md:flex-col gap-3 justify-center">
-          {pol.salary && (
-            <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] flex-1 md:flex-none card-lift">
-              <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-4 py-4">
-                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-1">Salary / yr</p>
-                <p className="text-xl font-bold text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair), serif" }}>
-                  ${pol.salary.toLocaleString()}
+          {/* Figure column */}
+          <div className="relative">
+            <VitruvianFigure
+              slug={pol.slug}
+              photo={pol.photo}
+              party={pol.party}
+              name={pol.name}
+              legiscanName={pol.legiscanName}
+            />
+          </div>
+
+          {/* Stats column */}
+          <div className="pb-4 pt-2 md:pt-8 flex flex-col gap-5">
+
+            {/* OVR + name block */}
+            <div className="flex items-start gap-5">
+              {/* OVR badge */}
+              <div className="flex-shrink-0 text-center" style={{ minWidth: 72 }}>
+                <p className="text-[9px] font-black uppercase tracking-[0.25em] mb-0.5" style={{ color: accentColor }}>OVR</p>
+                <p
+                  className="font-black leading-none"
+                  style={{
+                    fontSize: "clamp(52px, 8vw, 80px)",
+                    color: "#fff",
+                    fontFamily: "var(--font-outfit), sans-serif",
+                    textShadow: `0 0 40px ${accentColor}60`,
+                  }}
+                >
+                  {loading || financeLoading ? "…" : stats.ovr}
                 </p>
               </div>
-            </div>
-          )}
-          {pol.legiscanName && (
-            <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] flex-1 md:flex-none card-lift">
-              <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-4 py-4">
-                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-1">Into Law</p>
-                <p className={`text-2xl font-bold ${isD ? "text-blue-700" : "text-red-700"}`}
-                  style={{ fontFamily: "var(--font-playfair), serif" }}>
-                  {loading ? "…" : lawBills.length}
+              {/* Name + office */}
+              <div className="min-w-0 pt-1">
+                <p className="text-[10px] font-bold uppercase tracking-[0.22em] mb-1.5" style={{ color: accentColor }}>
+                  {pol.district} · {pol.chamber}
                 </p>
-                {billTotal > 0 && (
-                  <p className="text-[10px] text-[var(--muted)] mt-0.5">of {billTotal} filed</p>
+                <h1
+                  className="font-bold leading-tight text-white"
+                  style={{ fontSize: "clamp(22px, 4vw, 38px)", fontFamily: "var(--font-playfair), serif" }}
+                >
+                  {pol.name}
+                </h1>
+                <p className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.45)" }}>{pol.office}</p>
+                {pol.salary && (
+                  <p className="text-xs mt-1 font-semibold" style={{ color: "rgba(255,255,255,0.3)" }}>
+                    ${pol.salary.toLocaleString()} / yr
+                  </p>
                 )}
               </div>
             </div>
-          )}
-        </div>
-      </div>
 
-      {/* ── Social / Links row ─────────────────────────────────────────── */}
-      <div className="flex flex-wrap justify-center gap-2 px-6 pb-8 -mt-4">
-        {pol.website && (
-          <a href={pol.website} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[var(--accent)] text-white text-xs font-semibold hover:bg-[var(--accent-light)] transition-colors">
-            Official Website
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
-            </svg>
-          </a>
-        )}
-        {pol.twitter && (
-          <a href={`https://twitter.com/${pol.twitter}`} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white ring-1 ring-[var(--border)] text-[var(--accent)] text-xs font-semibold hover:ring-[var(--accent)] transition-colors">
-            X / Twitter
-          </a>
-        )}
-        {pol.instagram && (
-          <a href={`https://instagram.com/${pol.instagram}`} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white ring-1 ring-[var(--border)] text-[var(--accent)] text-xs font-semibold hover:ring-[var(--accent)] transition-colors">
-            Instagram
-          </a>
-        )}
-        {pol.email && (
-          <a href={`mailto:${pol.email}`}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white ring-1 ring-[var(--border)] text-[var(--accent)] text-xs font-semibold hover:ring-[var(--accent)] transition-colors">
-            Email
-          </a>
+            {/* Attribute bars */}
+            <div className="space-y-2.5">
+              {statOrder.map((key) => (
+                <AttributeBar
+                  key={key}
+                  label={STAT_LABELS[key]}
+                  value={stats[key]}
+                  color={accentColor}
+                  isLoading={(key === "warChest" || key === "lawmaker") && (loading || financeLoading)}
+                />
+              ))}
+            </div>
+
+            {/* Social links */}
+            <div className="flex flex-wrap gap-2 pt-1">
+              {pol.website && (
+                <a href={pol.website} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all"
+                  style={{ background: accentColor, color: "#fff" }}>
+                  Website
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
+                  </svg>
+                </a>
+              )}
+              {pol.twitter && (
+                <a href={`https://twitter.com/${pol.twitter}`} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all"
+                  style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }}>
+                  X
+                </a>
+              )}
+              {pol.instagram && (
+                <a href={`https://instagram.com/${pol.instagram}`} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all"
+                  style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }}>
+                  Instagram
+                </a>
+              )}
+              {pol.email && (
+                <a href={`mailto:${pol.email}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all"
+                  style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }}>
+                  Email
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Badges strip */}
+        {badges.length > 0 && (
+          <div
+            className="relative border-t"
+            style={{ borderColor: "rgba(255,255,255,0.08)", background: "rgba(0,0,0,0.25)" }}
+          >
+            <div className="max-w-6xl mx-auto px-5 py-4">
+              <p className="text-[9px] font-black uppercase tracking-[0.3em] mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>
+                Badges
+              </p>
+              <div className="flex flex-wrap gap-3">
+                {badges.map(badge => (
+                  <BadgeChip key={badge.id} badge={badge} />
+                ))}
+              </div>
+            </div>
+          </div>
         )}
       </div>
 
