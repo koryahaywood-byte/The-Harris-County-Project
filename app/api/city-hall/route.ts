@@ -146,6 +146,8 @@ Respond with a JSON array of objects with these exact fields:
   "category": string
 }
 
+Each summary must be ONE sentence — punchy, plain English, no jargon. Under 20 words. What happened and why it matters.
+
 Return ONLY the JSON array, no markdown, no other text. Extract 4-8 items.`;
 
   try {

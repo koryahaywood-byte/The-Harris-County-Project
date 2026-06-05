@@ -4,158 +4,232 @@ import Link from "next/link";
 import ScrollReveal from "@/components/ScrollReveal";
 import type { CouncilMeetingData, AgendaItem } from "@/app/api/city-hall/route";
 
-/* ─── Helpers ──────────────────────────────────────────────────────────────── */
-function SectionLabel({ label }: { label: string }) {
-  return (
-    <div className="flex items-center gap-4 mb-6">
-      <div className="h-px flex-1" style={{ background: "rgba(26,58,92,0.15)" }} />
-      <span className="text-[10px] font-bold uppercase tracking-[0.22em]" style={{ color: "var(--muted, #7a8ba0)" }}>
-        {label}
-      </span>
-      <div className="h-px flex-1" style={{ background: "rgba(26,58,92,0.15)" }} />
-    </div>
-  );
-}
+/* ─── Design tokens ────────────────────────────────────────────────────────── */
+const SIG_COLOR  = { high: "#b91c1c", medium: "#d97706", low: "#6b7280" } as const;
+const SIG_ICON   = { high: "!", medium: "~", low: "·" } as const;
+const SIG_LABEL  = { high: "Major", medium: "Notable", low: "Procedural" } as const;
 
-const SIGNIFICANCE_COLOR = { high: "#b91c1c", medium: "#1a3a5c", low: "#6b7280" };
-const SIGNIFICANCE_LABEL = { high: "Major", medium: "Notable", low: "Procedural" };
-
-const CATEGORY_COLORS: Record<string, string> = {
-  Budget: "#0f766e",
-  Development: "#7c3aed",
-  "Public Safety": "#1d4ed8",
-  Transportation: "#0891b2",
-  Housing: "#b45309",
-  Environment: "#15803d",
-  Personnel: "#6b7280",
-  Other: "#4b5563",
+const CAT_META: Record<string, { color: string; icon: string }> = {
+  Budget:          { color: "#0f766e", icon: "$" },
+  Development:     { color: "#7c3aed", icon: "D" },
+  "Public Safety": { color: "#1d4ed8", icon: "S" },
+  Transportation:  { color: "#0891b2", icon: "T" },
+  Housing:         { color: "#b45309", icon: "H" },
+  Environment:     { color: "#15803d", icon: "E" },
+  Personnel:       { color: "#6b7280", icon: "P" },
+  Other:           { color: "#4b5563", icon: "O" },
 };
+const catColor = (c: string) => CAT_META[c]?.color ?? "#1a3a5c";
+const catIcon  = (c: string) => CAT_META[c]?.icon  ?? "?";
 
-function categoryColor(cat: string) {
-  return CATEGORY_COLORS[cat] ?? "#1a3a5c";
-}
-
-function ItemCard({ item }: { item: AgendaItem }) {
-  const sigColor = SIGNIFICANCE_COLOR[item.significance];
-  const catColor = categoryColor(item.category);
+/* ─── Category breakdown bar ───────────────────────────────────────────────── */
+function BreakdownBar({ items }: { items: AgendaItem[] }) {
+  if (!items.length) return null;
+  const counts: Record<string, number> = {};
+  for (const it of items) counts[it.category] = (counts[it.category] ?? 0) + 1;
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  const total  = items.length;
   return (
-    <div
-      className="card-lift rounded-xl ring-1 ring-black/8 p-0 overflow-hidden"
-      style={{ background: "#fff", boxShadow: "0 1px 4px rgba(26,58,92,0.06), inset 0 1px 0 rgba(255,255,255,0.8)" }}
-    >
-      {/* Significance stripe */}
-      <div style={{ height: 3, background: sigColor }} />
-      <div className="p-5">
-        {/* Meta row */}
-        <div className="flex items-center gap-2 mb-2 flex-wrap">
-          <span
-            className="text-[10px] font-bold uppercase tracking-[0.18em] px-2 py-0.5 rounded-full"
-            style={{ background: `${sigColor}14`, color: sigColor }}
-          >
-            {SIGNIFICANCE_LABEL[item.significance]}
+    <div className="mb-8">
+      {/* Segmented bar */}
+      <div className="flex h-2 rounded-full overflow-hidden gap-px mb-3">
+        {sorted.map(([cat, n]) => (
+          <div
+            key={cat}
+            title={`${cat}: ${n}`}
+            style={{
+              width: `${(n / total) * 100}%`,
+              background: catColor(cat),
+              transition: "width 0.8s cubic-bezier(0.4,0,0.2,1)",
+            }}
+          />
+        ))}
+      </div>
+      {/* Legend */}
+      <div className="flex flex-wrap gap-x-4 gap-y-1">
+        {sorted.map(([cat, n]) => (
+          <span key={cat} className="flex items-center gap-1.5 text-[11px] font-medium" style={{ color: "#6b7280" }}>
+            <span className="inline-block w-2 h-2 rounded-sm" style={{ background: catColor(cat) }} />
+            {cat} <span className="font-bold" style={{ color: catColor(cat) }}>{n}</span>
           </span>
-          <span
-            className="text-[10px] font-semibold uppercase tracking-[0.15em] px-2 py-0.5 rounded-full"
-            style={{ background: `${catColor}12`, color: catColor }}
-          >
-            {item.category}
-          </span>
-        </div>
-        {/* Title */}
-        <h3
-          className="text-base font-bold mb-2 leading-snug"
-          style={{ fontFamily: "var(--font-playfair), serif", color: "#1a3a5c" }}
-        >
-          {item.title}
-        </h3>
-        {/* Summary */}
-        <p className="text-sm leading-relaxed mb-3" style={{ color: "#4a5568" }}>
-          {item.summary}
-        </p>
-        {/* Politicians */}
-        {item.politicians.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mb-3">
-            {item.politicians.map((pol) => {
-              const slug = pol
-                .toLowerCase()
-                .replace(/[^a-z0-9 ]/g, "")
-                .replace(/\s+/g, "-");
-              return (
-                <Link
-                  key={pol}
-                  href={`/politicians/${slug}`}
-                  className="text-[11px] font-semibold px-2 py-0.5 rounded-full transition-colors duration-200"
-                  style={{
-                    background: "rgba(26,58,92,0.07)",
-                    color: "#1a3a5c",
-                    border: "1px solid rgba(26,58,92,0.15)",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.target as HTMLElement).style.background = "rgba(26,58,92,0.14)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.target as HTMLElement).style.background = "rgba(26,58,92,0.07)";
-                  }}
-                >
-                  {pol}
-                </Link>
-              );
-            })}
-          </div>
-        )}
-        {/* News hits */}
-        {item.newsHits.length > 0 && (
-          <div className="border-t border-black/6 pt-3 mt-1 space-y-1.5">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#7a8ba0" }}>
-              In the news
-            </p>
-            {item.newsHits.slice(0, 3).map((hit, i) => (
-              <a
-                key={i}
-                href={hit.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-xs leading-snug hover:underline"
-                style={{ color: "#2563a8" }}
-              >
-                {hit.title}
-                {hit.source && (
-                  <span className="ml-1 text-[10px]" style={{ color: "#7a8ba0" }}>
-                    — {hit.source}
-                  </span>
-                )}
-              </a>
-            ))}
-          </div>
-        )}
+        ))}
       </div>
     </div>
   );
 }
 
+/* ─── Significance heat row ─────────────────────────────────────────────────── */
+function HeatRow({ items }: { items: AgendaItem[] }) {
+  const counts = { high: 0, medium: 0, low: 0 };
+  for (const it of items) counts[it.significance]++;
+  return (
+    <div className="flex gap-3 mb-8">
+      {(["high", "medium", "low"] as const).map((s) => (
+        <div
+          key={s}
+          className="flex-1 rounded-xl p-3 text-center ring-1 ring-black/6"
+          style={{ background: `${SIG_COLOR[s]}09` }}
+        >
+          <p className="text-2xl font-bold mb-0.5" style={{ color: SIG_COLOR[s], fontFamily: "var(--font-playfair), serif" }}>
+            {counts[s]}
+          </p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: SIG_COLOR[s] }}>
+            {SIG_LABEL[s]}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ─── Item card ─────────────────────────────────────────────────────────────── */
+function ItemCard({ item, index }: { item: AgendaItem; index: number }) {
+  const [open, setOpen] = useState(false);
+  const cc = catColor(item.category);
+  const sc = SIG_COLOR[item.significance];
+
+  return (
+    <div
+      className="card-lift rounded-2xl overflow-hidden ring-1 ring-black/7 cursor-pointer"
+      style={{
+        background: "#fff",
+        boxShadow: "0 1px 4px rgba(26,58,92,0.05), inset 0 1px 0 rgba(255,255,255,0.9)",
+        animationDelay: `${index * 60}ms`,
+      }}
+      onClick={() => setOpen((v) => !v)}
+    >
+      {/* Top accent bar: significance color */}
+      <div style={{ height: 3, background: `linear-gradient(90deg, ${sc}, ${cc})` }} />
+
+      <div className="p-4">
+        {/* Header row */}
+        <div className="flex items-start gap-3">
+          {/* Category icon badge */}
+          <div
+            className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black"
+            style={{ background: `${cc}15`, color: cc }}
+          >
+            {catIcon(item.category)}
+          </div>
+
+          <div className="flex-1 min-w-0">
+            {/* Title */}
+            <h3
+              className="text-sm font-bold leading-snug mb-1"
+              style={{ fontFamily: "var(--font-playfair), serif", color: "#1a3a5c" }}
+            >
+              {item.title}
+            </h3>
+            {/* One-line summary */}
+            <p className="text-xs leading-relaxed" style={{ color: "#6b7280" }}>
+              {item.summary}
+            </p>
+          </div>
+
+          {/* Significance dot + expand chevron */}
+          <div className="shrink-0 flex flex-col items-center gap-1.5 pt-0.5">
+            <span
+              className="w-2 h-2 rounded-full"
+              style={{ background: sc }}
+              title={SIG_LABEL[item.significance]}
+            />
+            <svg
+              width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#9ca3af" strokeWidth="1.5"
+              style={{ transform: open ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.2s" }}
+            >
+              <path d="M2 3.5l3 3 3-3" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Expandable: politicians + news */}
+        {open && (
+          <div className="mt-3 pt-3 border-t border-black/5 space-y-2">
+            {/* Politicians */}
+            {item.politicians.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {item.politicians.map((pol) => (
+                  <Link
+                    key={pol}
+                    href={`/politicians/${pol.toLowerCase().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, "-")}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-[10px] font-semibold px-2 py-0.5 rounded-full transition-colors duration-150"
+                    style={{ background: "rgba(26,58,92,0.07)", color: "#1a3a5c", border: "1px solid rgba(26,58,92,0.13)" }}
+                  >
+                    {pol}
+                  </Link>
+                ))}
+              </div>
+            )}
+            {/* News hits */}
+            {item.newsHits.length > 0 && (
+              <div className="space-y-1">
+                {item.newsHits.slice(0, 3).map((hit, i) => (
+                  <a
+                    key={i}
+                    href={hit.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex items-baseline gap-1.5 text-[11px] hover:underline leading-snug"
+                    style={{ color: "#2563a8" }}
+                  >
+                    <span className="shrink-0 text-[9px] font-bold uppercase tracking-wide" style={{ color: "#9ca3af" }}>
+                      {hit.source || "News"}
+                    </span>
+                    <span className="line-clamp-1">{hit.title}</span>
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Footer badges row (always visible) */}
+        <div className="flex items-center gap-2 mt-3 flex-wrap">
+          <span
+            className="text-[9px] font-bold uppercase tracking-[0.15em] px-1.5 py-0.5 rounded"
+            style={{ background: `${cc}12`, color: cc }}
+          >
+            {item.category}
+          </span>
+          {item.politicians.length > 0 && (
+            <span className="text-[10px]" style={{ color: "#9ca3af" }}>
+              {item.politicians.length} official{item.politicians.length !== 1 ? "s" : ""}
+            </span>
+          )}
+          {item.newsHits.length > 0 && (
+            <span className="ml-auto text-[10px] font-semibold flex items-center gap-1" style={{ color: "#2563a8" }}>
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <rect x="1" y="2" width="10" height="8" rx="1"/><path d="M4 5h4M4 7h2"/>
+              </svg>
+              {item.newsHits.length} article{item.newsHits.length !== 1 ? "s" : ""}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Main page ─────────────────────────────────────────────────────────────── */
 export default function CityHallPage() {
-  const [data, setData] = useState<CouncilMeetingData | null>(null);
+  const [data, setData]     = useState<CouncilMeetingData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"timeline" | "all">("timeline");
+  const [error, setError]   = useState<string | null>(null);
+  const [filter, setFilter] = useState<"all" | "high" | "medium" | "low">("all");
 
   useEffect(() => {
     fetch("/api/city-hall")
-      .then((r) => {
-        if (!r.ok) throw new Error(`API error ${r.status}`);
-        return r.json();
-      })
-      .then((d) => {
-        if (d.error) throw new Error(d.error);
-        setData(d);
-      })
+      .then((r) => { if (!r.ok) throw new Error(`API error ${r.status}`); return r.json(); })
+      .then((d) => { if (d.error) throw new Error(d.error); setData(d); })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, []);
 
-  const highItems = data?.items.filter((i) => i.significance === "high") ?? [];
-  const allItems = data?.items ?? [];
-  const displayed = activeTab === "timeline" ? highItems.length ? highItems : allItems : allItems;
+  const allItems      = data?.items ?? [];
+  const displayed     = filter === "all" ? allItems : allItems.filter((i) => i.significance === filter);
+  const highCount     = allItems.filter((i) => i.significance === "high").length;
 
   return (
     <div style={{ background: "var(--bg, #f5f3ef)", minHeight: "100vh", fontFamily: "var(--font-outfit), sans-serif" }}>
@@ -164,186 +238,122 @@ export default function CityHallPage() {
         className="relative overflow-hidden"
         style={{
           background: "linear-gradient(135deg, #1a3a5c 0%, #0f2540 60%, #162e4a 100%)",
-          paddingTop: "4rem",
-          paddingBottom: "4rem",
+          paddingTop: "3.5rem",
+          paddingBottom: "3rem",
         }}
       >
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse 70% 60% at 80% 40%, rgba(37,99,168,0.18) 0%, transparent 70%)",
-          }}
-        />
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: "radial-gradient(ellipse 70% 60% at 80% 40%, rgba(37,99,168,0.18) 0%, transparent 70%)",
+        }} />
         <div className="relative max-w-4xl mx-auto px-5">
           <p className="text-sky-300 text-xs font-bold uppercase tracking-[0.22em] mb-3">City Hall Story Engine</p>
           <h1
-            className="text-3xl md:text-5xl font-bold text-white mb-4"
+            className="text-3xl md:text-4xl font-bold text-white mb-3"
             style={{ fontFamily: "var(--font-playfair), serif", lineHeight: 1.18 }}
           >
             What Happened at<br />Houston City Council
           </h1>
-          <p className="text-white/55 text-base max-w-xl mb-4">
-            Every Tuesday, Houston City Council meets. Every Wednesday, Emily Ramshaw covers it in plain English at
-            Emily Takes Notes. This engine turns her reporting into a structured timeline — then cross-references
-            each item against local news.
+          <p className="text-white/50 text-sm max-w-lg">
+            Emily Takes Notes covers every Tuesday council meeting. This turns her reporting into a visual breakdown.
           </p>
           {data && (
-            <p className="text-sky-200/70 text-xs font-medium">
-              Latest meeting covered: {data.date}
-              {data.cached && (
-                <span className="ml-2 text-white/30">(cached)</span>
-              )}
+            <p className="text-sky-200/60 text-xs font-medium mt-3">
+              {data.date} · {allItems.length} items · {highCount} major
+              {data.cached && <span className="ml-2 text-white/25">cached</span>}
             </p>
           )}
         </div>
       </section>
 
-      <div className="max-w-4xl mx-auto px-5 py-10">
+      <div className="max-w-4xl mx-auto px-5 py-8">
         {/* Loading */}
         {loading && (
-          <div className="flex items-center gap-3 py-12 justify-center">
+          <div className="flex items-center gap-3 py-16 justify-center">
             <span className="relative flex h-3 w-3">
               <span className="alive-halo absolute inline-flex h-full w-full rounded-full bg-sky-400" />
               <span className="alive-pulse relative inline-flex h-3 w-3 rounded-full bg-sky-400" />
             </span>
-            <span className="text-sm" style={{ color: "#7a8ba0" }}>
-              Fetching latest council meeting...
-            </span>
+            <span className="text-sm" style={{ color: "#7a8ba0" }}>Fetching latest council meeting...</span>
           </div>
         )}
 
         {/* Error */}
         {error && (
-          <div
-            className="rounded-xl ring-1 ring-red-200 p-6 mb-8"
-            style={{ background: "#fef2f2", color: "#7f1d1d" }}
-          >
+          <div className="rounded-xl ring-1 ring-red-200 p-5 mb-8" style={{ background: "#fef2f2", color: "#7f1d1d" }}>
             <p className="font-semibold text-sm mb-1">Could not load latest meeting</p>
-            <p className="text-xs opacity-70">{error}</p>
-            <p className="text-xs mt-2 opacity-60">
-              Check{" "}
-              <a href="https://emilytakesnotes.com" target="_blank" rel="noopener noreferrer" className="underline">
-                emilytakesnotes.com
-              </a>{" "}
-              directly.
-            </p>
+            <p className="text-xs opacity-70">{error} — check <a href="https://emilytakesnotes.com" target="_blank" rel="noopener noreferrer" className="underline">emilytakesnotes.com</a></p>
           </div>
         )}
 
-        {/* Emily's card */}
         {data && (
           <ScrollReveal>
-            <SectionLabel label="Source" />
+            {/* Emily source card — compact */}
             <div
-              className="rounded-2xl ring-1 ring-black/8 mb-10"
-              style={{
-                background: "#1a3a5c",
-                boxShadow: "0 4px 24px rgba(26,58,92,0.14), inset 0 1px 0 rgba(255,255,255,0.06)",
-              }}
+              className="rounded-2xl mb-8 p-4 flex items-center gap-4"
+              style={{ background: "#1a3a5c", boxShadow: "0 4px 20px rgba(26,58,92,0.12)" }}
             >
-              <div className="p-6">
-                <div className="flex items-start justify-between gap-4 flex-wrap">
-                  <div className="flex-1 min-w-0">
-                    <p
-                      className="text-sky-300 text-[10px] font-bold uppercase tracking-[0.2em] mb-2"
-                    >
-                      Emily Takes Notes — {data.date}
-                    </p>
-                    <h2
-                      className="text-lg font-bold text-white mb-3 leading-snug"
-                      style={{ fontFamily: "var(--font-playfair), serif" }}
-                    >
-                      {data.meetingTitle}
-                    </h2>
-                    <p className="text-white/55 text-sm leading-relaxed line-clamp-3">
-                      {data.emilyExcerpt}
-                    </p>
-                  </div>
-                  <a
-                    href={data.emilyUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200"
-                    style={{
-                      background: "rgba(255,255,255,0.10)",
-                      color: "#fff",
-                      border: "1px solid rgba(255,255,255,0.15)",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.target as HTMLElement).style.background = "rgba(255,255,255,0.18)";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.target as HTMLElement).style.background = "rgba(255,255,255,0.10)";
-                    }}
-                  >
-                    Read full post
-                  </a>
+              <div className="flex-1 min-w-0">
+                <p className="text-sky-300 text-[10px] font-bold uppercase tracking-[0.2em] mb-0.5">
+                  Emily Takes Notes · {data.date}
+                </p>
+                <p className="text-white text-sm font-semibold leading-snug truncate" style={{ fontFamily: "var(--font-playfair), serif" }}>
+                  {data.meetingTitle}
+                </p>
+              </div>
+              <a
+                href={data.emilyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200"
+                style={{ background: "rgba(255,255,255,0.10)", color: "#fff", border: "1px solid rgba(255,255,255,0.15)" }}
+              >
+                Read
+              </a>
+            </div>
+
+            {/* Visual breakdown */}
+            {allItems.length > 0 && (
+              <>
+                <HeatRow items={allItems} />
+                <BreakdownBar items={allItems} />
+
+                {/* Filter pills */}
+                <div className="flex gap-2 mb-5 flex-wrap items-center">
+                  {(["all", "high", "medium", "low"] as const).map((f) => {
+                    const count = f === "all" ? allItems.length : allItems.filter((i) => i.significance === f).length;
+                    const col = f === "all" ? "#1a3a5c" : SIG_COLOR[f];
+                    return (
+                      <button
+                        key={f}
+                        onClick={() => setFilter(f)}
+                        className="px-3 py-1 rounded-full text-xs font-semibold transition-all duration-200 capitalize"
+                        style={
+                          filter === f
+                            ? { background: col, color: "#fff" }
+                            : { background: `${col}10`, color: col, border: `1px solid ${col}30` }
+                        }
+                      >
+                        {f === "all" ? `All (${count})` : `${SIG_LABEL[f]} (${count})`}
+                      </button>
+                    );
+                  })}
+                  <span className="ml-auto text-[10px]" style={{ color: "#9ca3af" }}>
+                    tap card to expand
+                  </span>
                 </div>
-              </div>
-            </div>
-          </ScrollReveal>
-        )}
 
-        {/* Timeline */}
-        {data && data.items.length > 0 && (
-          <ScrollReveal>
-            <SectionLabel label="AI-Generated Timeline" />
+                {/* Cards grid */}
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {displayed.map((item, i) => (
+                    <ItemCard key={item.id} item={item} index={i} />
+                  ))}
+                </div>
 
-            {/* Tab pills */}
-            <div className="flex gap-2 mb-6 flex-wrap">
-              {([["timeline", `Key Items (${highItems.length || allItems.length})`], ["all", `All Items (${allItems.length})`]] as const).map(
-                ([tab, label]) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className="px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200"
-                    style={
-                      activeTab === tab
-                        ? { background: "#1a3a5c", color: "#fff" }
-                        : { background: "rgba(26,58,92,0.08)", color: "#1a3a5c", border: "1px solid rgba(26,58,92,0.15)" }
-                    }
-                  >
-                    {label}
-                  </button>
-                )
-              )}
-              <span className="ml-auto text-[10px] font-medium self-center" style={{ color: "#7a8ba0" }}>
-                Summarized by Claude · Cross-referenced via Google News
-              </span>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              {displayed.map((item) => (
-                <ItemCard key={item.id} item={item} />
-              ))}
-            </div>
-          </ScrollReveal>
-        )}
-
-        {/* Archive note */}
-        {data && (
-          <ScrollReveal>
-            <div
-              className="mt-10 rounded-xl ring-1 ring-black/6 p-5 flex items-start gap-4"
-              style={{ background: "rgba(26,58,92,0.04)" }}
-            >
-              <div className="shrink-0 mt-0.5">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#2563a8" strokeWidth="1.5">
-                  <rect x="2" y="5" width="14" height="11" rx="1.5" />
-                  <path d="M1 5h16M6 5V3a1 1 0 011-1h4a1 1 0 011 1v2" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-xs font-bold mb-0.5" style={{ color: "#1a3a5c" }}>
-                  History book ethos
+                <p className="text-[10px] text-center mt-6" style={{ color: "#b0bec8" }}>
+                  Summarized by Claude Haiku · News via Google News RSS
                 </p>
-                <p className="text-xs leading-relaxed" style={{ color: "#7a8ba0" }}>
-                  Each meeting summary is archived to{" "}
-                  <code className="text-[11px] bg-black/5 px-1 rounded">data/council-meetings/</code> after fetch, so
-                  every Tuesday in Houston City Council history is preserved — not just the latest one.
-                </p>
-              </div>
-            </div>
+              </>
+            )}
           </ScrollReveal>
         )}
       </div>
