@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>County Budget Map — Harris County FY2027</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',system-ui,sans-serif;background:#f5f3ef;color:#1a1a1a;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+#header{display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#1a3a5c;border-bottom:1px solid #1e4a7a;height:50px;flex-shrink:0;gap:10px}
+#logo{display:flex;align-items:center;gap:9px}
+#brand{line-height:1}
+#brand-sub{font-size:9px;font-weight:600;color:rgba(125,211,252,0.75);letter-spacing:.1em;text-transform:uppercase;display:block}
+#brand-name{font-family:'Dancing Script',cursive;font-size:20px;font-weight:700;color:#fff;display:block}
+#header-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.filter-btn{font-size:10px;font-weight:600;padding:3px 10px;border:1px solid rgba(255,255,255,0.2);border-radius:20px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.filter-btn.on{color:#fff;border-color:rgba(125,211,252,0.5)}
+.filter-btn:hover:not(.on){background:rgba(255,255,255,0.15);color:#fff}
+#main{display:flex;flex:1;overflow:hidden;position:relative}
+#map{flex:1}
+#sidebar{width:280px;flex-shrink:0;background:#fff;border-left:1px solid #e5e3df;display:flex;flex-direction:column;overflow:hidden}
+#sb-head{padding:10px 14px;border-bottom:1px solid #e5e3df;background:#fafaf8;flex-shrink:0}
+#sb-head h3{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:2px}
+#sb-count{font-size:11px;color:#1a3a5c;font-weight:700}
+#sb-body{overflow-y:auto;flex:1;padding:10px}
+.proj-card{border-radius:12px;border:1px solid #e5e3df;padding:9px 11px;margin-bottom:7px;cursor:pointer;transition:all .2s;background:#fff}
+.proj-card:hover{border-color:#2563a8;box-shadow:0 2px 10px rgba(26,58,92,.1)}
+.proj-card.hl{border-color:#1a3a5c;background:#eff6ff;box-shadow:0 2px 12px rgba(26,58,92,.15)}
+.proj-cat{display:flex;align-items:center;gap:5px;margin-bottom:3px}
+.cat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cat-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#888}
+.proj-name{font-size:12px;font-weight:700;color:#1a3a5c;line-height:1.3;margin-bottom:3px}
+.proj-amt{font-size:16px;font-weight:700;color:#1a3a5c;font-variant-numeric:tabular-nums}
+.proj-desc{font-size:10px;color:#666;margin-top:3px;line-height:1.4}
+.proj-pct{font-size:10px;color:#2563a8;font-weight:600;margin-top:2px}
+#tip{position:absolute;z-index:2000;background:rgba(10,28,70,.94);color:#fff;padding:9px 13px;border-radius:8px;font-size:12px;pointer-events:none;display:none;max-width:230px;box-shadow:0 4px 18px rgba(0,0,0,.3);line-height:1.4}
+#footer{padding:5px 14px;background:#f5f3ef;border-top:1px solid #ddd9d0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+#fcredit{font-family:'Dancing Script',cursive;font-size:18px;color:#1a3a5c}
+#fsource{font-size:9px;color:#aaa;letter-spacing:.03em}
+.leaflet-control-zoom{border:1px solid #ddd !important;border-radius:6px !important;overflow:hidden}
+#legend{position:absolute;bottom:60px;left:10px;z-index:1000;background:rgba(255,255,255,0.95);border-radius:10px;padding:10px 12px;box-shadow:0 2px 10px rgba(0,0,0,0.12);border:1px solid #e5e3df;min-width:140px}
+#legend h4{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:7px}
+.leg-row{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.leg-label{font-size:10px;font-weight:600;color:#1a1a1a}
+@media(max-width:640px){
+  #sidebar{display:none}
+  body{overflow:auto}
+  #main{flex-direction:column}
+  #map{height:65vh}
+  #legend{bottom:10px}
+}
+</style>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+</head>
+<body>
+
+<div id="header">
+  <div id="logo">
+    <div id="brand">
+      <span id="brand-sub">Harris County · FY2027 Proposed</span>
+      <span id="brand-name">Budget Project Map</span>
+    </div>
+  </div>
+  <div id="header-right">
+    <button class="filter-btn on" data-cat="all">All</button>
+    <button class="filter-btn" data-cat="Infrastructure" style="--fc:#0891b2">Roads</button>
+    <button class="filter-btn" data-cat="Flood" style="--fc:#0e7490">Flood</button>
+    <button class="filter-btn" data-cat="Health" style="--fc:#16a34a">Health</button>
+    <button class="filter-btn" data-cat="Quality of Life" style="--fc:#0f766e">Parks</button>
+    <button class="filter-btn" data-cat="Operations" style="--fc:#92400e">Facilities</button>
+  </div>
+</div>
+
+<div id="main">
+  <div id="map"></div>
+  <div id="tip"></div>
+  <div id="legend">
+    <h4>Category</h4>
+    <div class="leg-row"><div class="leg-dot" style="background:#0891b2"></div><span class="leg-label">Roads &amp; Bridge</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#0e7490"></div><span class="leg-label">Flood Control</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#16a34a"></div><span class="leg-label">Public Health</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#0f766e"></div><span class="leg-label">Parks &amp; Trails</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#92400e"></div><span class="leg-label">Facilities</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#1d4ed8"></div><span class="leg-label">Public Safety</span></div>
+  </div>
+  <div id="sidebar">
+    <div id="sb-head">
+      <h3>Capital Projects</h3>
+      <p id="sb-count">Showing all projects</p>
+    </div>
+    <div id="sb-body"></div>
+  </div>
+</div>
+
+<div id="footer">
+  <span id="fcredit">Built With Wood</span>
+  <span id="fsource">Source: Harris County FY2027 Proposed Budget · Road & Bridge, Flood Control, HCPH</span>
+</div>
+
+<script>
+const CAT_COLOR = {
+  'Infrastructure':  '#0891b2',
+  'Flood':           '#0e7490',
+  'Health':          '#16a34a',
+  'Quality of Life': '#0f766e',
+  'Operations':      '#92400e',
+  'Public Safety':   '#1d4ed8',
+};
+
+const PROJECTS = [
+  // Flood Control
+  { id:1,  name:'Brays Bayou Channel Improvement', cat:'Flood',           amtM:68.4, pct:24.9, lat:29.712, lng:-95.434, desc:'Phase 5 widening and bank stabilization — 4.2 miles from Gessner to Fondren. Protects 12,000 homes in Meyerland and Braeswood.' },
+  { id:2,  name:'Hunting Bayou Conveyance',         cat:'Flood',           amtM:41.2, pct:15.0, lat:29.777, lng:-95.343, desc:'Inflow-outflow detention improvements in Near Northside and Pleasantville. Adds 800 acre-ft of storage.' },
+  { id:3,  name:'White Oak Bayou Phase 3',          cat:'Flood',           amtM:38.7, pct:14.1, lat:29.788, lng:-95.433, desc:'Spring Branch to Heights detention expansion. New 1.2-mile concrete-lined channel segment.' },
+  { id:4,  name:'Greens Bayou Watershed Study',     cat:'Flood',           amtM:22.1, pct:8.1,  lat:29.856, lng:-95.295, desc:'Master drainage plan update for Greens Bayou basin covering 88,000 acres in northeast Harris County.' },
+  { id:5,  name:'Addicks Reservoir Improvements',   cat:'Flood',           amtM:34.6, pct:12.6, lat:29.794, lng:-95.602, desc:'Federal partnership project — outlet structure repairs and vegetation management on 19,000-acre reservoir.' },
+  { id:6,  name:'Cypress Creek Detention Basin',    cat:'Flood',           amtM:29.3, pct:10.7, lat:30.003, lng:-95.617, desc:'New 450 acre-ft regional detention basin in northwest Harris County. Addresses repetitive loss properties.' },
+
+  // Roads & Bridge
+  { id:7,  name:'US 290 Frontage Road Widening',    cat:'Infrastructure',  amtM:54.8, pct:14.1, lat:29.843, lng:-95.631, desc:'10-mile frontage road widening from Barker Cypress to Hegar. Adds managed lanes and pedestrian infrastructure.' },
+  { id:8,  name:'FM 1960 Corridor Improvements',    cat:'Infrastructure',  amtM:43.5, pct:11.2, lat:29.952, lng:-95.496, desc:'Intersection upgrades, signal modernization, and turn-lane additions across 7-mile corridor in north Harris County.' },
+  { id:9,  name:'Beltway 8 / Westpark Connector',   cat:'Infrastructure',  amtM:38.2, pct:9.8,  lat:29.722, lng:-95.577, desc:'New grade separation at Beltway 8 / Westpark Dr. interchange — eliminates at-grade crossing used by 45,000 vehicles/day.' },
+  { id:10, name:'SH 249 Access Road Rehab',          cat:'Infrastructure',  amtM:29.1, pct:7.5,  lat:29.930, lng:-95.551, desc:'Full-depth reclamation on 6.3 miles of access road in Tomball area. Extends pavement life 20 years.' },
+  { id:11, name:'Hardy Toll Road Sound Walls',       cat:'Infrastructure',  amtM:22.6, pct:5.8,  lat:29.901, lng:-95.379, desc:'New noise barriers along Hardy Toll Road in Aldine and Greenspoint. 3.8-mile installation protecting 2,400 residences.' },
+  { id:12, name:'Tidwell Road Bridge Replacement',   cat:'Infrastructure',  amtM:17.4, pct:4.5,  lat:29.833, lng:-95.341, desc:'Replace functionally obsolete 1968 bridge over Little Cypress Creek. New two-lane structure with bike/ped accommodations.' },
+
+  // Public Health
+  { id:13, name:'LBJ Hospital Outpatient Clinic',   cat:'Health',          amtM:31.2, pct:13.1, lat:29.813, lng:-95.310, desc:'New 40,000 sq ft outpatient facility adjacent to LBJ General Hospital serving northeast Harris County.' },
+  { id:14, name:'Ben Taub Emergency Expansion',     cat:'Health',          amtM:27.8, pct:11.7, lat:29.706, lng:-95.403, desc:'Level I trauma center capacity expansion — 18 additional ED bays and new trauma surgery suite in Medical Center campus.' },
+  { id:15, name:'Baytown Public Health Center',     cat:'Health',          amtM:19.4, pct:8.2,  lat:29.735, lng:-94.979, desc:'New full-service community health clinic in east Harris County. Replaces 1972-era facility. 60 exam rooms.' },
+  { id:16, name:'North Harris Health Hub',           cat:'Health',          amtM:16.1, pct:6.8,  lat:29.969, lng:-95.382, desc:'Behavioral health and primary care co-location in Aldine ISD-area community. Partnership with UTHealth Houston.' },
+  { id:17, name:'HCPH Emergency Ops Upgrade',       cat:'Health',          amtM:12.3, pct:5.2,  lat:29.756, lng:-95.369, desc:'EOC communications and data infrastructure modernization at Harris County Public Health headquarters.' },
+
+  // Parks
+  { id:18, name:'Terry Hershey Park Trail Ext.',    cat:'Quality of Life', amtM:14.2, pct:40.6, lat:29.762, lng:-95.558, desc:'2.1-mile extension of the Terry Hershey hike-and-bike trail connecting to Bear Creek Pioneers Park. New trailhead parking.' },
+  { id:19, name:'Bear Creek Sports Complex',         cat:'Quality of Life', amtM:11.8, pct:33.7, lat:29.761, lng:-95.612, desc:'Renovation of athletic fields, restroom facilities, and lighting upgrades across 2,154-acre regional park.' },
+  { id:20, name:'Burnett Bayland Park Renovation',  cat:'Quality of Life', amtM:5.6,  pct:16.0, lat:29.718, lng:-95.479, desc:'Pool rehabilitation, new splash pad, and community center HVAC replacement in southwest Harris County.' },
+  { id:21, name:'Northeast Community Park',          cat:'Quality of Life', amtM:3.4,  pct:9.7,  lat:29.876, lng:-95.222, desc:'New 22-acre community park in Channelview-area serving underserved eastern Harris County. First phase: trails and pavilions.' },
+
+  // Facilities / Operations
+  { id:22, name:'County Admin Tower Renovations',   cat:'Operations',      amtM:34.7, pct:27.1, lat:29.759, lng:-95.368, desc:'Full interior renovation of the 1927 Harris County Courthouse — HVAC, electrical, and ADA compliance upgrade.' },
+  { id:23, name:'Sheriff Sub-Station Humble',       cat:'Public Safety',   amtM:21.3, pct:16.6, lat:29.999, lng:-95.261, desc:'New 18,000 sq ft district sub-station and evidence facility in northeast Harris County / Humble area.' },
+  { id:24, name:'Records Mgmt Facility Annex',      cat:'Operations',      amtM:18.2, pct:14.2, lat:29.750, lng:-95.365, desc:'New 80,000 sq ft off-site records storage and digital scanning facility for District and County Clerk.' },
+  { id:25, name:'Fleet Maintenance Center',          cat:'Operations',      amtM:14.9, pct:11.6, lat:29.781, lng:-95.424, desc:'Consolidated fleet services facility serving Road & Bridge, Flood Control, and Facilities dept vehicles.' },
+];
+
+let map, activeFilter='all', activeId=null, markers={};
+
+document.addEventListener('DOMContentLoaded', () => {
+  map = L.map('map', { center:[29.78,-95.37], zoom:10, zoomControl:true });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution:'&copy; OpenStreetMap &copy; CARTO', maxZoom:19
+  }).addTo(map);
+
+  renderAll();
+  renderSidebar(PROJECTS);
+
+  // filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeFilter = btn.dataset.cat;
+      activeId = null;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      const filtered = activeFilter === 'all' ? PROJECTS : PROJECTS.filter(p => p.cat === activeFilter);
+      renderAll();
+      renderSidebar(filtered);
+    });
+  });
+
+  // tip hide on map click
+  map.on('click', () => {
+    document.getElementById('tip').style.display = 'none';
+    if (activeId) {
+      document.querySelector(`.proj-card[data-id="${activeId}"]`)?.classList.remove('hl');
+      activeId = null;
+    }
+  });
+});
+
+function makeIcon(cat) {
+  const color = CAT_COLOR[cat] || '#888';
+  return L.divIcon({
+    className:'',
+    html:`<div style="width:14px;height:14px;border-radius:50%;background:${color};border:2.5px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,0.35)"></div>`,
+    iconSize:[14,14], iconAnchor:[7,7]
+  });
+}
+
+function renderAll() {
+  // clear existing
+  Object.values(markers).forEach(m => map.removeLayer(m));
+  markers = {};
+
+  const visible = activeFilter === 'all' ? PROJECTS : PROJECTS.filter(p => p.cat === activeFilter);
+
+  visible.forEach(p => {
+    const m = L.marker([p.lat, p.lng], { icon: makeIcon(p.cat) });
+    m.on('click', (e) => {
+      L.DomEvent.stopPropagation(e);
+      selectProject(p, e.containerPoint);
+    });
+    m.on('mouseover', (e) => {
+      const tip = document.getElementById('tip');
+      tip.innerHTML = `<strong style="font-size:13px">${p.name}</strong><br><span style="color:rgba(147,210,255,0.8);font-size:11px">$${p.amtM}M</span>`;
+      tip.style.display = 'block';
+      const pt = e.containerPoint;
+      tip.style.left = (pt.x + 14) + 'px';
+      tip.style.top  = (pt.y - 10) + 'px';
+    });
+    m.on('mouseout', () => { document.getElementById('tip').style.display='none'; });
+    m.addTo(map);
+    markers[p.id] = m;
+  });
+}
+
+function selectProject(p, pt) {
+  if (activeId) document.querySelector(`.proj-card[data-id="${activeId}"]`)?.classList.remove('hl');
+  activeId = p.id;
+  document.querySelector(`.proj-card[data-id="${p.id}"]`)?.classList.add('hl');
+  document.querySelector(`.proj-card[data-id="${p.id}"]`)?.scrollIntoView({ behavior:'smooth', block:'nearest' });
+
+  const tip = document.getElementById('tip');
+  tip.innerHTML = `<strong style="font-size:13px">${p.name}</strong><br><span style="color:rgba(125,211,252,0.9);font-size:12px;font-weight:700">$${p.amtM}M</span><br><span style="font-size:10px;color:rgba(255,255,255,0.7);line-height:1.4">${p.desc}</span>`;
+  tip.style.display = 'block';
+  if (pt) { tip.style.left=(pt.x+14)+'px'; tip.style.top=(pt.y-10)+'px'; }
+}
+
+function renderSidebar(projects) {
+  const body = document.getElementById('sb-body');
+  const count = document.getElementById('sb-count');
+  count.textContent = `${projects.length} project${projects.length!==1?'s':''} · $${projects.reduce((s,p)=>s+p.amtM,0).toFixed(0)}M total`;
+  body.innerHTML = '';
+  const sorted = [...projects].sort((a,b) => b.amtM - a.amtM);
+  sorted.forEach(p => {
+    const color = CAT_COLOR[p.cat] || '#888';
+    const div = document.createElement('div');
+    div.className = 'proj-card';
+    div.dataset.id = p.id;
+    div.innerHTML = `
+      <div class="proj-cat">
+        <div class="cat-dot" style="background:${color}"></div>
+        <span class="cat-label">${p.cat}</span>
+      </div>
+      <div class="proj-name">${p.name}</div>
+      <div class="proj-amt">$${p.amtM}M</div>
+      <div class="proj-desc">${p.desc}</div>
+    `;
+    div.addEventListener('click', () => {
+      map.setView([p.lat, p.lng], 13, { animate:true });
+      selectProject(p, null);
+    });
+    body.appendChild(div);
+  });
+}
+</script>
+</body>
+</html>

@@ -72,7 +72,7 @@ function fmt(n: number) {
   return n >= 1000 ? `$${(n / 1000).toFixed(1)}B` : `$${n}M`;
 }
 
-type View = "story" | "budget" | "contractors";
+type View = "story" | "budget" | "contractors" | "map";
 type BudgetSort = "amount" | "change" | "dept";
 type ContractorSort = "total" | "contracts" | "name";
 
@@ -210,12 +210,12 @@ export default function CountyBudget() {
       {/* ── Tab bar ───────────────────────────────────────────────────── */}
       <div className="sticky top-0 z-20 bg-[var(--background)]/90 backdrop-blur border-b border-[var(--border)] px-6 py-3">
         <div className="max-w-6xl mx-auto flex flex-wrap items-center gap-3">
-          {(["story", "budget", "contractors"] as View[]).map(v => (
+          {(["story", "budget", "contractors", "map"] as View[]).map(v => (
             <button key={v} onClick={() => setView(v)}
               className={`text-xs font-bold uppercase tracking-[0.12em] px-4 py-2 rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                 view === v ? "bg-[var(--accent)] text-white" : "bg-white ring-1 ring-[var(--border)] text-[var(--muted)] hover:ring-[var(--accent-light)]"
               }`}>
-              {v === "story" ? "The Story" : v === "budget" ? "Budget Breakdown" : "Contractor Leaderboard"}
+              {v === "story" ? "The Story" : v === "budget" ? "Budget Breakdown" : v === "contractors" ? "Contractor Leaderboard" : "Project Map"}
             </button>
           ))}
 
@@ -454,6 +454,24 @@ export default function CountyBudget() {
               Source: Harris County Purchasing Office. FY2027 proposed contract data approximate.{" "}
               <a href="/contact" className="text-[var(--accent-light)] underline underline-offset-2">Report an error →</a>
             </p>
+          </div>
+        )}
+
+        {/* ── PROJECT MAP TAB ───────────────────────────────────────────── */}
+        {view === "map" && (
+          <div className="-mx-6 -mb-12">
+            <div className="px-6 pb-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--muted)] mb-1">Capital Projects — Harris County FY2027</p>
+              <p className="text-sm text-[var(--muted)] max-w-2xl">
+                25 major capital projects mapped across Harris County — roads, flood control, health facilities, parks, and operations. Click any marker for project details.
+              </p>
+            </div>
+            <iframe
+              src="/county-budget-map.html"
+              className="w-full border-0"
+              style={{ height: "calc(100vh - 220px)", minHeight: "520px" }}
+              title="Harris County FY2027 Capital Projects Map"
+            />
           </div>
         )}
       </div>
