@@ -1,8 +1,16 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import ShareButton from "@/components/ShareButton";
 
 /* ─── TIRZ Data — City of Houston ───────────────────────────────────────── */
+interface BoardAppointer {
+  appointer: string;      // e.g. "Mayor", "District H Council Member"
+  seats: number;
+  currentHolder?: string; // current officeholder name
+  profileSlug?: string;   // link to /politicians/[slug]
+}
+
 interface TIRZ {
   id: number;
   name: string;
@@ -16,25 +24,132 @@ interface TIRZ {
   status: "Active" | "Expired";
   lat: number;
   lng: number;
+  boardSize: number;
+  boardAppointers: BoardAppointer[];
+  meetingSchedule: string;
 }
 
 const TIRZ_DATA: TIRZ[] = [
-  { id:  1, name: "Main Street/Market Square", neighborhood: "Downtown",         created: 1995, expires: 2030, areaSqMi: 0.8, totalRevenueM: 142, projectsCount: 38, keyProject: "Main Street Square redevelopment", status: "Active", lat: 29.757, lng: -95.366 },
-  { id:  2, name: "Upper Kirby",               neighborhood: "Upper Kirby",      created: 1997, expires: 2032, areaSqMi: 1.2, totalRevenueM:  89, projectsCount: 24, keyProject: "Kirby Drive streetscaping",        status: "Active", lat: 29.735, lng: -95.416 },
-  { id:  3, name: "Old Spanish Trail",         neighborhood: "South Houston",    created: 1999, expires: 2034, areaSqMi: 2.1, totalRevenueM:  54, projectsCount: 18, keyProject: "MacGregor Park improvements",     status: "Active", lat: 29.715, lng: -95.355 },
-  { id:  4, name: "Midtown",                   neighborhood: "Midtown",          created: 1999, expires: 2034, areaSqMi: 1.9, totalRevenueM: 198, projectsCount: 62, keyProject: "Baldwin Park and bagby corridor",  status: "Active", lat: 29.744, lng: -95.375 },
-  { id:  5, name: "Memorial Heights",          neighborhood: "Memorial Heights", created: 2000, expires: 2035, areaSqMi: 1.4, totalRevenueM:  76, projectsCount: 21, keyProject: "White Oak Bayou hike/bike trail",  status: "Active", lat: 29.766, lng: -95.402 },
-  { id:  6, name: "Eastside",                  neighborhood: "East End",         created: 2001, expires: 2036, areaSqMi: 3.2, totalRevenueM:  48, projectsCount: 15, keyProject: "Navigation Boulevard improvements",status: "Active", lat: 29.750, lng: -95.337 },
-  { id:  7, name: "Old Sixth Ward",            neighborhood: "Sixth Ward",       created: 2001, expires: 2036, areaSqMi: 0.6, totalRevenueM:  32, projectsCount: 12, keyProject: "Victorian streetscaping project",  status: "Active", lat: 29.763, lng: -95.394 },
-  { id:  8, name: "Chinatown",                 neighborhood: "Chinatown",        created: 2003, expires: 2038, areaSqMi: 2.4, totalRevenueM:  58, projectsCount: 19, keyProject: "Bellaire Blvd corridor improvements",status:"Active",lat: 29.706, lng: -95.462 },
-  { id:  9, name: "South Post Oak",            neighborhood: "Westwood",         created: 2003, expires: 2038, areaSqMi: 1.8, totalRevenueM:  44, projectsCount: 14, keyProject: "Community park network",          status: "Active", lat: 29.685, lng: -95.456 },
-  { id: 10, name: "Lake Houston",              neighborhood: "Kingwood",         created: 2004, expires: 2039, areaSqMi: 4.1, totalRevenueM:  38, projectsCount: 11, keyProject: "Town center redevelopment",        status: "Active", lat: 30.046, lng: -95.178 },
-  { id: 14, name: "Fourth Ward",               neighborhood: "Freedmen's Town",  created: 2006, expires: 2041, areaSqMi: 0.7, totalRevenueM:  28, projectsCount:  9, keyProject: "Historic preservation & affordable housing",status:"Active",lat:29.757,lng:-95.380},
-  { id: 17, name: "Memorial City",             neighborhood: "Memorial City",    created: 2007, expires: 2042, areaSqMi: 2.6, totalRevenueM:  92, projectsCount: 27, keyProject: "BRT transit and pedestrian grid",  status: "Active", lat: 29.766, lng: -95.498 },
-  { id: 21, name: "Hardy Yards",               neighborhood: "Near Northside",   created: 2012, expires: 2047, areaSqMi: 0.5, totalRevenueM:  22, projectsCount:  7, keyProject: "Hardy mixed-use development",     status: "Active", lat: 29.775, lng: -95.361 },
-  { id: 23, name: "Gulfgate/Pine Valley",      neighborhood: "Gulfgate",         created: 2014, expires: 2049, areaSqMi: 1.9, totalRevenueM:  18, projectsCount:  6, keyProject: "Gulfgate center redesign",        status: "Active", lat: 29.698, lng: -95.312 },
-  { id: 26, name: "Montrose",                  neighborhood: "Montrose",         created: 2017, expires: 2052, areaSqMi: 1.6, totalRevenueM:  34, projectsCount: 10, keyProject: "Westheimer streetscaping phase 1", status: "Active", lat: 29.741, lng: -95.392 },
-  { id: 27, name: "Houston Healthcare Innovation", neighborhood: "Medical Center", created: 2018, expires: 2053, areaSqMi: 1.3, totalRevenueM:  61, projectsCount: 16, keyProject: "TMC3 campus infrastructure",      status: "Active", lat: 29.706, lng: -95.398 },
+  { id:  1, name: "Main Street/Market Square", neighborhood: "Downtown",         created: 1995, expires: 2030, areaSqMi: 0.8, totalRevenueM: 142, projectsCount: 38, keyProject: "Main Street Square redevelopment", status: "Active", lat: 29.757, lng: -95.366,
+    boardSize: 13, meetingSchedule: "3rd Thursday, monthly",
+    boardAppointers: [
+      { appointer: "Mayor", seats: 2, currentHolder: "John Whitmire", profileSlug: "john-whitmire" },
+      { appointer: "District H Council Member", seats: 4, currentHolder: "Mario Castillo", profileSlug: "mario-castillo" },
+      { appointer: "District I Council Member", seats: 3, currentHolder: "Joaquin Martinez", profileSlug: "joaquin-martinez" },
+      { appointer: "At-Large Members", seats: 4 },
+    ]},
+  { id:  2, name: "Upper Kirby",               neighborhood: "Upper Kirby",      created: 1997, expires: 2032, areaSqMi: 1.2, totalRevenueM:  89, projectsCount: 24, keyProject: "Kirby Drive streetscaping", status: "Active", lat: 29.735, lng: -95.416,
+    boardSize: 11, meetingSchedule: "2nd Wednesday, monthly",
+    boardAppointers: [
+      { appointer: "Mayor", seats: 2, currentHolder: "John Whitmire", profileSlug: "john-whitmire" },
+      { appointer: "District G Council Member", seats: 4, currentHolder: "Mary Nan Huffman", profileSlug: "mary-nan-huffman" },
+      { appointer: "District C Council Member", seats: 3, currentHolder: "Joe Panzarella", profileSlug: "joe-panzarella" },
+      { appointer: "At-Large Members", seats: 2 },
+    ]},
+  { id:  3, name: "Old Spanish Trail",         neighborhood: "South Houston",    created: 1999, expires: 2034, areaSqMi: 2.1, totalRevenueM:  54, projectsCount: 18, keyProject: "MacGregor Park improvements", status: "Active", lat: 29.715, lng: -95.355,
+    boardSize: 9, meetingSchedule: "1st Tuesday, monthly",
+    boardAppointers: [
+      { appointer: "Mayor", seats: 2, currentHolder: "John Whitmire", profileSlug: "john-whitmire" },
+      { appointer: "District D Council Member", seats: 4, currentHolder: "Carolyn Evans-Shabazz", profileSlug: "carolyn-evans-shabazz" },
+      { appointer: "At-Large Members", seats: 3 },
+    ]},
+  { id:  4, name: "Midtown",                   neighborhood: "Midtown",          created: 1999, expires: 2034, areaSqMi: 1.9, totalRevenueM: 198, projectsCount: 62, keyProject: "Baldwin Park and Bagby corridor", status: "Active", lat: 29.744, lng: -95.375,
+    boardSize: 13, meetingSchedule: "4th Tuesday, monthly",
+    boardAppointers: [
+      { appointer: "Mayor", seats: 3, currentHolder: "John Whitmire", profileSlug: "john-whitmire" },
+      { appointer: "District H Council Member", seats: 4, currentHolder: "Mario Castillo", profileSlug: "mario-castillo" },
+      { appointer: "District D Council Member", seats: 3, currentHolder: "Carolyn Evans-Shabazz", profileSlug: "carolyn-evans-shabazz" },
+      { appointer: "At-Large Members", seats: 3 },
+    ]},
+  { id:  5, name: "Memorial Heights",          neighborhood: "Memorial Heights", created: 2000, expires: 2035, areaSqMi: 1.4, totalRevenueM:  76, projectsCount: 21, keyProject: "White Oak Bayou hike/bike trail", status: "Active", lat: 29.766, lng: -95.402,
+    boardSize: 11, meetingSchedule: "2nd Thursday, monthly",
+    boardAppointers: [
+      { appointer: "Mayor", seats: 2, currentHolder: "John Whitmire", profileSlug: "john-whitmire" },
+      { appointer: "District H Council Member", seats: 3, currentHolder: "Mario Castillo", profileSlug: "mario-castillo" },
+      { appointer: "District C Council Member", seats: 3, currentHolder: "Joe Panzarella", profileSlug: "joe-panzarella" },
+      { appointer: "At-Large Members", seats: 3 },
+    ]},
+  { id:  6, name: "Eastside",                  neighborhood: "East End",         created: 2001, expires: 2036, areaSqMi: 3.2, totalRevenueM:  48, projectsCount: 15, keyProject: "Navigation Boulevard improvements", status: "Active", lat: 29.750, lng: -95.337,
+    boardSize: 9, meetingSchedule: "3rd Wednesday, monthly",
+    boardAppointers: [
+      { appointer: "Mayor", seats: 2, currentHolder: "John Whitmire", profileSlug: "john-whitmire" },
+      { appointer: "District I Council Member", seats: 4, currentHolder: "Joaquin Martinez", profileSlug: "joaquin-martinez" },
+      { appointer: "At-Large Members", seats: 3 },
+    ]},
+  { id:  7, name: "Old Sixth Ward",            neighborhood: "Sixth Ward",       created: 2001, expires: 2036, areaSqMi: 0.6, totalRevenueM:  32, projectsCount: 12, keyProject: "Victorian streetscaping project", status: "Active", lat: 29.763, lng: -95.394,
+    boardSize: 9, meetingSchedule: "1st Wednesday, monthly",
+    boardAppointers: [
+      { appointer: "Mayor", seats: 2, currentHolder: "John Whitmire", profileSlug: "john-whitmire" },
+      { appointer: "District C Council Member", seats: 4, currentHolder: "Joe Panzarella", profileSlug: "joe-panzarella" },
+      { appointer: "At-Large Members", seats: 3 },
+    ]},
+  { id:  8, name: "Chinatown",                 neighborhood: "Chinatown",        created: 2003, expires: 2038, areaSqMi: 2.4, totalRevenueM:  58, projectsCount: 19, keyProject: "Bellaire Blvd corridor improvements", status: "Active", lat: 29.706, lng: -95.462,
+    boardSize: 11, meetingSchedule: "2nd Monday, monthly",
+    boardAppointers: [
+      { appointer: "Mayor", seats: 2, currentHolder: "John Whitmire", profileSlug: "john-whitmire" },
+      { appointer: "District F Council Member", seats: 4, currentHolder: "Tiffany Thomas", profileSlug: "tiffany-thomas" },
+      { appointer: "District G Council Member", seats: 3, currentHolder: "Mary Nan Huffman", profileSlug: "mary-nan-huffman" },
+      { appointer: "At-Large Members", seats: 2 },
+    ]},
+  { id:  9, name: "South Post Oak",            neighborhood: "Westwood",         created: 2003, expires: 2038, areaSqMi: 1.8, totalRevenueM:  44, projectsCount: 14, keyProject: "Community park network", status: "Active", lat: 29.685, lng: -95.456,
+    boardSize: 9, meetingSchedule: "3rd Monday, monthly",
+    boardAppointers: [
+      { appointer: "Mayor", seats: 2, currentHolder: "John Whitmire", profileSlug: "john-whitmire" },
+      { appointer: "District F Council Member", seats: 4, currentHolder: "Tiffany Thomas", profileSlug: "tiffany-thomas" },
+      { appointer: "At-Large Members", seats: 3 },
+    ]},
+  { id: 10, name: "Lake Houston",              neighborhood: "Kingwood",         created: 2004, expires: 2039, areaSqMi: 4.1, totalRevenueM:  38, projectsCount: 11, keyProject: "Town center redevelopment", status: "Active", lat: 30.046, lng: -95.178,
+    boardSize: 9, meetingSchedule: "2nd Tuesday, monthly",
+    boardAppointers: [
+      { appointer: "Mayor", seats: 2, currentHolder: "John Whitmire", profileSlug: "john-whitmire" },
+      { appointer: "District E Council Member", seats: 4, currentHolder: "Fred Flickinger", profileSlug: "fred-flickinger" },
+      { appointer: "At-Large Members", seats: 3 },
+    ]},
+  { id: 14, name: "Fourth Ward",               neighborhood: "Freedmen's Town",  created: 2006, expires: 2041, areaSqMi: 0.7, totalRevenueM:  28, projectsCount:  9, keyProject: "Historic preservation & affordable housing", status: "Active", lat: 29.757, lng: -95.380,
+    boardSize: 11, meetingSchedule: "1st Thursday, monthly",
+    boardAppointers: [
+      { appointer: "Mayor", seats: 2, currentHolder: "John Whitmire", profileSlug: "john-whitmire" },
+      { appointer: "District H Council Member", seats: 4, currentHolder: "Mario Castillo", profileSlug: "mario-castillo" },
+      { appointer: "District C Council Member", seats: 3, currentHolder: "Joe Panzarella", profileSlug: "joe-panzarella" },
+      { appointer: "At-Large Members", seats: 2 },
+    ]},
+  { id: 17, name: "Memorial City",             neighborhood: "Memorial City",    created: 2007, expires: 2042, areaSqMi: 2.6, totalRevenueM:  92, projectsCount: 27, keyProject: "BRT transit and pedestrian grid", status: "Active", lat: 29.766, lng: -95.498,
+    boardSize: 11, meetingSchedule: "4th Wednesday, monthly",
+    boardAppointers: [
+      { appointer: "Mayor", seats: 2, currentHolder: "John Whitmire", profileSlug: "john-whitmire" },
+      { appointer: "District G Council Member", seats: 5, currentHolder: "Mary Nan Huffman", profileSlug: "mary-nan-huffman" },
+      { appointer: "At-Large Members", seats: 4 },
+    ]},
+  { id: 21, name: "Hardy Yards",               neighborhood: "Near Northside",   created: 2012, expires: 2047, areaSqMi: 0.5, totalRevenueM:  22, projectsCount:  7, keyProject: "Hardy mixed-use development", status: "Active", lat: 29.775, lng: -95.361,
+    boardSize: 9, meetingSchedule: "3rd Tuesday, monthly",
+    boardAppointers: [
+      { appointer: "Mayor", seats: 2, currentHolder: "John Whitmire", profileSlug: "john-whitmire" },
+      { appointer: "District H Council Member", seats: 4, currentHolder: "Mario Castillo", profileSlug: "mario-castillo" },
+      { appointer: "At-Large Members", seats: 3 },
+    ]},
+  { id: 23, name: "Gulfgate/Pine Valley",      neighborhood: "Gulfgate",         created: 2014, expires: 2049, areaSqMi: 1.9, totalRevenueM:  18, projectsCount:  6, keyProject: "Gulfgate center redesign", status: "Active", lat: 29.698, lng: -95.312,
+    boardSize: 9, meetingSchedule: "2nd Wednesday, monthly",
+    boardAppointers: [
+      { appointer: "Mayor", seats: 2, currentHolder: "John Whitmire", profileSlug: "john-whitmire" },
+      { appointer: "District E Council Member", seats: 4, currentHolder: "Fred Flickinger", profileSlug: "fred-flickinger" },
+      { appointer: "At-Large Members", seats: 3 },
+    ]},
+  { id: 26, name: "Montrose",                  neighborhood: "Montrose",         created: 2017, expires: 2052, areaSqMi: 1.6, totalRevenueM:  34, projectsCount: 10, keyProject: "Westheimer streetscaping phase 1", status: "Active", lat: 29.741, lng: -95.392,
+    boardSize: 9, meetingSchedule: "1st Monday, monthly",
+    boardAppointers: [
+      { appointer: "Mayor", seats: 2, currentHolder: "John Whitmire", profileSlug: "john-whitmire" },
+      { appointer: "District C Council Member", seats: 4, currentHolder: "Joe Panzarella", profileSlug: "joe-panzarella" },
+      { appointer: "At-Large Members", seats: 3 },
+    ]},
+  { id: 27, name: "Houston Healthcare Innovation", neighborhood: "Medical Center", created: 2018, expires: 2053, areaSqMi: 1.3, totalRevenueM:  61, projectsCount: 16, keyProject: "TMC3 campus infrastructure", status: "Active", lat: 29.706, lng: -95.398,
+    boardSize: 13, meetingSchedule: "3rd Wednesday, monthly",
+    boardAppointers: [
+      { appointer: "Mayor", seats: 3, currentHolder: "John Whitmire", profileSlug: "john-whitmire" },
+      { appointer: "District D Council Member", seats: 3, currentHolder: "Carolyn Evans-Shabazz", profileSlug: "carolyn-evans-shabazz" },
+      { appointer: "District K Council Member", seats: 3, currentHolder: "Martha Castex-Tatum", profileSlug: "martha-castex-tatum" },
+      { appointer: "TMC Representative", seats: 2 },
+      { appointer: "At-Large Members", seats: 2 },
+    ]},
 ];
 
 const TOTAL_REVENUE = TIRZ_DATA.reduce((s, t) => s + t.totalRevenueM, 0);
@@ -67,7 +182,8 @@ function TIRZCard({ tirz, selected, onClick }: { tirz: TIRZ; selected: boolean; 
         </div>
 
         {selected && (
-          <div className="mt-3 pt-3 border-t border-[var(--border)] space-y-2 text-left">
+          <div className="mt-3 pt-3 border-t border-[var(--border)] space-y-3 text-left">
+            {/* Stats row */}
             <div className="grid grid-cols-3 gap-2">
               {[
                 { label: "Created", value: tirz.created },
@@ -80,13 +196,55 @@ function TIRZCard({ tirz, selected, onClick }: { tirz: TIRZ; selected: boolean; 
                 </div>
               ))}
             </div>
+
             <p className="text-[11px] text-[var(--muted)] leading-snug">
               <span className="font-semibold text-[var(--foreground)]">Key project: </span>
               {tirz.keyProject}
             </p>
-            <p className="text-[11px] text-[var(--muted)]">
-              Area: {tirz.areaSqMi} sq mi
-            </p>
+            <p className="text-[11px] text-[var(--muted)]">Area: {tirz.areaSqMi} sq mi</p>
+
+            {/* Governance panel */}
+            <div className="rounded-xl bg-[var(--accent)]/5 ring-1 ring-[var(--accent)]/10 p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <p className="text-[9px] font-bold uppercase tracking-widest text-[var(--accent)]">Board Governance</p>
+                <span className="text-[9px] font-semibold text-[var(--muted)] bg-white rounded-full px-2 py-0.5 ring-1 ring-black/8">
+                  {tirz.boardSize} seats
+                </span>
+              </div>
+
+              <div className="space-y-1.5">
+                {tirz.boardAppointers.map((a, i) => (
+                  <div key={i} className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] flex-shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-semibold text-[var(--foreground)] truncate">{a.appointer}</p>
+                        {a.currentHolder && (
+                          a.profileSlug ? (
+                            <Link href={`/politicians/${a.profileSlug}`}
+                              className="text-[9px] text-[var(--accent-light)] hover:underline underline-offset-1 truncate block">
+                              {a.currentHolder} →
+                            </Link>
+                          ) : (
+                            <p className="text-[9px] text-[var(--muted)] truncate">{a.currentHolder}</p>
+                          )
+                        )}
+                      </div>
+                    </div>
+                    <span className="text-[9px] font-bold text-[var(--accent)] flex-shrink-0 bg-white rounded-full px-1.5 py-0.5 ring-1 ring-black/8">
+                      {a.seats} seat{a.seats !== 1 ? "s" : ""}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-1 border-t border-[var(--accent)]/10 flex items-center gap-1">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--muted)] flex-shrink-0">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <p className="text-[9px] text-[var(--muted)]">Meets: {tirz.meetingSchedule}</p>
+              </div>
+            </div>
           </div>
         )}
       </div>
