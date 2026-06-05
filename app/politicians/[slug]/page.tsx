@@ -2,6 +2,7 @@
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { POLITICIANS } from "@/lib/politicians";
+import { getFinanceByName, fmt } from "@/lib/campaign-finance";
 import Link from "next/link";
 
 type Bill = {
@@ -565,28 +566,107 @@ export default function PoliticianProfile() {
             )}
 
             {/* ── MONEY TAB ── */}
-            {tab === "money" && (
-              <div className="py-4 text-center max-w-sm mx-auto">
-                <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
-                  <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-10 flex flex-col items-center gap-3">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.5">
-                      <circle cx="12" cy="12" r="10"/>
-                      <path d="M12 6v2m0 8v2M9 9h4.5a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3H15"/>
-                    </svg>
-                    <h3 className="font-bold text-[var(--accent)] text-lg" style={{ fontFamily: "var(--font-playfair), serif" }}>
-                      Campaign Finance Coming Soon
-                    </h3>
-                    <p className="text-sm text-[var(--muted)] leading-relaxed">
-                      Donor lists, spending breakdown, and PAC money will connect here once the Where Is the Dough data is wired to profiles.
-                    </p>
+            {tab === "money" && (() => {
+              const finance = getFinanceByName(pol.name);
+              if (!finance) return (
+                <div className="py-4 text-center max-w-sm mx-auto">
+                  <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
+                    <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-10 flex flex-col items-center gap-3">
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v2m0 8v2M9 9h4.5a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3H15"/>
+                      </svg>
+                      <h3 className="font-bold text-[var(--accent)] text-lg" style={{ fontFamily: "var(--font-playfair), serif" }}>
+                        No Finance Data
+                      </h3>
+                      <p className="text-sm text-[var(--muted)] leading-relaxed">
+                        Campaign finance data is not yet available for this official.
+                      </p>
+                      <Link href="/tools/where-is-the-dough"
+                        className="mt-2 text-xs font-semibold text-[var(--accent-light)] hover:underline">
+                        See full campaign finance tool →
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              );
+              const partyColor = finance.party === "D" ? "#2563a8" : "#b91c1c";
+              const totalCycle = finance.raised ?? finance.cash;
+              return (
+                <div className="py-4 space-y-4 max-w-2xl mx-auto">
+                  {/* Header */}
+                  <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
+                    <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-6">
+                      <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: partyColor }}>
+                        Campaign Finance · {finance.asOf}
+                      </p>
+                      <p className="text-xs text-[var(--muted)]">{finance.office}</p>
+                      <p className="text-xs text-[var(--muted)] mt-1">Source: {finance.level === "federal" ? "FEC" : "TEC"} · Data as of {finance.asOf}</p>
+                    </div>
+                  </div>
+
+                  {/* Key stats grid */}
+                  <div className={`grid gap-3 ${finance.raised ? "grid-cols-3" : "grid-cols-1 max-w-xs mx-auto"}`}>
+                    {/* Cash on hand */}
+                    <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[5px] card-lift">
+                      <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-5 text-center">
+                        <p className="text-xs text-[var(--muted)] uppercase tracking-wider mb-1">Cash on Hand</p>
+                        <p className="text-2xl font-bold" style={{ color: partyColor, fontFamily: "var(--font-playfair), serif" }}>
+                          {fmt(finance.cash)}
+                        </p>
+                      </div>
+                    </div>
+                    {/* Total raised */}
+                    {finance.raised && (
+                      <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[5px] card-lift">
+                        <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-5 text-center">
+                          <p className="text-xs text-[var(--muted)] uppercase tracking-wider mb-1">Total Raised</p>
+                          <p className="text-2xl font-bold text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair), serif" }}>
+                            {fmt(finance.raised)}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    {/* Total spent */}
+                    {finance.spent && (
+                      <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[5px] card-lift">
+                        <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-5 text-center">
+                          <p className="text-xs text-[var(--muted)] uppercase tracking-wider mb-1">Total Spent</p>
+                          <p className="text-2xl font-bold text-[var(--muted)]" style={{ fontFamily: "var(--font-playfair), serif" }}>
+                            {fmt(finance.spent)}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Burn rate bar — only if both raised and spent */}
+                  {finance.raised && finance.spent && (
+                    <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[5px]">
+                      <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-5">
+                        <p className="text-xs text-[var(--muted)] uppercase tracking-wider mb-3">Spend Rate</p>
+                        <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all duration-700"
+                            style={{ width: `${Math.min(100, Math.round((finance.spent / finance.raised) * 100))}%`, background: partyColor }}
+                          />
+                        </div>
+                        <p className="text-xs text-[var(--muted)] mt-2 text-right">
+                          {Math.round((finance.spent / finance.raised) * 100)}% of raised spent
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="text-center pt-1">
                     <Link href="/tools/where-is-the-dough"
-                      className="mt-2 text-xs font-semibold text-[var(--accent-light)] hover:underline">
-                      See campaign finance tool →
+                      className="text-xs font-semibold text-[var(--accent-light)] hover:underline">
+                      See full campaign finance leaderboard →
                     </Link>
                   </div>
                 </div>
-              </div>
-            )}
+              );
+            })()}
 
             {/* ── NEWS TAB ── */}
             {tab === "news" && (
