@@ -253,8 +253,8 @@ export default function CityHallPage() {
           >
             What Happened at<br />Houston City Council
           </h1>
-          <p className="text-white/50 text-sm max-w-lg">
-            Emily Takes Notes covers every Tuesday council meeting. This turns her reporting into a visual breakdown.
+          <p className="text-white/45 text-sm max-w-sm">
+            Tuesday meetings. Wednesday coverage. Structured here.
           </p>
           {data && (
             <p className="text-sky-200/60 text-xs font-medium mt-3">
@@ -287,28 +287,29 @@ export default function CityHallPage() {
 
         {data && (
           <ScrollReveal>
-            {/* Emily source card — compact */}
-            <div
-              className="rounded-2xl mb-8 p-4 flex items-center gap-4"
-              style={{ background: "#1a3a5c", boxShadow: "0 4px 20px rgba(26,58,92,0.12)" }}
-            >
-              <div className="flex-1 min-w-0">
-                <p className="text-sky-300 text-[10px] font-bold uppercase tracking-[0.2em] mb-0.5">
-                  Emily Takes Notes · {data.date}
-                </p>
-                <p className="text-white text-sm font-semibold leading-snug truncate" style={{ fontFamily: "var(--font-playfair), serif" }}>
-                  {data.meetingTitle}
-                </p>
-              </div>
-              <a
-                href={data.emilyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200"
-                style={{ background: "rgba(255,255,255,0.10)", color: "#fff", border: "1px solid rgba(255,255,255,0.15)" }}
+            {/* Story lede */}
+            <div className="mb-8">
+              <p
+                className="text-2xl md:text-3xl font-bold leading-snug mb-3"
+                style={{ fontFamily: "var(--font-playfair), serif", color: "#1a3a5c" }}
               >
-                Read
-              </a>
+                {data.lede || data.meetingTitle}
+              </p>
+              <div className="flex items-center gap-2">
+                <span className="text-xs" style={{ color: "#9ca3af" }}>
+                  via{" "}
+                  <a
+                    href={data.emilyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold hover:underline"
+                    style={{ color: "#2563a8" }}
+                  >
+                    Emily Takes Notes
+                  </a>
+                  {" "}· {data.date}
+                </span>
+              </div>
             </div>
 
             {/* Visual breakdown */}

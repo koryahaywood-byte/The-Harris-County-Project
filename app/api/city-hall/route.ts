@@ -31,6 +31,7 @@ export interface CouncilMeetingData {
   emilyHeadline: string;
   emilyUrl: string;
   emilyExcerpt: string;
+  lede: string;
   items: AgendaItem[];
   fetchedAt: string;
   cached: boolean;
@@ -164,6 +165,39 @@ Return ONLY the JSON array, no markdown, no other text. Extract 4-8 items.`;
   }
 }
 
+async function generateLede(postContent: string, postTitle: string, items: AgendaItem[]): Promise<string> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return postTitle;
+
+  const client = new Anthropic({ apiKey });
+  const topItems = items.slice(0, 3).map((i) => i.title).join(", ");
+
+  const prompt = `You are a sharp local news editor. Write a 2-sentence lede for a Houston City Council meeting recap.
+
+Meeting: "${postTitle}"
+Top items: ${topItems}
+
+Rules:
+- Sentence 1: the most important thing that happened. Specific. No fluff.
+- Sentence 2: the stakes or what it means for Houston residents.
+- No "Houston City Council" as the subject — start with the action or the issue.
+- No quotes, no attribution, no hedging. Write it as confident fact.
+- Total: under 40 words.
+
+Return ONLY the two sentences, nothing else.`;
+
+  try {
+    const msg = await client.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 120,
+      messages: [{ role: "user", content: prompt }],
+    });
+    return (msg.content[0] as { type: string; text: string }).text.trim();
+  } catch {
+    return postTitle;
+  }
+}
+
 // In-memory cache (resets on cold start; good enough for rate limiting)
 let cache: { data: CouncilMeetingData; ts: number } | null = null;
 const CACHE_TTL = 1000 * 60 * 60 * 4; // 4 hours
@@ -196,10 +230,15 @@ export async function GET() {
     const fullContent = await fetchFullPost(latest.link);
     const content = fullContent || excerpt;
 
-    // 3. Generate AI timeline
+    // 3. Generate AI timeline + lede (parallel)
     const rawItems = await generateTimeline(content, latest.title);
 
-    // 4. Fetch Google News for each significant item (limit to top 4)
+    // 4. Generate lede + fetch Google News in parallel
+    const [lede] = await Promise.all([
+      generateLede(content, latest.title, rawItems),
+    ]);
+
+    // 5. Fetch Google News for each significant item (limit to top 4)
     const topItems = rawItems.slice(0, 4);
     const itemsWithNews = await Promise.all(
       rawItems.map(async (item, i) => {
@@ -215,6 +254,7 @@ export async function GET() {
       emilyHeadline: latest.title,
       emilyUrl: latest.link,
       emilyExcerpt: excerpt,
+      lede,
       items: itemsWithNews,
       fetchedAt: new Date().toISOString(),
       cached: false,
