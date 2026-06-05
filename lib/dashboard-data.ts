@@ -74,8 +74,10 @@ function parseBingItems(xml: string): Array<{ title: string; link: string; sourc
   let m;
   while ((m = itemRe.exec(xml)) !== null) {
     const item = m[1];
-    const title = item.match(/<title>([\s\S]*?)<\/title>/)?.[1]
-      ?.replace(/<!\[CDATA\[|\]\]>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim() ?? "";
+    const title = (item.match(/<title>([\s\S]*?)<\/title>/)?.[1]
+      ?.replace(/<!\[CDATA\[|\]\]>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim() ?? "")
+      // Strip " - Source Name" or " | Source Name" suffixes Bing appends to titles
+      .replace(/\s[-|]\s[^-|]{3,60}$/, "");
     // Bing RSS links are Bing redirect URLs — extract the real URL from the `url=` param
     const rawLink = item.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.trim() ?? "";
     const realUrl = rawLink.match(/[?&]url=([^&]+)/)?.[1];
@@ -122,7 +124,7 @@ export async function getDashboardData(): Promise<DashboardData> {
   const [federalRaw, stateRaw, localRaw, rawMarkets] = await Promise.all([
     fetchTopStory("US Congress White House federal politics", todayStr),
     fetchTopStory("Texas Austin legislature politics 2026", todayStr),
-    fetchTopStory("Houston Harris County local politics government", todayStr),
+    fetchTopStory("Houston politics OR \"Harris County\" site:houstonchronicle.com OR site:houstonpublicmedia.org OR site:chron.com OR site:khou.com", todayStr),
     Promise.all([
       fetchMarketIndex("^DJI",  "Dow Jones"),
       fetchMarketIndex("^GSPC", "S&P 500"),
