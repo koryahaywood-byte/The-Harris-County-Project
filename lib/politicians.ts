@@ -12,6 +12,8 @@ export type Politician = {
   twitter?: string;
   instagram?: string;
   facebook?: string;
+  bluesky?: string;
+  tiktok?: string;
   email?: string;
   // Bill tracker search name (last name used for LegiScan)
   legiscanName?: string;

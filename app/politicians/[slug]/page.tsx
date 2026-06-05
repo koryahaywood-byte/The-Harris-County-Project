@@ -336,53 +336,295 @@ function DemographicsBar({ pol }: { pol: import("@/lib/politicians").Politician 
   );
 }
 
-/* ─── Social Feed (Twitter/X timeline) ──────────────────────────────────── */
-function SocialFeed({ handle }: { handle: string }) {
-  return (
-    <div className="rounded-2xl overflow-hidden" style={{ background: "#fff", border: "1px solid rgba(26,58,92,0.1)" }}>
-      <div className="px-4 py-3 border-b flex items-center justify-between" style={{ borderColor: "rgba(26,58,92,0.08)" }}>
-        <p className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: "#1a3a5c" }}>
-          Social Feed
-        </p>
-        <a
-          href={`https://twitter.com/${handle}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[10px] font-semibold"
-          style={{ color: "#2563a8" }}
-        >
-          @{handle} →
-        </a>
-      </div>
-      <div style={{ maxHeight: 420, overflow: "auto" }}>
-        {/* Twitter/X timeline embed — no API key needed */}
-        <a
-          className="twitter-timeline"
-          href={`https://twitter.com/${handle}`}
-          data-height="400"
-          data-chrome="noheader nofooter noborders transparent"
-          data-theme="light"
-          data-tweet-limit="5"
-        >
-          Loading tweets…
-        </a>
-        <TwitterScript />
-      </div>
-    </div>
-  );
+/* ─── Platform presence chip ─────────────────────────────────────────────── */
+const PLATFORMS = [
+  { key: "twitter",   label: "X",         color: "#000",    bg: "#f3f4f6" },
+  { key: "bluesky",   label: "Bluesky",   color: "#0085ff", bg: "#eff6ff" },
+  { key: "instagram", label: "Instagram", color: "#e1306c", bg: "#fdf2f8" },
+  { key: "tiktok",    label: "TikTok",    color: "#010101", bg: "#f3f4f6" },
+  { key: "facebook",  label: "Facebook",  color: "#1877f2", bg: "#eff6ff" },
+] as const;
+
+function platformUrl(platform: string, handle: string): string {
+  switch (platform) {
+    case "twitter":   return `https://twitter.com/${handle}`;
+    case "bluesky":   return `https://bsky.app/profile/${handle}`;
+    case "instagram": return `https://instagram.com/${handle}`;
+    case "tiktok":    return `https://tiktok.com/@${handle}`;
+    case "facebook":  return `https://facebook.com/${handle}`;
+    default: return "#";
+  }
 }
 
-function TwitterScript() {
+/* ─── Twitter timeline embed ────────────────────────────────────────────── */
+function TwitterTimeline({ handle }: { handle: string }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((window as any).twttr) { (window as any).twttr.widgets.load(); return; }
+    const w = window as any;
+    if (w.twttr?.widgets) { w.twttr.widgets.load(); return; }
     const s = document.createElement("script");
     s.src = "https://platform.twitter.com/widgets.js";
     s.async = true;
     document.head.appendChild(s);
-  }, []);
-  return null;
+  }, [handle]);
+
+  return (
+    <a
+      className="twitter-timeline"
+      href={`https://twitter.com/${handle}`}
+      data-height="360"
+      data-chrome="noheader nofooter noborders transparent"
+      data-theme="light"
+      data-tweet-limit="5"
+    >
+      Loading…
+    </a>
+  );
+}
+
+/* ─── Bluesky mention card ──────────────────────────────────────────────── */
+type BskyPost = { id: string; author: string; handle: string; avatar?: string; text: string; date: string; url: string; likes: number; reposts: number };
+
+function BskyCard({ post }: { post: BskyPost }) {
+  const date = new Date(post.date).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return (
+    <a
+      href={post.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block rounded-xl p-3 transition-colors"
+      style={{ background: "#f0f7ff", border: "1px solid rgba(0,133,255,0.15)" }}
+    >
+      <div className="flex items-start gap-2 mb-1.5">
+        {post.avatar
+          ? <img src={post.avatar} alt="" className="w-7 h-7 rounded-full flex-shrink-0" />
+          : <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center text-white text-[10px] font-bold" style={{ background: "#0085ff" }}>{post.author[0]}</div>
+        }
+        <div className="flex-1 min-w-0">
+          <span className="font-semibold text-xs" style={{ color: "#1a3a5c" }}>{post.author}</span>
+          <span className="text-[10px] ml-1.5" style={{ color: "#9ca3af" }}>@{post.handle} · {date}</span>
+        </div>
+        <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full flex-shrink-0" style={{ background: "#0085ff", color: "#fff" }}>Bluesky</span>
+      </div>
+      <p className="text-xs leading-relaxed line-clamp-3" style={{ color: "#374151" }}>{post.text}</p>
+      {(post.likes > 0 || post.reposts > 0) && (
+        <div className="flex gap-3 mt-1.5 text-[10px]" style={{ color: "#9ca3af" }}>
+          {post.likes > 0 && <span>{post.likes} likes</span>}
+          {post.reposts > 0 && <span>{post.reposts} reposts</span>}
+        </div>
+      )}
+    </a>
+  );
+}
+
+/* ─── Google News mention card ──────────────────────────────────────────── */
+function NewsCard({ article }: { article: NewsArticle }) {
+  const date = article.pubDate
+    ? new Date(article.pubDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+    : "";
+  return (
+    <a
+      href={article.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block rounded-xl p-3 transition-colors group"
+      style={{ background: "#fff", border: "1px solid rgba(26,58,92,0.1)" }}
+    >
+      <div className="flex items-start gap-2 mb-1">
+        <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full flex-shrink-0 mt-0.5" style={{ background: "#1a3a5c", color: "#fff" }}>News</span>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-semibold leading-snug group-hover:text-[var(--accent)] transition-colors line-clamp-2" style={{ color: "#1a3a5c" }}>
+            {article.title}
+          </p>
+          <div className="flex items-center gap-1.5 mt-1 text-[10px]" style={{ color: "#9ca3af" }}>
+            {article.source && <span className="font-semibold" style={{ color: "#2563a8" }}>{article.source}</span>}
+            {date && <><span>·</span><span>{date}</span></>}
+          </div>
+        </div>
+      </div>
+    </a>
+  );
+}
+
+/* ─── Facebook Page Plugin embed ────────────────────────────────────────── */
+function FacebookEmbed({ page }: { page: string }) {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const w = window as any;
+    if (w.FB) { w.FB.XFBML.parse(); return; }
+    const s = document.createElement("script");
+    s.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v19.0";
+    s.async = true;
+    s.crossOrigin = "anonymous";
+    document.head.appendChild(s);
+  }, [page]);
+
+  return (
+    <div className="overflow-hidden rounded-xl" style={{ border: "1px solid rgba(24,119,242,0.15)" }}>
+      <div
+        className="fb-page"
+        data-href={`https://www.facebook.com/${page}`}
+        data-tabs="timeline"
+        data-width="500"
+        data-height="360"
+        data-small-header="true"
+        data-adapt-container-width="true"
+        data-hide-cover="false"
+        data-show-facepile="false"
+      />
+    </div>
+  );
+}
+
+/* ─── Profile link card (for platforms without embed) ───────────────────── */
+function ProfileCard({ platform, handle, color, bg }: { platform: string; handle: string; color: string; bg: string }) {
+  const url = platformUrl(platform, handle);
+  const labels: Record<string, string> = { instagram: "Instagram", tiktok: "TikTok" };
+  const label = labels[platform] ?? platform;
+
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-3 rounded-xl px-4 py-3 transition-all card-lift"
+      style={{ background: bg, border: `1px solid ${color}20` }}
+    >
+      <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-black" style={{ background: color, color: "#fff" }}>
+        {label[0]}
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-xs font-bold" style={{ color: "#1a3a5c" }}>{label}</p>
+        <p className="text-[10px]" style={{ color: "#9ca3af" }}>@{handle}</p>
+      </div>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" className="flex-shrink-0">
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
+      </svg>
+    </a>
+  );
+}
+
+/* ─── Full multi-platform social feed ───────────────────────────────────── */
+function SocialFeed({ pol }: { pol: import("@/lib/politicians").Politician }) {
+  const [bskyPosts, setBskyPosts] = useState<BskyPost[]>([]);
+  const [newsMentions, setNewsMentions] = useState<NewsArticle[]>([]);
+  const [loadingBuzzes, setLoadingBuzzes] = useState(true);
+
+  useEffect(() => {
+    setLoadingBuzzes(true);
+    const bskyP = fetch(`/api/bluesky?q=${encodeURIComponent(pol.name)}`)
+      .then(r => r.json()).then(d => setBskyPosts(d.posts ?? [])).catch(() => {});
+    const newsP = fetch(`/api/news?name=${encodeURIComponent(pol.name)}`)
+      .then(r => r.json()).then(d => setNewsMentions(d.articles ?? [])).catch(() => {});
+    Promise.all([bskyP, newsP]).finally(() => setLoadingBuzzes(false));
+  }, [pol.name]);
+
+  const hasBuzz = bskyPosts.length > 0 || newsMentions.length > 0;
+
+  return (
+    <div className="space-y-6 max-w-2xl">
+
+      {/* Platform presence row */}
+      <div>
+        <p className="text-[9px] font-black uppercase tracking-[0.25em] mb-2" style={{ color: "var(--muted)" }}>Platforms</p>
+        <div className="flex flex-wrap gap-2">
+          {PLATFORMS.map(p => {
+            const handle = (pol as Record<string, unknown>)[p.key] as string | undefined;
+            const active = !!handle;
+            return (
+              <a
+                key={p.key}
+                href={active ? platformUrl(p.key, handle!) : undefined}
+                target={active ? "_blank" : undefined}
+                rel={active ? "noopener noreferrer" : undefined}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all"
+                style={
+                  active
+                    ? { background: p.bg, color: p.color, border: `1px solid ${p.color}25` }
+                    : { background: "rgba(0,0,0,0.04)", color: "#d1d5db", border: "1px solid rgba(0,0,0,0.06)", cursor: "default" }
+                }
+              >
+                <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: active ? p.color : "#e5e7eb" }} />
+                {p.label}
+                {active && <span className="text-[9px] opacity-60">@{handle}</span>}
+              </a>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Official feed — Twitter/X timeline */}
+      {pol.twitter && (
+        <div>
+          <p className="text-[9px] font-black uppercase tracking-[0.25em] mb-2" style={{ color: "var(--muted)" }}>
+            Official Posts — @{pol.twitter}
+          </p>
+          <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(26,58,92,0.1)" }}>
+            <TwitterTimeline handle={pol.twitter} />
+          </div>
+        </div>
+      )}
+
+      {/* Facebook page embed */}
+      {pol.facebook && (
+        <div>
+          <p className="text-[9px] font-black uppercase tracking-[0.25em] mb-2" style={{ color: "var(--muted)" }}>
+            Facebook Page
+          </p>
+          <FacebookEmbed page={pol.facebook} />
+        </div>
+      )}
+
+      {/* Instagram + TikTok profile cards (no public embed available) */}
+      {(pol.instagram || pol.tiktok) && (
+        <div>
+          <p className="text-[9px] font-black uppercase tracking-[0.25em] mb-2" style={{ color: "var(--muted)" }}>
+            Other Channels
+          </p>
+          <div className="flex flex-col gap-2">
+            {pol.instagram && <ProfileCard platform="instagram" handle={pol.instagram} color="#e1306c" bg="#fdf2f8" />}
+            {pol.tiktok    && <ProfileCard platform="tiktok"    handle={pol.tiktok}    color="#010101" bg="#f9f9f9" />}
+          </div>
+          <p className="text-[9px] mt-2" style={{ color: "var(--muted)" }}>
+            Instagram and TikTok don&apos;t allow third-party feed embeds — view directly on their platforms.
+          </p>
+        </div>
+      )}
+
+      {/* Buzz — Bluesky + Google News mentions */}
+      <div>
+        <p className="text-[9px] font-black uppercase tracking-[0.25em] mb-2" style={{ color: "var(--muted)" }}>
+          Buzz — What People Are Saying
+        </p>
+        {loadingBuzzes ? (
+          <div className="py-8 flex items-center justify-center gap-2" style={{ color: "var(--muted)" }}>
+            <span className="relative flex h-2 w-2"><span className="alive-pulse relative h-2 w-2 rounded-full bg-sky-400" /></span>
+            <span className="text-xs">Scanning Bluesky + Google News…</span>
+          </div>
+        ) : !hasBuzz ? (
+          <div className="py-8 text-center text-xs rounded-xl" style={{ color: "var(--muted)", background: "rgba(0,0,0,0.03)", border: "1px dashed rgba(0,0,0,0.1)" }}>
+            No recent mentions found on Bluesky or Google News.
+            {!process.env.NEXT_PUBLIC_BSKY_CONFIGURED && (
+              <span className="block text-[9px] mt-1 opacity-60">Add BSKY_IDENTIFIER + BSKY_APP_PASSWORD to Vercel env vars to enable Bluesky search.</span>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {/* Interleave Bluesky + news */}
+            {Array.from({ length: Math.max(bskyPosts.length, newsMentions.length) }).map((_, i) => (
+              <div key={i} className="space-y-2">
+                {bskyPosts[i] && <BskyCard post={bskyPosts[i]} />}
+                {newsMentions[i] && <NewsCard article={newsMentions[i]} />}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+    </div>
+  );
 }
 
 /* ─── Attribute Bar ─────────────────────────────────────────────────────── */
@@ -554,7 +796,7 @@ export default function PoliticianProfile() {
     ...(pol.legiscanName ? [{ id: "bills" as Tab, label: "Bills" }] : []),
     { id: "money", label: "Money" },
     { id: "news",  label: "News" },
-    ...(pol.twitter ? [{ id: "social" as Tab, label: "Social" }] : []),
+    ...((pol.twitter || pol.instagram || pol.facebook || pol.bluesky || pol.tiktok) ? [{ id: "social" as Tab, label: "Social" }] : []),
   ];
 
   const statOrder = ["warChest", "lawmaker", "influence", "access", "tenure"] as const;
@@ -1015,16 +1257,8 @@ export default function PoliticianProfile() {
             )}
 
             {/* ── SOCIAL TAB ── */}
-            {tab === "social" && pol.twitter && (
-              <div className="max-w-2xl">
-                <p className="text-xs font-bold uppercase tracking-[0.2em] mb-4 text-[var(--muted)]">
-                  Social Feed — @{pol.twitter}
-                </p>
-                <SocialFeed handle={pol.twitter} />
-                <p className="text-xs text-[var(--muted)] mt-3">
-                  Timeline from X (Twitter) · Posts by the official
-                </p>
-              </div>
+            {tab === "social" && (
+              <SocialFeed pol={pol} />
             )}
 
           </div>
