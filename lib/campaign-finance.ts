@@ -6,9 +6,11 @@ export interface CandidateFinance {
   cash: number;
   raised?: number;
   spent?: number;
+  investments?: number;
+  loans?: number;
   asOf: string;
   incumbent?: boolean;
-  filingUrl?: string;  // direct FEC or TEC filing link
+  filingUrl?: string;
 }
 
 const TEC = (name: string) => `https://www.ethics.state.tx.us/search/cf/list.php?name=${encodeURIComponent(name)}&type=cand`;

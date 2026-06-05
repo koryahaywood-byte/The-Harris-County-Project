@@ -1,0 +1,247 @@
+import { NextResponse } from "next/server";
+import { PDFDocument } from "pdf-lib";
+import Anthropic from "@anthropic-ai/sdk";
+
+const HC_BASE = "https://ethics.harrisvotes.com";
+const SEARCH_URL = `${HC_BASE}/CampaignFinanceReports/COR.aspx`;
+
+// Harris County local filers — search name must be "Last, First"
+const HC_CANDIDATES = [
+  { searchName: "Ellis, Rodney",    name: "Rodney Ellis",   office: "Commissioner PCT 1", party: "D" as const, incumbent: true },
+  { searchName: "Hidalgo, Lina",    name: "Lina Hidalgo",   office: "County Judge",       party: "D" as const, incumbent: true },
+  { searchName: "Garcia, Adrian",   name: "Adrian Garcia",  office: "Commissioner PCT 2", party: "D" as const, incumbent: true },
+  { searchName: "Ramsey, Tom",      name: "Tom Ramsey",     office: "Commissioner PCT 3", party: "R" as const, incumbent: true },
+  { searchName: "Briones, Lesley",  name: "Lesley Briones", office: "Commissioner PCT 4", party: "D" as const, incumbent: true },
+];
+
+export interface HCCandidate {
+  name: string;
+  office: string;
+  level: "county";
+  party: "D" | "R";
+  cash: number;
+  raised: number;
+  spent: number;
+  investments: number;
+  loans: number;
+  asOf: string;
+  filingDate: string;
+  incumbent: boolean;
+  filingUrl: string;
+  dataSource: "live" | "error";
+  fetchedAt: string;
+}
+
+// Step 1: GET the search page to grab ASP.NET hidden fields
+async function getFormTokens(): Promise<{
+  viewState: string;
+  viewStateGen: string;
+  eventValidation: string;
+  cookies: string;
+}> {
+  const res = await fetch(SEARCH_URL, { cache: "no-store" });
+  const html = await res.text();
+  const cookies = res.headers.get("set-cookie") ?? "";
+
+  const get = (name: string) => {
+    const m = html.match(new RegExp(`name="${name}"[^>]*value="([^"]*)"`, "s"));
+    return m ? m[1] : "";
+  };
+
+  return {
+    viewState:      get("__VIEWSTATE"),
+    viewStateGen:   get("__VIEWSTATEGENERATOR"),
+    eventValidation: get("__EVENTVALIDATION"),
+    cookies,
+  };
+}
+
+// Step 2: POST search and extract the first CFR filing URL + date
+async function getLatestFilingUrl(
+  searchName: string,
+  tokens: { viewState: string; viewStateGen: string; eventValidation: string; cookies: string }
+): Promise<{ url: string; date: string } | null> {
+  const body = new URLSearchParams({
+    "__VIEWSTATE":         tokens.viewState,
+    "__VIEWSTATEGENERATOR": tokens.viewStateGen,
+    "__VIEWSTATEENCRYPTED": "",
+    "__EVENTVALIDATION":   tokens.eventValidation,
+    "ctl00$ContentPlaceHolder1$txtName": searchName,
+    "ctl00$ContentPlaceHolder1$btnSearch": "Search",
+  });
+
+  const res = await fetch(SEARCH_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Cookie": tokens.cookies,
+    },
+    body: body.toString(),
+    cache: "no-store",
+  });
+
+  const html = await res.text();
+
+  // Find all CFR rows: Document.aspx?ID=... with date + category
+  // Rows contain: lblFileDate and a link to Document.aspx
+  const rowRegex = /lblFileDate[^>]*>([^<]+)<\/span>[\s\S]*?lblCategory[^>]*>(Campaign Finance Report[^<]*)<\/span>[\s\S]*?href="(\.\.\/Document\.aspx\?ID=[^"]+)"/g;
+  const matches = [...html.matchAll(rowRegex)];
+
+  if (!matches.length) return null;
+
+  // First result is most recent (sorted by date desc)
+  const [, date, , relUrl] = matches[0];
+  const fullUrl = `${HC_BASE}/${relUrl.replace(/^\.\.\//, "")}`;
+  return { url: fullUrl, date: date.trim() };
+}
+
+// Step 3: Download full PDF, extract only page 4, return as Buffer
+async function extractPage4(pdfUrl: string): Promise<Uint8Array> {
+  const res = await fetch(pdfUrl);
+  if (!res.ok) throw new Error(`PDF fetch failed: ${res.status}`);
+  const fullBytes = new Uint8Array(await res.arrayBuffer());
+
+  const srcDoc = await PDFDocument.load(fullBytes, { ignoreEncryption: true });
+  const outDoc = await PDFDocument.create();
+  // Page index is 0-based; page 4 = index 3
+  const pageIndex = 3;
+  if (srcDoc.getPageCount() < pageIndex + 1) {
+    throw new Error(`PDF has only ${srcDoc.getPageCount()} pages`);
+  }
+  const [copied] = await outDoc.copyPages(srcDoc, [pageIndex]);
+  outDoc.addPage(copied);
+  return outDoc.save();
+}
+
+// Step 4: Send page 4 to Claude and extract all financial fields
+async function extractFinancialsFromPage(
+  pdfBytes: Uint8Array,
+  candidateName: string
+): Promise<{
+  cash: number;
+  raised: number;
+  spent: number;
+  investments: number;
+  loans: number;
+  asOf: string;
+}> {
+  const client = new Anthropic();
+  const base64 = Buffer.from(pdfBytes).toString("base64");
+
+  const message = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 512,
+    messages: [{
+      role: "user",
+      content: [
+        {
+          type: "document",
+          source: { type: "base64", media_type: "application/pdf", data: base64 },
+        },
+        {
+          type: "text",
+          text: `This is page 4 of a Texas campaign finance report for ${candidateName}. Extract these exact dollar amounts and return ONLY valid JSON with no markdown:
+{
+  "cash_on_hand_end": <number>,
+  "total_receipts": <number>,
+  "total_expenditures": <number>,
+  "investments": <number>,
+  "loans_outstanding": <number>,
+  "period_end_date": "<MM/DD/YYYY string>"
+}
+Use 0 for any field not found. Do not include $ or commas in numbers.`,
+        },
+      ],
+    }],
+  });
+
+  const text = message.content[0].type === "text" ? message.content[0].text : "{}";
+  // Strip any markdown code fences if present
+  const clean = text.replace(/```[a-z]*\n?/g, "").trim();
+  const parsed = JSON.parse(clean);
+
+  const toNum = (v: unknown) => typeof v === "number" ? v : parseFloat(String(v ?? "0").replace(/[,$]/g, "")) || 0;
+
+  const dateStr: string = parsed.period_end_date ?? "";
+  let asOf = "Unknown";
+  if (dateStr) {
+    const [m, , y] = dateStr.split("/");
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    asOf = `${months[parseInt(m) - 1]} ${y}`;
+  }
+
+  return {
+    cash:        toNum(parsed.cash_on_hand_end),
+    raised:      toNum(parsed.total_receipts),
+    spent:       toNum(parsed.total_expenditures),
+    investments: toNum(parsed.investments),
+    loans:       toNum(parsed.loans_outstanding),
+    asOf,
+  };
+}
+
+export async function GET() {
+  const fetchedAt = new Date().toISOString();
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    return NextResponse.json({ error: "ANTHROPIC_API_KEY not set", results: [], fetchedAt }, { status: 500 });
+  }
+
+  const results: HCCandidate[] = [];
+
+  // Get form tokens once for all searches
+  let tokens: Awaited<ReturnType<typeof getFormTokens>>;
+  try {
+    tokens = await getFormTokens();
+  } catch {
+    return NextResponse.json({ error: "Failed to load Harris County search page", results: [], fetchedAt }, { status: 500 });
+  }
+
+  // Process candidates sequentially (ASP.NET state, avoid race conditions)
+  for (const cand of HC_CANDIDATES) {
+    try {
+      const filing = await getLatestFilingUrl(cand.searchName, tokens);
+      if (!filing) throw new Error("No filing found");
+
+      const page4 = await extractPage4(filing.url);
+      const fin = await extractFinancialsFromPage(page4, cand.name);
+
+      results.push({
+        name: cand.name,
+        office: cand.office,
+        level: "county",
+        party: cand.party,
+        cash:        fin.cash,
+        raised:      fin.raised,
+        spent:       fin.spent,
+        investments: fin.investments,
+        loans:       fin.loans,
+        asOf:        fin.asOf,
+        filingDate:  filing.date,
+        incumbent:   cand.incumbent,
+        filingUrl:   filing.url,
+        dataSource:  "live",
+        fetchedAt,
+      });
+    } catch (err) {
+      results.push({
+        name: cand.name, office: cand.office, level: "county", party: cand.party,
+        cash: 0, raised: 0, spent: 0, investments: 0, loans: 0,
+        asOf: "N/A", filingDate: "N/A", incumbent: cand.incumbent,
+        filingUrl: `${HC_BASE}/CampaignFinanceReports/COR.aspx`,
+        dataSource: "error",
+        fetchedAt,
+      });
+      console.error(`Harris County scrape failed for ${cand.name}:`, err);
+    }
+  }
+
+  results.sort((a, b) => b.cash - a.cash);
+
+  return NextResponse.json({ results, fetchedAt }, {
+    headers: {
+      // Cache aggressively — data only changes after TEC filing deadlines
+      "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
+    },
+  });
+}

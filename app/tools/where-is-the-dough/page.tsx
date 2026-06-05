@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { FINANCE_DATA, fmt, type CandidateFinance } from "@/lib/campaign-finance";
 import type { FECCandidate } from "@/app/api/finance/fec/route";
 import type { TECCandidate } from "@/app/api/finance/tec/route";
+import type { HCCandidate } from "@/app/api/finance/harris-county/route";
 
 type Candidate = CandidateFinance;
 
@@ -20,6 +21,7 @@ export default function WhereIsTheDough() {
   const [search, setSearch] = useState("");
   const [fecData, setFecData]   = useState<FECCandidate[]>([]);
   const [tecData, setTecData]   = useState<TECCandidate[]>([]);
+  const [hcData,  setHcData]    = useState<HCCandidate[]>([]);
   const [fecFetchedAt, setFecFetchedAt] = useState<string>("");
   const [tecFetchedAt, setTecFetchedAt] = useState<string>("");
 
@@ -39,6 +41,13 @@ export default function WhereIsTheDough() {
         setTecFetchedAt(fetchedAt);
       })
       .catch(() => {});
+
+    fetch("/api/finance/harris-county")
+      .then(r => r.json())
+      .then(({ results }: { results: HCCandidate[] }) => {
+        setHcData(results.filter(r => r.dataSource === "live"));
+      })
+      .catch(() => {});
   }, []);
 
   // Merge live API data over static hardcoded data
@@ -53,6 +62,11 @@ export default function WhereIsTheDough() {
       const live = tecData.find(l => l.name === d.name);
       if (!live) return d;
       return { ...d, cash: live.cash, asOf: live.asOf };
+    }
+    if (d.level === "county") {
+      const live = hcData.find(l => l.name === d.name);
+      if (!live) return d;
+      return { ...d, cash: live.cash, raised: live.raised, spent: live.spent, investments: live.investments, loans: live.loans, asOf: live.asOf };
     }
     return d;
   });
@@ -95,14 +109,15 @@ export default function WhereIsTheDough() {
           <p className="text-white/70 text-sm max-w-lg">
             Cash-on-hand for every Harris County official, candidate, and challenger. TEC &amp; FEC filings.
           </p>
-          {(fecData.length > 0 || tecData.length > 0) && (
+          {(fecData.length > 0 || tecData.length > 0 || hcData.length > 0) && (
             <p className="mt-2 text-[11px] text-sky-300/80 flex items-center gap-1.5">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-sky-400 alive-pulse" />
               {[
-                fecData.length > 0 ? `Federal: FEC live` : null,
-                tecData.length > 0 ? `State: TEC live` : null,
-              ].filter(Boolean).join(" · ")}
-              {fecFetchedAt && <span className="text-sky-300/50 ml-1">&mdash; {new Date(fecFetchedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>}
+                fecData.length > 0 ? "Federal: FEC" : null,
+                tecData.length > 0 ? "State: TEC" : null,
+                hcData.length  > 0 ? "County: Harris Clerk" : null,
+              ].filter(Boolean).join(" · ")} &mdash; live data
+              {fecFetchedAt && <span className="text-sky-300/50 ml-1">as of {new Date(fecFetchedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>}
             </p>
           )}
           <div className="mt-5 flex flex-wrap gap-3">
