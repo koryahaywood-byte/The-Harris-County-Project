@@ -41,15 +41,14 @@ type Counts = { total: number; committee: number; passed: number; law: number; p
 
 // Harris County US Representatives — 119th Congress (2025-2027)
 const REPS: Rep[] = [
-  { name: "Sylvia Garcia",     district: "TX-29", chamber: "House",  party: "D", role: "U.S. Representative" },
-  { name: "Lizzie Fletcher",   district: "TX-7",  chamber: "House",  party: "D", role: "U.S. Representative" },
-  { name: "Al Green",          district: "TX-9",  chamber: "House",  party: "D", role: "U.S. Representative" },
-  { name: "Dan Crenshaw",      district: "TX-2",  chamber: "House",  party: "R", role: "U.S. Representative" },
-  { name: "Brian Babin",       district: "TX-36", chamber: "House",  party: "R", role: "U.S. Representative" },
-  { name: "Wesley Hunt",       district: "TX-38", chamber: "House",  party: "R", role: "U.S. Representative" },
-  { name: "Amanda Edwards",    district: "TX-18", chamber: "House",  party: "D", role: "U.S. Representative (CD-18)" },
-  { name: "John Cornyn",       district: "TX",    chamber: "Senate", party: "R", role: "U.S. Senator" },
-  { name: "Ted Cruz",          district: "TX",    chamber: "Senate", party: "R", role: "U.S. Senator" },
+  { name: "Sylvia Garcia",       district: "TX-29", chamber: "House",  party: "D", role: "U.S. Representative" },
+  { name: "Lizzie Fletcher",     district: "TX-7",  chamber: "House",  party: "D", role: "U.S. Representative" },
+  { name: "Christian Menefee",   district: "TX-18", chamber: "House",  party: "D", role: "U.S. Representative" },
+  { name: "Dan Crenshaw",        district: "TX-2",  chamber: "House",  party: "R", role: "U.S. Representative" },
+  { name: "Brian Babin",         district: "TX-36", chamber: "House",  party: "R", role: "U.S. Representative" },
+  { name: "Wesley Hunt",         district: "TX-38", chamber: "House",  party: "R", role: "U.S. Representative" },
+  { name: "John Cornyn",         district: "TX",    chamber: "Senate", party: "R", role: "U.S. Senator" },
+  { name: "Ted Cruz",            district: "TX",    chamber: "Senate", party: "R", role: "U.S. Senator" },
 ];
 
 async function fetchSummary(rep: Rep): Promise<Counts> {

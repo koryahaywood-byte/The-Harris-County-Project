@@ -21,8 +21,8 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Ken Paxton",            office: "U.S. Senate (R runoff)",         level: "federal",  party: "R", cash: 2600000,   raised: 2200000,  spent: 3200000,  asOf: "Apr 2026", incumbent: false, filingUrl: FEC("S4TX00462") },
   { name: "Lizzie Fletcher",       office: "U.S. Rep CD-07",                 level: "federal",  party: "D", cash: 1750893,   asOf: "Apr 2026", incumbent: true,  filingUrl: FEC("H8TX07139") },
   { name: "Shaun Finnie",          office: "U.S. Rep CD-02 (D nominee)",     level: "federal",  party: "D", cash: 1543080,   asOf: "Apr 2026", incumbent: false, filingUrl: FEC("H4TX02177") },
-  { name: "Al Green",              office: "U.S. Rep CD-18 (runoff)",        level: "federal",  party: "D", cash: 264570,    asOf: "Apr 2026", incumbent: true,  filingUrl: FEC("H4TX09090") },
-  { name: "Christian Menefee",     office: "U.S. Rep CD-18 (runoff)",        level: "federal",  party: "D", cash: 255858,    asOf: "Apr 2026", incumbent: false, filingUrl: FEC("H4TX18126") },
+  { name: "Al Green",              office: "CD-18 candidate (lost runoff)",  level: "federal",  party: "D", cash: 264570,    asOf: "Apr 2026", incumbent: false, filingUrl: FEC("H4TX09090") },
+  { name: "Christian Menefee",     office: "U.S. Rep CD-18",                 level: "federal",  party: "D", cash: 255858,    asOf: "Apr 2026", incumbent: true,  filingUrl: FEC("H4TX18126") },
   { name: "Sylvia Garcia",         office: "U.S. Rep CD-29",                 level: "federal",  party: "D", cash: 175662,    asOf: "Apr 2026", incumbent: true,  filingUrl: FEC("H8TX29049") },
   // State
   { name: "Greg Abbott",           office: "Governor",                        level: "state",    party: "R", cash: 105700000, raised: 22700000, asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Greg Abbott") },

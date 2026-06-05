@@ -521,7 +521,7 @@ const DATA = [
   /* ── FEDERAL ── */
   { name:'Lizzie Fletcher',       office:'US Rep CD-07',            level:'federal',  party:'D', cash:1750893, asOf:'Apr 2026' , raised:0, spent:0, begin:1796226, campaignUrl:'https://www.lizziefletcher.com', govUrl:'https://fletcher.house.gov', incumbent:true },
   { name:'Sylvia Garcia',         office:'US Rep CD-29',            level:'federal',  party:'D', cash:175662,  asOf:'Apr 2026' , raised:0, spent:0, begin:389230, campaignUrl:'https://sylvia4congress.com', govUrl:'https://sylviagarcia.house.gov', incumbent:true },
-  { name:'Al Green',              office:'US Rep CD-18 (runoff)',    level:'federal',  party:'D', cash:264570,  asOf:'Apr 2026' , raised:0, spent:262992, begin:527562, campaignUrl:'https://algreen.house.gov', govUrl:'https://algreen.house.gov', incumbent:true },
+  { name:'Al Green',              office:'CD-18 candidate (lost runoff)',level:'federal',  party:'D', cash:264570,  asOf:'Apr 2026', raised:0, spent:262992, begin:527562, campaignUrl:'https://algreen.house.gov', govUrl:'https://algreen.house.gov', incumbent:false },
   { name:'James Talarico',         office:'US Senator (D nominee)',   level:'federal',  party:'D', cash:9858865, asOf:'Apr 2026', raised:27000000, spent:17141135, begin:0, campaignUrl:'https://www.talaricotexas.com', govUrl:'https://house.texas.gov/members/member-page/?district=50', incumbent:false },
   /* ── FEDERAL REPUBLICANS ── */
   { name:'John Cornyn',            office:'US Senator (R runoff)',    level:'federal',  party:'R', cash:8200000, asOf:'Apr 2026', raised:9000000, spent:15800000, begin:15000000, campaignUrl:'https://www.johncornyn.com', govUrl:'https://www.cornyn.senate.gov', incumbent:true  },
@@ -529,7 +529,7 @@ const DATA = [
   { name:'Steve Toth',             office:'US Rep CD-02 (R nominee)', level:'federal',  party:'R', cash:0,       asOf:'', incumbent:false },
   { name:'Michael McCaul',         office:'US Rep CD-10 (retiring)',  level:'federal',  party:'R', cash:0,       asOf:'', upIn:0, incumbent:true  },
   { name:'Troy Nehls',             office:'US Rep CD-22 (retired)',   level:'federal',  party:'R', cash:0,       asOf:'', upIn:0, incumbent:true  },
-  { name:'Christian Menefee',     office:'US Rep CD-18 (runoff)',level:'federal',  party:'D', cash:255858,  asOf:'Apr 2026', raised:0, spent:132881, begin:388739, campaignUrl:'https://menefee.com', govUrl:'https://menefee.house.gov', incumbent:false },
+  { name:'Christian Menefee',     office:'U.S. Rep CD-18',level:'federal',  party:'D', cash:255858,  asOf:'Apr 2026', raised:0, spent:132881, begin:388739, campaignUrl:'https://menefee.com', govUrl:'https://menefee.house.gov', incumbent:true },
   { name:'Dan Crenshaw',          office:'US Rep CD-02 (lost primary)',level:'federal',party:'R', cash:0,       asOf:'', raised:0, spent:0, begin:0, campaignUrl:'https://dancrenshaw.com', govUrl:'https://crenshaw.house.gov', incumbent:true  },
   { name:'Ted Cruz',               office:'US Senator (incumbent)',   level:'federal',  party:'R', cash:0, asOf:'', raised:0, spent:0, begin:0, campaignUrl:'https://www.tedcruz.org', govUrl:'https://www.cruz.senate.gov', upIn:2030, incumbent:true  },
 
@@ -1170,8 +1170,8 @@ const FEC_KEY = 'DEMO_KEY'; // Replace with your free key from api.fec.gov/devel
 const FEC_CANDIDATES = [
   {fecId:'H8TX07065', name:'Lizzie Fletcher',    office:'US Rep CD-07'},
   {fecId:'H8TX29049', name:'Sylvia Garcia',       office:'US Rep CD-29'},
-  {fecId:'H2TX18049', name:'Al Green',            office:'US Rep CD-18 (runoff)'},
-  {fecId:'H2TX18064', name:'Christian Menefee',   office:'US Rep CD-18 (runoff)'},
+  {fecId:'H2TX18049', name:'Al Green',            office:'CD-18 candidate (lost runoff)'},
+  {fecId:'H2TX18064', name:'Christian Menefee',   office:'U.S. Rep CD-18'},
   {fecId:'H2TX02228', name:'Shaun Finnie',         office:'US Rep CD-02 (D nominee)'},
   {fecId:'H6TX22057', name:'Marquette Greene-Scott',office:'US Rep CD-22 (D nominee)'},
   {fecId:'H2TX38052', name:'Melissa McDonough',   office:'US Rep CD-38 (D nominee)'},
