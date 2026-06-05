@@ -303,6 +303,25 @@ export default function PoliticianProfile() {
   const [statusFilter, setStatusFilter] = useState<BillStatus | "all">("all");
   const [news, setNews]             = useState<NewsArticle[]>([]);
   const [newsLoading, setNewsLoading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [liveFinance, setLiveFinance] = useState<any | null>(null);
+  const [financeLoading, setFinanceLoading] = useState(false);
+  const [financeError, setFinanceError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!pol || tab !== "money") return;
+    if (liveFinance) return;
+    setFinanceLoading(true);
+    setFinanceError(null);
+    fetch(`/api/finance/by-name?name=${encodeURIComponent(pol.name)}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.error) throw new Error(d.error);
+        setLiveFinance(d);
+      })
+      .catch((e) => setFinanceError(e.message))
+      .finally(() => setFinanceLoading(false));
+  }, [pol, tab, liveFinance]);
 
   useEffect(() => {
     if (!pol?.legiscanName) return;
@@ -573,7 +592,19 @@ export default function PoliticianProfile() {
 
             {/* ── MONEY TAB ── */}
             {tab === "money" && (() => {
-              const finance = getFinanceByName(pol.name);
+              const finance = liveFinance ?? getFinanceByName(pol.name);
+              const isLive = liveFinance?.dataSource === "live";
+
+              if (financeLoading) return (
+                <div className="py-16 flex flex-col items-center gap-3">
+                  <span className="relative flex h-3 w-3">
+                    <span className="alive-halo absolute inline-flex h-full w-full rounded-full bg-sky-400" />
+                    <span className="alive-pulse relative inline-flex h-3 w-3 rounded-full bg-sky-400" />
+                  </span>
+                  <p className="text-sm text-[var(--muted)]">Loading live finance data...</p>
+                </div>
+              );
+
               if (!finance) return (
                 <div className="py-4 text-center max-w-sm mx-auto">
                   <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
@@ -607,7 +638,18 @@ export default function PoliticianProfile() {
                         Campaign Finance · {finance.asOf}
                       </p>
                       <p className="text-xs text-[var(--muted)]">{finance.office}</p>
-                      <p className="text-xs text-[var(--muted)] mt-1">Source: {finance.level === "federal" ? "FEC" : "TEC"} · Data as of {finance.asOf}</p>
+                      <p className="text-xs text-[var(--muted)] mt-1 flex items-center gap-2">
+                        Source: {finance.level === "federal" ? "FEC" : finance.level === "houston" ? "Houston COH" : finance.level === "county" ? "Harris County" : "TEC"} · Data as of {finance.asOf}
+                        {isLive && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600">
+                            <span className="relative flex h-1.5 w-1.5"><span className="alive-pulse relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" /></span>
+                            Live
+                          </span>
+                        )}
+                        {financeError && (
+                          <span className="text-[10px] text-amber-600">({financeError} — showing cached data)</span>
+                        )}
+                      </p>
                     </div>
                   </div>
 

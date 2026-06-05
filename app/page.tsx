@@ -155,6 +155,22 @@ export default function Home() {
             </div>
           </ScrollReveal>
 
+          {/* ── CITY HALL ── */}
+          <ScrollReveal className="mb-20">
+            <SectionLabel>City Hall</SectionLabel>
+            <div className="mb-4">
+              <ToolCard
+                large
+                tool={{
+                  href: "/tools/city-hall",
+                  name: "City Hall Story Engine",
+                  description: "Every Tuesday, Houston City Council meets. Every Wednesday, Emily Takes Notes covers it. This engine turns her reporting into a structured timeline — then cross-references each agenda item against local news coverage and links to politician profiles.",
+                  status: "live",
+                }}
+              />
+            </div>
+          </ScrollReveal>
+
           {/* ── MONEY ── */}
           <ScrollReveal className="mb-20">
             <SectionLabel>Money</SectionLabel>
@@ -187,7 +203,7 @@ export default function Home() {
                 }}
               />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <ToolCard
                 tool={{
                   href: "/tools/tirz",
@@ -198,9 +214,27 @@ export default function Home() {
               />
               <ToolCard
                 tool={{
+                  href: "/tools/tirz#governance",
+                  name: "TIRZ Governance",
+                  description: "Who sits on each TIRZ board? Who appointed them? See the full governance layer — board seats, appointers, term dates, and how each zone is controlled.",
+                  status: "live",
+                }}
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <ToolCard
+                tool={{
                   href: "/tools/infrastructure-funding",
                   name: "Infrastructure Funding Map",
                   description: "Where is federal and state infrastructure money landing in Harris County? IIJA, FEMA, HUD, TxDOT — mapped by project.",
+                  status: "live",
+                }}
+              />
+              <ToolCard
+                tool={{
+                  href: "/tools/county-budget#map",
+                  name: "County Project Map",
+                  description: "25 major Harris County capital projects — roads, flood control, health, parks — mapped by location with funding sources and status.",
                   status: "live",
                 }}
               />
