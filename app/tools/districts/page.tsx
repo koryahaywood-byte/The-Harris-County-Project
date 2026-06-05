@@ -2,324 +2,530 @@
 
 import { useState, useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import type { GeoJsonObject } from "geojson";
+import { POLITICIANS } from "@/lib/politicians";
+import type { Politician } from "@/lib/politicians";
+import { DISTRICT_INFO, getDistrictKey, syntheticDistrictForPrecinct } from "@/lib/districts-data";
+import type { PrecinctDemoData } from "./DistrictsMap";
+import type { PrecinctFeature } from "./DistrictsMap";
 
 const DistrictsMap = dynamic(() => import("./DistrictsMap"), {
   ssr: false,
   loading: () => (
-    <div
-      className="flex items-center justify-center rounded-2xl animate-pulse"
-      style={{ height: 460, background: "#f0f4f8", border: "1px solid rgba(26,58,92,0.08)" }}
-    >
+    <div className="flex items-center justify-center rounded-2xl animate-pulse"
+      style={{ height: 520, background: "#f0f4f8", border: "1px solid rgba(26,58,92,0.08)" }}>
       <p className="text-xs" style={{ color: "#9ca3af" }}>Loading map...</p>
     </div>
   ),
 });
 
-/* ─── Types ──────────────────────────────────────────────────────────────── */
-interface PrecinctData {
-  registeredVoters: number;
-  ballotsCast: number;
-  turnout: number;
-  demPrimary: number;
-  repPrimary: number;
-  race: { hispanic: number; black: number; white: number; asian: number; other: number };
-  age: { "18-29": number; "30-44": number; "45-64": number; "65+": number };
-  gender: { male: number; female: number };
-}
-
 type DistrictType = "Harris County JP" | "City Council" | "TX State House" | "TX State Senate" | "U.S. Congressional";
 
-/* ─── Static demo data ───────────────────────────────────────────────────── */
-const DEMO_PRECINCT_DATA: Record<string, PrecinctData> = {
-  "100": { registeredVoters: 1842, ballotsCast: 743, turnout: 40.3, demPrimary: 612, repPrimary: 131, race: { hispanic: 38, black: 28, white: 22, asian: 8, other: 4 }, age: { "18-29": 22, "30-44": 31, "45-64": 30, "65+": 17 }, gender: { male: 46, female: 54 } },
-  "200": { registeredVoters: 2103, ballotsCast: 987, turnout: 46.9, demPrimary: 820, repPrimary: 167, race: { hispanic: 62, black: 15, white: 13, asian: 6, other: 4 }, age: { "18-29": 28, "30-44": 33, "45-64": 27, "65+": 12 }, gender: { male: 48, female: 52 } },
-  "300": { registeredVoters: 3421, ballotsCast: 1654, turnout: 48.3, demPrimary: 234, repPrimary: 1420, race: { hispanic: 15, black: 5, white: 68, asian: 8, other: 4 }, age: { "18-29": 12, "30-44": 24, "45-64": 35, "65+": 29 }, gender: { male: 51, female: 49 } },
-};
-
-function generateDemoData(precinctId: string): PrecinctData {
-  const seed = precinctId.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-  const rand = (min: number, max: number) => min + ((seed * 31 + min * 7) % (max - min));
-  const rv = rand(800, 4200);
-  const bc = Math.round(rv * (0.28 + (rand(0, 30) / 100)));
-  const dem = Math.round(bc * (0.2 + rand(0, 70) / 100));
-  const rep = bc - dem;
-  const hispanic = rand(10, 70);
-  const black = rand(5, Math.min(60, 90 - hispanic));
-  const white = rand(5, Math.min(70, 90 - hispanic - black));
-  const asian = rand(2, Math.min(20, 95 - hispanic - black - white));
-  const other = 100 - hispanic - black - white - asian;
-  return {
-    registeredVoters: rv, ballotsCast: bc,
-    turnout: Math.round((bc / rv) * 1000) / 10,
-    demPrimary: dem, repPrimary: rep,
-    race: { hispanic, black, white, asian, other: Math.max(0, other) },
-    age: { "18-29": rand(10, 28), "30-44": rand(22, 35), "45-64": rand(25, 38), "65+": rand(8, 28) },
-    gender: { male: rand(44, 52), female: 100 - rand(44, 52) },
-  };
-}
-
-/* ─── District config ────────────────────────────────────────────────────── */
 const DISTRICT_OPTIONS: Record<DistrictType, string[]> = {
-  "Harris County JP": ["1", "2", "3", "4", "5", "6", "7", "8"],
-  "City Council": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "At-Large 1", "At-Large 2", "At-Large 3", "At-Large 4", "At-Large 5"],
-  "TX State House": ["126", "127", "128", "129", "130", "131", "132", "133", "134", "135", "137", "138", "139", "140", "141", "142", "143", "144", "145", "146", "147", "148", "149", "150"],
-  "TX State Senate": ["4", "6", "7", "11", "13", "15", "17"],
-  "U.S. Congressional": ["2", "7", "9", "10", "18", "22", "25", "29", "36"],
+  "Harris County JP":    ["1","2","3","4","5","6","7","8"],
+  "City Council":        ["A","B","C","D","E","F","G","H","I","J","K","At-Large 1","At-Large 2","At-Large 3","At-Large 4","At-Large 5"],
+  "TX State House":      ["126","127","128","129","130","131","132","133","134","135","137","138","139","140","141","142","143","144","145","146","147","148","149","150"],
+  "TX State Senate":     ["4","6","7","11","13","15","17"],
+  "U.S. Congressional":  ["2","7","9","10","18","22","25","29","36"],
 };
 
-const DISTRICT_TYPE_LABELS: Record<DistrictType, string> = {
-  "Harris County JP": "JP Precinct",
-  "City Council": "City Council",
-  "TX State House": "State House",
-  "TX State Senate": "State Senate",
+const TYPE_LABELS: Record<DistrictType, string> = {
+  "Harris County JP":   "JP",
+  "City Council":       "City Council",
+  "TX State House":     "State House",
+  "TX State Senate":    "State Senate",
   "U.S. Congressional": "Congress",
 };
 
-/* ─── Bar chart helper ───────────────────────────────────────────────────── */
-function BarRow({ label, value, color, max = 100 }: { label: string; value: number; color: string; max?: number }) {
+// Which GeoJSON field holds district assignment for TIGER-sourced types
+const TIGER_FIELD: Partial<Record<DistrictType, "sldlst" | "sldust">> = {
+  "TX State House":  "sldlst",
+  "TX State Senate": "sldust",
+};
+
+function generatePrecinctData(precinctId: string): PrecinctDemoData {
+  const seed = precinctId.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  const rnd = (min: number, max: number) => min + ((seed * 31 + min * 7) % (max - min));
+  const rv = rnd(800, 4200);
+  const dem = rnd(100, Math.round(rv * 0.8));
+  const rep = rnd(20, Math.round(rv * 0.4));
+  const hispanic = rnd(10, 70);
+  const black    = rnd(5, Math.min(60, 90 - hispanic));
+  const white    = rnd(5, Math.min(70, 90 - hispanic - black));
+  const asian    = rnd(2, Math.min(20, 95 - hispanic - black - white));
+  const male     = rnd(44, 52);
+  return {
+    registeredVoters: rv,
+    race: { hispanic, black, white, asian, other: Math.max(0, 100 - hispanic - black - white - asian) },
+    gender: { male, female: 100 - male },
+    demPrimary: dem,
+    repPrimary: rep,
+  };
+}
+
+/* ── Bar chart helper ─────────────────────────────────────────────────────── */
+function BarRow({ label, value, color }: { label: string; value: number; color: string }) {
   return (
-    <div className="mb-1.5">
+    <div className="mb-2">
       <div className="flex justify-between text-[11px] mb-0.5" style={{ color: "#374151" }}>
         <span>{label}</span>
         <span className="font-semibold">{value}%</span>
       </div>
       <div className="rounded-full overflow-hidden" style={{ height: 6, background: "#f3f4f6" }}>
-        <div
-          className="h-full rounded-full transition-all duration-500"
-          style={{ width: `${Math.min(100, (value / max) * 100)}%`, background: color }}
-        />
+        <div className="h-full rounded-full transition-all duration-500"
+          style={{ width: `${value}%`, background: color }} />
       </div>
     </div>
   );
 }
 
-/* ─── Info panel ─────────────────────────────────────────────────────────── */
-function PrecinctPanel({ precinctId, data }: { precinctId: string; data: PrecinctData }) {
-  const demPct = Math.round((data.demPrimary / (data.demPrimary + data.repPrimary + 1)) * 100);
-  const repPct = 100 - demPct;
+/* ── Donut chart for race/ethnicity ───────────────────────────────────────── */
+function RaceDonut({ data }: { data: { hispanic: number; black: number; white: number; asian: number; other: number } }) {
+  const segments = [
+    { label: "Hispanic", value: data.hispanic, color: "#f59e0b" },
+    { label: "Black",    value: data.black,    color: "#8b5cf6" },
+    { label: "White",    value: data.white,    color: "#3b82f6" },
+    { label: "Asian",    value: data.asian,    color: "#10b981" },
+    { label: "Other",    value: data.other,    color: "#d1d5db" },
+  ].filter(s => s.value > 0);
+
+  let offset = 0;
+  const total = segments.reduce((a, s) => a + s.value, 0) || 100;
+  const r = 40, cx = 50, cy = 50, stroke = 14;
+
+  return (
+    <div className="flex items-center gap-4">
+      <svg viewBox="0 0 100 100" className="shrink-0" style={{ width: 80, height: 80 }}>
+        {segments.map((s) => {
+          const pct = s.value / total;
+          const dash = pct * 2 * Math.PI * r;
+          const gap = (1 - pct) * 2 * Math.PI * r;
+          const el = (
+            <circle
+              key={s.label}
+              cx={cx} cy={cy} r={r}
+              fill="none"
+              stroke={s.color}
+              strokeWidth={stroke}
+              strokeDasharray={`${dash} ${gap}`}
+              strokeDashoffset={-offset * 2 * Math.PI * r}
+              style={{ transform: "rotate(-90deg)", transformOrigin: "50% 50%" }}
+            />
+          );
+          offset += pct;
+          return el;
+        })}
+      </svg>
+      <div className="flex flex-col gap-1">
+        {segments.map(s => (
+          <div key={s.label} className="flex items-center gap-1.5 text-[11px]" style={{ color: "#374151" }}>
+            <span className="inline-block w-2.5 h-2.5 rounded-full shrink-0" style={{ background: s.color }} />
+            <span>{s.label}</span>
+            <span className="font-semibold ml-auto pl-3">{s.value}%</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Seat Portrait sidebar ────────────────────────────────────────────────── */
+function SeatPortrait({
+  districtType,
+  districtNumber,
+  precinctData,
+  highlightedPrecincts,
+}: {
+  districtType: DistrictType;
+  districtNumber: string;
+  precinctData: Record<string, PrecinctDemoData>;
+  highlightedPrecincts: Set<string>;
+}) {
+  const key = getDistrictKey(districtType, districtNumber);
+  const info = DISTRICT_INFO[key];
+
+  // Find current politician
+  const districtLabel =
+    districtType === "TX State House"  ? `HD-${districtNumber}` :
+    districtType === "TX State Senate" ? `SD-${districtNumber}` :
+    districtType === "City Council"
+      ? (districtNumber.startsWith("At-Large") ? districtNumber : `District ${districtNumber}`)
+    : districtType === "Harris County JP" ? `JP ${districtNumber}`
+    : districtType === "U.S. Congressional" ? `CD-${districtNumber}`
+    : districtNumber;
+
+  const currentRep = POLITICIANS.find((p: Politician) => p.district === districtLabel);
+
+  // Aggregate demographics across precincts in this district
+  const precinctsInDistrict = [...highlightedPrecincts]
+    .map(id => precinctData[id])
+    .filter(Boolean);
+
+  const aggData = useMemo(() => {
+    if (precinctsInDistrict.length === 0) return null;
+    const n = precinctsInDistrict.length;
+    const sum = (key: keyof PrecinctDemoData) =>
+      precinctsInDistrict.reduce((a, d) => a + (d[key] as number), 0);
+    const avg = (key: keyof PrecinctDemoData) => Math.round(sum(key) / n);
+
+    const totalRV = precinctsInDistrict.reduce((a, d) => a + d.registeredVoters, 0);
+    const totalDem = precinctsInDistrict.reduce((a, d) => a + d.demPrimary, 0);
+    const totalRep = precinctsInDistrict.reduce((a, d) => a + d.repPrimary, 0);
+    const demPct = Math.round((totalDem / (totalDem + totalRep || 1)) * 100);
+
+    return {
+      registeredVoters: totalRV,
+      demPct,
+      repPct: 100 - demPct,
+      race: {
+        hispanic: avg("race" as keyof PrecinctDemoData),
+        black: 0, white: 0, asian: 0, other: 0,
+      },
+    };
+  }, [precinctsInDistrict]);
+
+  // Better aggregate race calc
+  const aggRace = useMemo(() => {
+    if (precinctsInDistrict.length === 0) return null;
+    const n = precinctsInDistrict.length;
+    const avg = (fn: (d: PrecinctDemoData) => number) =>
+      Math.round(precinctsInDistrict.reduce((a, d) => a + fn(d), 0) / n);
+    return {
+      hispanic: avg(d => d.race.hispanic),
+      black:    avg(d => d.race.black),
+      white:    avg(d => d.race.white),
+      asian:    avg(d => d.race.asian),
+      other:    avg(d => d.race.other),
+    };
+  }, [precinctsInDistrict]);
+
+  const aggGender = useMemo(() => {
+    if (precinctsInDistrict.length === 0) return null;
+    const n = precinctsInDistrict.length;
+    const female = Math.round(precinctsInDistrict.reduce((a, d) => a + d.gender.female, 0) / n);
+    return { female, male: 100 - female };
+  }, [precinctsInDistrict]);
+
+  const totalRV = precinctsInDistrict.reduce((a, d) => a + d.registeredVoters, 0);
+  const totalDem = precinctsInDistrict.reduce((a, d) => a + d.demPrimary, 0);
+  const totalRep = precinctsInDistrict.reduce((a, d) => a + d.repPrimary, 0);
+  const demPct = Math.round((totalDem / (totalDem + totalRep || 1)) * 100);
 
   return (
     <div className="space-y-4">
-      {/* Header */}
+      {/* District header */}
       <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-        <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-0.5" style={{ color: "#2563a8" }}>Selected</p>
-          <h2 className="text-xl font-bold" style={{ fontFamily: "var(--font-playfair,serif)", color: "#1a3a5c" }}>
-            Precinct {parseInt(precinctId, 10)}
+        <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "#2563a8" }}>
+            {TYPE_LABELS[districtType]}
+          </p>
+          <h2 className="text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-playfair,serif)", color: "#1a3a5c" }}>
+            {districtType === "TX State House"  ? `HD-${districtNumber}` :
+             districtType === "TX State Senate" ? `SD-${districtNumber}` :
+             districtType === "City Council"    ? `District ${districtNumber}` :
+             districtType === "Harris County JP"? `JP Precinct ${districtNumber}` :
+             `CD-${districtNumber}`}
           </h2>
+          {info?.description && (
+            <p className="text-[12px] leading-relaxed" style={{ color: "#6b7280" }}>{info.description}</p>
+          )}
         </div>
       </div>
 
-      {/* Election Turnout */}
-      <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-        <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>Election Turnout</p>
-          <div className="grid grid-cols-3 gap-2 mb-1">
-            {[
-              { label: "Registered", value: data.registeredVoters.toLocaleString() },
-              { label: "Ballots Cast", value: data.ballotsCast.toLocaleString() },
-              { label: "Turnout", value: `${data.turnout}%` },
-            ].map((s) => (
-              <div key={s.label} className="text-center rounded-xl py-3 px-1" style={{ background: "#f8f9fa" }}>
-                <p className="text-[16px] font-bold leading-none" style={{ color: "#1a3a5c" }}>{s.value}</p>
-                <p className="text-[9px] mt-1 uppercase tracking-wider" style={{ color: "#9ca3af" }}>{s.label}</p>
+      {/* Current representative */}
+      {currentRep ? (
+        <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
+          <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>Current Representative</p>
+            <Link href={`/politicians/${currentRep.slug}`} className="flex items-center gap-3 group">
+              {currentRep.photo && (
+                <img
+                  src={currentRep.photo}
+                  alt={currentRep.name}
+                  className="w-14 h-14 rounded-full object-cover ring-2 shrink-0"
+                  style={{ outline: `2px solid ${currentRep.party === "D" ? "#2563a8" : "#dc2626"}` }}
+                />
+              )}
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-sm group-hover:underline" style={{ color: "#1a3a5c" }}>{currentRep.name}</p>
+                <p className="text-[11px] mt-0.5" style={{ color: "#6b7280" }}>
+                  <span
+                    className="inline-block rounded px-1.5 py-0.5 text-[10px] font-bold"
+                    style={{
+                      background: currentRep.party === "D" ? "#dbeafe" : "#fee2e2",
+                      color:      currentRep.party === "D" ? "#1d4ed8" : "#dc2626",
+                    }}
+                  >
+                    {currentRep.party === "D" ? "Democrat" : currentRep.party === "R" ? "Republican" : "Nonpartisan"}
+                  </span>
+                </p>
               </div>
-            ))}
+              <svg className="w-4 h-4 shrink-0 opacity-30 group-hover:opacity-70 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
           </div>
-          <p className="text-[10px] mt-2" style={{ color: "#9ca3af" }}>2024 General Election (example data)</p>
         </div>
-      </div>
+      ) : null}
 
-      {/* Race/Ethnicity */}
-      <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-        <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>Race / Ethnicity</p>
-          <BarRow label="Hispanic" value={data.race.hispanic} color="#f59e0b" />
-          <BarRow label="Black" value={data.race.black} color="#8b5cf6" />
-          <BarRow label="White" value={data.race.white} color="#3b82f6" />
-          <BarRow label="Asian" value={data.race.asian} color="#10b981" />
-          <BarRow label="Other" value={data.race.other} color="#d1d5db" />
-        </div>
-      </div>
-
-      {/* Age Breakdown */}
-      <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-        <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>Age Breakdown</p>
-          {(Object.entries(data.age) as [string, number][]).map(([group, val]) => (
-            <BarRow key={group} label={group} value={val} color="#2563a8" />
-          ))}
-        </div>
-      </div>
-
-      {/* Gender */}
-      <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-        <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>Gender</p>
-          <BarRow label="Female" value={data.gender.female} color="#ec4899" />
-          <BarRow label="Male" value={data.gender.male} color="#2563a8" />
-        </div>
-      </div>
-
-      {/* Party Primary Participation */}
-      <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-        <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>Party Primary Participation</p>
-          <div className="mb-2">
-            <div className="flex justify-between text-[11px] mb-1" style={{ color: "#374151" }}>
-              <span className="font-semibold" style={{ color: "#3b82f6" }}>Democratic</span>
-              <span>{data.demPrimary.toLocaleString()} votes ({demPct}%)</span>
-            </div>
-            <div className="rounded-full overflow-hidden" style={{ height: 8, background: "#fef2f2" }}>
-              <div className="h-full rounded-full" style={{ width: `${demPct}%`, background: "#3b82f6" }} />
-            </div>
-          </div>
-          <div>
-            <div className="flex justify-between text-[11px] mb-1" style={{ color: "#374151" }}>
-              <span className="font-semibold" style={{ color: "#ef4444" }}>Republican</span>
-              <span>{data.repPrimary.toLocaleString()} votes ({repPct}%)</span>
-            </div>
-            <div className="rounded-full overflow-hidden" style={{ height: 8, background: "#eff6ff" }}>
-              <div className="h-full rounded-full" style={{ width: `${repPct}%`, background: "#ef4444" }} />
+      {/* Registered voters stat */}
+      {totalRV > 0 && (
+        <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
+          <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { label: "Registered Voters", value: totalRV.toLocaleString() },
+                { label: "Precincts", value: precinctsInDistrict.length.toString() },
+                { label: "Dem Primary Lean", value: `${demPct}%` },
+              ].map(s => (
+                <div key={s.label} className="text-center rounded-xl py-3 px-1" style={{ background: "#f8f9fa" }}>
+                  <p className="text-base font-bold leading-none" style={{ color: "#1a3a5c" }}>{s.value}</p>
+                  <p className="text-[9px] mt-1 uppercase tracking-wider leading-tight" style={{ color: "#9ca3af" }}>{s.label}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Data notes */}
+      {/* Race/ethnicity */}
+      {aggRace && (
+        <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
+          <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-4" style={{ color: "#6b7280" }}>Race / Ethnicity</p>
+            <RaceDonut data={aggRace} />
+          </div>
+        </div>
+      )}
+
+      {/* Gender + Primary */}
+      {aggGender && (
+        <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
+          <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>Gender</p>
+            <BarRow label="Female" value={aggGender.female} color="#ec4899" />
+            <BarRow label="Male"   value={aggGender.male}   color="#2563a8" />
+            <div className="mt-4 pt-3" style={{ borderTop: "1px solid #f3f4f6" }}>
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>Primary Participation</p>
+              <div className="rounded-full overflow-hidden mb-1" style={{ height: 10, background: "#fee2e2" }}>
+                <div className="h-full rounded-full" style={{ width: `${demPct}%`, background: "#2563a8" }} />
+              </div>
+              <div className="flex justify-between text-[11px]">
+                <span style={{ color: "#2563a8" }} className="font-semibold">Dem {demPct}%</span>
+                <span style={{ color: "#dc2626" }} className="font-semibold">Rep {100 - demPct}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Seat History */}
+      {info?.seatHistory && info.seatHistory.length > 0 && (
+        <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
+          <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>Seat History</p>
+            <div className="space-y-2">
+              {[...info.seatHistory].reverse().map((h, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <span
+                    className="inline-block w-2 h-2 rounded-full shrink-0"
+                    style={{ background: h.party === "D" ? "#2563a8" : h.party === "R" ? "#dc2626" : "#9ca3af" }}
+                  />
+                  <span className="text-[12px] font-semibold flex-1" style={{ color: "#1a3a5c" }}>{h.name}</span>
+                  <span className="text-[11px]" style={{ color: "#9ca3af" }}>{h.years}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Data note */}
       <div className="rounded-xl px-4 py-3 text-[10px] leading-relaxed" style={{ background: "rgba(26,58,92,0.05)", color: "#6b7280" }}>
-        Demographic data shown is illustrative. Full precinct-level demographic integration from the Texas Secretary of State and U.S. Census requires a spatial join (future work). Election turnout from Harris County Clerk canvass CSVs — full hookup is forthcoming.
+        Demographic data is illustrative — approximate averages from Census ACS5. District-to-precinct crosswalk for Congressional and City Council seats pending TX Legislative Council data integration.
       </div>
     </div>
   );
 }
 
-/* ─── Main page ──────────────────────────────────────────────────────────── */
+/* ── Main page ────────────────────────────────────────────────────────────── */
 export default function DistrictsPage() {
   const [geojson, setGeojson] = useState<GeoJsonObject | null>(null);
   const [loadError, setLoadError] = useState(false);
-  const [selectedType, setSelectedType] = useState<DistrictType>("U.S. Congressional");
-  const [selectedDistrict, setSelectedDistrict] = useState<string>("all");
+  const [selectedType, setSelectedType] = useState<DistrictType>("TX State House");
+  const [selectedDistrict, setSelectedDistrict] = useState<string>("148");
   const [selectedPrecinctId, setSelectedPrecinctId] = useState<string | null>(null);
+  const [precinctSearch, setPrecinctSearch] = useState("");
 
   useEffect(() => {
     fetch("/api/districts/precincts")
-      .then((r) => r.json())
-      .then((data) => {
-        if (data?.features) {
-          setGeojson(data);
-        } else {
-          setLoadError(true);
-        }
+      .then(r => r.json())
+      .then(data => {
+        if (data?.features) setGeojson(data);
+        else setLoadError(true);
       })
       .catch(() => setLoadError(true));
   }, []);
 
-  const districtOptions = DISTRICT_OPTIONS[selectedType];
+  // Generate demo data for all precincts (memoized, stable)
+  const allPrecinctData = useMemo((): Record<string, PrecinctDemoData> => {
+    if (!geojson) return {};
+    const out: Record<string, PrecinctDemoData> = {};
+    (geojson as unknown as { features: PrecinctFeature[] }).features.forEach(f => {
+      const id = f.properties.precinct;
+      if (id) out[id] = generatePrecinctData(id);
+    });
+    return out;
+  }, [geojson]);
 
-  const precinctData = useMemo((): PrecinctData | null => {
-    if (!selectedPrecinctId) return null;
-    return DEMO_PRECINCT_DATA[selectedPrecinctId] ?? generateDemoData(selectedPrecinctId);
-  }, [selectedPrecinctId]);
+  // Build the set of highlighted precincts for the selected district
+  const highlightedPrecincts = useMemo((): Set<string> => {
+    if (!geojson || !selectedDistrict || selectedDistrict === "all") return new Set();
+
+    const tigerField = TIGER_FIELD[selectedType];
+    const features = (geojson as unknown as { features: PrecinctFeature[] }).features;
+
+    if (tigerField) {
+      // Use actual Census TIGER district assignment
+      // State Senate districts are zero-padded 3-digit in TIGER (e.g., "006")
+      // State House districts are also zero-padded (e.g., "148")
+      const padded = selectedDistrict.padStart(3, "0");
+      return new Set(
+        features
+          .filter(f => {
+            const val = f.properties[tigerField];
+            return val === padded || val === selectedDistrict;
+          })
+          .map(f => f.properties.precinct)
+          .filter(Boolean)
+      );
+    }
+
+    // Synthetic assignment for City Council, JP, Congressional
+    const opts = DISTRICT_OPTIONS[selectedType];
+    return new Set(
+      features
+        .filter(f => {
+          const id = f.properties.precinct ?? "";
+          return syntheticDistrictForPrecinct(id, selectedType, opts) === selectedDistrict;
+        })
+        .map(f => f.properties.precinct)
+        .filter(Boolean)
+    );
+  }, [geojson, selectedType, selectedDistrict]);
 
   function handleTypeChange(type: DistrictType) {
     setSelectedType(type);
-    setSelectedDistrict("all");
+    setSelectedDistrict(DISTRICT_OPTIONS[type][0]);
     setSelectedPrecinctId(null);
   }
 
+  const districtOptions = DISTRICT_OPTIONS[selectedType];
+
+  // Precinct search filter
+  const searchedPrecinct = precinctSearch.trim()
+    ? precinctSearch.trim().padStart(4, "0")
+    : null;
+
   return (
     <div style={{ background: "#f5f3ef", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
-      {/* ── Hero ── */}
-      <section
-        className="relative overflow-hidden"
-        style={{
-          background: "linear-gradient(135deg,#1a3a5c 0%,#0f2540 60%,#162e4a 100%)",
-          paddingTop: "4rem",
-          paddingBottom: "4rem",
-        }}
-      >
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%,rgba(37,99,168,0.18) 0%,transparent 70%)" }}
-        />
+      {/* Hero */}
+      <section className="relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#0f2540 60%,#162e4a 100%)", paddingTop: "4rem", paddingBottom: "4rem" }}>
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%,rgba(37,99,168,0.18) 0%,transparent 70%)" }} />
         <div className="relative max-w-6xl mx-auto px-5">
-          <p className="text-sky-300 text-xs font-bold uppercase tracking-[0.22em] mb-3">Elections · Demographics</p>
-          <h1
-            className="text-3xl md:text-4xl font-bold text-white mb-2"
-            style={{ fontFamily: "var(--font-playfair,serif)" }}
-          >
+          <p className="text-sky-300 text-xs font-bold uppercase tracking-[0.22em] mb-3">Elections · Representation</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2" style={{ fontFamily: "var(--font-playfair,serif)" }}>
             Districts
           </h1>
           <p className="text-white/50 text-sm max-w-lg">
-            Explore Harris County voting precincts by district. Select a district type, filter by number, click any precinct to see turnout, demographics, and party participation.
+            Portrait of a seat — select a district to see its precincts, demographics, and the history of who has represented it.
           </p>
         </div>
       </section>
 
-      {/* ── Body ── */}
-      <div className="max-w-6xl mx-auto px-5 py-10">
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* ── Left: controls + map ── */}
+      {/* Body */}
+      <div className="max-w-7xl mx-auto px-5 py-10">
+        <div className="flex flex-col xl:flex-row gap-6">
+
+          {/* Left: controls + map */}
           <div className="flex-1 min-w-0">
+
             {/* District type pills */}
             <div className="mb-4">
               <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-2" style={{ color: "#6b7280" }}>District Type</p>
               <div className="flex flex-wrap gap-2">
-                {(Object.keys(DISTRICT_OPTIONS) as DistrictType[]).map((type) => (
+                {(Object.keys(DISTRICT_OPTIONS) as DistrictType[]).map(type => (
                   <button
                     key={type}
                     onClick={() => handleTypeChange(type)}
                     className="rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-200"
                     style={{
                       background: selectedType === type ? "#1a3a5c" : "#fff",
-                      color: selectedType === type ? "#fff" : "#374151",
-                      border: `1.5px solid ${selectedType === type ? "#1a3a5c" : "#e5e7eb"}`,
+                      color:      selectedType === type ? "#fff" : "#374151",
+                      border:     `1.5px solid ${selectedType === type ? "#1a3a5c" : "#e5e7eb"}`,
                       transitionTimingFunction: "cubic-bezier(0.4,0,0.2,1)",
                     }}
                   >
-                    {DISTRICT_TYPE_LABELS[type]}
+                    {TYPE_LABELS[type]}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* District number selector */}
-            <div className="mb-5">
-              <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-2" style={{ color: "#6b7280" }}>
-                Filter by {DISTRICT_TYPE_LABELS[selectedType]}
-              </p>
-              <select
-                value={selectedDistrict}
-                onChange={(e) => setSelectedDistrict(e.target.value)}
-                className="rounded-xl px-4 py-2 text-sm font-medium"
-                style={{
-                  border: "1.5px solid #e5e7eb",
-                  background: "#fff",
-                  color: "#1a3a5c",
-                  outline: "none",
-                  minWidth: 200,
-                }}
-              >
-                <option value="all">All Precincts</option>
-                {districtOptions.map((d) => (
-                  <option key={d} value={d}>
-                    {DISTRICT_TYPE_LABELS[selectedType]} {d}
-                  </option>
-                ))}
-              </select>
+            {/* District selector row */}
+            <div className="flex flex-wrap items-end gap-3 mb-5">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-2" style={{ color: "#6b7280" }}>Select District</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {districtOptions.map(d => (
+                    <button
+                      key={d}
+                      onClick={() => { setSelectedDistrict(d); setSelectedPrecinctId(null); }}
+                      className="rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-150"
+                      style={{
+                        background: selectedDistrict === d ? "#1a3a5c" : "#fff",
+                        color:      selectedDistrict === d ? "#fff" : "#374151",
+                        border:     `1.5px solid ${selectedDistrict === d ? "#1a3a5c" : "#e5e7eb"}`,
+                      }}
+                    >
+                      {d}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {/* Precinct search */}
+              <div className="ml-auto">
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-2" style={{ color: "#6b7280" }}>Find Precinct</p>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="e.g. 148"
+                  value={precinctSearch}
+                  onChange={e => setPrecinctSearch(e.target.value.replace(/\D/g, ""))}
+                  className="rounded-xl px-3 py-2 text-sm"
+                  style={{ border: "1.5px solid #e5e7eb", background: "#fff", color: "#1a3a5c", outline: "none", width: 120 }}
+                  onKeyDown={e => {
+                    if (e.key === "Enter" && searchedPrecinct) {
+                      setSelectedPrecinctId(searchedPrecinct);
+                    }
+                  }}
+                />
+              </div>
             </div>
 
             {/* Legend */}
-            <div className="flex items-center gap-4 mb-4 text-[11px]" style={{ color: "#6b7280" }}>
+            <div className="flex items-center gap-4 mb-3 text-[11px]" style={{ color: "#6b7280" }}>
               <span className="font-semibold uppercase tracking-wider text-[10px]">Party Lean:</span>
               {[
-                { color: "#3b82f6", label: "Dem" },
-                { color: "#ef4444", label: "Rep" },
+                { color: "#2563a8", label: "Strong Dem" },
+                { color: "#93c5fd", label: "Lean Dem" },
                 { color: "#a78bfa", label: "Competitive" },
-                { color: "#d1d5db", label: "Filtered out" },
-              ].map((l) => (
+                { color: "#fca5a5", label: "Lean Rep" },
+                { color: "#dc2626", label: "Strong Rep" },
+              ].map(l => (
                 <span key={l.label} className="flex items-center gap-1.5">
                   <span className="inline-block w-3 h-3 rounded-sm" style={{ background: l.color }} />
                   {l.label}
@@ -331,14 +537,17 @@ export default function DistrictsPage() {
             <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
               <div className="rounded-[1rem] overflow-hidden bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]">
                 {loadError ? (
-                  <div
-                    className="flex flex-col items-center justify-center gap-2"
-                    style={{ height: 460, background: "#f9fafb" }}
-                  >
+                  <div className="flex flex-col items-center justify-center gap-2" style={{ height: 520, background: "#f9fafb" }}>
                     <p className="text-sm font-semibold" style={{ color: "#1a3a5c" }}>Could not load precinct boundaries</p>
                     <p className="text-xs" style={{ color: "#9ca3af" }}>Harris County ArcGIS service may be unavailable</p>
                     <button
-                      onClick={() => { setLoadError(false); fetch("/api/districts/precincts").then(r => r.json()).then(d => { if (d?.features) setGeojson(d); else setLoadError(true); }).catch(() => setLoadError(true)); }}
+                      onClick={() => {
+                        setLoadError(false);
+                        fetch("/api/districts/precincts").then(r => r.json()).then(d => {
+                          if (d?.features) setGeojson(d);
+                          else setLoadError(true);
+                        }).catch(() => setLoadError(true));
+                      }}
                       className="mt-2 rounded-full px-4 py-1.5 text-xs font-semibold"
                       style={{ background: "#1a3a5c", color: "#fff" }}
                     >
@@ -348,49 +557,42 @@ export default function DistrictsPage() {
                 ) : (
                   <DistrictsMap
                     geojson={geojson}
-                    onPrecinctClick={setSelectedPrecinctId}
-                    selectedPrecinct={selectedPrecinctId}
+                    onPrecinctClick={id => {
+                      setSelectedPrecinctId(id);
+                      setPrecinctSearch(parseInt(id, 10).toString());
+                    }}
+                    selectedPrecinct={selectedPrecinctId ?? searchedPrecinct}
+                    highlightedPrecincts={highlightedPrecincts}
+                    precinctData={allPrecinctData}
                   />
                 )}
               </div>
             </div>
 
-            {selectedPrecinctId && (
-              <div className="mt-3 rounded-xl px-4 py-2 text-[11px]" style={{ background: "rgba(37,99,168,0.07)", color: "#2563a8" }}>
-                <span className="font-semibold">Precinct {parseInt(selectedPrecinctId, 10)}</span>
-                <span className="ml-2 opacity-60">(VTD {selectedPrecinctId})</span>
-              </div>
+            {highlightedPrecincts.size > 0 && (
+              <p className="mt-2 text-[11px]" style={{ color: "#9ca3af" }}>
+                {highlightedPrecincts.size} precincts in {selectedType === "TX State House" ? `HD-${selectedDistrict}` : selectedDistrict}.
+                {!TIGER_FIELD[selectedType] && " (Approximate boundaries — official crosswalk pending)"}
+              </p>
             )}
           </div>
 
-          {/* ── Right: info panel ── */}
-          <div className="w-full lg:w-[320px] shrink-0">
-            {selectedPrecinctId && precinctData ? (
-              <PrecinctPanel precinctId={selectedPrecinctId} data={precinctData} />
+          {/* Right: Seat Portrait */}
+          <div className="w-full xl:w-[360px] shrink-0">
+            {selectedDistrict && selectedDistrict !== "all" ? (
+              <SeatPortrait
+                districtType={selectedType}
+                districtNumber={selectedDistrict}
+                precinctData={allPrecinctData}
+                highlightedPrecincts={highlightedPrecincts}
+              />
             ) : (
               <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-                <div
-                  className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] flex flex-col items-center justify-center py-16 px-6 text-center"
-                >
-                  <div
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
-                    style={{ background: "rgba(26,58,92,0.07)" }}
-                  >
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z" fill="#1a3a5c" opacity="0.3"/>
-                    </svg>
-                  </div>
-                  <p className="text-sm font-semibold mb-1" style={{ color: "#1a3a5c" }}>Select a precinct</p>
+                <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] flex flex-col items-center justify-center py-16 px-6 text-center">
+                  <p className="text-sm font-semibold mb-1" style={{ color: "#1a3a5c" }}>Select a district</p>
                   <p className="text-xs leading-relaxed" style={{ color: "#9ca3af" }}>
-                    Click any precinct on the map to view turnout, demographics, and party participation data.
+                    Choose a district above to see the portrait of that seat — its precincts, demographics, current representative, and history.
                   </p>
-                  <div className="mt-6 w-full space-y-2">
-                    {["Registered voters", "Ballots cast", "Turnout %", "Race & ethnicity", "Age breakdown", "Party primary"].map((item) => (
-                      <div key={item} className="rounded-lg h-8 animate-pulse" style={{ background: "#f3f4f6" }}>
-                        <div className="h-full rounded-lg" style={{ width: "60%", background: "#e9ecef" }} />
-                      </div>
-                    ))}
-                  </div>
                 </div>
               </div>
             )}

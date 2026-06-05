@@ -244,7 +244,15 @@ export default function Home() {
                 tool={{
                   href: "/tools/districts",
                   name: "Districts",
-                  description: "Explore Harris County voting precincts by district — Congressional, State House, State Senate, City Council, and JP. Click any precinct for turnout, demographics, and party participation data.",
+                  description: "Portrait of a seat — select any district to see its precincts highlighted, demographic breakdown, current representative, and the history of who held that seat.",
+                  status: "live",
+                }}
+              />
+              <ToolCard
+                tool={{
+                  href: "/tools/early-vote",
+                  name: "Early Vote Tracker",
+                  description: "Track who is voting early across Harris County precincts, cross-referenced against Democratic and Republican primary history — a real-time gauge of which side is turning out.",
                   status: "live",
                 }}
               />
