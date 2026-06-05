@@ -30,12 +30,6 @@ function ToolCard({ tool, large }: { tool: Tool; large?: boolean }) {
               Coming Soon
             </span>
           )}
-          {tool.status === "live" && (
-            <span className="flex-shrink-0 relative flex h-2.5 w-2.5 mt-1.5">
-              <span className="alive-halo absolute inline-flex h-full w-full rounded-full bg-emerald-400" />
-              <span className="alive-pulse relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
-            </span>
-          )}
         </div>
         <p className={`text-[var(--muted)] leading-relaxed ${large ? "text-base" : "text-sm"}`}>
           {tool.description}

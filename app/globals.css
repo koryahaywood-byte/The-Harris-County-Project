@@ -130,60 +130,114 @@ img { image-rendering: -webkit-optimize-contrast; }
 
 /* ── Toolbox opening animation ───────────────────────────────────────────── */
 
-/* Lid rotates around hinge point (120, 84) — the bottom-center of the lid */
+/* Hinge point: (150, 92) = bottom-center of lid where it meets box body */
+
 @keyframes tb-appear {
-  from { opacity: 0; transform: translateY(20px) scale(0.96); }
-  to   { opacity: 1; transform: translateY(0)    scale(1); }
+  0%   { opacity: 0; transform: translateY(40px) scale(0.88); }
+  70%  { opacity: 1; transform: translateY(-6px) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0)    scale(1); }
 }
 
+/* Whole-box shake — something inside is fighting to get out */
+@keyframes tb-shake {
+  0%   { transform: translateX(0)     rotate(0deg); }
+  12%  { transform: translateX(-10px) rotate(-1.2deg); }
+  25%  { transform: translateX(10px)  rotate(1.2deg); }
+  37%  { transform: translateX(-8px)  rotate(-0.8deg); }
+  50%  { transform: translateX(8px)   rotate(0.8deg); }
+  62%  { transform: translateX(-5px)  rotate(-0.4deg); }
+  75%  { transform: translateX(5px)   rotate(0.4deg); }
+  87%  { transform: translateX(-2px); }
+  100% { transform: translateX(0)     rotate(0deg); }
+}
+
+/* Lid bounce — teasing before the full open */
 @keyframes tb-lid-bounce {
-  0%   { transform: translate(120px,84px) rotate(0deg)   translate(-120px,-84px); }
-  35%  { transform: translate(120px,84px) rotate(-12deg)  translate(-120px,-84px); }
-  65%  { transform: translate(120px,84px) rotate(-2deg)   translate(-120px,-84px); }
-  100% { transform: translate(120px,84px) rotate(0deg)   translate(-120px,-84px); }
+  0%   { transform: translate(150px,92px) rotate(0deg)   translate(-150px,-92px); }
+  30%  { transform: translate(150px,92px) rotate(-18deg)  translate(-150px,-92px); }
+  55%  { transform: translate(150px,92px) rotate(-5deg)   translate(-150px,-92px); }
+  75%  { transform: translate(150px,92px) rotate(-14deg)  translate(-150px,-92px); }
+  100% { transform: translate(150px,92px) rotate(0deg)   translate(-150px,-92px); }
 }
 
+/* Lid full open — slams back with overshoot */
 @keyframes tb-lid-open {
-  0%   { transform: translate(120px,84px) rotate(0deg)    translate(-120px,-84px); }
-  60%  { transform: translate(120px,84px) rotate(-112deg) translate(-120px,-84px); }
-  80%  { transform: translate(120px,84px) rotate(-100deg) translate(-120px,-84px); }
-  100% { transform: translate(120px,84px) rotate(-105deg) translate(-120px,-84px); }
+  0%   { transform: translate(150px,92px) rotate(0deg)    translate(-150px,-92px); }
+  50%  { transform: translate(150px,92px) rotate(-120deg) translate(-150px,-92px); }
+  70%  { transform: translate(150px,92px) rotate(-95deg)  translate(-150px,-92px); }
+  85%  { transform: translate(150px,92px) rotate(-110deg) translate(-150px,-92px); }
+  100% { transform: translate(150px,92px) rotate(-105deg) translate(-150px,-92px); }
 }
 
+/* Interior glow burst */
 @keyframes tb-glow {
-  0%   { opacity: 0;   transform: scaleX(0.3); }
-  50%  { opacity: 0.9; transform: scaleX(1); }
-  100% { opacity: 0.5; transform: scaleX(1); }
+  0%   { opacity: 0; transform: scaleX(0.2) scaleY(0.5); }
+  40%  { opacity: 1; transform: scaleX(1)   scaleY(1); }
+  100% { opacity: 0.6; transform: scaleX(1) scaleY(1); }
 }
 
-@keyframes tb-tool-pop {
-  0%   { opacity: 0; transform: translateY(8px) scale(0.7); }
-  60%  { opacity: 1; transform: translateY(-4px) scale(1.05); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+/* Expanding ring burst from box opening */
+@keyframes tb-ring {
+  0%   { transform: scale(0.05); opacity: 1; }
+  100% { transform: scale(1);    opacity: 0; }
 }
 
+/* Tools fly upward out of the box in arcs */
+@keyframes tb-fly-center {
+  0%   { opacity: 0; transform: translateY(0)     scale(0.7); }
+  15%  { opacity: 1; transform: translateY(-10px)  scale(1.15); }
+  100% { opacity: 0; transform: translateY(-130px) scale(0.85); }
+}
+@keyframes tb-fly-left {
+  0%   { opacity: 0; transform: translate(0, 0)          scale(0.7); }
+  15%  { opacity: 1; transform: translate(-12px, -10px)  scale(1.1); }
+  100% { opacity: 0; transform: translate(-55px, -120px) scale(0.8); }
+}
+@keyframes tb-fly-right {
+  0%   { opacity: 0; transform: translate(0, 0)         scale(0.7); }
+  15%  { opacity: 1; transform: translate(12px, -10px)  scale(1.1); }
+  100% { opacity: 0; transform: translate(55px, -120px) scale(0.8); }
+}
+@keyframes tb-fly-far-left {
+  0%   { opacity: 0; transform: translate(0, 0)           scale(0.7); }
+  15%  { opacity: 1; transform: translate(-20px, -8px)    scale(1.1); }
+  100% { opacity: 0; transform: translate(-90px, -110px)  scale(0.75); }
+}
+
+/* Content rise-in after box opens */
 @keyframes tb-content-in {
-  from { opacity: 0; transform: translateY(22px); filter: blur(1px); }
+  from { opacity: 0; transform: translateY(28px); filter: blur(2px); }
   to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
 }
 
-.tb-appear    { animation: tb-appear 0.5s cubic-bezier(0.32,0.72,0,1) forwards; }
-.tb-bouncing  { animation: tb-lid-bounce 0.45s ease-out forwards; }
-.tb-opening   { animation: tb-lid-open 0.7s cubic-bezier(0.32,0.72,0,1) forwards; }
-.tb-glow      { animation: tb-glow 0.5s ease-out forwards; }
-.tb-tool-pop  { animation: tb-tool-pop 0.4s cubic-bezier(0.32,0.72,0,1) forwards; }
+/* ── Animation classes ── */
+.tb-appear   { animation: tb-appear  0.65s cubic-bezier(0.22,1,0.36,1) forwards; }
+.tb-shaking  { animation: tb-shake   0.7s  ease-in-out forwards; }
+.tb-bouncing { animation: tb-lid-bounce 0.55s cubic-bezier(0.22,1,0.36,1) forwards; }
+.tb-opening  { animation: tb-lid-open   0.75s cubic-bezier(0.22,1,0.36,1) forwards; }
+.tb-glow     { animation: tb-glow    0.6s  ease-out forwards; }
+.tb-ring-1   { animation: tb-ring 0.9s cubic-bezier(0.22,1,0.36,1) 0ms   forwards; }
+.tb-ring-2   { animation: tb-ring 0.9s cubic-bezier(0.22,1,0.36,1) 180ms forwards; }
+.tb-ring-3   { animation: tb-ring 0.9s cubic-bezier(0.22,1,0.36,1) 360ms forwards; }
+
+.tb-fly-c  { animation: tb-fly-center   0.85s cubic-bezier(0.22,1,0.36,1) forwards; }
+.tb-fly-l  { animation: tb-fly-left     0.85s cubic-bezier(0.22,1,0.36,1) 60ms  forwards; }
+.tb-fly-r  { animation: tb-fly-right    0.85s cubic-bezier(0.22,1,0.36,1) 120ms forwards; }
+.tb-fly-fl { animation: tb-fly-far-left 0.85s cubic-bezier(0.22,1,0.36,1) 30ms  forwards; }
+
 .tb-content-in {
   opacity: 0;
-  animation: tb-content-in 0.65s cubic-bezier(0.32,0.72,0,1) forwards;
+  animation: tb-content-in 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
 }
+.tb-content-in.d0 { animation-delay: 0ms; }
+.tb-content-in.d1 { animation-delay: 100ms; }
+.tb-content-in.d2 { animation-delay: 200ms; }
 
-.tb-content-in.delay-0  { animation-delay: 0ms; }
-.tb-content-in.delay-1  { animation-delay: 80ms; }
-.tb-content-in.delay-2  { animation-delay: 160ms; }
-
-/* Reduced motion: skip straight to final state */
+/* Reduced motion: skip to final state instantly */
 @media (prefers-reduced-motion: reduce) {
-  .tb-appear, .tb-bouncing, .tb-opening, .tb-glow, .tb-tool-pop, .tb-content-in {
+  .tb-appear, .tb-shaking, .tb-bouncing, .tb-opening,
+  .tb-glow, .tb-ring-1, .tb-ring-2, .tb-ring-3,
+  .tb-fly-c, .tb-fly-l, .tb-fly-r, .tb-fly-fl, .tb-content-in {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
