@@ -1,640 +1,566 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import ShareButton from "@/components/ShareButton";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
-type Category = "All" | "Elections" | "Legislature" | "Courts" | "City Council" | "HISD";
+type Category = "Elections" | "Legislature" | "Courts" | "City Council" | "HISD";
+type FilterGroup = "all" | "political" | "governmental";
 
 interface CivicEvent {
   id: string;
   title: string;
-  date: string; // YYYY-MM-DD
-  endDate?: string; // YYYY-MM-DD — for ranges like early voting
-  category: Exclude<Category, "All">;
+  date: string;      // YYYY-MM-DD
+  endDate?: string;  // YYYY-MM-DD
+  category: Category;
   description: string;
   importance: "high" | "normal";
 }
 
 /* ─── Data ───────────────────────────────────────────────────────────────── */
 const EVENTS: CivicEvent[] = [
-  // ── Elections 2025-2026 ──────────────────────────────────────────────────
-  {
-    id: "vreg-primary-2026",
-    title: "Voter Registration Deadline — 2026 Primary",
-    date: "2026-02-02",
-    category: "Elections",
-    description: "Last day to register to vote or update your registration for the March 2026 Texas Primary Election.",
-    importance: "high",
-  },
-  {
-    id: "ev-primary-2026",
-    title: "Early Voting — 2026 Texas Primary",
-    date: "2026-02-17",
-    endDate: "2026-02-28",
-    category: "Elections",
-    description: "Early voting period for the March 3 Texas Primary. Harris County Clerk locations open across the county.",
-    importance: "high",
-  },
-  {
-    id: "primary-2026",
-    title: "2026 Texas Primary Election Day",
-    date: "2026-03-03",
-    category: "Elections",
-    description: "Texas statewide primary election. Vote for Democratic and Republican nominees for U.S. Senate, U.S. House, Texas Governor, state legislature, and Harris County offices.",
-    importance: "high",
-  },
-  {
-    id: "primary-runoff-vreg-2026",
-    title: "Voter Registration Deadline — 2026 Primary Runoff",
-    date: "2026-04-27",
-    category: "Elections",
-    description: "Last day to register to vote for the May 2026 Primary Runoff, if applicable.",
-    importance: "normal",
-  },
-  {
-    id: "ev-runoff-2026",
-    title: "Early Voting — 2026 Primary Runoff",
-    date: "2026-05-11",
-    endDate: "2026-05-22",
-    category: "Elections",
-    description: "Early voting period for the May 26 Primary Runoff.",
-    importance: "normal",
-  },
-  {
-    id: "runoff-2026",
-    title: "2026 Texas Primary Runoff",
-    date: "2026-05-26",
-    category: "Elections",
-    description: "Primary runoff for races where no candidate received more than 50% in the March primary.",
-    importance: "high",
-  },
-  {
-    id: "vreg-general-2026",
-    title: "Voter Registration Deadline — 2026 General",
-    date: "2026-10-05",
-    category: "Elections",
-    description: "Last day to register to vote for the November 3, 2026 General Election.",
-    importance: "high",
-  },
-  {
-    id: "ev-general-2026",
-    title: "Early Voting — 2026 General Election",
-    date: "2026-10-19",
-    endDate: "2026-10-30",
-    category: "Elections",
-    description: "Early voting period for the November 3 General Election.",
-    importance: "high",
-  },
-  {
-    id: "general-2026",
-    title: "2026 General Election Day",
-    date: "2026-11-03",
-    category: "Elections",
-    description: "Texas General Election. Polls open 7 AM – 7 PM. All active registered voters may participate.",
-    importance: "high",
-  },
+  // ── Elections ───────────────────────────────────────────────────────────
+  { id: "vreg-primary-2026",  title: "Voter Registration Deadline — Primary",   date: "2026-02-02", category: "Elections", description: "Last day to register or update registration for the March 2026 Texas Primary Election.", importance: "high" },
+  { id: "ev-primary-2026",    title: "Early Voting — 2026 Texas Primary",       date: "2026-02-17", endDate: "2026-02-28", category: "Elections", description: "Early voting period for the March 3 Texas Primary. Harris County Clerk locations open across the county.", importance: "high" },
+  { id: "primary-2026",       title: "2026 Texas Primary Election Day",          date: "2026-03-03", category: "Elections", description: "Texas statewide primary election. Vote for nominees for U.S. Senate, Congress, Governor, state legislature, and Harris County offices.", importance: "high" },
+  { id: "primary-runoff-vreg-2026", title: "Voter Reg Deadline — Primary Runoff", date: "2026-04-27", category: "Elections", description: "Last day to register to vote for the May 2026 Primary Runoff.", importance: "normal" },
+  { id: "ev-runoff-2026",     title: "Early Voting — 2026 Primary Runoff",      date: "2026-05-11", endDate: "2026-05-22", category: "Elections", description: "Early voting period for the May 26 Primary Runoff.", importance: "normal" },
+  { id: "runoff-2026",        title: "2026 Texas Primary Runoff",                date: "2026-05-26", category: "Elections", description: "Primary runoff for races where no candidate cleared 50% in March.", importance: "high" },
+  { id: "vreg-general-2026",  title: "Voter Registration Deadline — General",   date: "2026-10-05", category: "Elections", description: "Last day to register to vote for the November 3, 2026 General Election.", importance: "high" },
+  { id: "ev-general-2026",    title: "Early Voting — 2026 General Election",    date: "2026-10-19", endDate: "2026-10-30", category: "Elections", description: "Early voting period for the November 3 General Election.", importance: "high" },
+  { id: "general-2026",       title: "2026 General Election Day",                date: "2026-11-03", category: "Elections", description: "Texas General Election. Polls open 7 AM–7 PM.", importance: "high" },
 
   // ── Legislature ──────────────────────────────────────────────────────────
-  {
-    id: "lege-89-adjourn",
-    title: "TX 89th Legislature Adjourned",
-    date: "2025-06-02",
-    category: "Legislature",
-    description: "The Texas 89th Regular Legislative Session concluded. The next regular session begins January 2027.",
-    importance: "normal",
-  },
-  {
-    id: "lege-90-start",
-    title: "TX 90th Legislature Convenes",
-    date: "2027-01-12",
-    category: "Legislature",
-    description: "The 90th Texas Regular Legislative Session begins. Sessions meet every odd year from January through June.",
-    importance: "high",
-  },
+  { id: "lege-89-adjourn",    title: "TX 89th Legislature Adjourned",            date: "2025-06-02", category: "Legislature", description: "The Texas 89th Regular Session concluded. Next regular session begins January 2027.", importance: "normal" },
+  { id: "lege-90-start",      title: "TX 90th Legislature Convenes",             date: "2027-01-12", category: "Legislature", description: "The 90th Texas Regular Legislative Session begins. Sessions meet every odd year, January through June.", importance: "high" },
 
   // ── Harris County Commissioners Court ────────────────────────────────────
-  {
-    id: "cc-jul-1",
-    title: "Commissioners Court Meeting",
-    date: "2025-07-08",
-    category: "Courts",
-    description: "Harris County Commissioners Court regular meeting. Agenda posted 72 hours prior at harriscountytx.gov.",
-    importance: "normal",
-  },
-  {
-    id: "cc-jul-2",
-    title: "Commissioners Court Meeting",
-    date: "2025-07-22",
-    category: "Courts",
-    description: "Harris County Commissioners Court regular meeting. Agenda posted 72 hours prior at harriscountytx.gov.",
-    importance: "normal",
-  },
-  {
-    id: "cc-aug-1",
-    title: "Commissioners Court Meeting",
-    date: "2025-08-12",
-    category: "Courts",
-    description: "Harris County Commissioners Court regular meeting.",
-    importance: "normal",
-  },
-  {
-    id: "cc-aug-2",
-    title: "Commissioners Court Meeting",
-    date: "2025-08-26",
-    category: "Courts",
-    description: "Harris County Commissioners Court regular meeting.",
-    importance: "normal",
-  },
-  {
-    id: "cc-sep-1",
-    title: "Commissioners Court Meeting",
-    date: "2025-09-09",
-    category: "Courts",
-    description: "Harris County Commissioners Court regular meeting.",
-    importance: "normal",
-  },
-  {
-    id: "cc-sep-2",
-    title: "Commissioners Court Meeting",
-    date: "2025-09-23",
-    category: "Courts",
-    description: "Harris County Commissioners Court regular meeting.",
-    importance: "normal",
-  },
-  {
-    id: "cc-oct-1",
-    title: "Commissioners Court Meeting",
-    date: "2025-10-14",
-    category: "Courts",
-    description: "Harris County Commissioners Court regular meeting.",
-    importance: "normal",
-  },
-  {
-    id: "cc-oct-2",
-    title: "Commissioners Court Meeting",
-    date: "2025-10-28",
-    category: "Courts",
-    description: "Harris County Commissioners Court regular meeting.",
-    importance: "normal",
-  },
-  {
-    id: "cc-nov-1",
-    title: "Commissioners Court Meeting",
-    date: "2025-11-18",
-    category: "Courts",
-    description: "Harris County Commissioners Court regular meeting. (Moved from Nov 11 due to Veterans Day.)",
-    importance: "normal",
-  },
-  {
-    id: "cc-dec-1",
-    title: "Commissioners Court Meeting",
-    date: "2025-12-09",
-    category: "Courts",
-    description: "Harris County Commissioners Court regular meeting.",
-    importance: "normal",
-  },
-  {
-    id: "cc-budget-2026",
-    title: "Commissioners Court Budget Adoption",
-    date: "2025-09-30",
-    category: "Courts",
-    description: "Harris County Commissioners Court typically adopts the annual budget by September 30. This is the public's best opportunity to weigh in on county spending priorities.",
-    importance: "high",
-  },
+  { id: "cc-jul-1",  title: "Commissioners Court Meeting", date: "2025-07-08",  category: "Courts", description: "Harris County Commissioners Court regular meeting. Agenda posted 72 hours prior at harriscountytx.gov.", importance: "normal" },
+  { id: "cc-jul-2",  title: "Commissioners Court Meeting", date: "2025-07-22",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-aug-1",  title: "Commissioners Court Meeting", date: "2025-08-12",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-aug-2",  title: "Commissioners Court Meeting", date: "2025-08-26",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-sep-1",  title: "Commissioners Court Meeting", date: "2025-09-09",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-sep-2",  title: "Commissioners Court Meeting", date: "2025-09-23",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-oct-1",  title: "Commissioners Court Meeting", date: "2025-10-14",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-oct-2",  title: "Commissioners Court Meeting", date: "2025-10-28",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-nov-1",  title: "Commissioners Court Meeting", date: "2025-11-18",  category: "Courts", description: "Harris County Commissioners Court regular meeting. (Moved from Nov 11 — Veterans Day.)", importance: "normal" },
+  { id: "cc-dec-1",  title: "Commissioners Court Meeting", date: "2025-12-09",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-jan-1",  title: "Commissioners Court Meeting", date: "2026-01-13",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-jan-2",  title: "Commissioners Court Meeting", date: "2026-01-27",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-feb-1",  title: "Commissioners Court Meeting", date: "2026-02-10",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-feb-2",  title: "Commissioners Court Meeting", date: "2026-02-24",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-mar-1",  title: "Commissioners Court Meeting", date: "2026-03-10",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-mar-2",  title: "Commissioners Court Meeting", date: "2026-03-24",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-apr-1",  title: "Commissioners Court Meeting", date: "2026-04-14",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-apr-2",  title: "Commissioners Court Meeting", date: "2026-04-28",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-budget-2026", title: "Commissioners Court Budget Adoption", date: "2025-09-30", category: "Courts", description: "Commissioners Court typically adopts the annual budget by September 30.", importance: "high" },
 
   // ── Houston City Council ──────────────────────────────────────────────────
-  {
-    id: "hcc-jul",
-    title: "Houston City Council — Monthly Session",
-    date: "2025-07-09",
-    category: "City Council",
-    description: "Houston City Council meets weekly on Wednesdays at 9 AM. Full agendas at houstontx.gov/citysec.",
-    importance: "normal",
-  },
-  {
-    id: "hcc-aug",
-    title: "Houston City Council — Monthly Session",
-    date: "2025-08-06",
-    category: "City Council",
-    description: "Houston City Council meets weekly on Wednesdays at 9 AM. Public comment accepted at the start of each meeting.",
-    importance: "normal",
-  },
-  {
-    id: "hcc-budget",
-    title: "Houston City Budget Adoption",
-    date: "2025-06-11",
-    category: "City Council",
-    description: "Houston City Council votes on the FY2026 budget. The city's fiscal year begins July 1.",
-    importance: "high",
-  },
+  { id: "hcc-jul",    title: "Houston City Council Meeting", date: "2025-07-09", category: "City Council", description: "Houston City Council meets Wednesdays at 9 AM. Full agendas at houstontx.gov/citysec.", importance: "normal" },
+  { id: "hcc-aug",    title: "Houston City Council Meeting", date: "2025-08-06", category: "City Council", description: "Houston City Council weekly session. Public comment accepted at the start.", importance: "normal" },
+  { id: "hcc-sep",    title: "Houston City Council Meeting", date: "2025-09-10", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-oct",    title: "Houston City Council Meeting", date: "2025-10-08", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-nov",    title: "Houston City Council Meeting", date: "2025-11-12", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-dec",    title: "Houston City Council Meeting", date: "2025-12-10", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-jan26",  title: "Houston City Council Meeting", date: "2026-01-14", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-feb26",  title: "Houston City Council Meeting", date: "2026-02-11", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-mar26",  title: "Houston City Council Meeting", date: "2026-03-11", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-apr26",  title: "Houston City Council Meeting", date: "2026-04-08", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-budget", title: "Houston City Budget Adoption",  date: "2025-06-11", category: "City Council", description: "Houston City Council votes on the FY2026 budget. The city fiscal year begins July 1.", importance: "high" },
 
   // ── HISD Board ───────────────────────────────────────────────────────────
-  {
-    id: "hisd-jul",
-    title: "HISD Board of Managers Meeting",
-    date: "2025-07-10",
-    category: "HISD",
-    description: "Houston ISD Board of Managers regular monthly meeting. Meetings are held at Hattie Mae White Educational Support Center.",
-    importance: "normal",
-  },
-  {
-    id: "hisd-aug",
-    title: "HISD Board of Managers Meeting",
-    date: "2025-08-14",
-    category: "HISD",
-    description: "HISD Board of Managers regular monthly meeting.",
-    importance: "normal",
-  },
-  {
-    id: "hisd-sep",
-    title: "HISD Board of Managers Meeting",
-    date: "2025-09-11",
-    category: "HISD",
-    description: "HISD Board of Managers regular monthly meeting.",
-    importance: "normal",
-  },
-  {
-    id: "hisd-oct",
-    title: "HISD Board of Managers Meeting",
-    date: "2025-10-09",
-    category: "HISD",
-    description: "HISD Board of Managers regular monthly meeting.",
-    importance: "normal",
-  },
-  {
-    id: "hisd-nov",
-    title: "HISD Board of Managers Meeting",
-    date: "2025-11-13",
-    category: "HISD",
-    description: "HISD Board of Managers regular monthly meeting.",
-    importance: "normal",
-  },
-  {
-    id: "hisd-budget",
-    title: "HISD Budget Adoption",
-    date: "2025-06-26",
-    category: "HISD",
-    description: "HISD Board of Managers adopts the annual district budget for the 2025-2026 school year.",
-    importance: "high",
-  },
-  {
-    id: "hisd-back-to-school",
-    title: "HISD First Day of School",
-    date: "2025-08-11",
-    category: "HISD",
-    description: "First day of the 2025-2026 Houston ISD school year.",
-    importance: "normal",
-  },
+  { id: "hisd-jul",   title: "HISD Board of Managers Meeting", date: "2025-07-10", category: "HISD", description: "Houston ISD Board of Managers regular monthly meeting at Hattie Mae White Educational Support Center.", importance: "normal" },
+  { id: "hisd-aug",   title: "HISD Board of Managers Meeting", date: "2025-08-14", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-sep",   title: "HISD Board of Managers Meeting", date: "2025-09-11", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-oct",   title: "HISD Board of Managers Meeting", date: "2025-10-09", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-nov",   title: "HISD Board of Managers Meeting", date: "2025-11-13", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-dec",   title: "HISD Board of Managers Meeting", date: "2025-12-11", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-jan26", title: "HISD Board of Managers Meeting", date: "2026-01-08", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-feb26", title: "HISD Board of Managers Meeting", date: "2026-02-12", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-mar26", title: "HISD Board of Managers Meeting", date: "2026-03-12", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-apr26", title: "HISD Board of Managers Meeting", date: "2026-04-09", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-budget",       title: "HISD Budget Adoption",     date: "2025-06-26", category: "HISD", description: "HISD Board of Managers adopts the annual district budget.", importance: "high" },
+  { id: "hisd-back-to-school", title: "HISD First Day of School", date: "2025-08-11", category: "HISD", description: "First day of the 2025-2026 Houston ISD school year.", importance: "normal" },
 ];
 
-/* ─── Helpers ────────────────────────────────────────────────────────────── */
-function formatDate(dateStr: string) {
-  const [year, month, day] = dateStr.split("-").map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+/* ─── Category design tokens ─────────────────────────────────────────────── */
+const CAT_COLOR: Record<Category, string> = {
+  Elections:     "#2563a8",
+  Legislature:   "#7c3aed",
+  Courts:        "#d97706",
+  "City Council":"#0d9488",
+  HISD:          "#dc2626",
+};
+
+const POLITICAL:     Category[] = ["Elections", "Legislature"];
+const GOVERNMENTAL:  Category[] = ["Courts", "City Council", "HISD"];
+
+/* ─── Calendar helpers ───────────────────────────────────────────────────── */
+function daysInMonth(y: number, m: number) { return new Date(y, m + 1, 0).getDate(); }
+function firstWeekday(y: number, m: number) { return new Date(y, m, 1).getDay(); }
+function toDateStr(y: number, m: number, d: number) {
+  return `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 }
 
-function formatShort(dateStr: string) {
-  const [year, month, day] = dateStr.split("-").map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
+interface CalDay {
+  dateStr: string;
+  day: number;
+  isCurrentMonth: boolean;
+  isToday: boolean;
 }
 
-function formatMonthYear(dateStr: string) {
-  const [year, month, day] = dateStr.split("-").map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
-  });
+function buildGrid(year: number, month: number): CalDay[][] {
+  const today = new Date().toISOString().split("T")[0];
+  const firstWd = firstWeekday(year, month);
+  const dim = daysInMonth(year, month);
+  const prevDim = daysInMonth(year, month - 1);
+  const cells: CalDay[] = [];
+
+  // Leading days (prev month)
+  for (let i = firstWd - 1; i >= 0; i--) {
+    const d = prevDim - i;
+    const m2 = month === 0 ? 11 : month - 1;
+    const y2 = month === 0 ? year - 1 : year;
+    const dateStr = toDateStr(y2, m2, d);
+    cells.push({ dateStr, day: d, isCurrentMonth: false, isToday: dateStr === today });
+  }
+  // Current month
+  for (let d = 1; d <= dim; d++) {
+    const dateStr = toDateStr(year, month, d);
+    cells.push({ dateStr, day: d, isCurrentMonth: true, isToday: dateStr === today });
+  }
+  // Trailing
+  const need = 42 - cells.length;
+  for (let d = 1; d <= need; d++) {
+    const m2 = month === 11 ? 0 : month + 1;
+    const y2 = month === 11 ? year + 1 : year;
+    const dateStr = toDateStr(y2, m2, d);
+    cells.push({ dateStr, day: d, isCurrentMonth: false, isToday: dateStr === today });
+  }
+
+  const weeks: CalDay[][] = [];
+  for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
+  return weeks;
 }
 
-function toICSDate(dateStr: string) {
-  return dateStr.replace(/-/g, "") + "T090000Z";
-}
-
-function toICSDateOnly(dateStr: string) {
-  return dateStr.replace(/-/g, "");
-}
+/* ─── ICS / calendar add helpers ────────────────────────────────────────── */
+function toICSDate(s: string) { return s.replace(/-/g, "") + "T090000Z"; }
+function toICSDateOnly(s: string) { return s.replace(/-/g, ""); }
 
 function googleCalendarUrl(event: CivicEvent) {
-  const start = toICSDate(event.date);
-  const end = toICSDate(event.endDate ?? event.date);
   const params = new URLSearchParams({
-    action: "TEMPLATE",
-    text: event.title,
-    dates: `${start}/${end}`,
-    details: event.description,
-    location: "Harris County, TX",
+    action: "TEMPLATE", text: event.title,
+    dates: `${toICSDate(event.date)}/${toICSDate(event.endDate ?? event.date)}`,
+    details: event.description, location: "Harris County, TX",
   });
-  return `https://calendar.google.com/calendar/r/eventedit?${params.toString()}`;
-}
-
-function outlookUrl(event: CivicEvent) {
-  const params = new URLSearchParams({
-    path: "/calendar/action/compose",
-    rru: "addevent",
-    startdt: `${event.date}T09:00:00`,
-    enddt: `${event.endDate ?? event.date}T17:00:00`,
-    subject: event.title,
-    body: event.description,
-    location: "Harris County, TX",
-  });
-  return `https://outlook.live.com/calendar/0/deeplink/compose?${params.toString()}`;
+  return `https://calendar.google.com/calendar/r/eventedit?${params}`;
 }
 
 function downloadICS(event: CivicEvent) {
-  const uid = `${event.id}@harriscountyproject`;
   const start = event.endDate
     ? `DTSTART;VALUE=DATE:${toICSDateOnly(event.date)}`
     : `DTSTART:${toICSDate(event.date)}`;
   const end = event.endDate
     ? `DTEND;VALUE=DATE:${toICSDateOnly(event.endDate)}`
     : `DTEND:${toICSDate(event.date)}`;
-
-  const ics = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//The Harris County Project//EN",
-    "BEGIN:VEVENT",
-    `UID:${uid}`,
-    start,
-    end,
-    `SUMMARY:${event.title}`,
-    `DESCRIPTION:${event.description.replace(/,/g, "\\,")}`,
-    "LOCATION:Harris County\\, TX",
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ].join("\r\n");
-
-  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
+  const ics = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//The Harris County Project//EN",
+    "BEGIN:VEVENT",`UID:${event.id}@harriscountyproject`,start,end,
+    `SUMMARY:${event.title}`,`DESCRIPTION:${event.description.replace(/,/g,"\\,")}`,
+    "LOCATION:Harris County\\, TX","END:VEVENT","END:VCALENDAR"].join("\r\n");
   const a = document.createElement("a");
-  a.href = url;
+  a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
   a.download = `${event.id}.ics`;
   a.click();
-  URL.revokeObjectURL(url);
 }
 
-/* ─── Category metadata ──────────────────────────────────────────────────── */
-const CATEGORY_COLOR: Record<Exclude<Category, "All">, string> = {
-  Elections: "bg-sky-100 text-sky-700 ring-sky-200",
-  Legislature: "bg-violet-100 text-violet-700 ring-violet-200",
-  Courts: "bg-amber-100 text-amber-700 ring-amber-200",
-  "City Council": "bg-emerald-100 text-emerald-700 ring-emerald-200",
-  HISD: "bg-rose-100 text-rose-700 ring-rose-200",
-};
-
-const CATEGORIES: Category[] = ["All", "Elections", "Legislature", "Courts", "City Council", "HISD"];
-
-/* ─── Component: EventCard ───────────────────────────────────────────────── */
-function EventCard({ event }: { event: CivicEvent }) {
-  const [open, setOpen] = useState(false);
+/* ─── Event detail panel ─────────────────────────────────────────────────── */
+function EventDetail({ event }: { event: CivicEvent }) {
   const today = new Date().toISOString().split("T")[0];
   const isPast = event.date < today;
+  const cc = CAT_COLOR[event.category];
+  const d = new Date(event.date + "T12:00:00");
+  const dateLabel = d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
 
   return (
-    <div
-      className={`rounded-[1.75rem] ring-1 p-[5px] card-lift transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-        event.importance === "high"
-          ? "bg-[var(--accent)]/5 ring-[var(--accent)]/20 hover:ring-[var(--accent)]/40"
-          : "bg-white/60 ring-black/8 hover:ring-[var(--accent-light)]"
-      } ${isPast ? "opacity-50" : ""}`}
-    >
-      <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-5">
-        {/* Header row */}
-        <div className="flex items-start gap-3">
+    <div className="rounded-2xl overflow-hidden ring-1 ring-black/8" style={{ background: "#fff", boxShadow: "0 2px 8px rgba(26,58,92,0.07)" }}>
+      {/* Top accent */}
+      <div style={{ height: 3, background: event.importance === "high" ? cc : `${cc}60` }}/>
+      <div className="p-5">
+        <div className="flex items-start gap-3 mb-3">
           {/* Date block */}
-          <div className="flex-shrink-0 w-14 text-center rounded-xl bg-[var(--accent)]/6 px-2 py-2.5">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]/60 leading-none mb-0.5">
-              {new Date(event.date + "T12:00:00").toLocaleDateString("en-US", { month: "short" })}
+          <div className="shrink-0 w-12 text-center rounded-xl py-2 px-1" style={{ background: `${cc}10` }}>
+            <p className="text-[9px] font-bold uppercase tracking-widest leading-none mb-0.5" style={{ color: cc }}>
+              {d.toLocaleDateString("en-US", { month: "short" })}
             </p>
-            <p className="text-2xl font-bold text-[var(--accent)] leading-none" style={{ fontFamily: "var(--font-playfair), serif" }}>
-              {new Date(event.date + "T12:00:00").getDate()}
+            <p className="text-xl font-bold leading-none" style={{ color: cc, fontFamily: "var(--font-playfair), serif" }}>
+              {d.getDate()}
             </p>
           </div>
-
-          {/* Content */}
           <div className="flex-1 min-w-0">
-            <div className="flex flex-wrap items-center gap-2 mb-1">
-              <span className={`text-[10px] font-bold uppercase tracking-[0.15em] px-2.5 py-0.5 rounded-full ring-1 ${CATEGORY_COLOR[event.category]}`}>
+            <div className="flex flex-wrap gap-1.5 mb-1">
+              <span className="text-[9px] font-bold uppercase tracking-[0.15em] px-2 py-0.5 rounded-full"
+                style={{ background: `${cc}15`, color: cc }}>
                 {event.category}
               </span>
               {event.importance === "high" && (
-                <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-amber-600 bg-amber-50 ring-1 ring-amber-200 px-2.5 py-0.5 rounded-full">
+                <span className="text-[9px] font-bold uppercase tracking-[0.12em] px-2 py-0.5 rounded-full"
+                  style={{ background: "#fef3c7", color: "#b45309" }}>
                   Key Date
                 </span>
               )}
               {isPast && (
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--muted)] bg-gray-100 ring-1 ring-gray-200 px-2.5 py-0.5 rounded-full">
-                  Past
-                </span>
+                <span className="text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                  style={{ background: "#f3f4f6", color: "#6b7280" }}>Past</span>
               )}
             </div>
-
-            <h3 className="font-bold text-[var(--accent)] text-sm leading-snug" style={{ fontFamily: "var(--font-playfair), serif" }}>
+            <h3 className="font-bold text-sm leading-snug" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair), serif" }}>
               {event.title}
             </h3>
-
-            {event.endDate && (
-              <p className="text-[11px] text-[var(--muted)] mt-0.5">
-                {formatShort(event.date)} – {formatShort(event.endDate)}
-              </p>
-            )}
-          </div>
-
-          {/* Expand toggle */}
-          <button
-            onClick={() => setOpen((v) => !v)}
-            className="flex-shrink-0 w-7 h-7 rounded-full bg-[var(--accent)]/8 flex items-center justify-center text-[var(--accent)] transition-all duration-500 hover:bg-[var(--accent)]/15 active:scale-95"
-            aria-label="Toggle details"
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className={`transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${open ? "rotate-180" : ""}`}
-            >
-              <path d="M2 4l4 4 4-4" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Expanded details */}
-        <div
-          className={`overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${open ? "max-h-64 mt-4 opacity-100" : "max-h-0 opacity-0"}`}
-        >
-          <div className="border-t border-[var(--border)] pt-4">
-            <p className="text-sm text-[var(--muted)] leading-relaxed mb-4">{event.description}</p>
-
-            {!isPast && (
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => downloadICS(event)}
-                  className="group inline-flex items-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-light)] text-white text-xs font-semibold rounded-full px-4 py-2 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.97]"
-                >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                  Apple / iCal
-                </button>
-                <a
-                  href={googleCalendarUrl(event)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-white ring-1 ring-[var(--border)] hover:ring-[var(--accent-light)] text-[var(--accent)] text-xs font-semibold rounded-full px-4 py-2 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-sm active:scale-[0.97]"
-                >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-                  Google Calendar
-                </a>
-                <a
-                  href={outlookUrl(event)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-white ring-1 ring-[var(--border)] hover:ring-[var(--accent-light)] text-[var(--accent)] text-xs font-semibold rounded-full px-4 py-2 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-sm active:scale-[0.97]"
-                >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                  Outlook
-                </a>
-              </div>
-            )}
+            <p className="text-[11px] mt-0.5" style={{ color: "#9ca3af" }}>
+              {event.endDate
+                ? `${dateLabel} — ${new Date(event.endDate + "T12:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric" })}`
+                : dateLabel}
+            </p>
           </div>
         </div>
+        <p className="text-xs leading-relaxed mb-3" style={{ color: "#6b7280" }}>{event.description}</p>
+        {!isPast && (
+          <div className="flex flex-wrap gap-2">
+            <button onClick={() => downloadICS(event)}
+              className="px-3 py-1.5 rounded-full text-[10px] font-bold transition-colors duration-150"
+              style={{ background: "#1a3a5c", color: "#fff" }}>
+              + Apple / iCal
+            </button>
+            <a href={googleCalendarUrl(event)} target="_blank" rel="noopener noreferrer"
+              className="px-3 py-1.5 rounded-full text-[10px] font-semibold ring-1 ring-black/10 transition-colors duration-150"
+              style={{ background: "#fff", color: "#1a3a5c" }}>
+              + Google Calendar
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
+const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
 export default function CivicCalendar() {
-  const [activeCategory, setActiveCategory] = useState<Category>("All");
-  const today = new Date().toISOString().split("T")[0];
+  const now = new Date();
+  const [year, setYear]         = useState(now.getFullYear());
+  const [month, setMonth]       = useState(now.getMonth());
+  const [filter, setFilter]     = useState<FilterGroup>("all");
+  const [cats, setCats]         = useState<Set<Category>>(new Set(["Elections","Legislature","Courts","City Council","HISD"]));
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
-  const filtered = useMemo(() => {
-    return EVENTS.filter((e) => activeCategory === "All" || e.category === activeCategory).sort(
-      (a, b) => a.date.localeCompare(b.date)
-    );
-  }, [activeCategory]);
+  function prevMonth() {
+    if (month === 0) { setYear(y => y - 1); setMonth(11); } else setMonth(m => m - 1);
+    setSelectedDate(null);
+  }
+  function nextMonth() {
+    if (month === 11) { setYear(y => y + 1); setMonth(0); } else setMonth(m => m + 1);
+    setSelectedDate(null);
+  }
+  function jumpToday() {
+    setYear(now.getFullYear()); setMonth(now.getMonth());
+    setSelectedDate(now.toISOString().split("T")[0]);
+  }
 
-  // Group by month
-  const grouped = useMemo(() => {
-    const map = new Map<string, CivicEvent[]>();
-    for (const e of filtered) {
-      const key = formatMonthYear(e.date);
-      if (!map.has(key)) map.set(key, []);
-      map.get(key)!.push(e);
+  function applyFilterGroup(g: FilterGroup) {
+    setFilter(g);
+    if (g === "all")          setCats(new Set(["Elections","Legislature","Courts","City Council","HISD"]));
+    if (g === "political")    setCats(new Set(POLITICAL));
+    if (g === "governmental") setCats(new Set(GOVERNMENTAL));
+  }
+
+  function toggleCat(c: Category) {
+    setCats(prev => {
+      const next = new Set(prev);
+      next.has(c) ? next.delete(c) : next.add(c);
+      return next;
+    });
+    setFilter("all");
+  }
+
+  // Map events to dates (multi-day events appear on every date in range)
+  const eventMap = useMemo(() => {
+    const m = new Map<string, CivicEvent[]>();
+    for (const e of EVENTS) {
+      if (!cats.has(e.category)) continue;
+      // Enumerate all dates in range
+      const start = new Date(e.date + "T12:00:00");
+      const end   = e.endDate ? new Date(e.endDate + "T12:00:00") : start;
+      const cur   = new Date(start);
+      while (cur <= end) {
+        const ds = cur.toISOString().split("T")[0];
+        if (!m.has(ds)) m.set(ds, []);
+        m.get(ds)!.push(e);
+        cur.setDate(cur.getDate() + 1);
+      }
     }
-    return map;
-  }, [filtered]);
+    return m;
+  }, [cats]);
 
-  const upcoming = filtered.filter((e) => e.date >= today);
-  const nextKey = upcoming[0]?.date ? formatMonthYear(upcoming[0].date) : null;
+  const grid = useMemo(() => buildGrid(year, month), [year, month]);
+
+  const selectedEvents = useMemo(() =>
+    selectedDate ? (eventMap.get(selectedDate) ?? []) : [],
+    [selectedDate, eventMap]
+  );
+
+  // Upcoming event for "next up" banner
+  const today = now.toISOString().split("T")[0];
+  const nextUp = EVENTS
+    .filter(e => cats.has(e.category) && e.date >= today)
+    .sort((a, b) => a.date.localeCompare(b.date))[0];
 
   return (
-    <div>
-      {/* ── Hero ──────────────────────────────────────────────────────── */}
-      <div className="bg-[var(--accent)] text-white px-6 py-16 md:py-24 relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_80%_50%,rgba(37,99,168,0.4),transparent)]" />
-        <div className="max-w-6xl mx-auto relative z-10">
-          <p className="text-sky-300/80 text-[11px] font-bold uppercase tracking-[0.25em] mb-3">
-            Community
+    <div style={{ background: "var(--bg, #f5f3ef)", minHeight: "100vh", fontFamily: "var(--font-outfit), sans-serif" }}>
+      {/* Hero */}
+      <section className="relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#0f2540 60%,#162e4a 100%)", paddingTop: "3rem", paddingBottom: "3rem" }}>
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%,rgba(37,99,168,0.18) 0%,transparent 70%)" }}/>
+        <div className="relative max-w-6xl mx-auto px-5">
+          <p className="text-sky-300 text-xs font-bold uppercase tracking-[0.22em] mb-3">Community</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2"
+            style={{ fontFamily: "var(--font-playfair), serif" }}>Civic Calendar</h1>
+          <p className="text-white/50 text-sm max-w-lg mb-4">
+            Election days, voter registration deadlines, court meetings, city council, HISD — every date that matters.
           </p>
-          <h1
-            className="text-3xl md:text-4xl font-bold leading-tight mb-2"
-            style={{ fontFamily: "var(--font-playfair), serif" }}
-          >
-            Civic Calendar
-          </h1>
-          <p className="text-white/70 text-sm max-w-lg">
-            Election days, voter registration deadlines, commissioners court, city council, HISD board — every date that matters. Add any event directly to your calendar.
-          </p>
-          <ShareButton
-            toolName="Civic Calendar"
-            section="Community"
-            description="Election days, voter registration deadlines, commissioners court, city council, HISD board — every date that matters."
-          />
-
-          {/* Next up pill */}
-          {upcoming[0] && (
-            <div className="mt-6 inline-flex items-center gap-3 bg-white/10 ring-1 ring-white/20 rounded-full px-5 py-2.5 text-sm">
-              <span className="w-2 h-2 rounded-full bg-sky-300 animate-pulse flex-shrink-0" />
-              <span className="text-white/70 text-xs uppercase tracking-widest font-semibold">Next Up</span>
-              <span className="text-white font-semibold">{upcoming[0].title}</span>
-              <span className="text-white/50 text-xs">{formatShort(upcoming[0].date)}</span>
+          {nextUp && (
+            <div className="inline-flex items-center gap-3 rounded-full px-4 py-2 text-xs"
+              style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.15)" }}>
+              <span className="relative flex h-2 w-2">
+                <span className="alive-halo absolute inset-0 rounded-full bg-sky-400"/>
+                <span className="alive-pulse relative h-2 w-2 rounded-full bg-sky-400"/>
+              </span>
+              <span className="text-white/50 font-semibold uppercase tracking-wider text-[10px]">Next Up</span>
+              <span className="text-white font-semibold">{nextUp.title}</span>
+              <span className="text-white/40">{new Date(nextUp.date + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
             </div>
           )}
         </div>
-      </div>
+      </section>
 
-      {/* ── Filters ───────────────────────────────────────────────────── */}
-      <div className="sticky top-0 z-20 bg-[var(--background)]/90 backdrop-blur border-b border-[var(--border)] px-6 py-3">
-        <div className="max-w-6xl mx-auto flex gap-2 overflow-x-auto scrollbar-none pb-0.5">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`flex-shrink-0 text-xs font-bold uppercase tracking-[0.12em] px-4 py-2 rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-                activeCategory === cat
-                  ? "bg-[var(--accent)] text-white shadow-sm"
-                  : "bg-white ring-1 ring-[var(--border)] text-[var(--muted)] hover:ring-[var(--accent-light)] hover:text-[var(--accent)]"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* Main layout */}
+      <div className="max-w-6xl mx-auto px-4 py-8 flex gap-6 items-start">
 
-      {/* ── Timeline ──────────────────────────────────────────────────── */}
-      <div className="max-w-3xl mx-auto px-6 py-16">
-        {grouped.size === 0 && (
-          <div className="text-center py-20 text-[var(--muted)]">No events in this category.</div>
-        )}
-
-        {Array.from(grouped.entries()).map(([monthYear, events]) => {
-          const isCurrentMonth = nextKey === monthYear;
-          return (
-            <div key={monthYear} className="mb-14">
-              {/* Month label */}
-              <div className="flex items-center gap-3 mb-6">
-                {isCurrentMonth && (
-                  <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse flex-shrink-0" />
-                )}
-                <span
-                  className={`text-lg font-bold ${isCurrentMonth ? "text-[var(--accent)]" : "text-[var(--muted)]"}`}
-                  style={{ fontFamily: "var(--font-playfair), serif" }}
-                >
-                  {monthYear}
-                </span>
-                <span className="flex-1 h-px bg-[var(--border)]" />
+        {/* ── Sidebar ──────────────────────────────────────────────────── */}
+        <aside className="w-56 flex-shrink-0 hidden md:block sticky top-20">
+          {/* Month nav */}
+          <div className="rounded-2xl ring-1 ring-black/8 mb-4 overflow-hidden"
+            style={{ background: "#fff", boxShadow: "0 1px 4px rgba(26,58,92,0.06)" }}>
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-1">
+                <button onClick={prevMonth}
+                  className="w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-150"
+                  style={{ background: "rgba(26,58,92,0.07)" }}>
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#1a3a5c" strokeWidth="2">
+                    <path d="M8 2L4 6l4 4"/>
+                  </svg>
+                </button>
+                <div className="text-center">
+                  <p className="font-bold text-sm" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair), serif" }}>
+                    {MONTH_NAMES[month]}
+                  </p>
+                  <p className="text-xs" style={{ color: "#9ca3af" }}>{year}</p>
+                </div>
+                <button onClick={nextMonth}
+                  className="w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-150"
+                  style={{ background: "rgba(26,58,92,0.07)" }}>
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#1a3a5c" strokeWidth="2">
+                    <path d="M4 2l4 4-4 4"/>
+                  </svg>
+                </button>
               </div>
+              <button onClick={jumpToday}
+                className="w-full mt-2 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-[0.15em] transition-colors duration-150"
+                style={{ background: "rgba(26,58,92,0.07)", color: "#1a3a5c" }}>
+                Today
+              </button>
+            </div>
+          </div>
 
-              {/* Events */}
-              <div className="flex flex-col gap-3">
-                {events.map((event) => (
-                  <EventCard key={event.id} event={event} />
+          {/* Filter groups */}
+          <div className="rounded-2xl ring-1 ring-black/8 overflow-hidden"
+            style={{ background: "#fff", boxShadow: "0 1px 4px rgba(26,58,92,0.06)" }}>
+            <div className="p-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "#9ca3af" }}>Filter</p>
+              <div className="flex flex-col gap-1.5 mb-4">
+                {([["all","All Events"],["political","Political"],["governmental","Governmental"]] as [FilterGroup,string][]).map(([g,label]) => (
+                  <button key={g} onClick={() => applyFilterGroup(g)}
+                    className="text-left px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150"
+                    style={filter === g
+                      ? { background: "#1a3a5c", color: "#fff" }
+                      : { background: "rgba(26,58,92,0.05)", color: "#1a3a5c" }}>
+                    {label}
+                    {g === "political" && <span className="block text-[9px] font-normal mt-0.5 opacity-60">Elections · Legislature</span>}
+                    {g === "governmental" && <span className="block text-[9px] font-normal mt-0.5 opacity-60">Courts · City Council · HISD</span>}
+                  </button>
                 ))}
               </div>
-            </div>
-          );
-        })}
 
-        {/* Footer note */}
-        <div className="mt-8 rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[5px]">
-          <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-5 text-center">
-            <p className="text-xs text-[var(--muted)] leading-relaxed">
-              Dates are gathered from official public sources. Commissioners Court and board meetings may be rescheduled.{" "}
-              <a href="mailto:koryahaywood@gmail.com" className="text-[var(--accent-light)] underline underline-offset-2">
-                Submit a missing date →
-              </a>
-            </p>
+              {/* Individual category toggles */}
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: "#9ca3af" }}>Categories</p>
+              <div className="flex flex-col gap-1.5">
+                {(["Elections","Legislature","Courts","City Council","HISD"] as Category[]).map(c => {
+                  const on = cats.has(c);
+                  return (
+                    <button key={c} onClick={() => toggleCat(c)}
+                      className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150"
+                      style={{ background: on ? `${CAT_COLOR[c]}12` : "transparent", color: on ? CAT_COLOR[c] : "#9ca3af" }}>
+                      <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: on ? CAT_COLOR[c] : "#d1d5db" }}/>
+                      {c}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {/* ── Calendar grid ────────────────────────────────────────────── */}
+        <div className="flex-1 min-w-0">
+          {/* Mobile month nav */}
+          <div className="flex md:hidden items-center justify-between mb-4 gap-2 flex-wrap">
+            <div className="flex items-center gap-3">
+              <button onClick={prevMonth} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(26,58,92,0.08)" }}>
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#1a3a5c" strokeWidth="2"><path d="M8 2L4 6l4 4"/></svg>
+              </button>
+              <p className="font-bold" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair), serif" }}>
+                {MONTH_NAMES[month]} {year}
+              </p>
+              <button onClick={nextMonth} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(26,58,92,0.08)" }}>
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#1a3a5c" strokeWidth="2"><path d="M4 2l4 4-4 4"/></svg>
+              </button>
+            </div>
+            <button onClick={jumpToday} className="px-4 py-1.5 rounded-full text-xs font-bold" style={{ background: "rgba(26,58,92,0.08)", color: "#1a3a5c" }}>Today</button>
+          </div>
+
+          {/* Mobile filter pills */}
+          <div className="flex md:hidden gap-2 mb-4 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+            {([["all","All"],["political","Political"],["governmental","Governmental"]] as [FilterGroup,string][]).map(([g,label]) => (
+              <button key={g} onClick={() => applyFilterGroup(g)}
+                className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold"
+                style={filter === g ? { background: "#1a3a5c", color: "#fff" } : { background: "rgba(26,58,92,0.08)", color: "#1a3a5c" }}>
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {/* Calendar */}
+          <div className="rounded-2xl overflow-hidden ring-1 ring-black/8 mb-6"
+            style={{ background: "#fff", boxShadow: "0 2px 8px rgba(26,58,92,0.07)" }}>
+            {/* Day-of-week header */}
+            <div className="grid grid-cols-7 border-b border-black/6">
+              {DOW.map(d => (
+                <div key={d} className="py-2.5 text-center text-[10px] font-bold uppercase tracking-[0.15em]"
+                  style={{ color: "#9ca3af" }}>
+                  {d}
+                </div>
+              ))}
+            </div>
+
+            {/* Weeks */}
+            {grid.map((week, wi) => (
+              <div key={wi} className="grid grid-cols-7" style={{ borderBottom: wi < grid.length - 1 ? "1px solid rgba(0,0,0,0.05)" : "none" }}>
+                {week.map((cell) => {
+                  const cellEvents = eventMap.get(cell.dateStr) ?? [];
+                  const isSelected = selectedDate === cell.dateStr;
+                  const hasHigh = cellEvents.some(e => e.importance === "high");
+
+                  return (
+                    <button
+                      key={cell.dateStr}
+                      onClick={() => setSelectedDate(isSelected ? null : cell.dateStr)}
+                      className="relative min-h-[72px] sm:min-h-[80px] p-1.5 text-left transition-colors duration-150 flex flex-col"
+                      style={{
+                        background: isSelected ? "rgba(26,58,92,0.07)" : cell.isToday ? "rgba(37,99,168,0.05)" : "transparent",
+                        borderRight: "1px solid rgba(0,0,0,0.04)",
+                      }}
+                    >
+                      {/* Day number */}
+                      <span
+                        className="text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full mb-1"
+                        style={{
+                          color: cell.isToday ? "#fff" : cell.isCurrentMonth ? "#1a3a5c" : "#d1d5db",
+                          background: cell.isToday ? "#1a3a5c" : "transparent",
+                          fontFamily: cell.isToday ? "var(--font-playfair), serif" : undefined,
+                        }}
+                      >
+                        {cell.day}
+                      </span>
+
+                      {/* Event dots / chips */}
+                      <div className="flex flex-col gap-0.5 w-full">
+                        {cellEvents.slice(0, 3).map((e, i) => {
+                          const isStart = e.date === cell.dateStr;
+                          return (
+                            <div key={i} className="hidden sm:flex items-center gap-1 rounded px-1 py-0.5 text-[9px] font-semibold leading-tight truncate"
+                              style={{
+                                background: `${CAT_COLOR[e.category]}18`,
+                                color: CAT_COLOR[e.category],
+                                borderLeft: `2px solid ${CAT_COLOR[e.category]}`,
+                                opacity: isStart ? 1 : 0.6,
+                              }}>
+                              <span className="truncate">{e.title.split(" — ")[0].split(" — ")[0].slice(0, 20)}</span>
+                            </div>
+                          );
+                        })}
+                        {/* Mobile: just dots */}
+                        <div className="flex sm:hidden gap-0.5 flex-wrap">
+                          {cellEvents.slice(0, 4).map((e, i) => (
+                            <span key={i} className="w-1.5 h-1.5 rounded-full" style={{ background: CAT_COLOR[e.category] }}/>
+                          ))}
+                        </div>
+                        {cellEvents.length > 3 && (
+                          <span className="hidden sm:block text-[9px] font-semibold" style={{ color: "#9ca3af" }}>
+                            +{cellEvents.length - 3}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* High-importance accent dot */}
+                      {hasHigh && !cell.isToday && (
+                        <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full" style={{ background: "#d97706" }}/>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+
+          {/* Selected day events */}
+          {selectedDate && (
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "#9ca3af" }}>
+                {new Date(selectedDate + "T12:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}
+              </p>
+              {selectedEvents.length === 0 ? (
+                <p className="text-sm text-center py-6" style={{ color: "#9ca3af" }}>No events on this date.</p>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  {selectedEvents.map(e => <EventDetail key={e.id} event={e} />)}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Legend */}
+          <div className="mt-6 flex flex-wrap gap-3">
+            {(["Elections","Legislature","Courts","City Council","HISD"] as Category[]).map(c => (
+              <span key={c} className="flex items-center gap-1.5 text-xs" style={{ color: "#6b7280" }}>
+                <span className="w-2.5 h-2.5 rounded-sm" style={{ background: CAT_COLOR[c] }}/>
+                {c}
+              </span>
+            ))}
+            <span className="flex items-center gap-1.5 text-xs" style={{ color: "#6b7280" }}>
+              <span className="w-2.5 h-2.5 rounded-sm" style={{ background: "#d97706" }}/>
+              Key Date
+            </span>
           </div>
         </div>
       </div>
