@@ -127,3 +127,66 @@ img { image-rendering: -webkit-optimize-contrast; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #ddd9d0; border-radius: 99px; }
 ::-webkit-scrollbar-thumb:hover { background: #1a3a5c40; }
+
+/* ── Toolbox opening animation ───────────────────────────────────────────── */
+
+/* Lid rotates around hinge point (120, 84) — the bottom-center of the lid */
+@keyframes tb-appear {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@keyframes tb-lid-bounce {
+  0%   { transform: translate(120px,84px) rotate(0deg)   translate(-120px,-84px); }
+  35%  { transform: translate(120px,84px) rotate(-12deg)  translate(-120px,-84px); }
+  65%  { transform: translate(120px,84px) rotate(-2deg)   translate(-120px,-84px); }
+  100% { transform: translate(120px,84px) rotate(0deg)   translate(-120px,-84px); }
+}
+
+@keyframes tb-lid-open {
+  0%   { transform: translate(120px,84px) rotate(0deg)    translate(-120px,-84px); }
+  60%  { transform: translate(120px,84px) rotate(-112deg) translate(-120px,-84px); }
+  80%  { transform: translate(120px,84px) rotate(-100deg) translate(-120px,-84px); }
+  100% { transform: translate(120px,84px) rotate(-105deg) translate(-120px,-84px); }
+}
+
+@keyframes tb-glow {
+  0%   { opacity: 0;   transform: scaleX(0.3); }
+  50%  { opacity: 0.9; transform: scaleX(1); }
+  100% { opacity: 0.5; transform: scaleX(1); }
+}
+
+@keyframes tb-tool-pop {
+  0%   { opacity: 0; transform: translateY(8px) scale(0.7); }
+  60%  { opacity: 1; transform: translateY(-4px) scale(1.05); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes tb-content-in {
+  from { opacity: 0; transform: translateY(22px); filter: blur(1px); }
+  to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+}
+
+.tb-appear    { animation: tb-appear 0.5s cubic-bezier(0.32,0.72,0,1) forwards; }
+.tb-bouncing  { animation: tb-lid-bounce 0.45s ease-out forwards; }
+.tb-opening   { animation: tb-lid-open 0.7s cubic-bezier(0.32,0.72,0,1) forwards; }
+.tb-glow      { animation: tb-glow 0.5s ease-out forwards; }
+.tb-tool-pop  { animation: tb-tool-pop 0.4s cubic-bezier(0.32,0.72,0,1) forwards; }
+.tb-content-in {
+  opacity: 0;
+  animation: tb-content-in 0.65s cubic-bezier(0.32,0.72,0,1) forwards;
+}
+
+.tb-content-in.delay-0  { animation-delay: 0ms; }
+.tb-content-in.delay-1  { animation-delay: 80ms; }
+.tb-content-in.delay-2  { animation-delay: 160ms; }
+
+/* Reduced motion: skip straight to final state */
+@media (prefers-reduced-motion: reduce) {
+  .tb-appear, .tb-bouncing, .tb-opening, .tb-glow, .tb-tool-pop, .tb-content-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ScrollReveal from "@/components/ScrollReveal";
 import DashboardWidget from "@/components/DashboardWidget";
+import ToolboxOpener from "@/components/ToolboxOpener";
 
 type Tool = {
   href: string;
@@ -141,23 +142,8 @@ export default function Home() {
       <section id="toolbox" className="py-28 md:py-40 px-6">
         <div className="max-w-6xl mx-auto">
 
-          {/* Toolbox header */}
-          <ScrollReveal className="mb-16 md:mb-24">
-            <SectionLabel>The Toolbox</SectionLabel>
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-              <h2
-                className="text-4xl md:text-6xl font-bold text-[var(--accent)] leading-[1.05] max-w-xl"
-                style={{ fontFamily: "var(--font-playfair), serif" }}
-              >
-                Civic tools,
-                <br />
-                all in one place.
-              </h2>
-              <p className="text-[var(--muted)] max-w-xs leading-relaxed text-sm md:text-base md:text-right md:pb-2">
-                Built for Harris County.<br />Free, always.<br />All data from public sources.
-              </p>
-            </div>
-          </ScrollReveal>
+          {/* Toolbox header — animated toolbox SVG reveal */}
+          <ToolboxOpener />
 
           {/* ── CITY HALL ── */}
           <ScrollReveal className="mb-20">
