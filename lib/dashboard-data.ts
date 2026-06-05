@@ -12,6 +12,14 @@ export interface NewsStory {
   isToday: boolean;
 }
 
+export interface MarketIndex {
+  symbol: string;
+  name: string;
+  price: number;
+  change: number;      // absolute
+  changePct: number;   // percentage
+}
+
 export interface DashboardData {
   federal: NewsStory | null;
   state:   NewsStory | null;
@@ -19,6 +27,7 @@ export interface DashboardData {
   todayEvents: { title: string; category: string; description: string }[];
   upcomingEvent: { title: string; date: string; daysAway: number; category: string } | null;
   nextElection:  { title: string; date: string; daysAway: number } | null;
+  markets: MarketIndex[];
 }
 
 // Wikipedia REST API returns verified, hotlink-safe thumbnail URLs.
@@ -28,6 +37,27 @@ const WIKI_TOPICS: Record<string, string> = {
   state:   "Texas_State_Capitol",
   local:   "Houston",
 };
+
+async function fetchMarketIndex(symbol: string, name: string): Promise<MarketIndex | null> {
+  try {
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=1d`;
+    const res = await fetch(url, {
+      next: { revalidate: 900 }, // 15-min cache
+      headers: { "User-Agent": "Mozilla/5.0" },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const meta = data?.chart?.result?.[0]?.meta;
+    if (!meta) return null;
+    const price = meta.regularMarketPrice ?? 0;
+    const prevClose = meta.chartPreviousClose ?? meta.previousClose ?? price;
+    const change = price - prevClose;
+    const changePct = prevClose ? (change / prevClose) * 100 : 0;
+    return { symbol, name, price, change, changePct };
+  } catch {
+    return null;
+  }
+}
 
 async function getWikipediaImage(topic: string): Promise<string | null> {
   try {
@@ -116,8 +146,8 @@ export async function fetchTopStory(
 export async function getDashboardData(): Promise<DashboardData> {
   const todayStr = new Date().toISOString().slice(0, 10);
 
-  // Fetch Wikipedia images and news stories in parallel
-  const [wikiImgs, federalStory, stateStory, localStory] = await Promise.all([
+  // Fetch Wikipedia images, news stories, and market data in parallel
+  const [wikiImgs, federalStory, stateStory, localStory, rawMarkets] = await Promise.all([
     Promise.all([
       getWikipediaImage(WIKI_TOPICS.federal),
       getWikipediaImage(WIKI_TOPICS.state),
@@ -126,6 +156,12 @@ export async function getDashboardData(): Promise<DashboardData> {
     fetchTopStory("US Congress White House federal politics", todayStr, null),
     fetchTopStory("Texas Austin legislature politics 2026", todayStr, null),
     fetchTopStory("Houston Harris County local politics government", todayStr, null),
+    Promise.all([
+      fetchMarketIndex("^DJI",  "Dow Jones"),
+      fetchMarketIndex("^GSPC", "S&P 500"),
+      fetchMarketIndex("^IXIC", "NASDAQ"),
+      fetchMarketIndex("CL=F",  "Oil (WTI)"),
+    ]),
   ]);
 
   const [fedImg, stateImg, localImg] = wikiImgs;
@@ -159,5 +195,7 @@ export async function getDashboardData(): Promise<DashboardData> {
     daysAway: Math.ceil((new Date(nextElectionEvent.date).getTime() - new Date(todayStr).getTime()) / 86400000),
   } : null;
 
-  return { federal, state, local, todayEvents, upcomingEvent, nextElection };
+  const markets = rawMarkets.filter((m): m is MarketIndex => m !== null);
+
+  return { federal, state, local, todayEvents, upcomingEvent, nextElection, markets };
 }

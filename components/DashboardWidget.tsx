@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getDashboardData } from "@/lib/dashboard-data";
-import type { DashboardData, NewsStory } from "@/lib/dashboard-data";
+import type { DashboardData, NewsStory, MarketIndex } from "@/lib/dashboard-data";
 
 const CAT_COLOR: Record<string, string> = {
   Elections:     "#2563a8",
@@ -39,18 +39,17 @@ function NewsCard({ story, tier }: { story: NewsStory | null; tier: string; labe
   const noStoryToday = story && !story.isToday;
   return (
     <div className="group relative rounded-[1.5rem] overflow-hidden bg-white ring-1 ring-black/8 card-lift flex flex-col min-h-[340px]">
-      {/* Photo area */}
-      <div className="relative w-full h-48 flex-shrink-0 overflow-hidden">
-        {story?.image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={story.image}
-            alt=""
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-        ) : (
-          <div className="w-full h-full" style={{ background: gradient }} />
-        )}
+      {/* Photo area — uses CSS background-image so gradient always shows as fallback */}
+      <div
+        className="relative w-full h-48 flex-shrink-0 overflow-hidden transition-transform duration-700 group-hover:scale-105"
+        style={{
+          backgroundImage: story?.image
+            ? `url(${story.image}), ${gradient}`
+            : gradient,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
         {/* Tier badge */}
         <div className="absolute top-3 left-3 flex items-center gap-2">
           <span className="text-[10px] font-bold uppercase tracking-[0.2em] bg-white/90 backdrop-blur-sm text-[var(--accent)] px-3 py-1.5 rounded-full shadow-sm">
@@ -93,6 +92,42 @@ function NewsCard({ story, tier }: { story: NewsStory | null; tier: string; labe
           <p className="text-sm text-[var(--muted)]">Loading latest {tier.toLowerCase()} story...</p>
         )}
       </div>
+    </div>
+  );
+}
+
+function MarketsCard({ markets }: { markets: MarketIndex[] }) {
+  if (markets.length === 0) {
+    return (
+      <div className="rounded-2xl bg-white ring-1 ring-black/8 p-5 flex flex-col justify-between">
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-3">Markets</p>
+        <p className="text-sm text-[var(--muted)]">Market data unavailable</p>
+      </div>
+    );
+  }
+  return (
+    <div className="rounded-2xl bg-white ring-1 ring-black/8 p-5 flex flex-col gap-1">
+      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-2">Markets</p>
+      {markets.map(m => {
+        const up = m.changePct >= 0;
+        const color = up ? "#16a34a" : "#dc2626";
+        return (
+          <div key={m.symbol} className="flex items-baseline justify-between gap-2 py-1.5" style={{ borderBottom: "1px solid #f3f4f6" }}>
+            <div>
+              <span className="text-xs font-semibold" style={{ color: "#1a3a5c" }}>{m.name}</span>
+            </div>
+            <div className="flex items-baseline gap-2 text-right flex-shrink-0">
+              <span className="text-sm font-bold tabular-nums" style={{ color: "#1a3a5c" }}>
+                {m.price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </span>
+              <span className="text-[11px] font-semibold tabular-nums" style={{ color }}>
+                {up ? "▲" : "▼"} {Math.abs(m.changePct).toFixed(2)}%
+              </span>
+            </div>
+          </div>
+        );
+      })}
+      <p className="text-[9px] mt-1" style={{ color: "#9ca3af" }}>Delayed ~15 min · Yahoo Finance</p>
     </div>
   );
 }
@@ -212,24 +247,8 @@ export default async function DashboardWidget() {
             </Link>
           </div>
 
-          {/* TX Session status */}
-          <div className="rounded-2xl bg-white ring-1 ring-black/8 p-5 flex flex-col justify-between">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-3">TX Legislature</p>
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0" />
-                <span className="text-xs font-semibold text-amber-600 uppercase tracking-wide">Adjourned</span>
-              </div>
-              <p className="text-sm font-semibold text-[var(--accent)]">89th Session Ended</p>
-              <p className="text-xs text-[var(--muted)] mt-1">Next session convenes January 2027 — the 90th Texas Legislature.</p>
-            </div>
-            <Link
-              href="/tools/bill-tracker"
-              className="mt-3 text-[11px] font-semibold text-[var(--accent-light)] hover:underline"
-            >
-              Browse filed bills →
-            </Link>
-          </div>
+          {/* Markets */}
+          <MarketsCard markets={data?.markets ?? []} />
 
         </div>
       </div>
