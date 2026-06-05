@@ -1,0 +1,111 @@
+export type Category = "Elections" | "Legislature" | "Courts" | "City Council" | "HISD" | "Civic";
+
+export interface CivicEvent {
+  id: string;
+  title: string;
+  date: string;
+  endDate?: string;
+  category: Category;
+  description: string;
+  importance: "high" | "normal";
+  location?: { lat: number; lng: number; address: string };
+}
+
+export const CAT_COLOR: Record<Category, string> = {
+  Elections:     "#2563a8",
+  Legislature:   "#7c3aed",
+  Courts:        "#d97706",
+  "City Council":"#0d9488",
+  HISD:          "#dc2626",
+  Civic:         "#16a34a",
+};
+
+export const EVENTS: CivicEvent[] = [
+  // ── Elections ──────────────────────────────────────────────────────────
+  { id: "vreg-primary-2026",  title: "Voter Registration Deadline — Primary",   date: "2026-02-02", category: "Elections", description: "Last day to register or update registration for the March 2026 Texas Primary Election.", importance: "high" },
+  { id: "ev-primary-2026",    title: "Early Voting — 2026 Texas Primary",       date: "2026-02-17", endDate: "2026-02-28", category: "Elections", description: "Early voting period for the March 3 Texas Primary. Harris County Clerk locations open across the county.", importance: "high" },
+  { id: "primary-2026",       title: "2026 Texas Primary Election Day",          date: "2026-03-03", category: "Elections", description: "Texas statewide primary election. Vote for nominees for U.S. Senate, Congress, Governor, state legislature, and Harris County offices.", importance: "high" },
+  { id: "primary-runoff-vreg-2026", title: "Voter Reg Deadline — Primary Runoff", date: "2026-04-27", category: "Elections", description: "Last day to register to vote for the May 2026 Primary Runoff.", importance: "normal" },
+  { id: "ev-runoff-2026",     title: "Early Voting — 2026 Primary Runoff",      date: "2026-05-11", endDate: "2026-05-22", category: "Elections", description: "Early voting period for the May 26 Primary Runoff.", importance: "normal" },
+  { id: "runoff-2026",        title: "2026 Texas Primary Runoff",                date: "2026-05-26", category: "Elections", description: "Primary runoff for races where no candidate cleared 50% in March.", importance: "high" },
+  { id: "vreg-general-2026",  title: "Voter Registration Deadline — General",   date: "2026-10-05", category: "Elections", description: "Last day to register to vote for the November 3, 2026 General Election.", importance: "high" },
+  { id: "ev-general-2026",    title: "Early Voting — 2026 General Election",    date: "2026-10-19", endDate: "2026-10-30", category: "Elections", description: "Early voting period for the November 3 General Election.", importance: "high" },
+  { id: "general-2026",       title: "2026 General Election Day",                date: "2026-11-03", category: "Elections", description: "Texas General Election. Polls open 7 AM–7 PM.", importance: "high" },
+  // ── Legislature ──────────────────────────────────────────────────────────
+  { id: "lege-89-adjourn",    title: "TX 89th Legislature Adjourned",            date: "2025-06-02", category: "Legislature", description: "The Texas 89th Regular Session concluded. Next regular session begins January 2027.", importance: "normal" },
+  { id: "lege-90-start",      title: "TX 90th Legislature Convenes",             date: "2027-01-12", category: "Legislature", description: "The 90th Texas Regular Legislative Session begins. Sessions meet every odd year, January through June.", importance: "high" },
+  // ── Harris County Commissioners Court ───────────────────────────────────
+  { id: "cc-jul-1",  title: "Commissioners Court Meeting", date: "2025-07-08",  category: "Courts", description: "Harris County Commissioners Court regular meeting. Agenda posted 72 hours prior at harriscountytx.gov.", importance: "normal" },
+  { id: "cc-jul-2",  title: "Commissioners Court Meeting", date: "2025-07-22",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-aug-1",  title: "Commissioners Court Meeting", date: "2025-08-12",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-aug-2",  title: "Commissioners Court Meeting", date: "2025-08-26",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-sep-1",  title: "Commissioners Court Meeting", date: "2025-09-09",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-sep-2",  title: "Commissioners Court Meeting", date: "2025-09-23",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-oct-1",  title: "Commissioners Court Meeting", date: "2025-10-14",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-oct-2",  title: "Commissioners Court Meeting", date: "2025-10-28",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-nov-1",  title: "Commissioners Court Meeting", date: "2025-11-18",  category: "Courts", description: "Harris County Commissioners Court regular meeting. (Moved from Nov 11 — Veterans Day.)", importance: "normal" },
+  { id: "cc-dec-1",  title: "Commissioners Court Meeting", date: "2025-12-09",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-jan-1",  title: "Commissioners Court Meeting", date: "2026-01-13",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-jan-2",  title: "Commissioners Court Meeting", date: "2026-01-27",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-feb-1",  title: "Commissioners Court Meeting", date: "2026-02-10",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-feb-2",  title: "Commissioners Court Meeting", date: "2026-02-24",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-mar-1",  title: "Commissioners Court Meeting", date: "2026-03-10",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-mar-2",  title: "Commissioners Court Meeting", date: "2026-03-24",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-apr-1",  title: "Commissioners Court Meeting", date: "2026-04-14",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-apr-2",  title: "Commissioners Court Meeting", date: "2026-04-28",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-may-1",  title: "Commissioners Court Meeting", date: "2026-05-12",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-may-2",  title: "Commissioners Court Meeting", date: "2026-05-26",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-jun-1",  title: "Commissioners Court Meeting", date: "2026-06-09",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-jun-2",  title: "Commissioners Court Meeting", date: "2026-06-23",  category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
+  { id: "cc-budget-2026", title: "Commissioners Court Budget Adoption", date: "2025-09-30", category: "Courts", description: "Commissioners Court typically adopts the annual budget by September 30.", importance: "high" },
+  // ── Houston City Council ─────────────────────────────────────────────────
+  { id: "hcc-jul",    title: "Houston City Council Meeting", date: "2025-07-09", category: "City Council", description: "Houston City Council meets Wednesdays at 9 AM. Full agendas at houstontx.gov/citysec.", importance: "normal" },
+  { id: "hcc-aug",    title: "Houston City Council Meeting", date: "2025-08-06", category: "City Council", description: "Houston City Council weekly session. Public comment accepted at the start.", importance: "normal" },
+  { id: "hcc-sep",    title: "Houston City Council Meeting", date: "2025-09-10", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-oct",    title: "Houston City Council Meeting", date: "2025-10-08", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-nov",    title: "Houston City Council Meeting", date: "2025-11-12", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-dec",    title: "Houston City Council Meeting", date: "2025-12-10", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-jan26",  title: "Houston City Council Meeting", date: "2026-01-14", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-feb26",  title: "Houston City Council Meeting", date: "2026-02-11", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-mar26",  title: "Houston City Council Meeting", date: "2026-03-11", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-apr26",  title: "Houston City Council Meeting", date: "2026-04-08", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-may26",  title: "Houston City Council Meeting", date: "2026-05-13", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-jun26a", title: "Houston City Council Meeting", date: "2026-06-03", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-jun26b", title: "Houston City Council Meeting", date: "2026-06-10", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
+  { id: "hcc-budget", title: "Houston City Budget Adoption",  date: "2025-06-11", category: "City Council", description: "Houston City Council votes on the FY2026 budget. The city fiscal year begins July 1.", importance: "high" },
+  // ── HISD Board ──────────────────────────────────────────────────────────
+  { id: "hisd-jul",   title: "HISD Board of Managers Meeting", date: "2025-07-10", category: "HISD", description: "Houston ISD Board of Managers regular monthly meeting at Hattie Mae White Educational Support Center.", importance: "normal" },
+  { id: "hisd-aug",   title: "HISD Board of Managers Meeting", date: "2025-08-14", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-sep",   title: "HISD Board of Managers Meeting", date: "2025-09-11", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-oct",   title: "HISD Board of Managers Meeting", date: "2025-10-09", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-nov",   title: "HISD Board of Managers Meeting", date: "2025-11-13", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-dec",   title: "HISD Board of Managers Meeting", date: "2025-12-11", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-jan26", title: "HISD Board of Managers Meeting", date: "2026-01-08", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-feb26", title: "HISD Board of Managers Meeting", date: "2026-02-12", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-mar26", title: "HISD Board of Managers Meeting", date: "2026-03-12", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-apr26", title: "HISD Board of Managers Meeting", date: "2026-04-09", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-may26", title: "HISD Board of Managers Meeting", date: "2026-05-14", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-jun26", title: "HISD Board of Managers Meeting", date: "2026-06-11", category: "HISD", description: "HISD Board of Managers regular monthly meeting.", importance: "normal" },
+  { id: "hisd-budget",       title: "HISD Budget Adoption",     date: "2025-06-26", category: "HISD", description: "HISD Board of Managers adopts the annual district budget.", importance: "high" },
+  { id: "hisd-back-to-school", title: "HISD First Day of School", date: "2025-08-11", category: "HISD", description: "First day of the 2025-2026 Houston ISD school year.", importance: "normal" },
+  // ── Civic ────────────────────────────────────────────────────────────────
+  { id: "lwv-jul-25",   title: "LWV Houston Monthly Meeting",     date: "2025-07-21", category: "Civic", description: "League of Women Voters of Houston monthly member meeting. Open to members and prospective members.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-aug-25",   title: "LWV Houston Monthly Meeting",     date: "2025-08-18", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-sep-25",   title: "LWV Houston Monthly Meeting",     date: "2025-09-15", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-oct-25",   title: "LWV Houston Monthly Meeting",     date: "2025-10-20", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-nov-25",   title: "LWV Houston Monthly Meeting",     date: "2025-11-17", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-jan-26",   title: "LWV Houston Monthly Meeting",     date: "2026-01-19", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-voter-reg-26", title: "LWV Voter Registration Drive", date: "2026-01-26", category: "Civic", description: "LWV Houston hosts a voter registration drive ahead of the March primary. Volunteers needed.", importance: "high", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-feb-26",   title: "LWV Houston Monthly Meeting",     date: "2026-02-16", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-mar-26",   title: "LWV Houston Monthly Meeting",     date: "2026-03-16", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-apr-26",   title: "LWV Houston Monthly Meeting",     date: "2026-04-20", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-may-26",   title: "LWV Houston Monthly Meeting",     date: "2026-05-18", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "lwv-jun-26",   title: "LWV Houston Monthly Meeting",     date: "2026-06-15", category: "Civic", description: "League of Women Voters of Houston monthly member meeting.", importance: "normal", location: { lat: 29.7390, lng: -95.4200, address: "2615 Southwest Fwy, Houston, TX" } },
+  { id: "tirz2-q1-26",  title: "TIRZ 2 (Midtown) Board Meeting",      date: "2026-01-21", category: "Civic", description: "TIRZ 2 Midtown Management District quarterly board meeting.", importance: "normal", location: { lat: 29.7440, lng: -95.3800, address: "Midtown Houston (3000 Main St area)" } },
+  { id: "tirz2-q2-26",  title: "TIRZ 2 (Midtown) Board Meeting",      date: "2026-04-15", category: "Civic", description: "TIRZ 2 Midtown Management District quarterly board meeting.", importance: "normal", location: { lat: 29.7440, lng: -95.3800, address: "Midtown Houston (3000 Main St area)" } },
+  { id: "tirz16-q1-26", title: "TIRZ 16 (Uptown/Galleria) Board",     date: "2026-03-18", category: "Civic", description: "Uptown Houston TIRZ 16 board meeting.", importance: "normal", location: { lat: 29.7460, lng: -95.4620, address: "Uptown Houston District (1800 Post Oak Blvd)" } },
+  { id: "sn-assembly-jan-26",  title: "Super Neighborhood Assembly", date: "2026-01-22", category: "Civic", description: "Houston Super Neighborhood Assembly quarterly gathering.", importance: "high", location: { lat: 29.7569, lng: -95.3677, address: "Houston City Hall, 901 Bagby St" } },
+  { id: "sn-assembly-apr-26",  title: "Super Neighborhood Assembly", date: "2026-04-23", category: "Civic", description: "Houston Super Neighborhood Assembly quarterly gathering.", importance: "high", location: { lat: 29.7569, lng: -95.3677, address: "Houston City Hall, 901 Bagby St" } },
+  { id: "naacp-aug-25",        title: "Houston NAACP Branch Meeting", date: "2025-08-19", category: "Civic", description: "Houston Branch NAACP monthly membership meeting.", importance: "normal", location: { lat: 29.7560, lng: -95.3580, address: "NAACP Houston office (4805 Mt Vernon St)" } },
+  { id: "lulac-aug-25",        title: "LULAC Council Houston Meeting", date: "2025-08-26", category: "Civic", description: "League of United Latin American Citizens (LULAC) Council Houston monthly meeting.", importance: "normal", location: { lat: 29.7425, lng: -95.3680, address: "East Houston (2100 Navigation Blvd area)" } },
+];

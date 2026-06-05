@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ScrollReveal from "@/components/ScrollReveal";
+import DashboardWidget from "@/components/DashboardWidget";
 
 type Tool = {
   href: string;
@@ -132,6 +133,9 @@ export default function Home() {
           <div className="w-px h-10 bg-white/60" style={{ animation: "pulse 2s ease-in-out infinite" }} />
         </div>
       </section>
+
+      {/* ── DASHBOARD WIDGET ─────────────────────────────────────── */}
+      <DashboardWidget />
 
       {/* ── TOOLBOX ──────────────────────────────────────────────────── */}
       <section id="toolbox" className="py-28 md:py-40 px-6">
