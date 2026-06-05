@@ -225,10 +225,16 @@ function VitruvianFigure({ slug, photo, party, name, legiscanName }: {
           <path d="M268,152 Q280,160 292,152" fill="none" stroke="rgba(60,35,20,0.35)" strokeWidth="2" strokeLinecap="round"/>
 
           {/* HAIR */}
-          <path d="M236,108 Q256,88 280,84 Q304,88 324,108 Q318,92 280,88 Q242,92 236,108 Z"
-            fill="#2a1a0e" opacity="0.75"/>
-          <path d="M218,120 Q222,100 236,108 Q228,104 222,116 Z" fill="#2a1a0e" opacity="0.55"/>
-          <path d="M342,120 Q338,100 324,108 Q332,104 338,116 Z" fill="#2a1a0e" opacity="0.55"/>
+          {/* Main crown */}
+          <path d="M230,112 Q252,86 280,82 Q308,86 330,112 Q322,88 280,84 Q238,88 230,112 Z"
+            fill="#2a1a0e" opacity="0.88"/>
+          {/* Temple fill left */}
+          <path d="M218,128 Q220,108 230,112 Q224,112 220,122 Z" fill="#2a1a0e" opacity="0.72"/>
+          {/* Temple fill right */}
+          <path d="M342,128 Q340,108 330,112 Q336,112 340,122 Z" fill="#2a1a0e" opacity="0.72"/>
+          {/* Hairline softener */}
+          <path d="M236,106 Q258,90 280,87 Q302,90 324,106" fill="none"
+            stroke="#2a1a0e" strokeWidth="6" strokeLinecap="round" opacity="0.35"/>
 
           {/* Head outline */}
           <circle cx="280" cy="135" r="63" fill="none" stroke={suit} strokeWidth="1" opacity="0.15"/>
@@ -256,10 +262,10 @@ function VitruvianFigure({ slug, photo, party, name, legiscanName }: {
         <div
           className="vit-photo absolute pointer-events-none"
           style={{
-            /* head center: cx=280/560=50%, cy=135/600=22.5%, r=63 */
-            left:   "calc(50% - 13%)",
-            top:    "calc(22.5% - 13%)",
-            width:  "26%",
+            /* head center: cx=280/560=50%, cy=135/600=22.5%, r=63/560=11.25% */
+            left:   "calc(50% - 14%)",
+            top:    "calc(22.5% - 14%)",
+            width:  "28%",
             aspectRatio: "1",
           }}
         >
@@ -274,7 +280,7 @@ function VitruvianFigure({ slug, photo, party, name, legiscanName }: {
             <img
               src={photo}
               alt={name}
-              className="w-full h-full object-cover object-top"
+              className="w-full h-full object-cover object-center"
               style={{ display: "block" }}
             />
           </div>
