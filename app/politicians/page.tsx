@@ -17,6 +17,15 @@ export default function PoliticiansIndex() {
           <p className="text-white/70 text-sm max-w-xl">
             Money, bills, salary, district, and more — for every Harris County elected official.
           </p>
+          <div className="mt-5">
+            <Link
+              href="/politicians/leaderboard"
+              className="inline-flex items-center gap-2 bg-sky-300 hover:bg-sky-200 text-[var(--accent)] font-bold rounded-full px-5 py-2.5 text-sm transition-all duration-300"
+            >
+              OVR Leaderboard
+              <span>→</span>
+            </Link>
+          </div>
         </div>
       </div>
 

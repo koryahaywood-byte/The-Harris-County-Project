@@ -149,7 +149,7 @@ export default function BlogsPage() {
         <div className="max-w-6xl mx-auto relative z-10">
           <p className="text-sky-300/80 text-[11px] font-bold uppercase tracking-[0.25em] mb-3">Media</p>
           <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-2" style={{ fontFamily: "var(--font-playfair), serif" }}>
-            Blogs & Influencers
+            Journalists & Voices
           </h1>
           <p className="text-white/70 text-sm max-w-lg">
             The best journalists, bloggers, and civic accounts covering Harris County politics. Curated — not comprehensive.

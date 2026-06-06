@@ -152,24 +152,25 @@ img { image-rendering: -webkit-optimize-contrast; }
 }
 
 /*
-  Lid 3-D simulation: scaleY from transform-origin bottom = lid hinge.
-  As scaleY → 0 the lid appears to rotate backward (away from viewer) flat.
-  Negative overshoot (scaleY < 0) = slight spring past flat = natural settle.
+  Lid true 3-D: rotateX from transform-origin bottom edge = hinge.
+  The SVG wrapper has perspective set so rotateX actually looks 3D.
+  rotateX(0deg) = closed flat. rotateX(-110deg) = open past vertical (overshoot).
+  Bounce phase teases +30deg then returns.
 */
 @keyframes tb-lid-bounce3d {
-  0%   { transform: scaleY(1);    }
-  30%  { transform: scaleY(0.55); }
-  55%  { transform: scaleY(0.88); }
-  75%  { transform: scaleY(0.65); }
-  100% { transform: scaleY(1);    }
+  0%   { transform: rotateX(0deg);  }
+  30%  { transform: rotateX(-28deg); }
+  55%  { transform: rotateX(-8deg);  }
+  75%  { transform: rotateX(-22deg); }
+  100% { transform: rotateX(0deg);  }
 }
 
 @keyframes tb-lid-open3d {
-  0%   { transform: scaleY(1);     }
-  48%  { transform: scaleY(-0.08); }
-  62%  { transform: scaleY(0.05);  }
-  78%  { transform: scaleY(-0.04); }
-  100% { transform: scaleY(0);     }
+  0%   { transform: rotateX(0deg);    }
+  55%  { transform: rotateX(-115deg); }
+  72%  { transform: rotateX(-95deg);  }
+  84%  { transform: rotateX(-108deg); }
+  100% { transform: rotateX(-105deg); }
 }
 
 /* Interior glow burst */
@@ -247,16 +248,16 @@ img { image-rendering: -webkit-optimize-contrast; }
 /* ── Animation classes ── */
 .tb-appear       { animation: tb-appear        0.65s cubic-bezier(0.22,1,0.36,1) forwards; }
 .tb-shaking      { animation: tb-shake         0.7s  ease-in-out forwards; }
-/* transform-box:fill-box + origin bottom = hinge at bottom edge of lid group */
+/* True 3-D lid hinge: bottom edge of lid is the pivot */
 .tb-lid-bounce3d {
   transform-box: fill-box;
   transform-origin: 50% 100%;
-  animation: tb-lid-bounce3d  0.55s cubic-bezier(0.22,1,0.36,1) forwards;
+  animation: tb-lid-bounce3d 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
 }
 .tb-lid-open3d {
   transform-box: fill-box;
   transform-origin: 50% 100%;
-  animation: tb-lid-open3d    0.75s cubic-bezier(0.22,1,0.36,1) forwards;
+  animation: tb-lid-open3d 0.85s cubic-bezier(0.22,1,0.36,1) forwards;
 }
 .tb-glow         { animation: tb-glow          0.6s  ease-out forwards; }
 .tb-ring-1       { animation: tb-ring 0.9s cubic-bezier(0.22,1,0.36,1) 0ms   forwards; }
@@ -289,5 +290,5 @@ img { image-rendering: -webkit-optimize-contrast; }
     filter: none !important;
   }
   /* Lid should be invisible (open) in reduced-motion */
-  .tb-lid-open3d { transform: scaleY(0) !important; }
+  .tb-lid-open3d { transform: rotateX(-105deg) !important; }
 }

@@ -130,12 +130,12 @@ export default function ToolboxOpener() {
         ].join(" ")}
         style={{ minHeight: 230 }}
       >
-        <div style={{ position: "relative", width: 340, height: 248 }}>
+        <div style={{ position: "relative", width: 340, height: 248, perspective: "600px", perspectiveOrigin: "170px 120px" }}>
           <svg
             viewBox="0 0 340 248"
             width="340"
             height="248"
-            style={{ overflow: "visible" }}
+            style={{ overflow: "visible", transformStyle: "preserve-3d" }}
             aria-hidden="true"
           >
             <defs>
