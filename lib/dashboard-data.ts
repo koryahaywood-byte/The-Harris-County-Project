@@ -117,14 +117,40 @@ export async function fetchTopStory(
   }
 }
 
+/** Try several queries in parallel; return whichever resolves first with a result. */
+async function fetchBestStory(
+  queries: string[],
+  todayStr: string,
+): Promise<ReturnType<typeof fetchTopStory> extends Promise<infer T> ? T : never> {
+  const results = await Promise.all(queries.map(q => fetchTopStory(q, todayStr)));
+  // Prefer today's stories, then any result, in priority order
+  return (
+    results.find(r => r?.isToday) ??
+    results.find(r => r !== null) ??
+    null
+  );
+}
+
 export async function getDashboardData(): Promise<DashboardData> {
   const todayStr = new Date().toISOString().slice(0, 10);
 
-  // Fetch news stories and market data in parallel
+  // Fetch news stories and market data in parallel — each section tries multiple sources
   const [federalRaw, stateRaw, localRaw, rawMarkets] = await Promise.all([
-    fetchTopStory("US Congress White House federal politics", todayStr),
-    fetchTopStory("Texas Austin legislature politics 2026", todayStr),
-    fetchTopStory("Houston politics OR \"Harris County\" site:houstonchronicle.com OR site:houstonpublicmedia.org OR site:chron.com OR site:khou.com", todayStr),
+    fetchBestStory([
+      "US Senate midterms 2026",
+      "Congress election results 2026",
+      "Trump Senate Congress 2026",
+    ], todayStr),
+    fetchBestStory([
+      "Texas primary runoff 2026",
+      "Texas Senate 2026",
+      "Texas legislature 2026",
+    ], todayStr),
+    fetchBestStory([
+      "Harris County election 2026",
+      "Harris County runoff 2026",
+      "Houston Texas election 2026",
+    ], todayStr),
     Promise.all([
       fetchMarketIndex("^DJI",  "Dow Jones"),
       fetchMarketIndex("^GSPC", "S&P 500"),

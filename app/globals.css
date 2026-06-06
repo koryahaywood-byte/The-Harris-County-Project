@@ -130,7 +130,7 @@ img { image-rendering: -webkit-optimize-contrast; }
 
 /* ── Toolbox opening animation ───────────────────────────────────────────── */
 
-/* Hinge point: (150, 92) = bottom-center of lid where it meets box body */
+/* Hinge for 3-D lid: (170, 120) = bottom edge of lid where it meets box body */
 
 @keyframes tb-appear {
   0%   { opacity: 0; transform: translateY(40px) scale(0.88); }
@@ -138,7 +138,7 @@ img { image-rendering: -webkit-optimize-contrast; }
   100% { opacity: 1; transform: translateY(0)    scale(1); }
 }
 
-/* Whole-box shake — something inside is fighting to get out */
+/* Whole-box shake */
 @keyframes tb-shake {
   0%   { transform: translateX(0)     rotate(0deg); }
   12%  { transform: translateX(-10px) rotate(-1.2deg); }
@@ -151,22 +151,25 @@ img { image-rendering: -webkit-optimize-contrast; }
   100% { transform: translateX(0)     rotate(0deg); }
 }
 
-/* Lid bounce — teasing before the full open */
-@keyframes tb-lid-bounce {
-  0%   { transform: translate(150px,92px) rotate(0deg)   translate(-150px,-92px); }
-  30%  { transform: translate(150px,92px) rotate(-18deg)  translate(-150px,-92px); }
-  55%  { transform: translate(150px,92px) rotate(-5deg)   translate(-150px,-92px); }
-  75%  { transform: translate(150px,92px) rotate(-14deg)  translate(-150px,-92px); }
-  100% { transform: translate(150px,92px) rotate(0deg)   translate(-150px,-92px); }
+/*
+  Lid 3-D simulation: scaleY from transform-origin bottom = lid hinge.
+  As scaleY → 0 the lid appears to rotate backward (away from viewer) flat.
+  Negative overshoot (scaleY < 0) = slight spring past flat = natural settle.
+*/
+@keyframes tb-lid-bounce3d {
+  0%   { transform: scaleY(1);    }
+  30%  { transform: scaleY(0.55); }
+  55%  { transform: scaleY(0.88); }
+  75%  { transform: scaleY(0.65); }
+  100% { transform: scaleY(1);    }
 }
 
-/* Lid full open — slams back with overshoot */
-@keyframes tb-lid-open {
-  0%   { transform: translate(150px,92px) rotate(0deg)    translate(-150px,-92px); }
-  50%  { transform: translate(150px,92px) rotate(-120deg) translate(-150px,-92px); }
-  70%  { transform: translate(150px,92px) rotate(-95deg)  translate(-150px,-92px); }
-  85%  { transform: translate(150px,92px) rotate(-110deg) translate(-150px,-92px); }
-  100% { transform: translate(150px,92px) rotate(-105deg) translate(-150px,-92px); }
+@keyframes tb-lid-open3d {
+  0%   { transform: scaleY(1);     }
+  48%  { transform: scaleY(-0.08); }
+  62%  { transform: scaleY(0.05);  }
+  78%  { transform: scaleY(-0.04); }
+  100% { transform: scaleY(0);     }
 }
 
 /* Interior glow burst */
@@ -176,54 +179,95 @@ img { image-rendering: -webkit-optimize-contrast; }
   100% { opacity: 0.6; transform: scaleX(1) scaleY(1); }
 }
 
-/* Expanding ring burst from box opening */
+/* Expanding ring burst */
 @keyframes tb-ring {
   0%   { transform: scale(0.05); opacity: 1; }
   100% { transform: scale(1);    opacity: 0; }
 }
 
-/* Tools fly upward out of the box in arcs */
-@keyframes tb-fly-center {
-  0%   { opacity: 0; transform: translateY(0)     scale(0.7); }
-  15%  { opacity: 1; transform: translateY(-10px)  scale(1.15); }
-  100% { opacity: 0; transform: translateY(-130px) scale(0.85); }
+/*
+  Tool fall trajectories — all tools start at SVG origin (170,108).
+  Each keyframe translates from origin → peak → shelf landing position.
+  Shelf x offsets from 170: -122, -62, 0, +62, +122
+  Shelf y offset from 108: +108 (lands at y=216, below box bottom at y=200)
+  Peak y offset: -72
+*/
+@keyframes tb-fall-1 {
+  0%   { opacity: 0; transform: translate(0, 0); }
+  8%   { opacity: 1; transform: translate(-14px, -40px) scale(1.15); }
+  38%  { transform: translate(-60px, -72px) scale(1.1); }
+  72%  { transform: translate(-108px, 68px); }
+  86%  { transform: translate(-122px, 115px) scale(0.95); }
+  93%  { transform: translate(-122px, 100px); }
+  100% { opacity: 1; transform: translate(-122px, 108px) scale(1); }
 }
-@keyframes tb-fly-left {
-  0%   { opacity: 0; transform: translate(0, 0)          scale(0.7); }
-  15%  { opacity: 1; transform: translate(-12px, -10px)  scale(1.1); }
-  100% { opacity: 0; transform: translate(-55px, -120px) scale(0.8); }
+@keyframes tb-fall-2 {
+  0%   { opacity: 0; transform: translate(0, 0); }
+  9%   { opacity: 1; transform: translate(-7px, -44px) scale(1.15); }
+  38%  { transform: translate(-30px, -70px) scale(1.1); }
+  72%  { transform: translate(-54px, 70px); }
+  86%  { transform: translate(-62px, 115px) scale(0.95); }
+  93%  { transform: translate(-62px, 100px); }
+  100% { opacity: 1; transform: translate(-62px, 108px) scale(1); }
 }
-@keyframes tb-fly-right {
-  0%   { opacity: 0; transform: translate(0, 0)         scale(0.7); }
-  15%  { opacity: 1; transform: translate(12px, -10px)  scale(1.1); }
-  100% { opacity: 0; transform: translate(55px, -120px) scale(0.8); }
+@keyframes tb-fall-3 {
+  0%   { opacity: 0; transform: translate(0, 0); }
+  10%  { opacity: 1; transform: translate(0, -50px) scale(1.15); }
+  38%  { transform: translate(0, -72px) scale(1.1); }
+  72%  { transform: translate(0, 72px); }
+  86%  { transform: translate(0, 117px) scale(0.95); }
+  93%  { transform: translate(0, 101px); }
+  100% { opacity: 1; transform: translate(0, 108px) scale(1); }
 }
-@keyframes tb-fly-far-left {
-  0%   { opacity: 0; transform: translate(0, 0)           scale(0.7); }
-  15%  { opacity: 1; transform: translate(-20px, -8px)    scale(1.1); }
-  100% { opacity: 0; transform: translate(-90px, -110px)  scale(0.75); }
+@keyframes tb-fall-4 {
+  0%   { opacity: 0; transform: translate(0, 0); }
+  9%   { opacity: 1; transform: translate(7px, -44px) scale(1.15); }
+  38%  { transform: translate(30px, -70px) scale(1.1); }
+  72%  { transform: translate(54px, 70px); }
+  86%  { transform: translate(62px, 115px) scale(0.95); }
+  93%  { transform: translate(62px, 100px); }
+  100% { opacity: 1; transform: translate(62px, 108px) scale(1); }
+}
+@keyframes tb-fall-5 {
+  0%   { opacity: 0; transform: translate(0, 0); }
+  8%   { opacity: 1; transform: translate(14px, -40px) scale(1.15); }
+  38%  { transform: translate(60px, -72px) scale(1.1); }
+  72%  { transform: translate(108px, 68px); }
+  86%  { transform: translate(122px, 115px) scale(0.95); }
+  93%  { transform: translate(122px, 100px); }
+  100% { opacity: 1; transform: translate(122px, 108px) scale(1); }
 }
 
-/* Content rise-in after box opens */
+/* Content rise-in */
 @keyframes tb-content-in {
   from { opacity: 0; transform: translateY(28px); filter: blur(2px); }
   to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
 }
 
 /* ── Animation classes ── */
-.tb-appear   { animation: tb-appear  0.65s cubic-bezier(0.22,1,0.36,1) forwards; }
-.tb-shaking  { animation: tb-shake   0.7s  ease-in-out forwards; }
-.tb-bouncing { animation: tb-lid-bounce 0.55s cubic-bezier(0.22,1,0.36,1) forwards; }
-.tb-opening  { animation: tb-lid-open   0.75s cubic-bezier(0.22,1,0.36,1) forwards; }
-.tb-glow     { animation: tb-glow    0.6s  ease-out forwards; }
-.tb-ring-1   { animation: tb-ring 0.9s cubic-bezier(0.22,1,0.36,1) 0ms   forwards; }
-.tb-ring-2   { animation: tb-ring 0.9s cubic-bezier(0.22,1,0.36,1) 180ms forwards; }
-.tb-ring-3   { animation: tb-ring 0.9s cubic-bezier(0.22,1,0.36,1) 360ms forwards; }
+.tb-appear       { animation: tb-appear        0.65s cubic-bezier(0.22,1,0.36,1) forwards; }
+.tb-shaking      { animation: tb-shake         0.7s  ease-in-out forwards; }
+/* transform-box:fill-box + origin bottom = hinge at bottom edge of lid group */
+.tb-lid-bounce3d {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: tb-lid-bounce3d  0.55s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.tb-lid-open3d {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: tb-lid-open3d    0.75s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.tb-glow         { animation: tb-glow          0.6s  ease-out forwards; }
+.tb-ring-1       { animation: tb-ring 0.9s cubic-bezier(0.22,1,0.36,1) 0ms   forwards; }
+.tb-ring-2       { animation: tb-ring 0.9s cubic-bezier(0.22,1,0.36,1) 180ms forwards; }
 
-.tb-fly-c  { animation: tb-fly-center   0.85s cubic-bezier(0.22,1,0.36,1) forwards; }
-.tb-fly-l  { animation: tb-fly-left     0.85s cubic-bezier(0.22,1,0.36,1) 60ms  forwards; }
-.tb-fly-r  { animation: tb-fly-right    0.85s cubic-bezier(0.22,1,0.36,1) 120ms forwards; }
-.tb-fly-fl { animation: tb-fly-far-left 0.85s cubic-bezier(0.22,1,0.36,1) 30ms  forwards; }
+/* Staggered tool falls — each 80ms apart so they pop out like a fountain */
+.tb-fall-1 { animation: tb-fall-1 1.1s cubic-bezier(0.33,0,0.66,1) 0ms   forwards; }
+.tb-fall-2 { animation: tb-fall-2 1.1s cubic-bezier(0.33,0,0.66,1) 80ms  forwards; }
+.tb-fall-3 { animation: tb-fall-3 1.1s cubic-bezier(0.33,0,0.66,1) 160ms forwards; }
+.tb-fall-4 { animation: tb-fall-4 1.1s cubic-bezier(0.33,0,0.66,1) 240ms forwards; }
+.tb-fall-5 { animation: tb-fall-5 1.1s cubic-bezier(0.33,0,0.66,1) 320ms forwards; }
 
 .tb-content-in {
   opacity: 0;
@@ -235,12 +279,15 @@ img { image-rendering: -webkit-optimize-contrast; }
 
 /* Reduced motion: skip to final state instantly */
 @media (prefers-reduced-motion: reduce) {
-  .tb-appear, .tb-shaking, .tb-bouncing, .tb-opening,
-  .tb-glow, .tb-ring-1, .tb-ring-2, .tb-ring-3,
-  .tb-fly-c, .tb-fly-l, .tb-fly-r, .tb-fly-fl, .tb-content-in {
+  .tb-appear, .tb-shaking, .tb-lid-bounce3d, .tb-lid-open3d,
+  .tb-glow, .tb-ring-1, .tb-ring-2,
+  .tb-fall-1, .tb-fall-2, .tb-fall-3, .tb-fall-4, .tb-fall-5,
+  .tb-content-in {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
   }
+  /* Lid should be invisible (open) in reduced-motion */
+  .tb-lid-open3d { transform: scaleY(0) !important; }
 }

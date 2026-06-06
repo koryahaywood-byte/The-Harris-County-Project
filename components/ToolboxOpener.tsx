@@ -5,16 +5,80 @@ import { useRef, useState, useEffect } from "react";
 // Phase timeline (ms from trigger):
 //   0    → appear   : box slides up from below
 //   750  → shake    : whole box rattles (something inside wants OUT)
-//   1450 → bounce   : lid teases — pops up, snaps back
-//   1950 → open     : lid SLAMS open with overshoot + settle
-//   2100 → burst    : tools fly out in arcs + expanding rings
-//   2700 → content  : heading text rises in
+//   1450 → bounce   : lid teases — front edge lifts, snaps back
+//   1950 → open     : lid flips back with 3-D perspective overshoot
+//   2100 → burst    : 5 tools shoot up and arc down to their shelves
+//   2800 → content  : heading rises in; shelf labels fade in
 
 type Phase = "idle" | "appear" | "shake" | "bounce" | "open" | "burst" | "content";
 
+// 5 sections in the browse grid (labels shown on the shelf after tools land)
+const SHELF = [
+  { label: "City Hall",    icon: "building" },
+  { label: "Elections",   icon: "chart"    },
+  { label: "Money",       icon: "dollar"   },
+  { label: "Legislation", icon: "scroll"   },
+  { label: "Media",       icon: "screen"   },
+] as const;
+
+// x positions for each shelf slot (SVG coords, viewBox 0 0 340 220)
+const SHELF_X = [48, 108, 170, 232, 292];
+// y at which tools land on the shelf (below box body which ends at y=200)
+const SHELF_Y = 216;
+// tools all shoot from the box opening center
+const ORIGIN_X = 170;
+const ORIGIN_Y = 108;
+
+function ShelfIcon({ type, cx, cy }: { type: typeof SHELF[number]["icon"]; cx: number; cy: number }) {
+  switch (type) {
+    case "building":
+      return (
+        <g transform={`translate(${cx - 10},${cy - 12})`}>
+          <rect x="1" y="6"  width="18" height="14" rx="1" fill="none" stroke="#2563a8" strokeWidth="2"/>
+          <rect x="4" y="10" width="3"  height="4"  rx="0.5" fill="#2563a8" opacity="0.7"/>
+          <rect x="8.5" y="10" width="3" height="4" rx="0.5" fill="#2563a8" opacity="0.7"/>
+          <rect x="13" y="10" width="3" height="4"  rx="0.5" fill="#2563a8" opacity="0.7"/>
+          <rect x="7"  y="0"  width="6" height="7"  rx="0.5" fill="none" stroke="#2563a8" strokeWidth="1.8"/>
+        </g>
+      );
+    case "chart":
+      return (
+        <g transform={`translate(${cx - 9},${cy - 10})`}>
+          <rect x="0" y="10" width="5" height="10" rx="1.5" fill="#2563a8"/>
+          <rect x="7" y="5"  width="5" height="15" rx="1.5" fill="#2563a8" opacity="0.9"/>
+          <rect x="14" y="0" width="5" height="20" rx="1.5" fill="#2563a8"/>
+        </g>
+      );
+    case "dollar":
+      return (
+        <g transform={`translate(${cx},${cy})`}>
+          <circle cx="0" cy="0" r="11" fill="none" stroke="#2563a8" strokeWidth="2"/>
+          <text x="0" y="5" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#2563a8">$</text>
+        </g>
+      );
+    case "scroll":
+      return (
+        <g transform={`translate(${cx - 9},${cy - 11})`}>
+          <rect x="1" y="2" width="16" height="20" rx="2.5" fill="none" stroke="#2563a8" strokeWidth="2"/>
+          <line x1="4.5" y1="8"  x2="13.5" y2="8"  stroke="#2563a8" strokeWidth="1.8" strokeLinecap="round"/>
+          <line x1="4.5" y1="12" x2="13.5" y2="12" stroke="#2563a8" strokeWidth="1.8" strokeLinecap="round"/>
+          <line x1="4.5" y1="16" x2="10"   y2="16" stroke="#2563a8" strokeWidth="1.8" strokeLinecap="round"/>
+        </g>
+      );
+    case "screen":
+      return (
+        <g transform={`translate(${cx - 11},${cy - 10})`}>
+          <rect x="0" y="0" width="22" height="16" rx="2" fill="none" stroke="#2563a8" strokeWidth="2"/>
+          <line x1="9" y1="16" x2="13" y2="21" stroke="#2563a8" strokeWidth="1.8" strokeLinecap="round"/>
+          <line x1="6" y1="21" x2="16" y2="21" stroke="#2563a8" strokeWidth="1.8" strokeLinecap="round"/>
+          <rect x="2" y="2" width="18" height="12" rx="1" fill="#2563a8" opacity="0.08"/>
+        </g>
+      );
+  }
+}
+
 export default function ToolboxOpener() {
-  const ref        = useRef<HTMLDivElement>(null);
-  const wrapRef    = useRef<HTMLDivElement>(null);
+  const ref     = useRef<HTMLDivElement>(null);
   const [phase, setPhase] = useState<Phase>("idle");
 
   useEffect(() => {
@@ -36,7 +100,7 @@ export default function ToolboxOpener() {
           t(1450, "bounce");
           t(1950, "open");
           t(2100, "burst");
-          t(2700, "content");
+          t(2800, "content");
         }
       },
       { threshold: 0.2 }
@@ -45,221 +109,210 @@ export default function ToolboxOpener() {
     return () => obs.disconnect();
   }, []);
 
-  // Class helpers
   const isOpen    = phase === "open" || phase === "burst" || phase === "content";
   const isBurst   = phase === "burst" || phase === "content";
   const isContent = phase === "content";
 
   const lidClass =
-    phase === "bounce" ? "tb-bouncing" :
-    isOpen             ? "tb-opening"  : "";
+    phase === "bounce" ? "tb-lid-bounce3d" :
+    isOpen             ? "tb-lid-open3d"   : "";
 
   return (
     <div ref={ref} className="mb-16 md:mb-24">
 
-      {/* ── SVG Toolbox wrapper — shake applied here ────────────────── */}
+      {/* ── SVG Toolbox wrapper ── */}
       <div
-        ref={wrapRef}
         className={[
           "flex justify-center mb-10 md:mb-14",
-          phase === "idle"   ? "opacity-0" : "",
+          phase === "idle"   ? "opacity-0"  : "",
           phase === "appear" ? "tb-appear"  : "",
           phase === "shake"  ? "tb-shaking" : "",
         ].join(" ")}
-        style={{ minHeight: 190 }}
+        style={{ minHeight: 230 }}
       >
-        {/* SVG container — overflow visible so lid/tools can escape bounds */}
-        <div style={{ position: "relative", width: 300, height: 185 }}>
+        <div style={{ position: "relative", width: 340, height: 248 }}>
           <svg
-            viewBox="0 0 300 185"
-            width="300"
-            height="185"
+            viewBox="0 0 340 248"
+            width="340"
+            height="248"
             style={{ overflow: "visible" }}
             aria-hidden="true"
           >
             <defs>
-              {/* Box drop shadow */}
               <filter id="tb-drop" x="-15%" y="-15%" width="130%" height="160%">
                 <feDropShadow dx="0" dy="8" stdDeviation="12"
                   floodColor="#1a3a5c" floodOpacity="0.28"/>
               </filter>
-              {/* Lid shadow (lighter so it feels lifted) */}
-              <filter id="tb-lid-drop" x="-15%" y="-40%" width="130%" height="200%">
+              <filter id="tb-lid-drop" x="-15%" y="-60%" width="130%" height="220%">
                 <feDropShadow dx="0" dy="4" stdDeviation="6"
                   floodColor="#1a3a5c" floodOpacity="0.35"/>
               </filter>
-              {/* Interior warm gradient */}
               <radialGradient id="tb-interior" cx="50%" cy="0%" r="100%">
                 <stop offset="0%"   stopColor="#fdf8f0"/>
                 <stop offset="100%" stopColor="#e8e0d0"/>
               </radialGradient>
-              {/* Body gradient — slight top shine */}
               <linearGradient id="tb-body-grad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%"   stopColor="#22507a"/>
                 <stop offset="100%" stopColor="#1a3a5c"/>
               </linearGradient>
-              {/* Lid gradient */}
               <linearGradient id="tb-lid-grad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%"   stopColor="#26598a"/>
                 <stop offset="100%" stopColor="#1e4876"/>
               </linearGradient>
-              {/* Burst ring clip */}
-              <clipPath id="tb-box-clip">
-                <rect x="10" y="92" width="280" height="88" rx="8"/>
-              </clipPath>
+              <linearGradient id="tb-panel-grad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stopColor="rgba(255,255,255,0.07)"/>
+                <stop offset="100%" stopColor="rgba(0,0,0,0.1)"/>
+              </linearGradient>
             </defs>
 
-            {/* ── BURST RINGS — expand outward from box opening ── */}
+            {/* ── BURST RINGS from box opening ── */}
             {isBurst && (
-              <g transform="translate(150, 92)">
-                <ellipse cx="0" cy="0" rx="110" ry="28"
+              <g transform={`translate(${ORIGIN_X}, ${ORIGIN_Y})`}>
+                <ellipse cx="0" cy="0" rx="110" ry="22"
                   fill="none" stroke="#f5f0e8" strokeWidth="3"
                   className="tb-ring-1" opacity="0"/>
-                <ellipse cx="0" cy="0" rx="110" ry="28"
+                <ellipse cx="0" cy="0" rx="110" ry="22"
                   fill="none" stroke="#d4c9b0" strokeWidth="2"
                   className="tb-ring-2" opacity="0"/>
-                <ellipse cx="0" cy="0" rx="110" ry="28"
-                  fill="none" stroke="#b8ac94" strokeWidth="1.5"
-                  className="tb-ring-3" opacity="0"/>
               </g>
             )}
 
-            {/* ── GLOW from interior ── */}
+            {/* ── INTERIOR GLOW ── */}
             <ellipse
-              cx="150" cy="96" rx="120" ry="18"
+              cx={ORIGIN_X} cy={ORIGIN_Y} rx="120" ry="14"
               fill="#f8f2e4"
-              style={{ filter: "blur(16px)", transition: "opacity 0.4s ease 0.2s" }}
+              style={{ filter: "blur(14px)", transition: "opacity 0.4s ease 0.2s" }}
               className={isOpen ? "tb-glow" : ""}
               opacity="0"
             />
 
-            {/* ── BOX BODY ── */}
+            {/* ── BOX BODY — front face ── */}
             <g filter="url(#tb-drop)">
               {/* Main body */}
-              <rect x="10" y="92" width="280" height="88" rx="8"
+              <rect x="30" y="118" width="280" height="82" rx="8"
                 fill="url(#tb-body-grad)"/>
 
-              {/* Interior floor — revealed when open */}
-              <rect x="12" y="94" width="276" height="26" rx="4"
+              {/* Interior floor — revealed when lid opens */}
+              <rect x="32" y="120" width="276" height="22" rx="4"
                 fill="url(#tb-interior)"
-                style={{ transition: "opacity 0.3s ease 0.3s" }}
+                style={{ transition: "opacity 0.35s ease 0.25s" }}
                 opacity={isOpen ? 1 : 0}/>
 
-              {/* Horizontal shelf line in body */}
-              <rect x="10" y="136" width="280" height="2" rx="1"
-                fill="rgba(255,255,255,0.07)"/>
+              {/* Front panel decorative inset */}
+              <rect x="48" y="145" width="244" height="44" rx="5"
+                fill="url(#tb-panel-grad)" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
 
-              {/* Bottom edge detail */}
-              <rect x="10" y="174" width="280" height="6" rx="4"
+              {/* Horizontal shelf line */}
+              <rect x="30" y="162" width="280" height="2" rx="1"
+                fill="rgba(255,255,255,0.06)"/>
+
+              {/* Bottom edge */}
+              <rect x="30" y="194" width="280" height="6" rx="4"
                 fill="rgba(0,0,0,0.15)"/>
 
-              {/* Rivet corners */}
-              <circle cx="30"  cy="106" r="5" fill="#2563a8" opacity="0.8"/>
-              <circle cx="270" cy="106" r="5" fill="#2563a8" opacity="0.8"/>
-              <circle cx="30"  cy="164" r="5" fill="#2563a8" opacity="0.55"/>
-              <circle cx="270" cy="164" r="5" fill="#2563a8" opacity="0.55"/>
+              {/* Corner rivets */}
+              <circle cx="50"  cy="132" r="5" fill="#2563a8" opacity="0.8"/>
+              <circle cx="290" cy="132" r="5" fill="#2563a8" opacity="0.8"/>
+              <circle cx="50"  cy="188" r="5" fill="#2563a8" opacity="0.55"/>
+              <circle cx="290" cy="188" r="5" fill="#2563a8" opacity="0.55"/>
 
               {/* Side grip handles */}
-              <rect x="0"   y="112" width="12" height="28" rx="6" fill="#2563a8"/>
-              <rect x="288" y="112" width="12" height="28" rx="6" fill="#2563a8"/>
+              <rect x="18"  y="138" width="14" height="30" rx="7" fill="#2563a8"/>
+              <rect x="308" y="138" width="14" height="30" rx="7" fill="#2563a8"/>
 
-              {/* Brand stripe on body front */}
-              <rect x="55" y="150" width="190" height="3" rx="1.5"
+              {/* Brand stripe */}
+              <rect x="70" y="175" width="200" height="2.5" rx="1.25"
                 fill="rgba(37,99,168,0.4)"/>
             </g>
 
-            {/* ── LATCH / CLASP — sits on the seam ── */}
-            <rect x="114" y="78" width="72" height="28" rx="10" fill="#2563a8"/>
-            <rect x="126" y="86" width="48" height="12" rx="5"
+            {/* ── LATCH / CLASP ── */}
+            <rect x="124" y="104" width="92" height="30" rx="10" fill="#2563a8"/>
+            <rect x="136" y="112" width="68" height="14" rx="5"
               fill="#1a3a5c" opacity="0.55"/>
-            <circle cx="150" cy="92" r="4.5" fill="#2563a8"/>
-            <circle cx="150" cy="92" r="2"   fill="#1a3a5c" opacity="0.5"/>
+            <circle cx="170" cy="119" r="5"   fill="#2563a8"/>
+            <circle cx="170" cy="119" r="2.2" fill="#1a3a5c" opacity="0.5"/>
 
-            {/* ── TOOL SILHOUETTES — fly out when lid opens ── */}
-            {/* Bar chart — flies straight up center-left */}
-            <g className={isBurst ? "tb-fly-l" : ""} opacity="0"
-               style={{ transformOrigin: "90px 100px" }}>
-              <rect x="76" y="96" width="7"  height="8"  rx="1.5" fill="#2563a8"/>
-              <rect x="86" y="91" width="7"  height="13" rx="1.5" fill="#2563a8" opacity="0.9"/>
-              <rect x="96" y="86" width="7"  height="18" rx="1.5" fill="#2563a8"/>
-            </g>
+            {/* ── 5 TOOL ICONS — fall to shelf ── */}
+            {SHELF.map((s, i) => (
+              <g
+                key={s.label}
+                className={isBurst ? `tb-fall-${i + 1}` : ""}
+                opacity="0"
+                style={{ transformOrigin: `${ORIGIN_X}px ${ORIGIN_Y}px` }}
+              >
+                <ShelfIcon type={s.icon} cx={ORIGIN_X} cy={ORIGIN_Y} />
+              </g>
+            ))}
 
-            {/* Magnifying glass — center */}
-            <g className={isBurst ? "tb-fly-c" : ""} opacity="0"
-               style={{ transformOrigin: "148px 100px" }}>
-              <circle cx="144" cy="97" r="9"  fill="none" stroke="#2563a8" strokeWidth="3"/>
-              <line   x1="151" y1="104" x2="157" y2="112"
-                stroke="#2563a8" strokeWidth="3" strokeLinecap="round"/>
-            </g>
+            {/* ── SHELF LABELS — fade in when tools land (content phase) ── */}
+            {SHELF.map((s, i) => (
+              <text
+                key={`lbl-${s.label}`}
+                x={SHELF_X[i]}
+                y={SHELF_Y + 22}
+                textAnchor="middle"
+                fontSize="7.5"
+                fontWeight="700"
+                letterSpacing="0.06em"
+                fill="#2563a8"
+                opacity={isContent ? 1 : 0}
+                style={{
+                  transition: `opacity 0.5s ease ${0.1 * i + 0.2}s`,
+                  textTransform: "uppercase",
+                  fontFamily: "var(--font-geist-sans, sans-serif)",
+                }}
+              >
+                {s.label}
+              </text>
+            ))}
 
-            {/* Document — flies right */}
-            <g className={isBurst ? "tb-fly-r" : ""} opacity="0"
-               style={{ transformOrigin: "196px 100px" }}>
-              <rect x="188" y="88" width="18" height="22" rx="3"
-                fill="none" stroke="#2563a8" strokeWidth="2.5"/>
-              <line x1="192" y1="95" x2="202" y2="95"
-                stroke="#2563a8" strokeWidth="1.8" strokeLinecap="round"/>
-              <line x1="192" y1="100" x2="202" y2="100"
-                stroke="#2563a8" strokeWidth="1.8" strokeLinecap="round"/>
-              <line x1="192" y1="105" x2="198" y2="105"
-                stroke="#2563a8" strokeWidth="1.8" strokeLinecap="round"/>
-            </g>
-
-            {/* Wrench — flies far left */}
-            <g className={isBurst ? "tb-fly-fl" : ""} opacity="0"
-               style={{ transformOrigin: "48px 100px" }}>
-              <path d="M42 88 Q38 92 39 100 L48 110 Q51 113 54 110
-                       Q57 107 54 104 L45 94 Q47 87 42 88Z"
-                fill="#2563a8" opacity="0.9"/>
-              <circle cx="43" cy="89" r="4" fill="none"
-                stroke="#2563a8" strokeWidth="2.5"/>
-            </g>
-
-            {/* ── LID GROUP — animated ── */}
-            <g className={lidClass} filter="url(#tb-lid-drop)">
+            {/* ── LID GROUP — 3-D forward flip ── */}
+            <g
+              className={lidClass}
+              filter="url(#tb-lid-drop)"
+              style={{/* transform-origin handled by .tb-lid-open3d CSS class */}}
+            >
               {/* Lid body */}
-              <rect x="10" y="66" width="280" height="28" rx="8"
+              <rect x="30" y="100" width="280" height="20" rx="8"
                 fill="url(#tb-lid-grad)"/>
 
-              {/* Lid top surface highlight */}
-              <rect x="10" y="66" width="280" height="8" rx="6"
+              {/* Lid top highlight */}
+              <rect x="30" y="100" width="280" height="7" rx="6"
                 fill="rgba(255,255,255,0.09)"/>
 
               {/* Lid bottom seam */}
-              <rect x="10" y="90" width="280" height="3" rx="1"
+              <rect x="30" y="116" width="280" height="3" rx="1"
                 fill="rgba(0,0,0,0.12)"/>
 
               {/* Handle anchor tabs */}
-              <rect x="90"  y="66" width="14" height="10" rx="4" fill="#2563a8"/>
-              <rect x="196" y="66" width="14" height="10" rx="4" fill="#2563a8"/>
+              <rect x="108" y="100" width="14" height="9" rx="4" fill="#2563a8"/>
+              <rect x="218" y="100" width="14" height="9" rx="4" fill="#2563a8"/>
 
-              {/* Handle arch — main stroke */}
-              <path d="M 97 66 Q 97 26 150 26 Q 203 26 203 66"
-                fill="none" stroke="#2563a8" strokeWidth="11"
+              {/* Handle arch */}
+              <path d="M 115 100 Q 115 52 170 52 Q 225 52 225 100"
+                fill="none" stroke="#2563a8" strokeWidth="12"
                 strokeLinecap="round"/>
-              {/* Handle top highlight */}
-              <path d="M 97 66 Q 97 26 150 26 Q 203 26 203 66"
+              <path d="M 115 100 Q 115 52 170 52 Q 225 52 225 100"
                 fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="5"
                 strokeLinecap="round"/>
-              {/* Handle inner shadow */}
-              <path d="M 102 66 Q 102 32 150 32 Q 198 32 198 66"
-                fill="none" stroke="rgba(0,0,0,0.25)" strokeWidth="4"
+              <path d="M 120 100 Q 120 57 170 57 Q 220 57 220 100"
+                fill="none" stroke="rgba(0,0,0,0.22)" strokeWidth="4"
                 strokeLinecap="round"/>
 
               {/* Lid rivets */}
-              <circle cx="30"  cy="80" r="5" fill="#2563a8" opacity="0.8"/>
-              <circle cx="270" cy="80" r="5" fill="#2563a8" opacity="0.8"/>
+              <circle cx="50"  cy="109" r="5" fill="#2563a8" opacity="0.8"/>
+              <circle cx="290" cy="109" r="5" fill="#2563a8" opacity="0.8"/>
 
               {/* Lid brand line */}
-              <rect x="55" y="76" width="190" height="2.5" rx="1.25"
-                fill="rgba(255,255,255,0.08)"/>
+              <rect x="70" y="106" width="200" height="2.5" rx="1.25"
+                fill="rgba(255,255,255,0.07)"/>
             </g>
 
           </svg>
         </div>
       </div>
 
-      {/* ── Section label + heading — cascade in after box opens ─── */}
+      {/* ── Section label + heading ── */}
       <div className={isContent ? "tb-content-in d0" : "opacity-0"}
            style={{ pointerEvents: isContent ? "auto" : "none" }}>
         <div className="flex items-center gap-3 mb-6">
