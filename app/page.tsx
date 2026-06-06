@@ -9,8 +9,13 @@ interface Tool {
   name: string;
   description: string;
   gradient: string;
+  photo?: string;        // Unsplash URL — shown behind gradient overlay
   status?: "coming";
 }
+
+// Curated Unsplash photos — each dark enough to work under a semi-opaque gradient
+const PX = "?auto=format&fit=crop&w=600&q=75";
+const U  = (id: string) => `https://images.unsplash.com/photo-${id}${PX}`;
 
 const ROWS: { section: string; tools: Tool[] }[] = [
   {
@@ -18,22 +23,28 @@ const ROWS: { section: string; tools: Tool[] }[] = [
     tools: [
       { href: "/tools/where-is-the-dough", name: "Where the Money Resides",
         description: "Campaign finance for 49 Harris County politicians — live from FEC, TEC, and county filings.",
-        gradient: "linear-gradient(135deg,#92400e 0%,#b45309 60%,#d97706 100%)" },
+        gradient: "linear-gradient(135deg,#92400e 0%,#b45309 60%,#d97706 100%)",
+        photo: U("1611974789855-9c2a0a7236a3") },
       { href: "/tools/county-budget", name: "Harris County Budget",
         description: "FY2027 proposed spending — departments, contractors, story format.",
-        gradient: "linear-gradient(135deg,#1e3a5f 0%,#2563a8 100%)" },
+        gradient: "linear-gradient(135deg,#1e3a5f 0%,#2563a8 100%)",
+        photo: U("1575470021395-45dca7d3e3d0") },
       { href: "/tools/city-budget", name: "Houston City Budget",
         description: "The city's $6.5B budget broken down with the Three Moves explainer.",
-        gradient: "linear-gradient(135deg,#065f46 0%,#059669 100%)" },
+        gradient: "linear-gradient(135deg,#065f46 0%,#059669 100%)",
+        photo: U("1527631746610-bca00a040d60") },
       { href: "/tools/tirz", name: "TIRZ Tool",
         description: "27+ tax increment zones — what they collect and who governs them.",
-        gradient: "linear-gradient(135deg,#1e40af 0%,#2563a8 100%)" },
+        gradient: "linear-gradient(135deg,#1e40af 0%,#2563a8 100%)",
+        photo: U("1486325212027-8081e485255e") },
       { href: "/tools/infrastructure-funding", name: "Infrastructure Funding",
         description: "IIJA, FEMA, HUD, TxDOT — federal money mapped by project.",
-        gradient: "linear-gradient(135deg,#9a3412 0%,#c2410c 100%)" },
+        gradient: "linear-gradient(135deg,#9a3412 0%,#c2410c 100%)",
+        photo: U("1477959858617-67f85cf4f1df") },
       { href: "/tools/discretionary-funds", name: "Discretionary Funds",
         description: "How each council member spends their district improvement dollars.",
-        gradient: "linear-gradient(135deg,#0e7490 0%,#0891b2 100%)" },
+        gradient: "linear-gradient(135deg,#0e7490 0%,#0891b2 100%)",
+        photo: U("1529156069898-49953e39b3ac") },
     ],
   },
   {
@@ -41,22 +52,28 @@ const ROWS: { section: string; tools: Tool[] }[] = [
     tools: [
       { href: "/tools/heat-check", name: "Heat Check",
         description: "Harris County primary & runoff results, precinct by precinct.",
-        gradient: "linear-gradient(135deg,#991b1b 0%,#dc2626 100%)" },
+        gradient: "linear-gradient(135deg,#991b1b 0%,#dc2626 100%)",
+        photo: U("1596422846543-75c6fc197f07") },
       { href: "/tools/districts", name: "Districts",
         description: "Portrait of a seat — demographics, history, and who represents it.",
-        gradient: "linear-gradient(135deg,#0f2540 0%,#1a3a5c 100%)" },
+        gradient: "linear-gradient(135deg,#0f2540 0%,#1a3a5c 100%)",
+        photo: U("1569091791842-7cfb64e04797") },
       { href: "/tools/early-vote", name: "Early Vote Tracker",
         description: "Dem vs. Rep universe turnout by precinct — who is showing up.",
-        gradient: "linear-gradient(135deg,#3730a3 0%,#4f46e5 100%)" },
+        gradient: "linear-gradient(135deg,#3730a3 0%,#4f46e5 100%)",
+        photo: U("1541872703-74c5e44368f9") },
       { href: "/tools/endorsement-flowchart", name: "Endorsement Flowchart",
         description: "Who endorsed whom — unions, orgs, officials, all in one chart.",
-        gradient: "linear-gradient(135deg,#9d174d 0%,#be185d 100%)" },
+        gradient: "linear-gradient(135deg,#9d174d 0%,#be185d 100%)",
+        photo: U("1521791136064-7986c2920216") },
       { href: "/tools/consultant-flowchart", name: "Consultant Flowchart",
         description: "The operatives behind the campaigns — networked and mapped.",
-        gradient: "linear-gradient(135deg,#5b21b6 0%,#7c3aed 100%)" },
+        gradient: "linear-gradient(135deg,#5b21b6 0%,#7c3aed 100%)",
+        photo: U("1542744173-8e7e53415bb0") },
       { href: "/tools/civic-calendar", name: "Civic Calendar",
         description: "Every election date, filing deadline, and public meeting.",
-        gradient: "linear-gradient(135deg,#14532d 0%,#16a34a 100%)" },
+        gradient: "linear-gradient(135deg,#14532d 0%,#16a34a 100%)",
+        photo: U("1506784983877-45594efa4cbe") },
     ],
   },
   {
@@ -64,10 +81,12 @@ const ROWS: { section: string; tools: Tool[] }[] = [
     tools: [
       { href: "/tools/bill-tracker", name: "Bill Tracker",
         description: "TX 89th Legislature — bills filed by Harris County reps, ranked by laws passed.",
-        gradient: "linear-gradient(135deg,#4c1d95 0%,#6d28d9 100%)" },
+        gradient: "linear-gradient(135deg,#4c1d95 0%,#6d28d9 100%)",
+        photo: U("1585952406519-9d8b8c3ba4b4") },
       { href: "/tools/congressional-bills", name: "Congress Bills",
         description: "119th Congress — what Harris County's US reps actually signed into law.",
-        gradient: "linear-gradient(135deg,#1d4ed8 0%,#2563a8 100%)" },
+        gradient: "linear-gradient(135deg,#1d4ed8 0%,#2563a8 100%)",
+        photo: U("1523348837708-15d4a09cfac2") },
     ],
   },
   {
@@ -75,19 +94,20 @@ const ROWS: { section: string; tools: Tool[] }[] = [
     tools: [
       { href: "/tools/city-hall", name: "City Hall Beat",
         description: "Emily Takes Notes — City Council and HISD hearings AI-summarized and cross-referenced with politician profiles.",
-        gradient: "linear-gradient(135deg,#0f766e 0%,#0d9488 60%,#0891b2 100%)" },
+        gradient: "linear-gradient(135deg,#0f766e 0%,#0d9488 60%,#0891b2 100%)",
+        photo: U("1565517613760-aa17a7a34bd7") },
       { href: "/tools/harris-county-beat", name: "Harris County Beat",
-        description: "Commissioners Court, JPD, and county agencies — AI-summarized hearings with full context.",
+        description: "Commissioners Court, JPD, and county agencies — hearings tracked with full context.",
         gradient: "linear-gradient(135deg,#1a3a5c 0%,#2563a8 100%)",
-        status: "coming" },
+        photo: U("1589829545856-d10d557cf95f") },
       { href: "/tools/state-beat", name: "State House Beat",
         description: "TX 89th Legislature — floor votes, committee hearings, and lobbyist filings from Austin.",
         gradient: "linear-gradient(135deg,#4c1d95 0%,#7c3aed 100%)",
-        status: "coming" },
+        photo: U("1569949382669-ecf63b8c2c9f") },
       { href: "/tools/congress-beat", name: "Congressional Beat",
         description: "Harris County's US representatives — floor speeches, votes, and committee work in Washington.",
         gradient: "linear-gradient(135deg,#991b1b 0%,#b91c1c 60%,#dc2626 100%)",
-        status: "coming" },
+        photo: U("1503198515498-d0bd9ed16902") },
     ],
   },
   {
@@ -95,16 +115,20 @@ const ROWS: { section: string; tools: Tool[] }[] = [
     tools: [
       { href: "/tools/tv-station", name: "TV Station",
         description: "Commissioners Court, City Council, HISD, TX Legislature — all live.",
-        gradient: "linear-gradient(135deg,#111827 0%,#1f2937 100%)" },
+        gradient: "linear-gradient(135deg,#111827 0%,#1f2937 100%)",
+        photo: U("1585771724684-38269d6639fd") },
       { href: "/blogs", name: "Journalists & Voices",
         description: "The best journalists and civic accounts — X, Instagram, Threads, newsletters — covering Harris County.",
-        gradient: "linear-gradient(135deg,#78350f 0%,#b45309 100%)" },
+        gradient: "linear-gradient(135deg,#78350f 0%,#b45309 100%)",
+        photo: U("1504711434969-e33886168f5c") },
       { href: "/politicians", name: "Politicians",
         description: "49 Harris County officials — stats, finance, bills, and social feeds.",
-        gradient: "linear-gradient(135deg,#1a3a5c 0%,#2563a8 100%)" },
+        gradient: "linear-gradient(135deg,#1a3a5c 0%,#2563a8 100%)",
+        photo: U("1560472354-b33ff0c44a43") },
       { href: "/contact", name: "Contact & Feedback",
         description: "Spot a data error? Have an idea for a new tool? Tell us.",
-        gradient: "linear-gradient(135deg,#374151 0%,#6b7280 100%)" },
+        gradient: "linear-gradient(135deg,#374151 0%,#6b7280 100%)",
+        photo: U("1577563908411-5077b6dc7624") },
     ],
   },
 ];
@@ -120,12 +144,22 @@ function BrowseCard({ tool }: { tool: Tool }) {
         boxShadow: "0 2px 8px rgba(26,58,92,0.08), 0 1px 2px rgba(0,0,0,0.04)",
       }}
     >
-      {/* Cover */}
-      <div
-        className="w-full h-[130px] relative overflow-hidden"
-        style={{ background: tool.gradient }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      {/* Cover — photo + gradient overlay */}
+      <div className="w-full h-[130px] relative overflow-hidden" style={{ background: "#0a0a0a" }}>
+        {tool.photo && (
+          <img
+            src={tool.photo}
+            alt=""
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105"
+            style={{ opacity: 0.45 }}
+          />
+        )}
+        {/* Gradient colour identity — slightly translucent so photo shows through */}
+        <div className="absolute inset-0" style={{ background: tool.gradient, opacity: tool.photo ? 0.72 : 1 }} />
+        {/* Hover shimmer */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
       {/* Info */}
       <div className="p-4">
