@@ -3,7 +3,7 @@ import Link from "next/link";
 interface Source {
   name: string;
   handle?: string;
-  platform: "Newsletter" | "Blog" | "Twitter/X" | "Instagram" | "YouTube" | "Podcast" | "Website";
+  platform: "Newsletter" | "Blog" | "Twitter/X" | "Instagram" | "Threads" | "YouTube" | "Podcast" | "Website";
   description: string;
   url: string;
   tags: string[];
@@ -49,6 +49,11 @@ const SOURCES: Source[] = [
   { name: "Erik Manny",                 platform: "Twitter/X",    url: "https://twitter.com/erikmanny", handle: "@erikmanny", description: "Houston political commentator and media personality with a finger on the pulse of Harris County races and community politics.", tags: ["Commentary", "Harris County", "Media"] },
   { name: "Charles Blain",             platform: "Twitter/X",    url: "https://twitter.com/CharlesBlain_", handle: "@CharlesBlain_", description: "Conservative Houston political analyst and advocate. Texas-focused commentary on local government, property taxes, and fiscal policy.", tags: ["Conservative", "Fiscal Policy", "Property Tax"] },
   { name: "iangelcarroll",              platform: "Instagram",    url: "https://www.instagram.com/iangelcarroll", handle: "@iangelcarroll", description: "Houston-based content creator and civic voice bringing Houston politics and culture to a younger, engaged audience.", tags: ["Youth", "Houston Culture", "Community"] },
+
+  // ── Threads ──────────────────────────────────────────────────────────────
+  { name: "Texas Tribune",              platform: "Threads",      url: "https://www.threads.net/@texastribune", handle: "@texastribune", description: "The Texas Tribune's Threads presence — breaking Texas politics, legislative updates, and election coverage.", tags: ["Legislature", "Statewide", "Breaking News"], recommended: true },
+  { name: "Houston Landing",            platform: "Threads",      url: "https://www.threads.net/@houstonlanding", handle: "@houstonlanding", description: "Houston Landing's accountability journalism on Threads — housing, environment, and local government.", tags: ["Investigative", "Housing", "Local Government"] },
+  { name: "Shea Jordan Smith",          platform: "Threads",      url: "https://www.threads.net/@sheajordansmith", handle: "@sheajordansmith", description: "Houston civic voice on Threads — local politics and community news for a younger audience.", tags: ["Community", "Houston Culture", "Civic Engagement"] },
 ];
 
 const PLATFORM_ICON: Record<string, string> = {
@@ -56,6 +61,7 @@ const PLATFORM_ICON: Record<string, string> = {
   "Blog":        "✍️",
   "Twitter/X":   "𝕏",
   "Instagram":   "📸",
+  "Threads":     "⊕",
   "YouTube":     "▶",
   "Podcast":     "🎙",
   "Website":     "🌐",
@@ -66,6 +72,7 @@ const PLATFORM_COLOR: Record<string, string> = {
   "Blog":        "#fef3c7 text-amber-700 border-amber-200",
   "Twitter/X":   "#f3f4f6 text-gray-700 border-gray-200",
   "Instagram":   "#fce7f3 text-pink-700 border-pink-200",
+  "Threads":     "#f0fdf4 text-green-700 border-green-200",
   "YouTube":     "#fee2e2 text-red-700 border-red-200",
   "Podcast":     "#ede9fe text-violet-700 border-violet-200",
   "Website":     "#dcfce7 text-emerald-700 border-emerald-200",

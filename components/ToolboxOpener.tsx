@@ -12,12 +12,12 @@ import { useRef, useState, useEffect } from "react";
 
 type Phase = "idle" | "appear" | "shake" | "bounce" | "open" | "burst" | "content";
 
-// 5 sections in the browse grid (labels shown on the shelf after tools land)
+// 5 sections in the browse grid — order matches ROWS in page.tsx
 const SHELF = [
-  { label: "City Hall",    icon: "building" },
-  { label: "Elections",   icon: "chart"    },
   { label: "Money",       icon: "dollar"   },
+  { label: "Elections",   icon: "chart"    },
   { label: "Legislation", icon: "scroll"   },
+  { label: "The Beat",    icon: "building" },
   { label: "Media",       icon: "screen"   },
 ] as const;
 
