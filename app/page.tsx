@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import Link from "next/link";
 import ScrollReveal from "@/components/ScrollReveal";
 import DashboardWidget from "@/components/DashboardWidget";
@@ -133,6 +135,133 @@ const ROWS: { section: string; tools: Tool[] }[] = [
   },
 ];
 
+/* ── Featured flagship tools ─────────────────────────────────────────────── */
+const FEATURED = [
+  {
+    href:        "/tools/heat-check",
+    name:        "Heat Check",
+    eyebrow:     "Elections",
+    headline:    "See how every\nprecinct voted.",
+    description: "1,011 precincts. Democratic and Republican primaries. Zoom into your block and see exactly how your neighborhood voted — and who turned out.",
+    proof:       ["1,011 precincts mapped", "Dem & Rep primaries", "2026 runoff data"],
+    photo:       U("1596422846543-75c6fc197f07"),
+    gradient:    "linear-gradient(135deg,#7f1d1d 0%,#991b1b 60%,#dc2626 100%)",
+    size:        "large",
+  },
+  {
+    href:        "/tools/where-is-the-dough",
+    name:        "Where the Money Resides",
+    eyebrow:     "Money",
+    headline:    "Follow the money\nbehind every official.",
+    description: "Live FEC, TEC, and county filings for all 49 Harris County politicians. See who's funding your representative — and how much.",
+    proof:       ["49 officials tracked", "FEC + TEC + County live", "Updated each filing cycle"],
+    photo:       U("1611974789855-9c2a0a7236a3"),
+    gradient:    "linear-gradient(135deg,#78350f 0%,#b45309 60%,#d97706 100%)",
+    size:        "small",
+  },
+  {
+    href:        "/tools/city-hall",
+    name:        "City Hall Beat",
+    eyebrow:     "The Beat",
+    headline:    "What actually happened\nat Tuesday's meeting.",
+    description: "Every Houston City Council meeting AI-summarized from Emily Takes Notes — major votes, who spoke, and which politicians were in the room.",
+    proof:       ["Every Tuesday meeting", "AI-structured timeline", "Cross-referenced to politician profiles"],
+    photo:       U("1565517613760-aa17a7a34bd7"),
+    gradient:    "linear-gradient(135deg,#0f766e 0%,#0d9488 60%,#0891b2 100%)",
+    size:        "small",
+  },
+] as const;
+
+function FeaturedSection() {
+  const [large, ...small] = FEATURED;
+  return (
+    <section id="start-here" className="py-16 md:py-24 px-6" style={{ background: "#f5f3ef" }}>
+      <div className="max-w-6xl mx-auto">
+        {/* Section label */}
+        <div className="flex items-center gap-3 mb-10">
+          <span className="block w-8 h-px bg-[var(--accent)]/25" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--accent)]/50">Start Here</span>
+          <span className="flex-1 h-px bg-[var(--border)]" />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-5">
+
+          {/* Large featured card */}
+          <Link href={large.href} className="group relative rounded-[2rem] overflow-hidden cursor-pointer block"
+            style={{ minHeight: 420 }}>
+            {/* Photo */}
+            <img src={large.photo} alt="" loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105"
+              style={{ opacity: 0.5 }} />
+            {/* Gradient overlay */}
+            <div className="absolute inset-0" style={{ background: large.gradient, opacity: 0.75 }} />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+            {/* Content */}
+            <div className="relative z-10 flex flex-col justify-end h-full p-8 md:p-10" style={{ minHeight: 420 }}>
+              <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/50 mb-3">{large.eyebrow}</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-white leading-[1.08] mb-4 whitespace-pre-line"
+                style={{ fontFamily: "var(--font-playfair), serif" }}>
+                {large.headline}
+              </h2>
+              <p className="text-white/70 text-sm leading-relaxed max-w-md mb-6">{large.description}</p>
+
+              {/* Proof points */}
+              <div className="flex flex-wrap gap-2 mb-6">
+                {large.proof.map(p => (
+                  <span key={p} className="text-[10px] font-bold px-3 py-1 rounded-full"
+                    style={{ background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.85)", border: "1px solid rgba(255,255,255,0.18)" }}>
+                    {p}
+                  </span>
+                ))}
+              </div>
+
+              <span className="inline-flex items-center gap-2 text-sm font-bold text-white group-hover:gap-3 transition-all duration-300">
+                Open {large.name}
+                <span className="inline-flex w-8 h-8 rounded-full bg-white/15 items-center justify-center group-hover:bg-white/25 transition-colors">→</span>
+              </span>
+            </div>
+          </Link>
+
+          {/* Two smaller cards stacked */}
+          <div className="flex flex-col gap-5">
+            {small.map(tool => (
+              <Link key={tool.href} href={tool.href}
+                className="group relative rounded-[2rem] overflow-hidden cursor-pointer flex-1 block"
+                style={{ minHeight: 195 }}>
+                <img src={tool.photo} alt="" loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105"
+                  style={{ opacity: 0.5 }} />
+                <div className="absolute inset-0" style={{ background: tool.gradient, opacity: 0.75 }} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+
+                <div className="relative z-10 flex flex-col justify-end h-full p-6" style={{ minHeight: 195 }}>
+                  <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/50 mb-2">{tool.eyebrow}</span>
+                  <h3 className="text-2xl font-bold text-white leading-tight mb-2 whitespace-pre-line"
+                    style={{ fontFamily: "var(--font-playfair), serif" }}>
+                    {tool.headline}
+                  </h3>
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-wrap gap-1.5">
+                      {tool.proof.slice(0, 2).map(p => (
+                        <span key={p} className="text-[9px] font-bold px-2 py-0.5 rounded-full"
+                          style={{ background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.8)", border: "1px solid rgba(255,255,255,0.15)" }}>
+                          {p}
+                        </span>
+                      ))}
+                    </div>
+                    <span className="text-white/60 text-xs font-bold group-hover:text-white group-hover:translate-x-1 transition-all duration-300">→</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ── Browse card ─────────────────────────────────────────────────────────── */
 function BrowseCard({ tool }: { tool: Tool }) {
   const card = (
@@ -213,6 +342,70 @@ function BrowseRow({ section, tools }: { section: string; tools: Tool[] }) {
   );
 }
 
+/* ── Full toolbox browse (collapsible) ───────────────────────────────────── */
+function ToolboxBrowse() {
+  const [open, setOpen] = useState(false);
+  return (
+    <section id="toolbox" style={{ background: "#eceae6", borderTop: "1px solid #ddd9d0" }}>
+      {/* Toggle header */}
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="w-full flex items-center justify-between px-6 py-6 cursor-pointer group transition-colors duration-200 hover:bg-black/4"
+      >
+        <div className="flex items-center gap-4">
+          {/* Mini toolbox icon */}
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--accent)" }}>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <rect x="2" y="9" width="16" height="9" rx="2" fill="rgba(255,255,255,0.9)"/>
+              <rect x="6" y="6" width="8" height="5" rx="1.5" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5"/>
+              <rect x="8" y="4" width="4" height="4" rx="1" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2"/>
+            </svg>
+          </div>
+          <div className="text-left">
+            <p className="text-sm font-bold text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair), serif" }}>
+              Browse All {ROWS.reduce((n, r) => n + r.tools.length, 0)} Tools
+            </p>
+            <p className="text-[11px] text-[var(--muted)]">
+              {ROWS.map(r => r.section).join(" · ")}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] font-bold text-[var(--muted)] group-hover:text-[var(--accent)] transition-colors">
+            {open ? "Collapse" : "Expand"}
+          </span>
+          <div className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+            style={{ background: open ? "var(--accent)" : "rgba(26,58,92,0.1)" }}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+              stroke={open ? "#fff" : "var(--accent)"} strokeWidth="2"
+              style={{ transform: open ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.3s ease" }}>
+              <path d="M3 5l4 4 4-4" />
+            </svg>
+          </div>
+        </div>
+      </button>
+
+      {/* Collapsible content */}
+      <div style={{
+        overflow: "hidden",
+        maxHeight: open ? "4000px" : "0",
+        transition: "max-height 0.6s cubic-bezier(0.4,0,0.2,1)",
+      }}>
+        <div className="pt-4 pb-16" style={{ background: "#f5f3ef" }}>
+          <div className="max-w-7xl mx-auto px-6 mb-10">
+            <ToolboxOpener />
+          </div>
+          <ScrollReveal>
+            {ROWS.map(row => (
+              <BrowseRow key={row.section} section={row.section} tools={row.tools} />
+            ))}
+          </ScrollReveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ── Page ────────────────────────────────────────────────────────────────── */
 export default function Home() {
   return (
@@ -243,17 +436,25 @@ export default function Home() {
             their government — how it votes, where it spends, and when it decides.
           </p>
 
-          <a
-            href="#toolbox"
-            className="group inline-flex items-center gap-3 bg-sky-300 hover:bg-sky-200 text-[var(--accent)] font-bold rounded-full px-7 py-4 text-sm transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_0_48px_rgba(125,211,252,0.35)] active:scale-[0.98]"
-          >
-            Open the Toolbox
-            <span className="inline-flex w-7 h-7 rounded-full bg-[var(--accent)]/15 items-center justify-center group-hover:translate-y-0.5 transition-transform duration-500">↓</span>
-          </a>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="#start-here"
+              className="group inline-flex items-center gap-3 bg-sky-300 hover:bg-sky-200 text-[var(--accent)] font-bold rounded-full px-7 py-4 text-sm transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_0_48px_rgba(125,211,252,0.35)] active:scale-[0.98]"
+            >
+              Start Exploring
+              <span className="inline-flex w-7 h-7 rounded-full bg-[var(--accent)]/15 items-center justify-center group-hover:translate-y-0.5 transition-transform duration-500">↓</span>
+            </a>
+            <a
+              href="#toolbox"
+              className="inline-flex items-center gap-2 text-white/55 hover:text-white font-semibold text-sm transition-colors duration-300 px-4 py-4"
+            >
+              Browse all 22 tools
+            </a>
+          </div>
 
           <div className="mt-16 flex flex-wrap gap-8">
             {[
-              { value: "18+", label: "Civic tools" },
+              { value: "22", label: "Civic tools" },
               { value: "4.7M", label: "Residents served" },
               { value: "Free", label: "Always" },
               { value: "100%", label: "Public data" },
@@ -274,22 +475,11 @@ export default function Home() {
       {/* ── DASHBOARD WIDGET ─────────────────────────────────────── */}
       <DashboardWidget />
 
-      {/* ── TOOLBOX ──────────────────────────────────────────────── */}
-      <section
-        id="toolbox"
-        className="pt-16 pb-24"
-        style={{ background: "#f5f3ef" }}
-      >
-        <div className="max-w-7xl mx-auto px-6 mb-10">
-          <ToolboxOpener />
-        </div>
+      {/* ── FEATURED FLAGSHIP TOOLS ──────────────────────────────── */}
+      <FeaturedSection />
 
-        <ScrollReveal>
-          {ROWS.map(row => (
-            <BrowseRow key={row.section} section={row.section} tools={row.tools} />
-          ))}
-        </ScrollReveal>
-      </section>
+      {/* ── FULL TOOLBOX BROWSE ──────────────────────────────────── */}
+      <ToolboxBrowse />
 
       {/* ── ABOUT ──────────────────────────────────────────────────── */}
       <section id="about" className="border-t border-[var(--border)] py-28 md:py-40 px-6 bg-[var(--accent)] text-white relative overflow-hidden">
