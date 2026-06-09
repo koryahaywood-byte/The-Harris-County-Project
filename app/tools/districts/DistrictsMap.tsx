@@ -211,10 +211,18 @@ export default function DistrictsMap({
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
       />
-      {boundsKey && districtBounds.current && (
+      {/* Fit to real boundary when available, else fall back to synthetic precinct bounds */}
+      {boundaryGeo && (() => {
+        try {
+          const b = L.geoJSON(boundaryGeo).getBounds();
+          if (b.isValid()) return <FitBounds bounds={b} key={`bound-${districtType}-${districtNum}`} />;
+        } catch { /* ignore */ }
+        return null;
+      })()}
+      {!boundaryGeo && boundsKey && districtBounds.current && (
         <FitBounds bounds={districtBounds.current} key={boundsKey} />
       )}
-      {!hasDistrict && (
+      {!hasDistrict && !boundaryGeo && (
         <FitBounds bounds={null} key="init" />
       )}
       {/* Real district boundary outline — drawn on top of precincts */}
@@ -235,17 +243,23 @@ export default function DistrictsMap({
       )}
 
       <GeoJSON
-        key={`${[...highlightedPrecincts].join(",")}_${selectedPrecinct}`}
+        key={`${[...highlightedPrecincts].join(",")}_${selectedPrecinct}_${!!boundaryGeo}`}
         data={geojson}
         style={(feature) => {
           const id = (feature as PrecinctFeature).properties.precinct ?? "";
-          const inDistrict = !hasDistrict || highlightedPrecincts.has(id);
           const isSelected = id === selectedPrecinct;
           const demo = precinctData[id];
 
           if (isSelected) {
             return { fillColor: "#f59e0b", fillOpacity: 0.9, color: "#d97706", weight: 2.5 };
           }
+
+          // When we have a real Census boundary, grey everything out — the outline tells the story
+          if (boundaryGeo) {
+            return { fillColor: "#d1d5db", fillOpacity: 0.15, color: "rgba(200,200,200,0.3)", weight: 0.4 };
+          }
+
+          const inDistrict = !hasDistrict || highlightedPrecincts.has(id);
           if (!inDistrict) {
             return { fillColor: "#d1d5db", fillOpacity: 0.18, color: "rgba(200,200,200,0.4)", weight: 0.4 };
           }
@@ -261,7 +275,7 @@ export default function DistrictsMap({
         onEachFeature={(feature, layer) => {
           const id = (feature as PrecinctFeature).properties.precinct ?? "";
           const demo = precinctData[id];
-          const inDistrict = !hasDistrict || highlightedPrecincts.has(id);
+          const inDistrict = boundaryGeo ? false : (!hasDistrict || highlightedPrecincts.has(id));
 
           if (demo && inDistrict) {
             layer.bindTooltip(buildTooltip(id, demo), {
