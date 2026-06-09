@@ -442,6 +442,7 @@ export const POLITICIANS: Politician[] = [
     chamber: "City",
     party: "D",
     salary: 275000,
+    photo: "https://www.houstontx.gov/mayor/images/mayor-whitmire.jpg",
     website: "https://www.houstontx.gov/mayor",
     twitter: "JohnWhitmire",
     termStart: 2024,
@@ -631,6 +632,7 @@ export const POLITICIANS: Politician[] = [
     chamber: "City",
     party: "D",
     salary: 174000,
+    photo: "https://www.houstontx.gov/controller/images/hollins.jpg",
     website: "https://www.houstontx.gov/controller",
     twitter: "ChrisHollins",
   },
@@ -643,6 +645,7 @@ export const POLITICIANS: Politician[] = [
     district: "Board Chair",
     chamber: "HISD",
     party: "NP",
+    photo: "https://www.houstonisd.org/cms/lib/TX02215309/Centricity/Domain/10559/Cruz-Judith.jpg",
     website: "https://www.houstonisd.org/boardofmanagers",
   },
   {
@@ -652,6 +655,7 @@ export const POLITICIANS: Politician[] = [
     district: "Districtwide",
     chamber: "HISD",
     party: "NP",
+    photo: "https://www.houstonisd.org/cms/lib/TX02215309/Centricity/Domain/10559/Huewitt-Kenneth.jpg",
     website: "https://www.houstonisd.org",
   },
   {
@@ -661,6 +665,7 @@ export const POLITICIANS: Politician[] = [
     district: "Board Member",
     chamber: "HISD",
     party: "NP",
+    photo: "https://www.houstonisd.org/cms/lib/TX02215309/Centricity/Domain/10559/Allen-Patricia.jpg",
     website: "https://www.houstonisd.org/boardofmanagers",
   },
   {
@@ -670,6 +675,7 @@ export const POLITICIANS: Politician[] = [
     district: "Board Member",
     chamber: "HISD",
     party: "NP",
+    photo: "https://www.houstonisd.org/cms/lib/TX02215309/Centricity/Domain/10559/Tamez-Adriana.jpg",
     website: "https://www.houstonisd.org/boardofmanagers",
   },
   {
@@ -679,6 +685,7 @@ export const POLITICIANS: Politician[] = [
     district: "Board Member",
     chamber: "HISD",
     party: "NP",
+    photo: "https://www.houstonisd.org/cms/lib/TX02215309/Centricity/Domain/10559/Harris-Paula.jpg",
     website: "https://www.houstonisd.org/boardofmanagers",
   },
 ];

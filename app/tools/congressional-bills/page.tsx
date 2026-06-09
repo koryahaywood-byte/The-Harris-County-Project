@@ -348,6 +348,20 @@ export default function CongressionalBillTracker() {
         </div>
       </div>
 
+      {/* Session context banner */}
+      <div className="max-w-4xl mx-auto px-6 pt-5">
+        <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl p-4">
+          <span className="text-lg leading-none mt-0.5">📋</span>
+          <div>
+            <p className="text-sm font-semibold text-amber-900">119th Congress — Session in Progress</p>
+            <p className="text-xs text-amber-700 mt-0.5">
+              The 119th Congress runs January 2025 – January 2027. Bills shown reflect current status as of last sync.
+              Final tallies available after adjournment.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* ── Controls ──────────────────────────────────────────────────── */}
       <div className="sticky top-0 z-20 bg-[var(--background)]/90 backdrop-blur border-b border-[var(--border)] px-6 py-3">
         <div className="max-w-4xl mx-auto flex flex-wrap items-center gap-3">

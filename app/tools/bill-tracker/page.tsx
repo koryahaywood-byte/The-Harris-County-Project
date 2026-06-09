@@ -258,6 +258,18 @@ export default function BillTracker() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-6">
+        {/* Session ended banner */}
+        <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+          <span className="text-lg leading-none mt-0.5">📋</span>
+          <div>
+            <p className="text-sm font-semibold text-amber-900">89th Texas Legislature — Session Archived</p>
+            <p className="text-xs text-amber-700 mt-0.5">
+              The regular session adjourned June 2, 2025. All bills shown reflect final passage status.
+              The 90th Legislature convenes January 2027.
+            </p>
+          </div>
+        </div>
+
         {apiMissing && (
           <div className="bg-amber-50 border border-amber-300 rounded-lg p-4 mb-6 text-sm text-amber-800">
             <strong>API key not configured.</strong> Add <code className="bg-amber-100 px-1 rounded">LEGISCAN_API_KEY</code> to Vercel.{" "}

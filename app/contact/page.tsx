@@ -5,28 +5,47 @@ import { useState } from "react";
 type FeedbackType = "data-error" | "suggest-tool" | "missing-date" | "general";
 
 const TYPES: { value: FeedbackType; label: string; description: string }[] = [
-  { value: "data-error", label: "Data Error", description: "Something on the site is wrong or outdated" },
+  { value: "data-error",   label: "Data Error",     description: "Something on the site is wrong or outdated" },
   { value: "suggest-tool", label: "Suggest a Tool", description: "I have an idea for a new civic tool" },
-  { value: "missing-date", label: "Missing Date", description: "A civic date is missing from the calendar" },
-  { value: "general", label: "General", description: "Something else" },
+  { value: "missing-date", label: "Missing Date",   description: "A civic date is missing from the calendar" },
+  { value: "general",      label: "General",        description: "Something else" },
 ];
 
+// Formspree endpoint — free tier, no backend needed
+const FORMSPREE_URL = "https://formspree.io/f/xwpkgqvj";
+
 export default function ContactPage() {
-  const [type, setType] = useState<FeedbackType>("general");
-  const [name, setName] = useState("");
-  const [message, setMessage] = useState("");
+  const [type, setType]         = useState<FeedbackType>("general");
+  const [name, setName]         = useState("");
+  const [message, setMessage]   = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    // mailto fallback — opens email client with pre-filled content
-    const subject = encodeURIComponent(`[Harris County Project — ${TYPES.find((t) => t.value === type)?.label}]`);
-    const body = encodeURIComponent(`From: ${name || "Anonymous"}\n\n${message}`);
-    window.location.href = `mailto:koryahaywood@gmail.com?subject=${subject}&body=${body}`;
-    setLoading(false);
-    setSubmitted(true);
+    setError("");
+    try {
+      const res = await fetch(FORMSPREE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          type: TYPES.find((t) => t.value === type)?.label,
+          name: name || "Anonymous",
+          message,
+        }),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        setError("Something went wrong. Please email us directly at koryahaywood@gmail.com");
+      }
+    } catch {
+      setError("Could not send — please email koryahaywood@gmail.com directly.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -35,13 +54,8 @@ export default function ContactPage() {
       <div className="bg-[var(--accent)] text-white px-6 py-16 md:py-24 relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_80%_50%,rgba(37,99,168,0.4),transparent)]" />
         <div className="max-w-6xl mx-auto relative z-10">
-          <p className="text-sky-300/80 text-[11px] font-bold uppercase tracking-[0.25em] mb-3">
-            Community
-          </p>
-          <h1
-            className="text-3xl md:text-4xl font-bold leading-tight mb-2"
-            style={{ fontFamily: "var(--font-playfair), serif" }}
-          >
+          <p className="text-sky-300/80 text-[11px] font-bold uppercase tracking-[0.25em] mb-3">Community</p>
+          <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-2" style={{ fontFamily: "var(--font-playfair), serif" }}>
             Contact & Feedback
           </h1>
           <p className="text-white/70 text-sm max-w-lg">
@@ -61,16 +75,13 @@ export default function ContactPage() {
                 </svg>
               </div>
               <h2 className="text-xl font-bold text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair), serif" }}>
-                Your email client should open
+                Message received — thank you
               </h2>
               <p className="text-[var(--muted)] text-sm max-w-xs leading-relaxed">
-                We pre-filled the message for you. If it didn&apos;t open, email us directly at{" "}
-                <a href="mailto:koryahaywood@gmail.com" className="text-[var(--accent-light)] underline underline-offset-2">
-                  koryahaywood@gmail.com
-                </a>
+                We read every submission and use them to improve the site.
               </p>
               <button
-                onClick={() => setSubmitted(false)}
+                onClick={() => { setSubmitted(false); setName(""); setMessage(""); }}
                 className="mt-2 text-xs font-semibold text-[var(--muted)] underline underline-offset-2"
               >
                 Send another
@@ -140,21 +151,23 @@ export default function ContactPage() {
               </div>
             </div>
 
+            {error && (
+              <p className="text-xs text-rose-600 -mt-2">{error}</p>
+            )}
+
             {/* Submit */}
             <button
               type="submit"
               disabled={loading || !message.trim()}
               className="group self-start inline-flex items-center gap-3 bg-[var(--accent)] hover:bg-[var(--accent-light)] disabled:opacity-40 disabled:pointer-events-none text-white font-bold rounded-full px-7 py-4 text-sm transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-lg active:scale-[0.98]"
             >
-              Send Feedback
-              <span className="inline-flex w-7 h-7 rounded-full bg-white/15 items-center justify-center group-hover:translate-x-1 group-hover:-translate-y-px transition-transform duration-500">
-                →
-              </span>
+              {loading ? "Sending…" : "Send Feedback"}
+              {!loading && (
+                <span className="inline-flex w-7 h-7 rounded-full bg-white/15 items-center justify-center group-hover:translate-x-1 group-hover:-translate-y-px transition-transform duration-500">
+                  →
+                </span>
+              )}
             </button>
-
-            <p className="text-xs text-[var(--muted)] -mt-2">
-              This will open your email client with your message pre-filled.
-            </p>
           </form>
         )}
       </div>
