@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getDashboardData } from "@/lib/dashboard-data";
-import type { DashboardData, NewsStory, MarketIndex } from "@/lib/dashboard-data";
+import type { DashboardData, NewsStory, BallotRace } from "@/lib/dashboard-data";
 
 const CAT_COLOR: Record<string, string> = {
   Elections:     "#2563a8",
@@ -96,38 +96,59 @@ function NewsCard({ story, tier }: { story: NewsStory | null; tier: string; labe
   );
 }
 
-function MarketsCard({ markets }: { markets: MarketIndex[] }) {
-  if (markets.length === 0) {
-    return (
-      <div className="rounded-2xl bg-white ring-1 ring-black/8 p-5 flex flex-col justify-between">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-3">Markets</p>
-        <p className="text-sm text-[var(--muted)]">Market data unavailable</p>
-      </div>
-    );
-  }
+const COMPETITIVE_COLOR: Record<string, { bg: string; text: string }> = {
+  "Safe D":   { bg: "#dbeafe", text: "#1d4ed8" },
+  "Lean D":   { bg: "#eff6ff", text: "#2563eb" },
+  "Toss-up":  { bg: "#fef9c3", text: "#a16207" },
+  "Lean R":   { bg: "#fff1f2", text: "#be123c" },
+  "Safe R":   { bg: "#ffe4e6", text: "#dc2626" },
+};
+
+function OnTheBallotCard({ races }: { races: BallotRace[] }) {
+  const electionDay = new Date("2026-11-03");
+  const today = new Date();
+  const daysAway = Math.ceil((electionDay.getTime() - today.getTime()) / 86400000);
+
   return (
-    <div className="rounded-2xl bg-white ring-1 ring-black/8 p-5 flex flex-col gap-1">
-      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-2">Markets</p>
-      {markets.map(m => {
-        const up = m.changePct >= 0;
-        const color = up ? "#16a34a" : "#dc2626";
-        return (
-          <div key={m.symbol} className="flex items-baseline justify-between gap-2 py-1.5" style={{ borderBottom: "1px solid #f3f4f6" }}>
-            <div>
-              <span className="text-xs font-semibold" style={{ color: "#1a3a5c" }}>{m.name}</span>
-            </div>
-            <div className="flex items-baseline gap-2 text-right flex-shrink-0">
-              <span className="text-sm font-bold tabular-nums" style={{ color: "#1a3a5c" }}>
-                {m.price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-              </span>
-              <span className="text-[11px] font-semibold tabular-nums" style={{ color }}>
-                {up ? "▲" : "▼"} {Math.abs(m.changePct).toFixed(2)}%
-              </span>
-            </div>
-          </div>
-        );
-      })}
-      <p className="text-[9px] mt-1" style={{ color: "#9ca3af" }}>Delayed ~15 min · Yahoo Finance</p>
+    <div className="rounded-2xl bg-white ring-1 ring-black/8 p-5 flex flex-col gap-0">
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--muted)]">On the Ballot · Nov 2026</p>
+        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "#fef3c7", color: "#b45309" }}>
+          {daysAway}d away
+        </span>
+      </div>
+      <ul className="flex flex-col divide-y divide-gray-100">
+        {races.map((race) => {
+          const chip = COMPETITIVE_COLOR[race.competitive] ?? COMPETITIVE_COLOR["Toss-up"];
+          return (
+            <li key={race.office}>
+              <Link
+                href={race.href}
+                className="flex items-center justify-between gap-2 py-2 group"
+              >
+                <div className="min-w-0">
+                  <p className="text-[12px] font-semibold text-[var(--accent)] truncate group-hover:underline leading-tight">
+                    {race.office}
+                  </p>
+                  <p className="text-[10px] text-[var(--muted)] truncate">{race.incumbent}</p>
+                </div>
+                <span
+                  className="text-[9px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 uppercase tracking-wide"
+                  style={{ background: chip.bg, color: chip.text }}
+                >
+                  {race.competitive}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+      <Link
+        href="/tools/heat-check"
+        className="mt-3 text-[11px] font-semibold text-[var(--accent-light)] hover:underline"
+      >
+        Full race analysis →
+      </Link>
     </div>
   );
 }
@@ -247,8 +268,8 @@ export default async function DashboardWidget() {
             </Link>
           </div>
 
-          {/* Markets */}
-          <MarketsCard markets={data?.markets ?? []} />
+          {/* On the Ballot */}
+          <OnTheBallotCard races={data?.ballot ?? []} />
 
         </div>
       </div>

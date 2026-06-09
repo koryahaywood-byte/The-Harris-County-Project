@@ -12,12 +12,12 @@ export interface NewsStory {
   isToday: boolean;
 }
 
-export interface MarketIndex {
-  symbol: string;
-  name: string;
-  price: number;
-  change: number;      // absolute
-  changePct: number;   // percentage
+export interface BallotRace {
+  office: string;
+  incumbent: string;
+  party: "D" | "R" | "?";
+  competitive: "Safe D" | "Lean D" | "Toss-up" | "Lean R" | "Safe R";
+  href: string;
 }
 
 export interface DashboardData {
@@ -27,7 +27,7 @@ export interface DashboardData {
   todayEvents: { title: string; category: string; description: string }[];
   upcomingEvent: { title: string; date: string; daysAway: number; category: string } | null;
   nextElection:  { title: string; date: string; daysAway: number } | null;
-  markets: MarketIndex[];
+  ballot: BallotRace[];
 }
 
 // Reliable fallback images — exact URLs returned by Wikipedia REST API (330px, pre-rendered).
@@ -36,27 +36,6 @@ const FALLBACK_IMAGES: Record<string, string> = {
   state:   "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/TexasStateCapitol-2010-01.JPG/330px-TexasStateCapitol-2010-01.JPG",
   local:   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Texas_medical_center.jpg/330px-Texas_medical_center.jpg",
 };
-
-async function fetchMarketIndex(symbol: string, name: string): Promise<MarketIndex | null> {
-  try {
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=1d`;
-    const res = await fetch(url, {
-      next: { revalidate: 900 }, // 15-min cache
-      headers: { "User-Agent": "Mozilla/5.0" },
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    const meta = data?.chart?.result?.[0]?.meta;
-    if (!meta) return null;
-    const price = meta.regularMarketPrice ?? 0;
-    const prevClose = meta.chartPreviousClose ?? meta.previousClose ?? price;
-    const change = price - prevClose;
-    const changePct = prevClose ? (change / prevClose) * 100 : 0;
-    return { symbol, name, price, change, changePct };
-  } catch {
-    return null;
-  }
-}
 
 
 function isTodayDate(pubDate: string, todayStr: string): boolean {
@@ -131,11 +110,21 @@ async function fetchBestStory(
   );
 }
 
+// November 2026 Harris County ballot — key races, updated manually as candidates file
+const NOVEMBER_2026_BALLOT: BallotRace[] = [
+  { office: "U.S. Senate (TX)",         incumbent: "John Cornyn (R)",   party: "R", competitive: "Lean R",   href: "/tools/congress-beat" },
+  { office: "TX Governor",              incumbent: "Greg Abbott (R)",    party: "R", competitive: "Lean R",   href: "/tools/state-beat" },
+  { office: "Harris County Judge",      incumbent: "Lina Hidalgo (D)",   party: "D", competitive: "Toss-up",  href: "/politicians" },
+  { office: "U.S. House TX-07",         incumbent: "Lizzie Fletcher (D)",party: "D", competitive: "Toss-up",  href: "/tools/congress-beat" },
+  { office: "U.S. House TX-22",         incumbent: "Troy Nehls (R)",     party: "R", competitive: "Lean R",   href: "/tools/congress-beat" },
+  { office: "HC Commissioner Pct. 2",   incumbent: "Adrian Garcia (D)",  party: "D", competitive: "Lean D",   href: "/politicians" },
+];
+
 export async function getDashboardData(): Promise<DashboardData> {
   const todayStr = new Date().toISOString().slice(0, 10);
 
-  // Fetch news stories and market data in parallel — each section tries multiple sources
-  const [federalRaw, stateRaw, localRaw, rawMarkets] = await Promise.all([
+  // Fetch news stories in parallel — each section tries multiple sources
+  const [federalRaw, stateRaw, localRaw] = await Promise.all([
     fetchBestStory([
       "US Senate midterms 2026",
       "Congress election results 2026",
@@ -151,12 +140,6 @@ export async function getDashboardData(): Promise<DashboardData> {
       "Harris County runoff 2026",
       "Houston Texas election 2026",
     ], todayStr),
-    Promise.all([
-      fetchMarketIndex("^DJI",  "Dow Jones"),
-      fetchMarketIndex("^GSPC", "S&P 500"),
-      fetchMarketIndex("^IXIC", "NASDAQ"),
-      fetchMarketIndex("CL=F",  "Oil (WTI)"),
-    ]),
   ]);
 
   // Bing RSS includes <News:Image> CDN thumbnails directly — use them, fall back to landmark
@@ -189,7 +172,5 @@ export async function getDashboardData(): Promise<DashboardData> {
     daysAway: Math.ceil((new Date(nextElectionEvent.date).getTime() - new Date(todayStr).getTime()) / 86400000),
   } : null;
 
-  const markets = rawMarkets.filter((m): m is MarketIndex => m !== null);
-
-  return { federal, state, local, todayEvents, upcomingEvent, nextElection, markets };
+  return { federal, state, local, todayEvents, upcomingEvent, nextElection, ballot: NOVEMBER_2026_BALLOT };
 }
