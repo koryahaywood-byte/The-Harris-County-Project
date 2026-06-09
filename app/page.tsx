@@ -391,15 +391,10 @@ function ToolboxBrowse() {
         maxHeight: open ? "4000px" : "0",
         transition: "max-height 0.6s cubic-bezier(0.4,0,0.2,1)",
       }}>
-        <div className="pt-4 pb-16" style={{ background: "#f5f3ef" }}>
-          <div className="max-w-7xl mx-auto px-6 mb-10">
-            <ToolboxOpener />
-          </div>
-          <ScrollReveal>
-            {ROWS.map(row => (
-              <BrowseRow key={row.section} section={row.section} tools={row.tools} />
-            ))}
-          </ScrollReveal>
+        <div className="pt-6 pb-16" style={{ background: "#f5f3ef" }}>
+          {ROWS.map(row => (
+            <BrowseRow key={row.section} section={row.section} tools={row.tools} />
+          ))}
         </div>
       </div>
     </section>
