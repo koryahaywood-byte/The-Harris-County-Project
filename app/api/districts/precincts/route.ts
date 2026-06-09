@@ -1,48 +1,47 @@
 import { NextResponse } from "next/server";
 
 // Harris County voting precincts via Census TIGERweb (layer 15 = Voting Districts)
-// maxAllowableOffset=0.003 simplifies vertices server-side → ~236KB (vs 3MB at full precision)
-const TIGERWEB =
-  "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/15/query" +
-  "?where=STATE%3D%2748%27+AND+COUNTY%3D%27201%27" +
-  "&outFields=VTD,NAME,SLDLST,SLDUST" +
-  "&f=geojson" +
-  "&geometryPrecision=4" +
-  "&outSR=4326" +
-  "&resultRecordCount=1100" +
-  "&maxAllowableOffset=0.003";
+// The WHERE clause MUST use literal single quotes — Census ArcGIS rejects %27 encoding.
+// We build the URL manually to avoid URLSearchParams encoding the quotes.
+const BASE = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/15/query";
+const COMMON = "&outFields=VTD,NAME&f=geojson&geometryPrecision=4&outSR=4326&maxAllowableOffset=0.003&resultRecordCount=550&orderByFields=VTD";
+
+function pageUrl(offset: number) {
+  return `${BASE}?where=STATE='48'+AND+COUNTY='201'${COMMON}&resultOffset=${offset}`;
+}
 
 export async function GET() {
   try {
-    const res = await fetch(TIGERWEB, {
-      next: { revalidate: 86400 },
-    });
+    // Harris County has ~1011 precincts — fetch in two pages of 550
+    const [res1, res2] = await Promise.all([
+      fetch(pageUrl(0),   { next: { revalidate: 86400 } }),
+      fetch(pageUrl(550), { next: { revalidate: 86400 } }),
+    ]);
 
-    if (!res.ok) {
-      return NextResponse.json({ error: "Upstream fetch failed", status: res.status }, { status: 502 });
+    if (!res1.ok) {
+      return NextResponse.json({ error: "Upstream fetch failed", status: res1.status }, { status: 502 });
     }
 
-    const geojson = await res.json();
+    const [d1, d2] = await Promise.all([
+      res1.json(),
+      res2.ok ? res2.json() : { features: [] },
+    ]);
 
-    // Normalize: rename VTD → precinct for consistency with the rest of the app
-    if (geojson.features) {
-      geojson.features = geojson.features.map((f: { properties: Record<string, unknown>; [key: string]: unknown }) => ({
-        ...f,
-        properties: {
-          precinct: f.properties.VTD,
-          name: f.properties.NAME,
-          // Real legislative crosswalk fields from Census TIGERweb
-          sldlst: f.properties.SLDLST ?? null,   // TX State House district (3-char padded, e.g. "148")
-          sldust: f.properties.SLDUST ?? null,   // TX State Senate district
-        },
-      }));
-    }
-
-    return NextResponse.json(geojson, {
-      headers: {
-        "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=3600",
+    const features = [
+      ...(d1.features ?? []),
+      ...(d2.features ?? []),
+    ].map((f: { properties: Record<string, unknown>; [key: string]: unknown }) => ({
+      ...f,
+      properties: {
+        precinct: f.properties.VTD,
+        name:     f.properties.NAME,
       },
-    });
+    }));
+
+    return NextResponse.json(
+      { type: "FeatureCollection", features },
+      { headers: { "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=3600" } }
+    );
   } catch (err) {
     console.error("Precincts fetch error:", err);
     return NextResponse.json({ error: "Failed to fetch precinct data" }, { status: 500 });
