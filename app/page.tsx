@@ -1,5 +1,3 @@
-"use client";
-import { useState } from "react";
 import Link from "next/link";
 import ScrollReveal from "@/components/ScrollReveal";
 import DashboardWidget from "@/components/DashboardWidget";
@@ -342,61 +340,23 @@ function BrowseRow({ section, tools }: { section: string; tools: Tool[] }) {
   );
 }
 
-/* ── Full toolbox browse (collapsible) ───────────────────────────────────── */
+/* ── Full toolbox browse ─────────────────────────────────────────────────── */
 function ToolboxBrowse() {
-  const [open, setOpen] = useState(false);
   return (
-    <section id="toolbox" style={{ background: "#eceae6", borderTop: "1px solid #ddd9d0" }}>
-      {/* Toggle header */}
-      <button
-        onClick={() => setOpen(v => !v)}
-        className="w-full flex items-center justify-between px-6 py-6 cursor-pointer group transition-colors duration-200 hover:bg-black/4"
-      >
-        <div className="flex items-center gap-4">
-          {/* Mini toolbox icon */}
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--accent)" }}>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <rect x="2" y="9" width="16" height="9" rx="2" fill="rgba(255,255,255,0.9)"/>
-              <rect x="6" y="6" width="8" height="5" rx="1.5" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5"/>
-              <rect x="8" y="4" width="4" height="4" rx="1" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2"/>
-            </svg>
-          </div>
-          <div className="text-left">
-            <p className="text-sm font-bold text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair), serif" }}>
-              Browse All {ROWS.reduce((n, r) => n + r.tools.length, 0)} Tools
-            </p>
-            <p className="text-[11px] text-[var(--muted)]">
-              {ROWS.map(r => r.section).join(" · ")}
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[11px] font-bold text-[var(--muted)] group-hover:text-[var(--accent)] transition-colors">
-            {open ? "Collapse" : "Expand"}
+    <section id="toolbox" className="pb-20" style={{ background: "#f5f3ef", borderTop: "1px solid #ddd9d0" }}>
+      <div className="max-w-7xl mx-auto px-6 pt-12 pb-6">
+        <div className="flex items-center gap-3">
+          <span className="block w-8 h-px bg-[var(--accent)]/25" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--accent)]/50">All Tools</span>
+          <span className="flex-1 h-px bg-[var(--border)]" />
+          <span className="text-[11px] text-[var(--muted)]">
+            {ROWS.reduce((n, r) => n + r.tools.length, 0)} tools · {ROWS.map(r => r.section).join(" · ")}
           </span>
-          <div className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-            style={{ background: open ? "var(--accent)" : "rgba(26,58,92,0.1)" }}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-              stroke={open ? "#fff" : "var(--accent)"} strokeWidth="2"
-              style={{ transform: open ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.3s ease" }}>
-              <path d="M3 5l4 4 4-4" />
-            </svg>
-          </div>
-        </div>
-      </button>
-
-      {/* Collapsible content */}
-      <div style={{
-        overflow: "hidden",
-        maxHeight: open ? "4000px" : "0",
-        transition: "max-height 0.6s cubic-bezier(0.4,0,0.2,1)",
-      }}>
-        <div className="pt-6 pb-16" style={{ background: "#f5f3ef" }}>
-          {ROWS.map(row => (
-            <BrowseRow key={row.section} section={row.section} tools={row.tools} />
-          ))}
         </div>
       </div>
+      {ROWS.map(row => (
+        <BrowseRow key={row.section} section={row.section} tools={row.tools} />
+      ))}
     </section>
   );
 }
