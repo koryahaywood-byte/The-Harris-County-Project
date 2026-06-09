@@ -556,6 +556,12 @@ export default function DistrictsPage() {
                     selectedPrecinct={selectedPrecinctId ?? searchedPrecinct}
                     highlightedPrecincts={highlightedPrecincts}
                     precinctData={allPrecinctData}
+                    districtType={
+                      selectedType === "TX State House" || selectedType === "TX State Senate"
+                        ? selectedType
+                        : null
+                    }
+                    districtNum={selectedDistrict ?? null}
                   />
                 )}
               </div>

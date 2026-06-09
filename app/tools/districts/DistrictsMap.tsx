@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, GeoJSON, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -30,6 +30,9 @@ export interface DistrictsMapProps {
   selectedPrecinct: string | null;
   highlightedPrecincts: Set<string>;   // precincts in the selected district
   precinctData: Record<string, PrecinctDemoData>;
+  // Real district boundary overlay
+  districtType: "TX State House" | "TX State Senate" | null;
+  districtNum: string | null;
 }
 
 function raceColor(data: PrecinctDemoData): string {
@@ -136,8 +139,27 @@ export default function DistrictsMap({
   selectedPrecinct,
   highlightedPrecincts,
   precinctData,
+  districtType,
+  districtNum,
 }: DistrictsMapProps) {
   const hasDistrict = highlightedPrecincts.size > 0;
+
+  // Fetch real district boundary polygon
+  const [boundaryGeo, setBoundaryGeo] = useState<GeoJsonObject | null>(null);
+  const lastBoundaryKey = useRef("");
+  useEffect(() => {
+    if (!districtType || !districtNum) { setBoundaryGeo(null); return; }
+    if (districtType !== "TX State House" && districtType !== "TX State Senate") { setBoundaryGeo(null); return; }
+    const type = districtType === "TX State Senate" ? "senate" : "house";
+    const key = `${type}-${districtNum}`;
+    if (key === lastBoundaryKey.current) return;
+    lastBoundaryKey.current = key;
+    setBoundaryGeo(null);
+    fetch(`/api/districts/boundary?type=${type}&district=${districtNum}`)
+      .then(r => r.json())
+      .then(d => { if (d?.features?.length) setBoundaryGeo(d); })
+      .catch(() => {});
+  }, [districtType, districtNum]);
 
   // Compute bounds for the highlighted district
   const districtBounds = useRef<L.LatLngBounds | null>(null);
@@ -195,6 +217,23 @@ export default function DistrictsMap({
       {!hasDistrict && (
         <FitBounds bounds={null} key="init" />
       )}
+      {/* Real district boundary outline — drawn on top of precincts */}
+      {boundaryGeo && (
+        <GeoJSON
+          key={`boundary-${districtType}-${districtNum}`}
+          data={boundaryGeo}
+          style={() => ({
+            fillColor: "transparent",
+            fillOpacity: 0,
+            color: "#1a3a5c",
+            weight: 3,
+            dashArray: "6 3",
+            opacity: 0.85,
+          })}
+          interactive={false}
+        />
+      )}
+
       <GeoJSON
         key={`${[...highlightedPrecincts].join(",")}_${selectedPrecinct}`}
         data={geojson}
