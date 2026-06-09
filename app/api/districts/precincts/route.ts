@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 const TIGERWEB =
   "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/15/query" +
   "?where=STATE%3D%2748%27+AND+COUNTY%3D%27201%27" +
-  "&outFields=VTD,NAME" +
+  "&outFields=VTD,NAME,SLDLST,SLDUST" +
   "&f=geojson" +
   "&geometryPrecision=4" +
   "&outSR=4326" +
@@ -31,6 +31,9 @@ export async function GET() {
         properties: {
           precinct: f.properties.VTD,
           name: f.properties.NAME,
+          // Real legislative crosswalk fields from Census TIGERweb
+          sldlst: f.properties.SLDLST ?? null,   // TX State House district (3-char padded, e.g. "148")
+          sldust: f.properties.SLDUST ?? null,   // TX State Senate district
         },
       }));
     }

@@ -10,8 +10,8 @@ export interface PrecinctFeature extends Feature {
   properties: {
     precinct: string;
     name: string;
-    sldlst?: string | null;
-    sldust?: string | null;
+    sldlst?: string | null;   // TX State House district (Census TIGER SLDLST, zero-padded 3 chars)
+    sldust?: string | null;   // TX State Senate district (Census TIGER SLDUST, zero-padded 3 chars)
     [key: string]: unknown;
   };
 }

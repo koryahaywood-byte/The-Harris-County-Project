@@ -377,8 +377,25 @@ export default function DistrictsPage() {
   // Build the set of highlighted precincts for the selected district
   const highlightedPrecincts = useMemo((): Set<string> => {
     if (!geojson || !selectedDistrict || selectedDistrict === "all") return new Set();
-    const opts = DISTRICT_OPTIONS[selectedType];
     const features = (geojson as unknown as { features: PrecinctFeature[] }).features;
+
+    // For TX State House and TX State Senate, use real Census TIGER crosswalk fields
+    // SLDLST values are 3-char zero-padded strings like "148", "134"
+    // SLDUST values are 3-char zero-padded strings like "006", "013"
+    if (selectedType === "TX State House") {
+      const target = selectedDistrict.padStart(3, "0");
+      const real = features.filter(f => f.properties.sldlst === target).map(f => f.properties.precinct).filter(Boolean);
+      if (real.length > 0) return new Set(real);
+    }
+    if (selectedType === "TX State Senate") {
+      const target = selectedDistrict.padStart(3, "0");
+      const real = features.filter(f => f.properties.sldust === target).map(f => f.properties.precinct).filter(Boolean);
+      if (real.length > 0) return new Set(real);
+    }
+
+    // For City Council, JP, and Congressional — fall back to synthetic bucketing
+    // (no Census precinct-level crosswalk available without spatial join)
+    const opts = DISTRICT_OPTIONS[selectedType];
     return new Set(
       features
         .filter(f => {
