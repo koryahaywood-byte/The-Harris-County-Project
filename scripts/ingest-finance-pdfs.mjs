@@ -77,13 +77,14 @@ async function extractViaClaude(buf, filename) {
       content: [
         { type: "document", source: { type: "base64", media_type: "application/pdf", data: buf.toString("base64") } },
         { type: "text", text:
-`This is a Texas campaign finance report (C/OH form or local variant). Extract from the cover sheet totals:
+`This is a Texas C/OH campaign finance report. Find the COVER SHEET SUPPORT & TOTALS page (labeled "FORM C/OH SUPPORT & TOTALS COVER SHEET PG 2"). For Justice of the Peace filers this summary page is typically page 3 of the PDF; for city council and county officials it is usually page 2 or 4. Extract:
 - candidateName
 - office sought/held
-- reportingPeriod (from–through dates)
-- totalRaised (total political contributions this period)
-- totalSpent (total political expenditures this period)
-- cashOnHand (total contributions maintained as of the last day of the period)
+- reportingPeriod (from–through dates on the cover sheet)
+- totalRaised = field 2 "TOTAL POLITICAL CONTRIBUTIONS (OTHER THAN PLEDGES, LOANS...)"
+- totalSpent = field 4 "TOTAL POLITICAL EXPENDITURES"
+- cashOnHand = field 5 "TOTAL POLITICAL CONTRIBUTIONS MAINTAINED AS OF THE LAST DAY OF REPORTING PERIOD"
+- outstandingLoans = field 6 "TOTAL PRINCIPAL AMOUNT OF ALL OUTSTANDING LOANS"
 Respond ONLY with JSON: {"candidateName":"","office":"","reportingPeriod":"","totalRaised":0,"totalSpent":0,"cashOnHand":0,"legible":true}
 Use null for any value you cannot read. Set legible:false if the form is handwritten/scanned poorly.` },
       ],

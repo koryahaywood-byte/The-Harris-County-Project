@@ -160,7 +160,7 @@ async function extractFinancialsFromPage(
         },
         {
           type: "text",
-          text: `This is the cover-sheet summary section of a Texas campaign finance report (C/OH form) for ${candidateName}. Extract these exact dollar amounts and return ONLY valid JSON with no markdown:
+          text: `This is a Texas C/OH campaign finance report for ${candidateName}. Find the COVER SHEET SUPPORT & TOTALS page (labeled "FORM C/OH SUPPORT & TOTALS COVER SHEET PG 2" or similar). For Justice of the Peace filers this is typically page 3; for city/county officials it may be page 2 or 4. Extract these exact dollar amounts and return ONLY valid JSON with no markdown:
 {
   "cash_on_hand_end": <number>,
   "total_receipts": <number>,
@@ -169,6 +169,7 @@ async function extractFinancialsFromPage(
   "loans_outstanding": <number>,
   "period_end_date": "<MM/DD/YYYY string>"
 }
+Look for: field 2 = TOTAL POLITICAL CONTRIBUTIONS, field 4 = TOTAL POLITICAL EXPENDITURES, field 5 = TOTAL POLITICAL CONTRIBUTIONS MAINTAINED AS OF THE LAST DAY OF REPORTING PERIOD (this is cash on hand), field 6 = TOTAL PRINCIPAL AMOUNT OF ALL OUTSTANDING LOANS.
 Use 0 for any field not found. Do not include $ or commas in numbers.`,
         },
       ],
