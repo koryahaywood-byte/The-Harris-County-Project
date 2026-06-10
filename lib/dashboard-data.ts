@@ -91,6 +91,54 @@ function parseRssItems(xml: string): Array<{
   return items;
 }
 
+// ── Scrape og:image from an article URL (fast, head-only) ────────────────────
+// Follows redirects (Google News links → real article URL), extracts og:image.
+// Caps at 4s so it never blocks the dashboard render.
+async function scrapeOgImage(articleUrl: string): Promise<string | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+
+    const res = await fetch(articleUrl, {
+      signal: controller.signal,
+      headers: {
+        "User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+        "Accept": "text/html",
+      },
+      // No cache — we want fresh og:image each revalidate cycle
+      next: { revalidate: 1800 },
+    });
+    clearTimeout(timeout);
+
+    if (!res.ok) return null;
+
+    // Stream just the first 32 KB — enough to capture the <head> og:image tag
+    const reader = res.body?.getReader();
+    if (!reader) return null;
+    let html = "";
+    while (html.length < 32768) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      html += new TextDecoder().decode(value);
+      // Stop once we've passed </head>
+      if (html.includes("</head>")) break;
+    }
+    reader.cancel();
+
+    // Extract og:image content attribute
+    const match =
+      html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
+      ?? html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i)
+      ?? html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i)
+      ?? html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i);
+
+    const imgUrl = match?.[1]?.trim() ?? null;
+    // Reject placeholder/logo images (too small or branded)
+    if (!imgUrl || imgUrl.includes("logo") || imgUrl.includes("default") || imgUrl.includes("placeholder")) return null;
+    return imgUrl;
+  } catch { return null; }
+}
+
 // ── Fetch from a URL, parse, return best story ────────────────────────────────
 async function fetchFromFeed(url: string, todayStr: string, sourceName?: string) {
   try {
@@ -177,9 +225,17 @@ export async function getDashboardData(): Promise<DashboardData> {
     fetchTier(FEDERAL_FEEDS, todayStr),
   ]);
 
-  const local   = localRaw   ? { ...localRaw,   image: localRaw.image   ?? FALLBACK_IMAGES.local   } : null;
-  const state   = stateRaw   ? { ...stateRaw,   image: stateRaw.image   ?? FALLBACK_IMAGES.state   } : null;
-  const federal = federalRaw ? { ...federalRaw, image: federalRaw.image ?? FALLBACK_IMAGES.federal } : null;
+  // Scrape og:image from actual article pages in parallel.
+  // If the RSS already has an image, use it directly (skip scrape).
+  const [localImg, stateImg, federalImg] = await Promise.all([
+    localRaw?.image   ? Promise.resolve(localRaw.image)   : localRaw   ? scrapeOgImage(localRaw.link)   : Promise.resolve(null),
+    stateRaw?.image   ? Promise.resolve(stateRaw.image)   : stateRaw   ? scrapeOgImage(stateRaw.link)   : Promise.resolve(null),
+    federalRaw?.image ? Promise.resolve(federalRaw.image) : federalRaw ? scrapeOgImage(federalRaw.link) : Promise.resolve(null),
+  ]);
+
+  const local   = localRaw   ? { ...localRaw,   image: localImg   ?? FALLBACK_IMAGES.local   } : null;
+  const state   = stateRaw   ? { ...stateRaw,   image: stateImg   ?? FALLBACK_IMAGES.state   } : null;
+  const federal = federalRaw ? { ...federalRaw, image: federalImg ?? FALLBACK_IMAGES.federal } : null;
 
   const todayEvents = EVENTS.filter(e => {
     if (e.endDate) return e.date <= todayStr && e.endDate >= todayStr;
