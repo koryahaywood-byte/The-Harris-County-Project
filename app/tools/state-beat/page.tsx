@@ -5,9 +5,9 @@ import Link from "next/link";
 /* ─── Harris County TX delegation ───────────────────────────────────────────── */
 const SENATORS = [
   { name: "Carol Alvarado",   district: "SD-6",  party: "D", slug: "carol-alvarado",   photo: "https://senate.texas.gov/members/d06/img/CA-2018_web.jpg" },
-  { name: "Borris Miles",     district: "SD-13", party: "D", slug: "borris-miles",     photo: "https://senate.texas.gov/members/d13/img/BM-2018_web.jpg" },
-  { name: "Joan Huffman",     district: "SD-17", party: "R", slug: "joan-huffman",     photo: "https://senate.texas.gov/members/d17/img/JH-2018_web.jpg" },
-  { name: "Paul Bettencourt", district: "SD-7",  party: "R", slug: "paul-bettencourt", photo: "https://senate.texas.gov/members/d07/img/PB-2018_web.jpg" },
+  { name: "Borris Miles",     district: "SD-13", party: "D", slug: "borris-miles",     photo: "https://senate.texas.gov/members/d13/img/Sen-Miles-2025-Headshot-web.jpg" },
+  { name: "Joan Huffman",     district: "SD-17", party: "R", slug: "joan-huffman",     photo: "https://senate.texas.gov/members/d17/img/headshot.jpg" },
+  { name: "Paul Bettencourt", district: "SD-7",  party: "R", slug: "paul-bettencourt", photo: "https://senate.texas.gov/members/d07/img/headshot.jpg" },
 ];
 
 const SESSION = {
@@ -58,7 +58,7 @@ export default function StateBeatPage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden" style={{ minHeight: 280 }}>
-        <img src="https://images.unsplash.com/photo-1569949382669-ecf63b8c2c9f?auto=format&fit=crop&w=1400&q=80"
+        <img src="https://images.unsplash.com/photo-1531218150217-54595bc2b934?auto=format&fit=crop&w=1400&q=80"
           alt="Texas State Capitol" className="absolute inset-0 w-full h-full object-cover" style={{ opacity: 0.35 }} />
         <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#3b0764 0%,#4c1d95 55%,#5b21b6 100%)", opacity: 0.78 }} />
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 80% at 80% 50%,rgba(124,58,237,0.25),transparent)" }} />

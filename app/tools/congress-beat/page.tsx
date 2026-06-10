@@ -4,14 +4,14 @@ import Link from "next/link";
 
 /* ─── Harris County Congressional delegation ─────────────────────────────────── */
 const REPS = [
-  { name: "Sylvester Turner",    district: "CD-18", party: "D", note: "Houston Mayor→Congress",       photo: "https://turner.house.gov/sites/evo-subsites/turner.house.gov/files/evo-media-image/turner-official-photo.jpg" },
-  { name: "Al Green",           district: "CD-9",  party: "D", note: "Civil rights veteran",          photo: "https://algreen.house.gov/sites/evo-subsites/algreen.house.gov/files/evo-media-image/al-green-official-photo.jpg" },
-  { name: "Lizzie Fletcher",    district: "CD-7",  party: "D", note: "Energy & Commerce Committee",  photo: "https://fletcher.house.gov/sites/evo-subsites/fletcher.house.gov/files/evo-media-image/fletcher-official-photo.jpg" },
-  { name: "Sylvia Garcia",      district: "CD-29", party: "D", note: "House Judiciary Committee",    photo: "https://sylviagarcia.house.gov/sites/evo-subsites/sylviagarcia.house.gov/files/evo-media-image/garcia-official-photo.jpg" },
-  { name: "Dan Crenshaw",       district: "CD-2",  party: "R", note: "House Armed Services",         photo: "https://crenshaw.house.gov/sites/evo-subsites/crenshaw.house.gov/files/evo-media-image/crenshaw-official-photo.jpg" },
-  { name: "Michael McCaul",     district: "CD-10", party: "R", note: "Foreign Affairs Chair",        photo: "https://mccaul.house.gov/sites/evo-subsites/mccaul.house.gov/files/evo-media-image/mccaul-official-photo.jpg" },
-  { name: "Randy Weber",        district: "CD-14", party: "R", note: "Science, Space & Technology",  photo: "https://weber.house.gov/sites/evo-subsites/weber.house.gov/files/evo-media-image/weber-official-photo.jpg" },
-  { name: "Pete Olson",         district: "CD-22", party: "R", note: "Energy & Commerce",            photo: "https://olson.house.gov/sites/evo-subsites/olson.house.gov/files/evo-media-image/olson-official-photo.jpg" },
+  { name: "Sylvester Turner",    district: "CD-18", party: "D", note: "Houston Mayor→Congress",       photo: "https://unitedstates.github.io/images/congress/450x550/T000490.jpg" },
+  { name: "Al Green",           district: "CD-9",  party: "D", note: "Civil rights veteran",          photo: "https://unitedstates.github.io/images/congress/450x550/G000553.jpg" },
+  { name: "Lizzie Fletcher",    district: "CD-7",  party: "D", note: "Energy & Commerce Committee",  photo: "https://unitedstates.github.io/images/congress/450x550/F000468.jpg" },
+  { name: "Sylvia Garcia",      district: "CD-29", party: "D", note: "House Judiciary Committee",    photo: "https://unitedstates.github.io/images/congress/450x550/G000587.jpg" },
+  { name: "Dan Crenshaw",       district: "CD-2",  party: "R", note: "House Armed Services",         photo: "https://unitedstates.github.io/images/congress/450x550/C001120.jpg" },
+  { name: "Michael McCaul",     district: "CD-10", party: "R", note: "Foreign Affairs Chair",        photo: "https://unitedstates.github.io/images/congress/450x550/M001157.jpg" },
+  { name: "Randy Weber",        district: "CD-14", party: "R", note: "Science, Space & Technology",  photo: "https://unitedstates.github.io/images/congress/450x550/W000814.jpg" },
+  { name: "Pete Olson",         district: "CD-22", party: "R", note: "Energy & Commerce",            photo: "https://unitedstates.github.io/images/congress/450x550/O000168.jpg" },
 ];
 
 const CONGRESS = { name: "119th Congress", status: "In Session", term: "Jan 2025 – Jan 2027" };
