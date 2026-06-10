@@ -64,22 +64,22 @@ export default function WhereIsTheDough() {
   const DATA: Candidate[] = BASE.map(d => {
     if (d.level === "federal") {
       const live = fecData.find(l => l.name === d.name);
-      if (!live) return d;
+      if (!live || !(live.cash > 0)) return d;
       return { ...d, cash: live.cash, raised: live.raised, spent: live.spent, asOf: live.asOf };
     }
     if (d.level === "state") {
       const live = tecData.find(l => l.name === d.name);
-      if (!live) return d;
+      if (!live || !(live.cash > 0)) return d;
       return { ...d, cash: live.cash, asOf: live.asOf };
     }
     if (d.level === "county") {
       const live = hcData.find(l => l.name === d.name);
-      if (!live) return d;
+      if (!live || !(live.cash > 0)) return d;
       return { ...d, cash: live.cash, raised: live.raised, spent: live.spent, investments: live.investments, loans: live.loans, asOf: live.asOf };
     }
     if (d.level === "houston") {
       const live = cohData.find(l => l.name === d.name);
-      if (!live) return d;
+      if (!live || !(live.cash > 0)) return d;
       return { ...d, cash: live.cash, raised: live.raised, spent: live.spent, loans: live.loans, asOf: live.asOf };
     }
     return d;
