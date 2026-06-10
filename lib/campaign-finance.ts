@@ -117,6 +117,7 @@ export const FINANCE_DATA_MERGED: CandidateFinance[] = FINANCE_DATA.map(d => {
     cash:   gen.cash   ?? d.cash,
     raised: gen.raised ?? d.raised,
     spent:  gen.spent  ?? d.spent,
+    loans:  (gen as { loans?: number }).loans ?? d.loans,
     asOf:   (gen as { asOf?: string }).asOf   ?? d.asOf,
   };
 });

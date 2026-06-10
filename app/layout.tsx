@@ -51,7 +51,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 mb-1">Site</p>
                 <Link href="/politicians" className="hover:text-white transition-colors duration-300">Officials</Link>
                 <Link href="/blogs" className="hover:text-white transition-colors duration-300">Media</Link>
-                <Link href="/tools/endorsement-flowchart" className="hover:text-white transition-colors duration-300">Endorsements</Link>
                 <Link href="/tools/tirz" className="hover:text-white transition-colors duration-300">TIRZs</Link>
                 <Link href="/contact" className="hover:text-white transition-colors duration-300">Contact</Link>
               </div>

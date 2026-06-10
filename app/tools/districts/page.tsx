@@ -82,6 +82,51 @@ function headerLabel(type: TypeKey, value: string | null): string {
   return `Council District ${value}`;
 }
 
+/* ── Kalshi prediction-market strip inside the VS card ────────────────────── */
+interface KalshiOdds { available: boolean; label?: string; demProb?: number; repProb?: number; volume?: number; url?: string }
+
+function KalshiStrip({ dKey }: { dKey: string }) {
+  const [odds, setOdds] = useState<KalshiOdds | null>(null);
+  useEffect(() => {
+    let alive = true;
+    setOdds(null);
+    fetch(`/api/kalshi?race=${encodeURIComponent(dKey)}`)
+      .then(r => r.json())
+      .then(d => { if (alive) setOdds(d); })
+      .catch(() => { if (alive) setOdds({ available: false }); });
+    return () => { alive = false; };
+  }, [dKey]);
+
+  if (!odds || !odds.available) return null;
+
+  return (
+    <div className="mt-4 pt-4" style={{ borderTop: "1px solid #f3f4f6" }}>
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>
+          Market Odds — Who Wins
+        </p>
+        <a href={odds.url} target="_blank" rel="noopener noreferrer"
+          className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity"
+          style={{ background: "#0f172a", color: "#4ade80" }}>
+          Kalshi ↗
+        </a>
+      </div>
+      <div className="flex items-center gap-3">
+        <span className="tnum text-sm font-bold w-12" style={{ color: "#2563a8" }}>{odds.demProb}%</span>
+        <div className="flex-1 h-3 rounded-full overflow-hidden flex" style={{ background: "#f3f4f6" }}>
+          <div className="h-full transition-all duration-700" style={{ width: `${odds.demProb}%`, background: "#2563a8" }} />
+          <div className="h-full transition-all duration-700" style={{ width: `${odds.repProb}%`, background: "#dc2626" }} />
+        </div>
+        <span className="tnum text-sm font-bold w-12 text-right" style={{ color: "#dc2626" }}>{odds.repProb}%</span>
+      </div>
+      <p className="text-[9px] mt-1.5" style={{ color: "#9ca3af" }}>
+        Implied win probability from Kalshi&rsquo;s &ldquo;{odds.label}&rdquo; margin markets
+        {odds.volume ? ` · ${odds.volume.toLocaleString()} contracts open` : ""} · not a poll, real-money market
+      </p>
+    </div>
+  );
+}
+
 /* ── VS card — incumbent vs challenger with money ─────────────────────────── */
 function VsCard({ dKey, office }: { dKey: string; office: string }) {
   const matchup = getMatchup(dKey === "US-Senate" ? "US-Senate" : dKey);
@@ -94,10 +139,10 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
   const enriched = sides.map(s => {
     const fin = getFinanceByName(s.name);
     const p = POLITICIANS.find((x: Politician) => x.name === s.name);
-    return { ...s, cash: fin?.cash ?? 0, asOf: fin?.asOf, photo: p?.photo };
+    return { ...s, cash: fin?.cash ?? 0, raised: fin?.raised, spent: fin?.spent, loans: fin?.loans, asOf: fin?.asOf, photo: p?.photo };
   });
   while (enriched.length < 2) {
-    enriched.push({ name: "Challenger", party: enriched[0].party === "D" ? "R" : "D", incumbent: false, note: "Awaiting filings", cash: 0, asOf: undefined, photo: undefined });
+    enriched.push({ name: "Challenger", party: enriched[0].party === "D" ? "R" : "D", incumbent: false, note: "Awaiting filings", cash: 0, raised: undefined, spent: undefined, loans: undefined, asOf: undefined, photo: undefined });
   }
   const maxCash = Math.max(...enriched.map(s => s.cash), 1);
 
@@ -149,6 +194,13 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
                     <div className="h-full rounded-full transition-all duration-700"
                       style={{ width: `${(s.cash / maxCash) * 100}%`, background: accent }} />
                   </div>
+                  {(s.raised != null || s.spent != null || (s.loans ?? 0) > 0) && (
+                    <p className="tnum text-[9px] mt-1.5 leading-relaxed" style={{ color: "#9ca3af" }}>
+                      {s.raised != null && <>Raised {fmt(s.raised)}<br /></>}
+                      {s.spent != null && <>Spent {fmt(s.spent)}<br /></>}
+                      {(s.loans ?? 0) > 0 && <>Loans {fmt(s.loans!)}</>}
+                    </p>
+                  )}
                 </div>
                 {s.note && <p className="text-[10px] italic" style={{ color: "#9ca3af" }}>{s.note}</p>}
               </div>
@@ -160,6 +212,8 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
             <span className="text-2xl font-black" style={{ fontFamily: "var(--font-playfair,serif)", color: "#1a3a5c" }}>VS</span>
           </div>
         </div>
+
+        <KalshiStrip dKey={dKey} />
 
         {matchup?.detail && (
           <p className="text-[11px] leading-relaxed mt-4 pt-3" style={{ color: "#6b7280", borderTop: "1px solid #f3f4f6" }}>{matchup.detail}</p>
@@ -524,7 +578,7 @@ export default function DistrictsPage() {
               </div>
             </div>
             <p className="mt-2 text-[11px]" style={{ color: "#9ca3af" }}>
-              Precinct shapes: Harris County Clerk. District assignment: precinct centroid vs Census TIGER 2024 + Harris County GIS boundaries.
+              Precinct shapes: Harris County Clerk. Congressional districts: 2025 enacted plan PLANC2333 (Texas Legislative Council). State + local: Census TIGER 2024 + Harris County/Houston GIS.
               Ballots cast: March 2026 primary, top-of-ticket race.
             </p>
 

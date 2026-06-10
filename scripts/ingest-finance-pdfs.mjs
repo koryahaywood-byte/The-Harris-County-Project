@@ -59,6 +59,7 @@ async function extractViaText(buf) {
     raised:    money("TOTAL\\s+(?:POLITICAL\\s+)?CONTRIBUTIONS(?!\\s+MAINTAINED)"),
     spent:     money("TOTAL\\s+(?:POLITICAL\\s+)?EXPENDITURES"),
     cash:      money("TOTAL\\s+CONTRIBUTIONS\\s+MAINTAINED") ?? money("CASH\\s+ON\\s+HAND"),
+    loans:     money("TOTAL\\s+PRINCIPAL\\s+AMOUNT\\s+OF\\s+ALL\\s+OUTSTANDING\\s+LOANS"),
     period:    period ? `${period[1]} – ${period[2]}` : null,
     method:    "text-regex",
     textLength: text.length,
@@ -85,7 +86,7 @@ async function extractViaClaude(buf, filename) {
 - totalSpent = field 4 "TOTAL POLITICAL EXPENDITURES"
 - cashOnHand = field 5 "TOTAL POLITICAL CONTRIBUTIONS MAINTAINED AS OF THE LAST DAY OF REPORTING PERIOD"
 - outstandingLoans = field 6 "TOTAL PRINCIPAL AMOUNT OF ALL OUTSTANDING LOANS"
-Respond ONLY with JSON: {"candidateName":"","office":"","reportingPeriod":"","totalRaised":0,"totalSpent":0,"cashOnHand":0,"legible":true}
+Respond ONLY with JSON: {"candidateName":"","office":"","reportingPeriod":"","totalRaised":0,"totalSpent":0,"cashOnHand":0,"outstandingLoans":0,"legible":true}
 Use null for any value you cannot read. Set legible:false if the form is handwritten/scanned poorly.` },
       ],
     }],
@@ -93,7 +94,7 @@ Use null for any value you cannot read. Set legible:false if the form is handwri
   const raw = msg.content.find(b => b.type === "text")?.text ?? "";
   const json = JSON.parse(raw.match(/\{[\s\S]*\}/)?.[0] ?? "{}");
   return {
-    raised: json.totalRaised, spent: json.totalSpent, cash: json.cashOnHand,
+    raised: json.totalRaised, spent: json.totalSpent, cash: json.cashOnHand, loans: json.outstandingLoans,
     period: json.reportingPeriod ?? null,
     candidateName: json.candidateName ?? null,
     officeOnForm:  json.office ?? null,
@@ -148,6 +149,7 @@ for (const fname of pdfFiles) {
     raised: result.raised ?? null,
     spent:  result.spent ?? null,
     cash:   result.cash ?? null,
+    loans:  result.loans ?? null,
     confidence,
     extractionMethod: result.method,
     error: result.error ?? null,

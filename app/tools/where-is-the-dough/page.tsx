@@ -380,7 +380,14 @@ export default function WhereIsTheDough() {
                           <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full ${isD ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"}`}>{c.party}</span>
                           {c.incumbent && <span className="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Inc</span>}
                         </div>
-                        <p className="text-[10px] text-[var(--muted)] truncate mb-2">{c.office}</p>
+                        <p className="text-[10px] text-[var(--muted)] truncate mb-1">{c.office}</p>
+                        {(c.raised != null || c.spent != null || c.loans != null) && (
+                          <p className="tnum text-[10px] mb-2 flex flex-wrap gap-x-3" style={{ color: "#9ca3af" }}>
+                            {c.raised != null && <span>Raised <strong style={{ color: "#4b5563" }}>{fmt(c.raised)}</strong></span>}
+                            {c.spent != null && <span>Spent <strong style={{ color: "#4b5563" }}>{fmt(c.spent)}</strong></span>}
+                            {c.loans != null && c.loans > 0 && <span>Loans <strong style={{ color: "#b45309" }}>{fmt(c.loans)}</strong></span>}
+                          </p>
+                        )}
                         {/* Monarch pill bar */}
                         <div className="h-2 bg-black/[0.05] rounded-full overflow-hidden max-w-xs hidden sm:block">
                           <div className="h-full rounded-full transition-all duration-700"
@@ -393,7 +400,7 @@ export default function WhereIsTheDough() {
                           <>
                             <p className={`tnum text-base font-bold ${isD ? "text-blue-600" : "text-red-600"}`}
                               style={{ fontFamily: "var(--font-playfair), serif" }}>{fmt(c.cash)}</p>
-                            <p className="text-[10px] text-[var(--muted)] mt-0.5 hidden md:block">{c.asOf}</p>
+                            <p className="text-[10px] text-[var(--muted)] mt-0.5 hidden md:block">cash on hand · {c.asOf}</p>
                           </>
                         ) : (
                           <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full bg-gray-100 text-gray-400">Pending</span>

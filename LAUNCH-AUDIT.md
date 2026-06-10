@@ -101,3 +101,23 @@ The May 2026 runoff results were already embedded in Heat Check but the rest of 
 3. **An FEC API key** (free, api.data.gov) if you want the live federal numbers diagnosed — or just tell me to dig into the existing route.
 4. **County court judge roster** (or green-light a parser-fix session).
 5. Optional: statewide canvass source for the non-Harris R primaries (TX SOS results export) to upgrade "presumed" nominees.
+
+---
+
+## Addendum — June 10, 2026 (evening pass)
+
+### Fixed
+- **Congressional districts were pre-redistricting.** The crosswalk used Census TIGER 2024 (old 118th-Congress map). Rebuilt against the **2025 enacted plan PLANC2333** from the Texas Legislative Council (shapefile reprojected from Texas Lambert Conformal Conic): **574 of 1,172 precincts changed CD**. CD-18 is now the compact central-Houston district; CD-9 is east Harris. CVAP racial data for CDs was re-aggregated from ~4,000 block groups against the new boundaries (CD-18: 50% Black CVAP; CD-9: 55% Hispanic). State house/senate (unchanged by 2025 redistricting) still use TIGER 2024.
+- Money leaderboard now shows **raised, spent, and loans** alongside cash on hand (where filings provide them); same figures added to the Districts VS card. The PDF pipeline + FEC merge now extract outstanding loans going forward (TEC C/OH cover-sheet field 6; FEC debts-owed).
+
+### Added
+- **Kalshi prediction markets in the VS card**: new `/api/kalshi` route (public elections API, no key, 5-min cache) maps races to Kalshi margin-of-victory events and derives implied win probability from the lowest-strike market. Live for: US Senate (61% R), TX-Gov, and CDs 2/7/8/9/18/22/29/36/38. Races without a Kalshi market simply don't show the strip.
+- The internal freshness dashboard is at **/admin/freshness** (unlinked + noindexed; refresh with `npm run check-freshness`).
+
+### Hidden (not deleted)
+- Endorsement Flowchart, Consultant Flowchart, Infrastructure Funding removed from homepage toolbox + footer; pages still reachable by URL with an "in development, unlisted" banner and noindex. Revisit logged in assistant memory; card definitions recoverable from git history.
+
+### New caveats
+- CD CVAP figures are sums of block groups within the greater-Harris window — for districts extending beyond (CD-8, CD-36), figures cover the Harris-area portion only (noted in the JSON).
+- Kalshi probabilities derive from margin markets, not head-to-head winner markets (Kalshi doesn't list those per-race yet); the lowest-strike market slightly understates true win probability.
+- Loans show only for filers whose reports have been re-extracted; run the finance pipeline at the July filing deadline to populate loans across the roster.

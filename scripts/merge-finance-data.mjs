@@ -60,7 +60,7 @@ async function fetchFec() {
       if (!t) throw new Error("no totals");
       out.push({
         name: cand.name, office: cand.office, level: "federal", party: cand.party,
-        raised: t.receipts ?? null, spent: t.disbursements ?? null,
+        raised: t.receipts ?? null, spent: t.disbursements ?? null, loans: t.last_debts_owed_by_committee ?? null,
         cash: t.last_cash_on_hand_end_period ?? null,
         asOf: t.coverage_end_date?.slice(0, 10) ?? "unknown",
         source: "fec-api",
@@ -107,7 +107,7 @@ const local = pdfRecords
   .map(r => ({
     name: r.name, office: r.office, level: levelFor(r.office),
     party: ROSTER.harrisCounty.concat(ROSTER.houston).find(p => p.name === r.name)?.party ?? null,
-    raised: r.raised, spent: r.spent, cash: r.cash,
+    raised: r.raised, spent: r.spent, cash: r.cash, loans: r.loans ?? null,
     asOf: r.reportingPeriod ?? r.filingDate, source: `pdf:${r.file}`,
     confidence: r.confidence,
   }));

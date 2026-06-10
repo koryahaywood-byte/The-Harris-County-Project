@@ -5,7 +5,7 @@ import ThreadsFeed from "@/components/ThreadsFeed";
 
 /* ─── Harris County Congressional delegation ─────────────────────────────────── */
 // The 9 congressional districts that cover Harris County (verified against the
-// precinct crosswalk built from Census TIGER 2024 boundaries).
+// precinct crosswalk: congressional = 2025 PLANC2333, state/local = TIGER 2024).
 const REPS = [
   { name: "Christian Menefee",  district: "CD-18", party: "D", note: "Won 2025 special election",    photo: "" },
   { name: "Al Green",           district: "CD-9",  party: "D", note: "Retiring — lost CD-18 runoff; term ends Jan 2027",          photo: "https://unitedstates.github.io/images/congress/450x550/G000553.jpg" },
