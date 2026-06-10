@@ -193,6 +193,40 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Melanie Miles", party: "D", incumbent: false, note: "Won May runoff over incumbent Sharon Burney (Place 2)" },
     ],
   },
+
+  // Commissioner Precincts — all incumbents, no 2026 challengers on file yet
+  "PCT-1": {
+    office: "Commissioner Precinct 1",
+    status: "partial",
+    sides: [
+      { name: "Rodney Ellis", party: "D", incumbent: true, note: "Incumbent — next election 2026" },
+    ],
+    detail: "Rodney Ellis has held PCT 1 since 2016. No Republican challenger filed as of June 2026.",
+  },
+  "PCT-2": {
+    office: "Commissioner Precinct 2",
+    status: "partial",
+    sides: [
+      { name: "Adrian Garcia", party: "D", incumbent: true, note: "Incumbent — next election 2026" },
+    ],
+    detail: "Adrian Garcia has held PCT 2 since 2016. No Republican challenger filed as of June 2026.",
+  },
+  "PCT-3": {
+    office: "Commissioner Precinct 3",
+    status: "partial",
+    sides: [
+      { name: "Tom Ramsey", party: "R", incumbent: true, note: "Incumbent — next election 2026" },
+    ],
+    detail: "Tom Ramsey has held PCT 3 since 2021. No Democratic challenger on file as of June 2026.",
+  },
+  "PCT-4": {
+    office: "Commissioner Precinct 4",
+    status: "partial",
+    sides: [
+      { name: "Lesley Briones", party: "D", incumbent: true, note: "Incumbent — next election 2026" },
+    ],
+    detail: "Lesley Briones has held PCT 4 since 2023. No Republican challenger filed as of June 2026.",
+  },
 };
 
 export function getMatchup(districtKey: string): Matchup | null {

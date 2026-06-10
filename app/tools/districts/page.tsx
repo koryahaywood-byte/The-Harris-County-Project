@@ -23,9 +23,9 @@ const DistrictsMap = dynamic(() => import("./DistrictsMap"), {
   ),
 });
 
-const CROSSWALK = (crosswalkRaw as { precincts: Record<string, { hd?: string; sd?: string; cd?: string; jp?: string; council?: string }> }).precincts;
+const CROSSWALK = (crosswalkRaw as { precincts: Record<string, { hd?: string; sd?: string; cd?: string; jp?: string; council?: string; pct?: string }> }).precincts;
 
-type DistrictField = "cd" | "sd" | "hd" | "jp" | "council";
+type DistrictField = "cd" | "sd" | "hd" | "jp" | "council" | "pct";
 type TypeKey = DistrictField | "countywide";
 
 const TYPES: { key: TypeKey; label: string }[] = [
@@ -34,12 +34,13 @@ const TYPES: { key: TypeKey; label: string }[] = [
   { key: "sd",      label: "State Senate" },
   { key: "hd",      label: "State House" },
   { key: "jp",      label: "JP / Constable" },
+  { key: "pct",     label: "Commissioner" },
   { key: "council", label: "City Council" },
 ];
 
 // Real district lists derived from the precinct crosswalk (centroid point-in-polygon)
 const DISTRICT_LISTS: Record<DistrictField, string[]> = (() => {
-  const sets: Record<DistrictField, Map<string, number>> = { cd: new Map(), sd: new Map(), hd: new Map(), jp: new Map(), council: new Map() };
+  const sets: Record<DistrictField, Map<string, number>> = { cd: new Map(), sd: new Map(), hd: new Map(), jp: new Map(), council: new Map(), pct: new Map() };
   for (const v of Object.values(CROSSWALK)) {
     (Object.keys(sets) as DistrictField[]).forEach(k => {
       const val = v[k];
@@ -49,7 +50,7 @@ const DISTRICT_LISTS: Record<DistrictField, string[]> = (() => {
   const list = (k: DistrictField, numeric: boolean) =>
     [...sets[k].entries()].filter(([, n]) => n > 3).map(([d]) => d)
       .sort((a, b) => numeric ? parseInt(a) - parseInt(b) : a.localeCompare(b));
-  return { cd: list("cd", true), sd: list("sd", true), hd: list("hd", true), jp: list("jp", true), council: list("council", false) };
+  return { cd: list("cd", true), sd: list("sd", true), hd: list("hd", true), jp: list("jp", true), council: list("council", false), pct: list("pct", true) };
 })();
 
 function districtKey(type: TypeKey, value: string | null): string {
@@ -59,6 +60,7 @@ function districtKey(type: TypeKey, value: string | null): string {
   if (type === "sd") return `SD-${value}`;
   if (type === "hd") return `HD-${value}`;
   if (type === "jp") return `HC-JP${value}`;
+  if (type === "pct") return `PCT-${value}`;
   return `COH-District ${value}`;
 }
 
@@ -69,6 +71,7 @@ function politicianLabel(type: TypeKey, value: string | null): string {
   if (type === "sd") return `SD-${value}`;
   if (type === "hd") return `HD-${value}`;
   if (type === "jp") return `JP ${value}`;
+  if (type === "pct") return `Commissioner PCT ${value}`;
   return `District ${value}`;
 }
 
@@ -79,6 +82,7 @@ function headerLabel(type: TypeKey, value: string | null): string {
   if (type === "sd") return `Senate District ${value}`;
   if (type === "hd") return `House District ${value}`;
   if (type === "jp") return `JP / Constable Precinct ${value}`;
+  if (type === "pct") return `Commissioner Precinct ${value}`;
   return `Council District ${value}`;
 }
 

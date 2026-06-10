@@ -25,8 +25,8 @@ export type MapLayer = "population" | "votes" | "results";
 
 export interface DistrictsMapProps {
   geojson: GeoJsonObject | null;
-  crosswalk: Record<string, { hd?: string; sd?: string; cd?: string; jp?: string; council?: string }>;
-  districtField: "hd" | "sd" | "cd" | "jp" | "council" | null; // null = countywide
+  crosswalk: Record<string, { hd?: string; sd?: string; cd?: string; jp?: string; council?: string; pct?: string }>;
+  districtField: "hd" | "sd" | "cd" | "jp" | "council" | "pct" | null; // null = countywide
   districtValue: string | null;
   layer: MapLayer;
   turnout: Record<string, PrecinctTurnout>;
