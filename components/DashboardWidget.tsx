@@ -17,6 +17,87 @@ const TIER_META = {
   federal: { label: "D.C.",    color: "#2563a8", desc: "Congress & the White House" },
 };
 
+// ── Notable days lookup — MM-DD keyed ───────────────────────────────────────
+// Covers federal holidays, national/international observances, Texas-specific
+// days, and standing civic deadlines. Shown in the Agenda card.
+const NOTABLE_DAYS: Record<string, { label: string; emoji: string; type: "holiday" | "civic" | "observance" | "fun" }[]> = {
+  // January
+  "01-01": [{ label: "New Year's Day", emoji: "🎆", type: "holiday" }],
+  "01-15": [{ label: "MLK Jr. Birthday", emoji: "✊", type: "holiday" }],  // observed 3rd Mon but keep date
+  "01-20": [{ label: "Martin Luther King Jr. Day (observed)", emoji: "✊", type: "holiday" }],
+  "01-21": [{ label: "National Hug Day", emoji: "🤗", type: "fun" }],
+
+  // February
+  "02-01": [{ label: "Black History Month begins", emoji: "✊", type: "observance" }],
+  "02-02": [{ label: "Groundhog Day", emoji: "🦔", type: "fun" }],
+  "02-14": [{ label: "Valentine's Day", emoji: "❤️", type: "fun" }],
+  "02-17": [{ label: "Presidents' Day", emoji: "🏛️", type: "holiday" }],
+  "02-19": [{ label: "Presidents' Day (observed)", emoji: "🏛️", type: "holiday" }],
+
+  // March
+  "03-08": [{ label: "International Women's Day", emoji: "♀️", type: "observance" }],
+  "03-17": [{ label: "St. Patrick's Day", emoji: "☘️", type: "fun" }],
+  "03-29": [{ label: "Texas Independence Day", emoji: "⭐", type: "holiday" }],  // March 2 but celebrated
+  "03-02": [{ label: "Texas Independence Day", emoji: "⭐", type: "holiday" }],
+  "03-31": [{ label: "César Chávez Day", emoji: "✊", type: "observance" }],
+
+  // April
+  "04-01": [{ label: "April Fools' Day", emoji: "🃏", type: "fun" }],
+  "04-15": [{ label: "Tax Day — federal returns due", emoji: "📋", type: "civic" }],
+  "04-22": [{ label: "Earth Day", emoji: "🌎", type: "observance" }],
+
+  // May
+  "05-01": [{ label: "International Workers' Day (May Day)", emoji: "✊", type: "observance" }],
+  "05-05": [{ label: "Cinco de Mayo", emoji: "🇲🇽", type: "observance" }],
+  "05-15": [{ label: "National Day of Teacher Appreciation", emoji: "🍎", type: "observance" }],
+  "05-26": [{ label: "Memorial Day (observed)", emoji: "🎖️", type: "holiday" }],
+
+  // June
+  "06-01": [{ label: "Pride Month begins", emoji: "🏳️‍🌈", type: "observance" }],
+  "06-10": [{ label: "National Iced Tea Day", emoji: "🧋", type: "fun" }],
+  "06-19": [{ label: "Juneteenth — Federal Holiday", emoji: "✊", type: "holiday" }],
+  "06-20": [{ label: "Juneteenth (observed)", emoji: "✊", type: "holiday" }],
+  "06-21": [{ label: "Summer Solstice", emoji: "☀️", type: "fun" }],
+
+  // July
+  "07-04": [{ label: "Independence Day", emoji: "🇺🇸", type: "holiday" }],
+  "07-23": [{ label: "National Hot Dog Day", emoji: "🌭", type: "fun" }],
+
+  // August
+  "08-26": [{ label: "Women's Equality Day", emoji: "♀️", type: "observance" }],
+  "08-19": [{ label: "National Aviation Day", emoji: "✈️", type: "fun" }],
+
+  // September
+  "09-01": [{ label: "Labor Day (observed)", emoji: "⚒️", type: "holiday" }],
+  "09-15": [{ label: "Hispanic Heritage Month begins", emoji: "🌮", type: "observance" }],
+  "09-17": [{ label: "Constitution Day", emoji: "📜", type: "civic" }],
+
+  // October
+  "10-02": [{ label: "World Habitat Day", emoji: "🏘️", type: "observance" }],
+  "10-06": [{ label: "Voter Registration Deadline — November 2026 Election", emoji: "🗳️", type: "civic" }],
+  "10-09": [{ label: "Indigenous Peoples' Day", emoji: "🪶", type: "observance" }],
+  "10-13": [{ label: "Columbus Day (federal)", emoji: "🚢", type: "holiday" }],
+  "10-15": [{ label: "Hispanic Heritage Month ends", emoji: "🌮", type: "observance" }],
+  "10-31": [{ label: "Halloween", emoji: "🎃", type: "fun" }],
+
+  // November
+  "11-03": [{ label: "Election Day — Harris County General Election 2026", emoji: "🗳️", type: "civic" }],
+  "11-11": [{ label: "Veterans Day", emoji: "🎖️", type: "holiday" }],
+  "11-26": [{ label: "Thanksgiving Day", emoji: "🦃", type: "holiday" }],
+
+  // December
+  "12-01": [{ label: "World AIDS Day", emoji: "🎗️", type: "observance" }],
+  "12-10": [{ label: "Human Rights Day", emoji: "✊", type: "observance" }],
+  "12-25": [{ label: "Christmas Day", emoji: "🎄", type: "holiday" }],
+  "12-26": [{ label: "Kwanzaa begins", emoji: "🕯️", type: "observance" }],
+  "12-31": [{ label: "New Year's Eve", emoji: "🥂", type: "fun" }],
+};
+
+function getNotableDays(todayStr: string) {
+  const mmdd = todayStr.slice(5); // "YYYY-MM-DD" → "MM-DD"
+  return NOTABLE_DAYS[mmdd] ?? [];
+}
+
 // ── Political quotes — rotates daily ────────────────────────────────────────
 const QUOTES = [
   { text: "Nearly all men can stand adversity, but if you want to test a man's character, give him power.", author: "Abraham Lincoln", title: "16th President" },
@@ -155,11 +236,21 @@ function NewsCard({ story, tier }: { story: NewsStory | null; tier: keyof typeof
   );
 }
 
+const NOTABLE_TYPE_COLOR: Record<string, string> = {
+  holiday:    "#dc2626",
+  civic:      "#2563a8",
+  observance: "#7c3aed",
+  fun:        "#d97706",
+};
+
 // ── Today's agenda ───────────────────────────────────────────────────────────
-function AgendaCard({ todayEvents, upcomingEvent }: {
+function AgendaCard({ todayEvents, upcomingEvent, notableDays }: {
   todayEvents: DashboardData["todayEvents"];
   upcomingEvent: DashboardData["upcomingEvent"];
+  notableDays: ReturnType<typeof getNotableDays>;
 }) {
+  const hasAnything = todayEvents.length > 0 || notableDays.length > 0;
+
   return (
     <div className="rounded-[1.5rem] bg-white ring-1 ring-black/8 p-5 flex flex-col"
       style={{ boxShadow: "0 2px 12px rgba(26,58,92,0.06)" }}>
@@ -167,10 +258,29 @@ function AgendaCard({ todayEvents, upcomingEvent }: {
         Today&apos;s Agenda
       </p>
 
-      {todayEvents.length > 0 ? (
+      {hasAnything ? (
         <ul className="flex flex-col gap-3 flex-1">
-          {todayEvents.slice(0, 4).map((e, i) => (
-            <li key={i} className="flex items-start gap-2.5">
+          {/* Notable days — holidays, observances, civic deadlines */}
+          {notableDays.map((nd, i) => (
+            <li key={`nd-${i}`} className="flex items-center gap-2.5">
+              <span className="text-base leading-none flex-shrink-0">{nd.emoji}</span>
+              <div className="min-w-0">
+                <p className="text-[12px] font-semibold leading-snug"
+                  style={{ color: NOTABLE_TYPE_COLOR[nd.type] }}>
+                  {nd.label}
+                </p>
+              </div>
+            </li>
+          ))}
+
+          {/* Divider between notable days and civic events */}
+          {notableDays.length > 0 && todayEvents.length > 0 && (
+            <li className="border-t border-black/5 my-0.5" />
+          )}
+
+          {/* Civic calendar events */}
+          {todayEvents.slice(0, 4 - Math.min(notableDays.length, 2)).map((e, i) => (
+            <li key={`ev-${i}`} className="flex items-start gap-2.5">
               <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0"
                 style={{ background: CAT_COLOR[e.category] ?? "#1a3a5c" }} />
               <div className="min-w-0">
@@ -272,6 +382,9 @@ export default async function DashboardWidget() {
   let data: DashboardData | null = null;
   try { data = await getDashboardData(); } catch { /* silently degrade */ }
 
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const notableDays = getNotableDays(todayStr);
+
   return (
     <section style={{ background: "var(--bg)", borderBottom: "1px solid var(--border)" }}
       className="py-14 md:py-20 px-6">
@@ -291,6 +404,7 @@ export default async function DashboardWidget() {
           <AgendaCard
             todayEvents={data?.todayEvents ?? []}
             upcomingEvent={data?.upcomingEvent ?? null}
+            notableDays={notableDays}
           />
           <CountdownCard nextElection={data?.nextElection ?? null} />
           <QuoteCard />
