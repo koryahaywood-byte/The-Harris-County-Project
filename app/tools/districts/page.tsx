@@ -100,26 +100,26 @@ function KalshiStrip({ dKey }: { dKey: string }) {
   if (!odds || !odds.available) return null;
 
   return (
-    <div className="mt-4 pt-4" style={{ borderTop: "1px solid #f3f4f6" }}>
+    <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
       <div className="flex items-center justify-between mb-2">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.4)" }}>
           Market Odds — Who Wins
         </p>
         <a href={odds.url} target="_blank" rel="noopener noreferrer"
           className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity"
-          style={{ background: "#0f172a", color: "#4ade80" }}>
+          style={{ background: "rgba(74,222,128,0.15)", color: "#4ade80" }}>
           Kalshi ↗
         </a>
       </div>
       <div className="flex items-center gap-3">
-        <span className="tnum text-sm font-bold w-12" style={{ color: "#2563a8" }}>{odds.demProb}%</span>
-        <div className="flex-1 h-3 rounded-full overflow-hidden flex" style={{ background: "#f3f4f6" }}>
-          <div className="h-full transition-all duration-700" style={{ width: `${odds.demProb}%`, background: "#2563a8" }} />
-          <div className="h-full transition-all duration-700" style={{ width: `${odds.repProb}%`, background: "#dc2626" }} />
+        <span className="tnum text-sm font-bold w-12" style={{ color: "#7aaee8" }}>{odds.demProb}%</span>
+        <div className="flex-1 h-3 rounded-full overflow-hidden flex" style={{ background: "rgba(255,255,255,0.08)" }}>
+          <div className="h-full transition-all duration-700" style={{ width: `${odds.demProb}%`, background: "#7aaee8" }} />
+          <div className="h-full transition-all duration-700" style={{ width: `${odds.repProb}%`, background: "#f08080" }} />
         </div>
-        <span className="tnum text-sm font-bold w-12 text-right" style={{ color: "#dc2626" }}>{odds.repProb}%</span>
+        <span className="tnum text-sm font-bold w-12 text-right" style={{ color: "#f08080" }}>{odds.repProb}%</span>
       </div>
-      <p className="text-[9px] mt-1.5" style={{ color: "#9ca3af" }}>
+      <p className="text-[9px] mt-1.5" style={{ color: "rgba(255,255,255,0.3)" }}>
         Implied win probability from Kalshi&rsquo;s &ldquo;{odds.label}&rdquo; margin markets
         {odds.volume ? ` · ${odds.volume.toLocaleString()} contracts open` : ""} · not a poll, real-money market
       </p>
@@ -147,19 +147,19 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
   const maxCash = Math.max(...enriched.map(s => s.cash), 1);
 
   return (
-    <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] mt-4">
-      <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-5">
+    <div className="rounded-[1.35rem] mt-4" style={{ background: "#1a2e44" }}>
+      <div className="rounded-[1.35rem] p-5" style={{ background: "#1a3a5c" }}>
         <div className="flex items-center justify-between mb-4">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>November 2026 — The Matchup</p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.4)" }}>November 2026 — The Matchup</p>
           {matchup?.status === "runoff-pending" && (
-            <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Runoff Pending</span>
+            <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: "rgba(251,191,36,0.15)", color: "#fbbf24" }}>Runoff Pending</span>
           )}
         </div>
 
         <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-3">
           {enriched.slice(0, 2).map((s, i) => {
             const isD = s.party === "D";
-            const accent = isD ? "#2563a8" : "#dc2626";
+            const accent = isD ? "#7aaee8" : "#f08080";
             return (
               <div key={i} className={`flex flex-col ${i === 0 ? "items-start text-left" : "items-end text-right"} gap-2`}>
                 <div className="flex items-center gap-3" style={{ flexDirection: i === 0 ? "row" : "row-reverse" }}>
@@ -168,17 +168,17 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
                       style={{ outline: `2.5px solid ${accent}`, outlineOffset: 2 }} />
                   ) : (
                     <div className="w-14 h-14 rounded-full shrink-0 flex items-center justify-center text-white font-bold text-sm"
-                      style={{ background: s.name === "Challenger" ? "#9ca3af" : accent }}>
+                      style={{ background: s.name === "Challenger" ? "rgba(255,255,255,0.2)" : `${accent}33`, border: `1.5px solid ${accent}40`, color: accent }}>
                       {s.name.split(" ").map(w => w[0]).join("").slice(0, 2)}
                     </div>
                   )}
                   <div>
-                    <p className="font-bold text-sm leading-tight" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>{s.name}</p>
+                    <p className="font-bold text-sm leading-tight" style={{ color: "#fff", fontFamily: "var(--font-playfair,serif)" }}>{s.name}</p>
                     <div className={`flex items-center gap-1.5 mt-1 ${i === 0 ? "" : "justify-end"}`}>
-                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: isD ? "#dbeafe" : "#fee2e2", color: accent }}>
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,255,255,0.1)", color: accent }}>
                         {s.party === "D" ? "Dem" : "Rep"}
                       </span>
-                      {s.incumbent && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Inc</span>}
+                      {s.incumbent && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(52,211,153,0.15)", color: "#34d399" }}>Inc</span>}
                     </div>
                   </div>
                 </div>
@@ -187,39 +187,39 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
                   <p className="text-xl font-bold" style={{ color: accent, fontFamily: "var(--font-playfair,serif)" }}>
                     {s.cash > 0 ? fmt(s.cash) : "—"}
                   </p>
-                  <p className="text-[9px] uppercase tracking-wider" style={{ color: "#9ca3af" }}>
+                  <p className="text-[9px] uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.35)" }}>
                     Cash on hand{s.asOf ? ` · ${s.asOf}` : ""}
                   </p>
-                  <div className={`h-2 rounded-full overflow-hidden mt-1.5 bg-black/[0.05] ${i === 0 ? "" : "scale-x-[-1]"}`}>
+                  <div className={`h-[5px] rounded-full overflow-hidden mt-1.5 ${i === 0 ? "" : "scale-x-[-1]"}`} style={{ background: "rgba(255,255,255,0.08)" }}>
                     <div className="h-full rounded-full transition-all duration-700"
                       style={{ width: `${(s.cash / maxCash) * 100}%`, background: accent }} />
                   </div>
                   {(s.raised != null || s.spent != null || (s.loans ?? 0) > 0) && (
-                    <p className="tnum text-[9px] mt-1.5 leading-relaxed" style={{ color: "#9ca3af" }}>
+                    <p className="tnum text-[9px] mt-1.5 leading-relaxed" style={{ color: "rgba(255,255,255,0.35)" }}>
                       {s.raised != null && <>Raised {fmt(s.raised)}<br /></>}
                       {s.spent != null && <>Spent {fmt(s.spent)}<br /></>}
                       {(s.loans ?? 0) > 0 && <>Loans {fmt(s.loans!)}</>}
                     </p>
                   )}
                 </div>
-                {s.note && <p className="text-[10px] italic" style={{ color: "#9ca3af" }}>{s.note}</p>}
+                {s.note && <p className="text-[10px] italic" style={{ color: "rgba(255,255,255,0.35)" }}>{s.note}</p>}
               </div>
             );
           })}
 
-          {/* VS divider — rendered between via grid order */}
+          {/* VS divider */}
           <div className="row-start-1 col-start-2 self-center flex flex-col items-center px-1">
-            <span className="text-2xl font-black" style={{ fontFamily: "var(--font-playfair,serif)", color: "#1a3a5c" }}>VS</span>
+            <span className="text-2xl font-black" style={{ fontFamily: "var(--font-playfair,serif)", color: "rgba(255,255,255,0.25)" }}>VS</span>
           </div>
         </div>
 
         <KalshiStrip dKey={dKey} />
 
         {matchup?.detail && (
-          <p className="text-[11px] leading-relaxed mt-4 pt-3" style={{ color: "#6b7280", borderTop: "1px solid #f3f4f6" }}>{matchup.detail}</p>
+          <p className="text-[11px] leading-relaxed mt-4 pt-3" style={{ color: "rgba(255,255,255,0.4)", borderTop: "1px solid rgba(255,255,255,0.08)" }}>{matchup.detail}</p>
         )}
         {!matchup && (
-          <p className="text-[11px] leading-relaxed mt-4 pt-3" style={{ color: "#9ca3af", borderTop: "1px solid #f3f4f6" }}>
+          <p className="text-[11px] leading-relaxed mt-4 pt-3" style={{ color: "rgba(255,255,255,0.35)", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
             Challenger filings for this seat have not been confirmed yet. As nominees are set, this card will show the head-to-head with each side&rsquo;s war chest.
           </p>
         )}

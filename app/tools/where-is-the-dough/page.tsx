@@ -388,17 +388,17 @@ export default function WhereIsTheDough() {
                             {c.loans != null && c.loans > 0 && <span>Loans <strong style={{ color: "#b45309" }}>{fmt(c.loans)}</strong></span>}
                           </p>
                         )}
-                        {/* Monarch pill bar */}
-                        <div className="h-2 bg-black/[0.05] rounded-full overflow-hidden max-w-xs hidden sm:block">
+                        {/* Proportional fill bar */}
+                        <div className="h-[5px] bg-black/[0.06] rounded-full overflow-hidden max-w-xs hidden sm:block">
                           <div className="h-full rounded-full transition-all duration-700"
-                            style={{ width: `${pct}%`, background: `linear-gradient(90deg,${isD ? "#3b82f6cc" : "#ef4444cc"},${isD ? "#3b82f6" : "#ef4444"})` }}/>
+                            style={{ width: `${pct}%`, background: isD ? "#2563a8" : "#dc2626" }}/>
                         </div>
                       </div>
                       {/* Cash + date */}
                       <div className="flex-shrink-0 text-right">
                         {c.cash > 0 ? (
                           <>
-                            <p className={`tnum text-base font-bold ${isD ? "text-blue-600" : "text-red-600"}`}
+                            <p className={`tnum text-xl font-bold ${isD ? "text-blue-700" : "text-red-700"}`}
                               style={{ fontFamily: "var(--font-playfair), serif" }}>{fmt(c.cash)}</p>
                             <p className="text-[10px] text-[var(--muted)] mt-0.5 hidden md:block">cash on hand · {c.asOf}</p>
                           </>
