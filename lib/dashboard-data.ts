@@ -29,6 +29,7 @@ export interface DashboardData {
   todayEvents: { title: string; category: string; description: string }[];
   upcomingEvent: { title: string; date: string; daysAway: number; category: string } | null;
   nextElection:  { title: string; date: string; daysAway: number } | null;
+  nextFiling:    { title: string; date: string; daysAway: number } | null;
   ballot: BallotRace[];
 }
 
@@ -91,37 +92,77 @@ function parseRssItems(xml: string): Array<{
   return items;
 }
 
-// ── Fetch og:image via Microlink API ─────────────────────────────────────────
-// Microlink is a free metadata API that properly follows JS redirects
-// (e.g. Google News → real article URL) and returns the og:image.
-// Free tier: 100 req/day per IP — cached 30 min so 3 stories = 3 req per cycle.
+// ── Decode Google News base64 article URLs → real article URL ────────────────
+// Google News RSS article links are protobuf-encoded blobs. The real URL is
+// embedded as a UTF-8 string inside the decoded bytes.
+function resolveArticleUrl(url: string): string {
+  if (!url.includes("news.google.com")) return url;
+  try {
+    const b64 = url.match(/articles\/([A-Za-z0-9_\-]+=*)/)?.[1];
+    if (!b64) return url;
+    const decoded = Buffer.from(b64, "base64").toString("binary");
+    // Real URL is a contiguous ASCII substring starting with http
+    const found = decoded.match(/https?:\/\/[!-~]+/)?.[0];
+    if (!found) return url;
+    // Strip trailing garbage bytes that may have been included
+    return found.replace(/[^\x20-\x7e]/g, "").replace(/[^\w\-._~:/?#\[\]@!$&'()*+,;=%]/g, "");
+  } catch { return url; }
+}
+
+// ── Scrape og:image from the real article page (stream first 24 KB) ───────────
 async function scrapeOgImage(articleUrl: string): Promise<string | null> {
+  const realUrl = resolveArticleUrl(articleUrl);
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
+    const tid = setTimeout(() => controller.abort(), 5000);
 
-    const api = `https://api.microlink.io?url=${encodeURIComponent(articleUrl)}&screenshot=false&video=false&audio=false`;
-    const res = await fetch(api, {
+    const res = await fetch(realUrl, {
       signal: controller.signal,
-      headers: { "Accept": "application/json" },
+      headers: {
+        // Mimic social crawler so sites serve the open-graph head without a paywall redirect
+        "User-Agent": "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)",
+        "Accept": "text/html,application/xhtml+xml",
+      },
+      redirect: "follow",
       next: { revalidate: 1800 },
     });
-    clearTimeout(timeout);
-
+    clearTimeout(tid);
     if (!res.ok) return null;
-    const json = await res.json();
 
-    const img: string | null =
-      json?.data?.image?.url
-      ?? json?.data?.logo?.url
+    // Stream only the first 24 KB — enough to reach </head>
+    const reader = res.body?.getReader();
+    if (!reader) return null;
+    const chunks: Uint8Array[] = [];
+    let total = 0;
+    while (total < 24576) {
+      const { done, value } = await reader.read();
+      if (done || !value) break;
+      chunks.push(value);
+      total += value.byteLength;
+      const partial = new TextDecoder().decode(value, { stream: true });
+      if (partial.includes("</head>") || partial.includes("<body")) break;
+    }
+    reader.cancel().catch(() => {});
+
+    const html = new TextDecoder().decode(
+      new Uint8Array(chunks.reduce<number[]>((acc, c) => [...acc, ...c], []))
+    );
+
+    // Try og:image first, then twitter:image
+    const imgUrl =
+      html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)?.[1]
+      ?? html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i)?.[1]
+      ?? html.match(/<meta[^>]+name=["']twitter:image(?::src)?["'][^>]+content=["']([^"']+)["']/i)?.[1]
+      ?? html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image(?::src)?["']/i)?.[1]
       ?? null;
 
-    // Reject tiny logos/icons masquerading as story images
-    const w = json?.data?.image?.width ?? 999;
-    const h = json?.data?.image?.height ?? 999;
-    if (!img || (w < 200 && h < 200)) return null;
+    if (!imgUrl) return null;
+    // Reject obvious logos/placeholders
+    if (/logo|icon|placeholder|default|avatar/i.test(imgUrl)) return null;
+    // Must look like an image URL
+    if (!/\.(jpe?g|png|webp|gif)/i.test(imgUrl) && !imgUrl.includes("image") && !imgUrl.includes("photo")) return null;
 
-    return img;
+    return imgUrl.startsWith("//") ? `https:${imgUrl}` : imgUrl;
   } catch { return null; }
 }
 
@@ -237,15 +278,26 @@ export async function getDashboardData(): Promise<DashboardData> {
     daysAway: Math.ceil((new Date(next.date).getTime() - new Date(todayStr).getTime()) / 86400000),
   } : null;
 
-  // Countdown: only actual voting days (primary, runoff, general) — not filing or registration deadlines
-  const ELECTION_DAY_IDS = new Set(["primary-2026", "runoff-2026", "general-2026"]);
+  // Countdown: only actual voting days (primary, runoff, general, municipal)
+  const ELECTION_DAY_IDS = new Set(["primary-2026", "runoff-2026", "general-2026", "hcc-election-2027"]);
   const nextElectionEvent = EVENTS
     .filter(e => ELECTION_DAY_IDS.has(e.id) && e.date > todayStr)
+    .sort((a, b) => a.date.localeCompare(b.date))[0] ?? null;
+
+  // Secondary: next candidate filing deadline (state general or city council)
+  const FILING_CLOSE_IDS = new Set(["candidate-filing-close", "hcc-filing-close-2027"]);
+  const nextFilingEvent = EVENTS
+    .filter(e => FILING_CLOSE_IDS.has(e.id) && e.date > todayStr)
     .sort((a, b) => a.date.localeCompare(b.date))[0] ?? null;
   const nextElection = nextElectionEvent ? {
     title: nextElectionEvent.title, date: nextElectionEvent.date,
     daysAway: Math.ceil((new Date(nextElectionEvent.date).getTime() - new Date(todayStr).getTime()) / 86400000),
   } : null;
 
-  return { federal, state, local, todayEvents, upcomingEvent, nextElection, ballot: NOVEMBER_2026_BALLOT };
+  const nextFiling = nextFilingEvent ? {
+    title: nextFilingEvent.title, date: nextFilingEvent.date,
+    daysAway: Math.ceil((new Date(nextFilingEvent.date).getTime() - new Date(todayStr).getTime()) / 86400000),
+  } : null;
+
+  return { federal, state, local, todayEvents, upcomingEvent, nextElection, nextFiling, ballot: NOVEMBER_2026_BALLOT };
 }

@@ -312,7 +312,10 @@ function AgendaCard({ todayEvents, upcomingEvent, notableDays }: {
 }
 
 // ── Election countdown — center, dominant ────────────────────────────────────
-function CountdownCard({ nextElection }: { nextElection: DashboardData["nextElection"] }) {
+function CountdownCard({ nextElection, nextFiling }: {
+  nextElection: DashboardData["nextElection"];
+  nextFiling:   DashboardData["nextFiling"];
+}) {
   return (
     <div className="rounded-[1.5rem] text-white flex flex-col items-center justify-center text-center p-6 relative overflow-hidden"
       style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#0f2540 100%)" }}>
@@ -339,8 +342,24 @@ function CountdownCard({ nextElection }: { nextElection: DashboardData["nextElec
         <p className="text-sm text-white/50 relative z-10">No upcoming election</p>
       )}
 
+      {/* Secondary: filing deadline */}
+      {nextFiling && (
+        <div className="relative z-10 mt-5 pt-4 w-full text-center"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/30 mb-1">
+            Filing Deadline
+          </p>
+          <p className="text-[13px] font-semibold text-sky-200">
+            {nextFiling.daysAway} day{nextFiling.daysAway !== 1 ? "s" : ""}
+          </p>
+          <p className="text-[10px] text-white/35 mt-0.5 leading-snug max-w-[160px] mx-auto">
+            {nextFiling.title.replace(" — ", " · ").replace("Candidate Filing Deadline", "").trim().replace(/^·\s*/, "")}
+          </p>
+        </div>
+      )}
+
       <Link href="/tools/civic-calendar"
-        className="relative z-10 mt-5 text-[11px] font-semibold text-sky-300 hover:underline">
+        className="relative z-10 mt-4 text-[11px] font-semibold text-sky-300 hover:underline">
         All election dates →
       </Link>
     </div>
@@ -406,7 +425,7 @@ export default async function DashboardWidget() {
             upcomingEvent={data?.upcomingEvent ?? null}
             notableDays={notableDays}
           />
-          <CountdownCard nextElection={data?.nextElection ?? null} />
+          <CountdownCard nextElection={data?.nextElection ?? null} nextFiling={data?.nextFiling ?? null} />
           <QuoteCard />
         </div>
 
