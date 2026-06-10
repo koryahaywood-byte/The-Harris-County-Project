@@ -91,11 +91,14 @@ export default function WhereIsTheDough() {
   const totalPool = demTotal + repTotal;
 
   const filtered = DATA
-    .filter(d => d.cash > 0)
     .filter(d => level === "all" || d.level === level)
     .filter(d => party === "all" || d.party === party)
     .filter(d => !search || d.name.toLowerCase().includes(search.toLowerCase()) || d.office.toLowerCase().includes(search.toLowerCase()))
-    .sort((a, b) => b.cash - a.cash);
+    .sort((a, b) => {
+      // Officials with no data sort to the bottom
+      if ((a.cash > 0) !== (b.cash > 0)) return a.cash > 0 ? -1 : 1;
+      return b.cash - a.cash;
+    });
 
   const maxCash = filtered[0]?.cash ?? 1;
 
@@ -322,7 +325,7 @@ export default function WhereIsTheDough() {
                     <div key={`${c.name}-${i}`}
                       className="flex items-center gap-4 px-5 py-4 border-b border-[var(--border)] last:border-0 hover:bg-black/[0.018] transition-colors duration-200">
                       {/* Rank */}
-                      <span className={`w-6 flex-shrink-0 text-center text-xs font-bold ${rankColor}`}>{i + 1}</span>
+                      <span className={`w-6 flex-shrink-0 text-center text-xs font-bold ${rankColor}`}>{c.cash > 0 ? i + 1 : "—"}</span>
                       {/* Avatar */}
                       <div
                         className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-white text-[11px] font-bold"
@@ -345,9 +348,15 @@ export default function WhereIsTheDough() {
                       </div>
                       {/* Cash + date */}
                       <div className="flex-shrink-0 text-right">
-                        <p className={`text-base font-bold ${isD ? "text-blue-600" : "text-red-600"}`}
-                          style={{ fontFamily: "var(--font-playfair), serif" }}>{fmt(c.cash)}</p>
-                        <p className="text-[10px] text-[var(--muted)] mt-0.5 hidden md:block">{c.asOf}</p>
+                        {c.cash > 0 ? (
+                          <>
+                            <p className={`text-base font-bold ${isD ? "text-blue-600" : "text-red-600"}`}
+                              style={{ fontFamily: "var(--font-playfair), serif" }}>{fmt(c.cash)}</p>
+                            <p className="text-[10px] text-[var(--muted)] mt-0.5 hidden md:block">{c.asOf}</p>
+                          </>
+                        ) : (
+                          <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full bg-gray-100 text-gray-400">Pending</span>
+                        )}
                       </div>
                     </div>
                   );
