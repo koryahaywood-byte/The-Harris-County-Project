@@ -1,10 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FINANCE_DATA, fmt, type CandidateFinance } from "@/lib/campaign-finance";
+import { FINANCE_DATA_MERGED, fmt, type CandidateFinance } from "@/lib/campaign-finance";
 import type { FECCandidate } from "@/app/api/finance/fec/route";
 import type { TECCandidate } from "@/app/api/finance/tec/route";
-import type { HCCandidate } from "@/app/api/finance/harris-county/route";
-import type { COHCandidate } from "@/app/api/finance/houston/route";
 
 type Candidate = CandidateFinance;
 
@@ -22,8 +20,6 @@ export default function WhereIsTheDough() {
   const [search, setSearch] = useState("");
   const [fecData, setFecData]   = useState<FECCandidate[]>([]);
   const [tecData, setTecData]   = useState<TECCandidate[]>([]);
-  const [hcData,  setHcData]    = useState<HCCandidate[]>([]);
-  const [cohData, setCohData]   = useState<COHCandidate[]>([]);
   const [fecFetchedAt, setFecFetchedAt] = useState<string>("");
   const [tecFetchedAt, setTecFetchedAt] = useState<string>("");
 
@@ -44,23 +40,11 @@ export default function WhereIsTheDough() {
       })
       .catch(() => {});
 
-    fetch("/api/finance/harris-county")
-      .then(r => r.json())
-      .then(({ results }: { results: HCCandidate[] }) => {
-        setHcData(results.filter(r => r.dataSource === "live"));
-      })
-      .catch(() => {});
-
-    fetch("/api/finance/houston")
-      .then(r => r.json())
-      .then(({ results }: { results: COHCandidate[] }) => {
-        setCohData(results.filter(r => r.dataSource === "live"));
-      })
-      .catch(() => {});
   }, []);
 
-  // Merge live API data over static hardcoded data
-  const BASE = FINANCE_DATA.filter((d) => d.name !== "Edward Pollard");
+  // Base is the pipeline-merged static data. Layer FEC + TEC live on top (both are
+  // clean JSON APIs with no PDF scraping — fast and reliable).
+  const BASE = FINANCE_DATA_MERGED.filter((d) => d.name !== "Edward Pollard");
   const DATA: Candidate[] = BASE.map(d => {
     if (d.level === "federal") {
       const live = fecData.find(l => l.name === d.name);
@@ -71,16 +55,6 @@ export default function WhereIsTheDough() {
       const live = tecData.find(l => l.name === d.name);
       if (!live || !(live.cash > 0)) return d;
       return { ...d, cash: live.cash, asOf: live.asOf };
-    }
-    if (d.level === "county") {
-      const live = hcData.find(l => l.name === d.name);
-      if (!live || !(live.cash > 0)) return d;
-      return { ...d, cash: live.cash, raised: live.raised, spent: live.spent, investments: live.investments, loans: live.loans, asOf: live.asOf };
-    }
-    if (d.level === "houston") {
-      const live = cohData.find(l => l.name === d.name);
-      if (!live || !(live.cash > 0)) return d;
-      return { ...d, cash: live.cash, raised: live.raised, spent: live.spent, loans: live.loans, asOf: live.asOf };
     }
     return d;
   });
@@ -126,14 +100,12 @@ export default function WhereIsTheDough() {
           <p className="text-white/70 text-sm max-w-lg">
             Cash-on-hand for every Harris County official, candidate, and challenger. TEC &amp; FEC filings.
           </p>
-          {(fecData.length > 0 || tecData.length > 0 || hcData.length > 0) && (
+          {(fecData.length > 0 || tecData.length > 0) && (
             <p className="mt-2 text-[11px] text-sky-300/80 flex items-center gap-1.5">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-sky-400 alive-pulse" />
               {[
                 fecData.length > 0 ? "Federal: FEC" : null,
                 tecData.length > 0 ? "State: TEC" : null,
-                hcData.length  > 0 ? "County: Harris Clerk" : null,
-                cohData.length > 0 ? "City: Houston COH" : null,
               ].filter(Boolean).join(" · ")} &mdash; live data
               {fecFetchedAt && <span className="text-sky-300/50 ml-1">as of {new Date(fecFetchedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>}
             </p>

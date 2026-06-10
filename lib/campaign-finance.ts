@@ -1,3 +1,5 @@
+import generatedRaw from "./campaign-finance-generated.json";
+
 export interface CandidateFinance {
   name: string;
   office: string;
@@ -89,10 +91,28 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Louie Ditta",           office: "Justice of the Peace PCT 8 PL 2", level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
 ];
 
+// Merge pipeline-generated data (from `npm run finance-publish`) over the static
+// baseline. Generated records only win when they carry a non-zero cash value so
+// a failed pipeline run never wipes out good static data.
+const generated = (generatedRaw as { candidates?: Array<Partial<CandidateFinance> & { name: string }> }).candidates ?? [];
+const generatedByName = new Map(generated.map(r => [r.name.toLowerCase(), r]));
+
+export const FINANCE_DATA_MERGED: CandidateFinance[] = FINANCE_DATA.map(d => {
+  const gen = generatedByName.get(d.name.toLowerCase());
+  if (!gen || !(gen.cash != null && gen.cash > 0)) return d;
+  return {
+    ...d,
+    cash:   gen.cash   ?? d.cash,
+    raised: gen.raised ?? d.raised,
+    spent:  gen.spent  ?? d.spent,
+    asOf:   (gen as { asOf?: string }).asOf   ?? d.asOf,
+  };
+});
+
 export function getFinanceByName(name: string): CandidateFinance | null {
   const normalized = name.trim().toLowerCase();
   return (
-    FINANCE_DATA.find((d) => d.name.toLowerCase() === normalized) ?? null
+    FINANCE_DATA_MERGED.find((d) => d.name.toLowerCase() === normalized) ?? null
   );
 }
 
