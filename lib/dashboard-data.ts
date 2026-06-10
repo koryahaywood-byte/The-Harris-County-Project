@@ -125,31 +125,37 @@ async function fetchTier(feeds: Array<{ url: string; source?: string }>, todaySt
 
 // ── Feed definitions ──────────────────────────────────────────────────────────
 
-// LOCAL — Chronicle is primary. Google News aggregates their paywalled content.
+// LOCAL — Chronicle Houston Politics section only (city hall, Harris County, mayor, commissioners)
+// Explicitly exclude Texas/national Chronicle sections so we don't bleed tiers
 const LOCAL_FEEDS = [
-  { url: `${GN}${encodeURIComponent("Houston Chronicle politics")}`, source: "Houston Chronicle" },
-  { url: `${GN}${encodeURIComponent("Houston politics Harris County government")}` },
-  { url: `${GN}${encodeURIComponent("site:houstonchronicle.com politics")}`, source: "Houston Chronicle" },
-  { url: "https://www.bing.com/news/search?q=Houston+Chronicle+politics+Harris+County&format=rss" },
-  { url: "https://www.bing.com/news/search?q=Harris+County+Houston+politics+government&format=rss" },
+  // Chronicle's Houston Politics RSS (direct section feed)
+  { url: "https://www.houstonchronicle.com/rss/feed/Houston-Politics-2341346.php", source: "Houston Chronicle" },
+  // Google News targeting Chronicle Houston/Harris County stories specifically
+  { url: `${GN}${encodeURIComponent('site:houstonchronicle.com "houston" OR "harris county" politics -texas -senate -governor')}`, source: "Houston Chronicle" },
+  { url: `${GN}${encodeURIComponent("Houston mayor city council Harris County commissioner Whitmire politics")}`, source: "Houston Chronicle" },
+  { url: "https://www.bing.com/news/search?q=site:houstonchronicle.com+Houston+Harris+County+local+politics&format=rss", source: "Houston Chronicle" },
+  { url: "https://www.bing.com/news/search?q=Houston+city+hall+mayor+Whitmire+Harris+County+commissioner&format=rss" },
 ];
 
-// STATE — Tribune is gold standard for TX political coverage
+// STATE — Tribune primary + Chronicle Texas Politics section
 const STATE_FEEDS = [
+  // Texas Tribune direct RSS (always fresh TX-specific coverage)
   { url: "https://www.texastribune.org/feeds/", source: "Texas Tribune" },
-  { url: `${GN}${encodeURIComponent("Texas Tribune Texas politics")}`, source: "Texas Tribune" },
-  { url: `${GN}${encodeURIComponent("Texas politics Austin government 2026")}` },
-  { url: "https://www.bing.com/news/search?q=Texas+Tribune+Texas+politics&format=rss" },
-  { url: "https://www.bing.com/news/search?q=Texas+politics+Austin+Statesman&format=rss" },
+  // Chronicle Texas Politics section RSS
+  { url: "https://www.houstonchronicle.com/rss/feed/Texas-Politics-2341355.php", source: "Houston Chronicle" },
+  { url: `${GN}${encodeURIComponent("Texas Tribune Texas legislature Austin politics 2026")}`, source: "Texas Tribune" },
+  { url: `${GN}${encodeURIComponent('site:houstonchronicle.com Texas politics Austin legislature governor')}`, source: "Houston Chronicle" },
+  { url: "https://www.bing.com/news/search?q=Texas+Tribune+Texas+politics+Austin+legislature&format=rss" },
 ];
 
-// FEDERAL — NYT/WaPo/WSJ political coverage
+// FEDERAL — Chronicle US/World + WaPo/NYT
 const FEDERAL_FEEDS = [
-  { url: `${GN}${encodeURIComponent("Washington Post politics Congress")}`, source: "Washington Post" },
-  { url: `${GN}${encodeURIComponent("New York Times politics Congress 2026")}`, source: "New York Times" },
-  { url: `${GN}${encodeURIComponent("federal politics Congress Senate midterms 2026")}` },
-  { url: "https://www.bing.com/news/search?q=Washington+Post+Congress+politics&format=rss" },
-  { url: "https://www.bing.com/news/search?q=NYT+politics+Congress+Senate+2026&format=rss" },
+  // Chronicle US & World Politics section RSS
+  { url: "https://www.houstonchronicle.com/rss/feed/US-World-Politics-2341360.php", source: "Houston Chronicle" },
+  { url: `${GN}${encodeURIComponent("Washington Post Congress White House politics")}`, source: "Washington Post" },
+  { url: `${GN}${encodeURIComponent("New York Times Congress Senate federal politics 2026")}`, source: "New York Times" },
+  { url: `${GN}${encodeURIComponent('site:houstonchronicle.com Congress federal Washington politics')}`, source: "Houston Chronicle" },
+  { url: "https://www.bing.com/news/search?q=Congress+Senate+White+House+federal+politics+2026&format=rss" },
 ];
 
 // November 2026 Harris County ballot

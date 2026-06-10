@@ -298,8 +298,8 @@ export default async function DashboardWidget() {
 
         {/* Source attribution */}
         <p className="mt-6 text-[10px] text-[var(--muted)]/40 text-center leading-relaxed max-w-2xl mx-auto">
-          Sources: Houston Chronicle · Texas Tribune · Austin American-Statesman · Texas Monthly ·
-          NY Times · Washington Post · Wall Street Journal · AP · Reuters.
+          Local: Houston Chronicle (Houston Politics) · State: Texas Tribune · Houston Chronicle (Texas Politics) ·
+          National: Houston Chronicle (US &amp; World) · Washington Post · New York Times.
           News refreshes every 30 min. Quotes rotate daily.
         </p>
 
