@@ -442,7 +442,7 @@ export const POLITICIANS: Politician[] = [
     chamber: "City",
     party: "D",
     salary: 275000,
-    photo: "https://www.houstontx.gov/mayor/images/mayor-whitmire.jpg",
+    photo: "https://www.houstontx.gov/mayor/images/whitmire250.jpg",
     website: "https://www.houstontx.gov/mayor",
     twitter: "JohnWhitmire",
     termStart: 2024,
