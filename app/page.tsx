@@ -24,7 +24,8 @@ const ROWS: { section: string; tools: Tool[] }[] = [
       { href: "/tools/where-is-the-dough", name: "Where the Money Resides",
         description: "Campaign finance for 49 Harris County politicians — live from FEC, TEC, and county filings.",
         gradient: "linear-gradient(135deg,#92400e 0%,#b45309 60%,#d97706 100%)",
-        photo: U("1611974789855-9c2a0a7236a3") },
+        // Magnifying glass over $100 bill — investigative finance look
+        photo: U("1554672408-b55a5c0cc4b7") },
       { href: "/tools/county-budget", name: "Harris County Budget",
         description: "FY2027 proposed spending — departments, contractors, story format.",
         gradient: "linear-gradient(135deg,#1e3a5f 0%,#2563a8 100%)",
@@ -53,7 +54,8 @@ const ROWS: { section: string; tools: Tool[] }[] = [
       { href: "/tools/heat-check", name: "Heat Check",
         description: "Harris County primary & runoff results, precinct by precinct.",
         gradient: "linear-gradient(135deg,#991b1b 0%,#dc2626 100%)",
-        photo: U("1596422846543-75c6fc197f07") },
+        // Aerial / street map grid — precinct map feel
+        photo: U("1524661135-1165ef7b63f4") },
       { href: "/tools/districts", name: "Districts",
         description: "Portrait of a seat — demographics, history, and who represents it.",
         gradient: "linear-gradient(135deg,#0f2540 0%,#1a3a5c 100%)",
@@ -95,7 +97,7 @@ const ROWS: { section: string; tools: Tool[] }[] = [
       { href: "/tools/city-hall", name: "City Hall Beat",
         description: "Emily Takes Notes — City Council and HISD hearings AI-summarized and cross-referenced with politician profiles.",
         gradient: "linear-gradient(135deg,#0f766e 0%,#0d9488 60%,#0891b2 100%)",
-        photo: U("1565517613760-aa17a7a34bd7") },
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Houston_City_Hall_2019.jpg/800px-Houston_City_Hall_2019.jpg" },
       { href: "/tools/harris-county-beat", name: "Harris County Beat",
         description: "Commissioners Court, JPD, and county agencies — hearings tracked with full context.",
         gradient: "linear-gradient(135deg,#1a3a5c 0%,#2563a8 100%)",
