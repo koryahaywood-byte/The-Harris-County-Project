@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 
 const STORAGE_KEY = "hcp_email_passed";
+const SKIP_KEY = "hcp_email_skipped";
 
 export default function EmailGate() {
   const [show, setShow] = useState(false);
@@ -12,7 +13,8 @@ export default function EmailGate() {
   useEffect(() => {
     // Only show on first visit — check localStorage after mount
     const passed = localStorage.getItem(STORAGE_KEY);
-    if (!passed) setShow(true);
+    const skipped = sessionStorage.getItem(SKIP_KEY);
+    if (!passed && !skipped) setShow(true);
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -43,7 +45,8 @@ export default function EmailGate() {
   }
 
   function skipForNow() {
-    // Allow skipping — but don't persist so they'll see it next visit
+    // Skip for this browsing session — they'll see it again next visit
+    sessionStorage.setItem(SKIP_KEY, "1");
     setShow(false);
   }
 
