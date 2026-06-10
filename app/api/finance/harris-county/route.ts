@@ -114,21 +114,22 @@ async function getLatestFilingUrl(
   return { url: fullUrl, date: date.trim() };
 }
 
-// Step 3: Download full PDF, extract only page 4, return as Buffer
-async function extractPage4(pdfUrl: string): Promise<Uint8Array> {
+// Step 3: Download full PDF, extract the cover-sheet summary pages.
+// Harris County C/OH form: summary totals are on page 4 for multi-page filings,
+// but JP and smaller filers often submit 2–3 page forms where the totals are on
+// the last page. We extract up to the first 4 pages (or all pages if fewer).
+async function extractSummaryPages(pdfUrl: string): Promise<Uint8Array> {
   const res = await fetch(pdfUrl);
   if (!res.ok) throw new Error(`PDF fetch failed: ${res.status}`);
   const fullBytes = new Uint8Array(await res.arrayBuffer());
 
   const srcDoc = await PDFDocument.load(fullBytes, { ignoreEncryption: true });
-  const outDoc = await PDFDocument.create();
-  // Page index is 0-based; page 4 = index 3
-  const pageIndex = 3;
-  if (srcDoc.getPageCount() < pageIndex + 1) {
-    throw new Error(`PDF has only ${srcDoc.getPageCount()} pages`);
-  }
-  const [copied] = await outDoc.copyPages(srcDoc, [pageIndex]);
-  outDoc.addPage(copied);
+  const total  = srcDoc.getPageCount();
+  // Take pages 1–4 (indices 0–3), or all pages if fewer than 4
+  const indices = Array.from({ length: Math.min(total, 4) }, (_, i) => i);
+  const outDoc  = await PDFDocument.create();
+  const copied  = await outDoc.copyPages(srcDoc, indices);
+  copied.forEach(p => outDoc.addPage(p));
   return outDoc.save();
 }
 
@@ -159,7 +160,7 @@ async function extractFinancialsFromPage(
         },
         {
           type: "text",
-          text: `This is page 4 of a Texas campaign finance report for ${candidateName}. Extract these exact dollar amounts and return ONLY valid JSON with no markdown:
+          text: `This is the cover-sheet summary section of a Texas campaign finance report (C/OH form) for ${candidateName}. Extract these exact dollar amounts and return ONLY valid JSON with no markdown:
 {
   "cash_on_hand_end": <number>,
   "total_receipts": <number>,
@@ -222,7 +223,7 @@ export async function GET() {
       const filing = await getLatestFilingUrl(cand.searchName, tokens);
       if (!filing) throw new Error("No filing found");
 
-      const page4 = await extractPage4(filing.url);
+      const page4 = await extractSummaryPages(filing.url);
       const fin = await extractFinancialsFromPage(page4, cand.name);
 
       results.push({
