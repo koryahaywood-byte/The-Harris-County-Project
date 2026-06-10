@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import ThreadsFeed from "@/components/ThreadsFeed";
 
 /* ─── Harris County TX delegation ───────────────────────────────────────────── */
 const SENATORS = [
@@ -27,31 +28,38 @@ const TRACKS = [
   { label: "Lobbyist Map",        desc: "Who is paying whom to lobby in Austin on Harris County-related issues.", color: "#b45309" },
 ];
 
-interface SocialPost { platform: "Threads"|"Facebook"|"Twitter/X"; author: string; handle: string; content: string; url: string; time: string; }
+const JOURNALISTS = [
+  { name: "Jeremy Wallace",   outlet: "Texas Tribune",        beat: "Texas Legislature & Austin politics",    handle: "@JeremySWallace",  url: "https://x.com/JeremySWallace" },
+  { name: "Robert Downen",    outlet: "Houston Chronicle",    beat: "Texas politics & Legislature",           handle: "@RobDownenChron",  url: "https://x.com/RobDownenChron" },
+  { name: "Zach Despart",     outlet: "Houston Chronicle",    beat: "Texas Legislature, Harris County",       handle: "@zachdespart",     url: "https://x.com/zachdespart" },
+  { name: "Cassandra Pollock",outlet: "Texas Tribune",        beat: "Texas politics, governor's office",      handle: "@cassandrapollock",url: "https://x.com/cassandrapollock" },
+  { name: "Paul Cobler",      outlet: "Texas Tribune",        beat: "Houston / Harris County",                handle: "@paulcobler",      url: "https://x.com/paulcobler" },
+  { name: "Jasper Scherer",   outlet: "Houston Chronicle",    beat: "Harris County, state politics",          handle: "@jaspscherer",     url: "https://x.com/jaspscherer" },
+];
+
+const HASHTAGS = [
+  { tag: "#txlege",          desc: "Main hashtag for the Texas Legislature — live floor votes, hearings, bills" },
+  { tag: "#HarrisCounty",    desc: "County-level coverage, used alongside #txlege for local impact stories" },
+  { tag: "#txedu",           desc: "Texas school voucher, HISD, and education policy debates" },
+  { tag: "#txpolitics",      desc: "Broader Texas political conversation — primaries, candidates, polling" },
+  { tag: "#HoustonChron",    desc: "Houston Chronicle breaking news and investigations" },
+  { tag: "#texastribune",    desc: "Texas Tribune non-partisan accountability journalism" },
+];
+
+interface SocialPost { platform: "Threads"|"Facebook"|"Twitter/X"; author: string; handle: string; content: string; url: string; time: string; image?: string; verified?: boolean; }
 const SOCIAL: SocialPost[] = [
-  { platform: "Twitter/X", author: "Texas Tribune",     handle: "@texastribune",    content: "Final day of the 89th Legislature: Here's everything that passed, failed, or got left on the table — with a Harris County filter. Big thread.",                        url: "https://twitter.com/TexasTribune",       time: "2h ago" },
+  { platform: "Twitter/X", author: "Texas Tribune",     handle: "@texastribune",    verified: true, image: "https://images.unsplash.com/photo-1531218150217-54595bc2b934?auto=format&fit=crop&w=800&q=70", content: "Final day of the 89th Legislature: Here's everything that passed, failed, or got left on the table — with a Harris County filter. Big thread.",                        url: "https://twitter.com/TexasTribune",       time: "2h ago" },
   { platform: "Twitter/X", author: "Jeremy Wallace",    handle: "@JeremySWallace",  content: "#txlege: Harris County delegation split on property tax bill final passage. Alvarado, Miles voted no. Bettencourt, Huffman yes. Bill goes to governor.",              url: "https://twitter.com/JeremySWallace",     time: "4h ago" },
   { platform: "Threads",   author: "Texas Tribune",     handle: "@texastribune",    content: "The school voucher bill is heading to the governor's desk. Every Harris County Senate Democrat voted against it. What it means for HISD — our explainer is live.", url: "https://www.threads.net/@texastribune",   time: "5h ago" },
   { platform: "Threads",   author: "Texas Signal",      handle: "@texassignal",     content: "#txlege wrap: Session ended with property tax relief smaller than promised. Harris County homeowners will see relief — but far less than what was advertised in January.", url: "https://www.threads.net/@texassignal",    time: "6h ago" },
-  { platform: "Twitter/X", author: "Robert Downen",     handle: "@RobDownenChron",  content: "My read on what the 89th Legislature actually delivered for Houston: a mixed bag. Flood relief funded. School choice passed. Harris County home rule: blocked again.", url: "https://twitter.com/RobDownenChron",      time: "8h ago" },
+  { platform: "Twitter/X", author: "Zach Despart",      handle: "@zachdespart",     content: "What the 89th Legislature actually delivered for Houston: flood relief funded, school choice passed, Harris County home rule blocked again.", url: "https://twitter.com/zachdespart",         time: "8h ago" },
   { platform: "Facebook",  author: "Texas Dems",        handle: "fb/txdemocrats",   content: "89th Legislature adjourned. Democrats fought hard on every front — property taxes, public education, and voting rights. The fight continues in 2026.",                  url: "https://www.facebook.com/groups/search/results/?q=texas+democrats", time: "1d ago" },
   { platform: "Facebook",  author: "Texas GOP",         handle: "fb/texasgop",      content: "The 89th Legislature delivered: property tax relief, school choice, and border security. A historic session for Texas conservatives. Full recap on txgop.org",            url: "https://www.facebook.com/groups/search/results/?q=texas+republican", time: "1d ago" },
 ];
 
-const PAL: Record<string, { bg: string; text: string; border: string }> = {
-  "Threads":   { bg: "#f0fdf4", text: "#15803d", border: "#bbf7d0" },
-  "Facebook":  { bg: "#eff6ff", text: "#1d4ed8", border: "#bfdbfe" },
-  "Twitter/X": { bg: "#f8fafc", text: "#374151", border: "#e2e8f0" },
-};
-
-function PlatformIcon({ p }: { p: SocialPost["platform"] }) {
-  if (p === "Threads")   return <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.5 12.068V12c0-3.514.85-6.37 2.495-8.483C5.841 1.218 8.589.024 12.175 0h.014c2.312.013 4.296.634 5.896 1.845 1.577 1.189 2.666 2.908 3.237 5.109l-2.002.595c-.448-1.74-1.278-3.109-2.469-4.068-1.178-.946-2.715-1.437-4.658-1.447-2.89.019-5.04.943-6.581 2.819C4.071 6.793 3.456 9.186 3.456 12v.068c0 2.825.615 5.211 1.829 7.093 1.54 1.86 3.691 2.784 6.587 2.803 2.327-.015 4.068-.635 5.325-1.895.973-.971 1.603-2.371 1.873-4.16a7.454 7.454 0 0 0-1.562-.166c-3.018 0-4.699-1.567-4.699-4.296 0-2.681 1.77-4.388 4.508-4.388 2.891 0 4.577 1.786 4.577 4.771 0 .413-.04.82-.12 1.207A7.04 7.04 0 0 1 20 16.5c-1.084 1.084-2.703 1.665-4.682 1.665-1.055 0-2.036-.182-2.908-.54a5.293 5.293 0 0 1-.224 2.375zm5.35-9.607c.026-.238.04-.48.04-.725 0-1.869-.829-2.807-2.535-2.807-1.627 0-2.51.924-2.51 2.6 0 1.726.864 2.532 2.7 2.532.546 0 1.063-.081 1.538-.234a4.756 4.756 0 0 0 .767-1.366z"/></svg>;
-  if (p === "Facebook")  return <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>;
-  return <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.261 5.632 5.903-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>;
-}
 
 export default function StateBeatPage() {
-  const [tab, setTab] = useState<"overview"|"social">("overview");
+  const [tab, setTab] = useState<"overview"|"social"|"journalists">("overview");
 
   return (
     <div style={{ background: "var(--background)", minHeight: "100vh" }}>
@@ -87,7 +95,7 @@ export default function StateBeatPage() {
           </div>
 
           <div className="flex gap-1">
-            {([["overview","What We Track"],["social","Voices on Social"]] as const).map(([k,l]) => (
+            {([["overview","What We Track"],["social","Voices on Social"],["journalists","Who Covers It"]] as const).map(([k,l]) => (
               <button key={k} onClick={() => setTab(k)}
                 className="px-4 py-2.5 text-xs font-bold uppercase tracking-[0.15em] rounded-t-lg transition-all cursor-pointer"
                 style={tab === k ? { background: "rgba(245,243,239,1)", color: "var(--accent)" } : { color: "rgba(255,255,255,0.5)" }}>
@@ -188,67 +196,10 @@ export default function StateBeatPage() {
         )}
 
         {tab === "social" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--muted)]">Threads & Twitter/X</span>
-              </div>
-              <div className="space-y-3">
-                {SOCIAL.filter(p => p.platform !== "Facebook").map((post, i) => {
-                  const pal = PAL[post.platform];
-                  return (
-                    <a key={i} href={post.url} target="_blank" rel="noopener noreferrer"
-                      className="block rounded-2xl transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
-                      style={{ background: pal.bg, border: `1px solid ${pal.border}` }}>
-                      <div className="p-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <span style={{ color: pal.text }}><PlatformIcon p={post.platform} /></span>
-                            <div>
-                              <p className="text-xs font-bold leading-none" style={{ color: "#1a3a5c" }}>{post.author}</p>
-                              <p className="text-[9px] mt-0.5" style={{ color: pal.text }}>{post.handle}</p>
-                            </div>
-                          </div>
-                          <span className="text-[9px]" style={{ color: "#9ca3af" }}>{post.time}</span>
-                        </div>
-                        <p className="text-xs leading-relaxed line-clamp-3" style={{ color: "#374151" }}>{post.content}</p>
-                      </div>
-                    </a>
-                  );
-                })}
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-2 h-2 rounded-full bg-blue-600" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--muted)]">Facebook Groups</span>
-              </div>
-              <div className="space-y-3">
-                {SOCIAL.filter(p => p.platform === "Facebook").map((post, i) => {
-                  const pal = PAL[post.platform];
-                  return (
-                    <a key={i} href={post.url} target="_blank" rel="noopener noreferrer"
-                      className="block rounded-2xl transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
-                      style={{ background: pal.bg, border: `1px solid ${pal.border}` }}>
-                      <div className="p-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <span style={{ color: pal.text }}><PlatformIcon p={post.platform} /></span>
-                            <div>
-                              <p className="text-xs font-bold leading-none" style={{ color: "#1a3a5c" }}>{post.author}</p>
-                              <p className="text-[9px] mt-0.5" style={{ color: pal.text }}>{post.handle}</p>
-                            </div>
-                          </div>
-                          <span className="text-[9px]" style={{ color: "#9ca3af" }}>{post.time}</span>
-                        </div>
-                        <p className="text-xs leading-relaxed line-clamp-3" style={{ color: "#374151" }}>{post.content}</p>
-                      </div>
-                    </a>
-                  );
-                })}
-              </div>
-              <div className="mt-5 rounded-2xl p-4 ring-1 ring-black/7" style={{ background: "#f8fafc" }}>
+          <ThreadsFeed
+            posts={SOCIAL}
+            footer={
+              <div className="rounded-2xl p-4 ring-1 ring-black/7 bg-white max-w-xl">
                 <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--muted)] mb-2">Find more</p>
                 <div className="space-y-1.5">
                   {[
@@ -264,6 +215,41 @@ export default function StateBeatPage() {
                     </a>
                   ))}
                 </div>
+              </div>
+            }
+          />
+        )}
+
+        {tab === "journalists" && (
+          <div className="max-w-2xl space-y-8">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--muted)] mb-4">Reporters Who Cover This Beat</p>
+              <div className="space-y-3">
+                {JOURNALISTS.map(j => (
+                  <a key={j.handle} href={j.url} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-4 rounded-2xl bg-white ring-1 ring-black/7 p-4 hover:shadow-md transition-all duration-200 group">
+                    <div className="w-9 h-9 rounded-full bg-[#4c1d95] flex items-center justify-center flex-shrink-0">
+                      <span className="text-white text-xs font-bold">{j.name.split(" ").map(w => w[0]).join("").slice(0,2)}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-sm text-[var(--accent)] group-hover:text-[var(--accent-light)]">{j.name}</p>
+                      <p className="text-[10px] text-[var(--muted)]">{j.outlet} · {j.beat}</p>
+                    </div>
+                    <span className="text-[10px] font-bold text-sky-600 shrink-0">{j.handle}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--muted)] mb-4">Hashtags to Follow</p>
+              <div className="flex flex-wrap gap-2">
+                {HASHTAGS.map(h => (
+                  <a key={h.tag} href={`https://x.com/search?q=${encodeURIComponent(h.tag)}`} target="_blank" rel="noopener noreferrer"
+                    className="flex flex-col rounded-2xl bg-white ring-1 ring-black/7 px-4 py-3 hover:shadow-md transition-all duration-200 hover:ring-[#7c3aed]">
+                    <span className="text-sm font-bold text-[#4c1d95]">{h.tag}</span>
+                    <span className="text-[10px] text-[var(--muted)] mt-0.5">{h.desc}</span>
+                  </a>
+                ))}
               </div>
             </div>
           </div>

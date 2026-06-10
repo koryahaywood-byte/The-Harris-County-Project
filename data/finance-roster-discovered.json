@@ -1,0 +1,25 @@
+{
+  "discoveredAt": "2026-06-10T15:06:36.641Z",
+  "results": [
+    {
+      "searchTerm": "County Criminal Court",
+      "filerNames": [],
+      "filingCount": 0
+    },
+    {
+      "searchTerm": "County Civil Court",
+      "filerNames": [],
+      "filingCount": 0
+    },
+    {
+      "searchTerm": "Probate Court",
+      "filerNames": [],
+      "filingCount": 0
+    },
+    {
+      "searchTerm": "Judge",
+      "filerNames": [],
+      "filingCount": 24
+    }
+  ]
+}

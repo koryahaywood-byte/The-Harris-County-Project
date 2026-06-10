@@ -28,7 +28,17 @@
     { "searchName": "Adams, Wanda",      "name": "Wanda E. Adams",      "office": "Justice of the Peace PCT 7 PL 1", "party": "D" },
     { "searchName": "Burney, Sharon",    "name": "Sharon M. Burney",    "office": "Justice of the Peace PCT 7 PL 2", "party": "D" },
     { "searchName": "Williamson, Holly", "name": "Holly Williamson",    "office": "Justice of the Peace PCT 8 PL 1", "party": "R" },
-    { "searchName": "Ditta, Louie",      "name": "Louie Ditta",         "office": "Justice of the Peace PCT 8 PL 2", "party": "R" }
+    { "searchName": "Ditta, Louie",      "name": "Louie Ditta",         "office": "Justice of the Peace PCT 8 PL 2", "party": "R" },
+
+    { "searchName": "Rosen, Alan",       "name": "Alan Rosen",          "office": "Constable PCT 1", "party": "D" },
+    { "searchName": "Garcia, Jerry",     "name": "Jerry Garcia",        "office": "Constable PCT 2", "party": "D" },
+    { "searchName": "Eagleton, Sherman", "name": "Sherman Eagleton",    "office": "Constable PCT 3", "party": "D" },
+    { "searchName": "Herman, Mark",      "name": "Mark Herman",         "office": "Constable PCT 4", "party": "R" },
+    { "searchName": "Allbritton, Terry", "name": "Terry Allbritton",    "office": "Constable PCT 5", "party": "R" },
+    { "searchName": "Trevino, Silvia",   "name": "Silvia Trevino",      "office": "Constable PCT 6", "party": "D" },
+    { "searchName": "Phillips, James",   "name": "James Phillips",      "office": "Constable PCT 7", "party": "D" },
+    { "searchName": "Sandlin, Phil",     "name": "Phil Sandlin",        "office": "Constable PCT 8", "party": "R" },
+    { "searchName": "Wyatt, Carla",      "name": "Carla Wyatt",         "office": "County Treasurer", "party": "D" }
   ],
 
   "_harrisCountyDiscovery": {

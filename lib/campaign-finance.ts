@@ -53,10 +53,20 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Teneshia Hudspeth",     office: "County Clerk",                   level: "county",   party: "D", cash: 17147,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Teneshia Hudspeth") },
   { name: "Sean Teare",            office: "District Attorney",              level: "county",   party: "D", cash: 14291,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Sean Teare") },
   { name: "Annette Ramirez",       office: "Tax Assessor-Collector",         level: "county",   party: "D", cash: 5775,      asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Annette Ramirez") },
+  { name: "Carla Wyatt",           office: "County Treasurer",               level: "county",   party: "D", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: TEC("Carla Wyatt") },
+  // Constables — file at ethics.harrisvotes.com
+  { name: "Alan Rosen",            office: "Constable PCT 1",                level: "county",   party: "D", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Jerry Garcia",          office: "Constable PCT 2",                level: "county",   party: "D", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Sherman Eagleton",      office: "Constable PCT 3",                level: "county",   party: "D", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Mark Herman",           office: "Constable PCT 4",                level: "county",   party: "R", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Terry Allbritton",      office: "Constable PCT 5",                level: "county",   party: "R", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Silvia Trevino",        office: "Constable PCT 6",                level: "county",   party: "D", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "James Phillips",        office: "Constable PCT 7",                level: "county",   party: "D", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Phil Sandlin",          office: "Constable PCT 8",                level: "county",   party: "R", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
   // City of Houston
   { name: "John Whitmire",         office: "Mayor",                          level: "houston",  party: "D", cash: 2741969,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("John Whitmire") },
-  { name: "Edward Pollard",        office: "City Council At-Large 2",        level: "houston",  party: "D", cash: 2197573,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Edward Pollard") },
-  { name: "Ed Pollard",            office: "City Council At-Large 2",        level: "houston",  party: "D", cash: 2197573,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Edward Pollard") },
+  { name: "Edward Pollard",        office: "City Council District J",        level: "houston",  party: "D", cash: 2197573,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Edward Pollard") },
+  { name: "Willie Davis",          office: "City Council At-Large 2",        level: "houston",  party: "D", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: TEC("Willie Davis") },
   { name: "Chris Hollins",         office: "City Controller",                level: "houston",  party: "D", cash: 530765,    asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Chris Hollins") },
   { name: "Martha Castex-Tatum",   office: "City Council District K",        level: "houston",  party: "D", cash: 366298,    asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Martha Castex-Tatum") },
   { name: "Tiffany Thomas",        office: "City Council District F",        level: "houston",  party: "D", cash: 262877,    asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Tiffany Thomas") },
@@ -70,6 +80,8 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Joaquin Martinez",      office: "City Council District I",        level: "houston",  party: "D", cash: 29304,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Joaquin Martinez") },
   { name: "Carolyn Evans-Shabazz", office: "City Council District D",        level: "houston",  party: "D", cash: 17235,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Carolyn Evans-Shabazz") },
   { name: "Tarsha Jackson",        office: "City Council District B",        level: "houston",  party: "D", cash: 9689,      asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Tarsha Jackson") },
+  { name: "Joe Panzarella",        office: "City Council District C",        level: "houston",  party: "R", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: TEC("Joe Panzarella") },
+  { name: "Mary Nan Huffman",      office: "City Council District G",        level: "houston",  party: "R", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: TEC("Mary Nan Huffman") },
 
   // Harris County Justice of the Peace — file at ethics.harrisvotes.com (same as commissioners)
   // Names verified from jp.hctx.net; cash populated by live HC scrape (page 4 of CFR PDF)

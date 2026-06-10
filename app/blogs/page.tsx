@@ -16,7 +16,7 @@ const SOURCES: Source[] = [
   { name: "Texas Tribune",               platform: "Newsletter",   url: "https://www.texastribune.org", description: "Nonprofit investigative journalism covering Texas government, politics, and policy. Exceptional depth on the state legislature and statewide races.", tags: ["Legislature", "Statewide", "Investigative"], recommended: true },
   { name: "Houston Public Media",        platform: "Website",      url: "https://www.houstonpublicmedia.org", description: "NPR and PBS affiliate covering Houston civic affairs. Reliable long-form reporting on city, county, and education.", tags: ["Radio", "Government", "Education"] },
   { name: "Axios Houston",               platform: "Newsletter",   url: "https://www.axios.com/local/houston", description: "Daily smart-brevity newsletter covering Houston politics, business, and development. Great for staying up on what matters quickly.", tags: ["Daily Briefing", "City Politics"] },
-  { name: "Houston Landing",             platform: "Website",      url: "https://houstonlanding.org", description: "Local nonprofit newsroom focused on Houston accountability journalism — housing, environment, and education.", tags: ["Investigative", "Housing", "Education"], recommended: true },
+  { name: "Houston Landing (Closed)",    platform: "Website",      url: "https://houstonlanding.org", description: "Closed in 2026. Was a local nonprofit newsroom covering Houston accountability journalism — housing, environment, and education.", tags: ["Investigative", "Housing", "Education"] },
   { name: "The Appeal",                  platform: "Website",      url: "https://theappeal.org", description: "National but covers Harris County criminal justice — DA races, policing, and court reform.", tags: ["Criminal Justice", "DA", "Policing"] },
 
   // ── Political Commentary & Analysis ─────────────────────────────────────
@@ -52,7 +52,6 @@ const SOURCES: Source[] = [
 
   // ── Threads ──────────────────────────────────────────────────────────────
   { name: "Texas Tribune",              platform: "Threads",      url: "https://www.threads.net/@texastribune", handle: "@texastribune", description: "The Texas Tribune's Threads presence — breaking Texas politics, legislative updates, and election coverage.", tags: ["Legislature", "Statewide", "Breaking News"], recommended: true },
-  { name: "Houston Landing",            platform: "Threads",      url: "https://www.threads.net/@houstonlanding", handle: "@houstonlanding", description: "Houston Landing's accountability journalism on Threads — housing, environment, and local government.", tags: ["Investigative", "Housing", "Local Government"] },
   { name: "Shea Jordan Smith",          platform: "Threads",      url: "https://www.threads.net/@sheajordansmith", handle: "@sheajordansmith", description: "Houston civic voice on Threads — local politics and community news for a younger audience.", tags: ["Community", "Houston Culture", "Civic Engagement"] },
 ];
 

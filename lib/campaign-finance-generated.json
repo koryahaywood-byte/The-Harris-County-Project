@@ -1,7 +1,19 @@
 {
-  "generatedAt": "2026-06-10T07:05:00.471Z",
-  "pdfBatch": "2026-06-10T07-01-43.json",
+  "generatedAt": "2026-06-10T08:45:41.729Z",
+  "pdfBatch": "2026-06-10T08-41-53.json",
   "candidates": [
+    {
+      "name": "John Whitmire",
+      "office": "Mayor",
+      "level": "houston",
+      "party": "D",
+      "raised": 830455.72,
+      "spent": 176895.17,
+      "cash": 2741969.71,
+      "asOf": "7/1/2025 - 12/31/2025",
+      "source": "pdf:WHITMIRE-JOHN-MAYOR-2026-01-14.pdf",
+      "confidence": "high"
+    },
     {
       "name": "Carol Alvarado",
       "office": "State Senator SD-6",
@@ -12,7 +24,7 @@
       "incumbent": true,
       "filingUrl": "https://ethics.state.tx.us/search/cf/SimpleSearch.php?q=Alvarado%2C%20Carol",
       "dataSource": "live",
-      "fetchedAt": "2026-06-10T06:36:49.079Z",
+      "fetchedAt": "2026-06-10T08:45:40.736Z",
       "source": "tec-api"
     },
     {
@@ -25,7 +37,7 @@
       "incumbent": false,
       "filingUrl": "https://ethics.state.tx.us/search/cf/SimpleSearch.php?q=Talarico%2C%20James",
       "dataSource": "live",
-      "fetchedAt": "2026-06-10T06:36:49.079Z",
+      "fetchedAt": "2026-06-10T08:45:40.736Z",
       "source": "tec-api"
     },
     {
@@ -38,7 +50,7 @@
       "incumbent": true,
       "filingUrl": "https://ethics.state.tx.us/search/cf/SimpleSearch.php?q=Thompson%2C%20Senfronia",
       "dataSource": "live",
-      "fetchedAt": "2026-06-10T06:36:49.079Z",
+      "fetchedAt": "2026-06-10T08:45:40.736Z",
       "source": "tec-api"
     },
     {
@@ -51,7 +63,7 @@
       "incumbent": true,
       "filingUrl": "https://ethics.state.tx.us/search/cf/SimpleSearch.php?q=Johnson%2C%20Ann",
       "dataSource": "live",
-      "fetchedAt": "2026-06-10T06:36:49.079Z",
+      "fetchedAt": "2026-06-10T08:45:40.736Z",
       "source": "tec-api"
     },
     {
@@ -64,7 +76,7 @@
       "incumbent": true,
       "filingUrl": "https://ethics.state.tx.us/search/cf/SimpleSearch.php?q=Hernandez%2C%20Ana%20E.",
       "dataSource": "live",
-      "fetchedAt": "2026-06-10T06:36:49.079Z",
+      "fetchedAt": "2026-06-10T08:45:40.736Z",
       "source": "tec-api"
     },
     {
@@ -77,7 +89,7 @@
       "incumbent": true,
       "filingUrl": "https://ethics.state.tx.us/search/cf/SimpleSearch.php?q=Perez%2C%20Mary%20Ann%20G.",
       "dataSource": "live",
-      "fetchedAt": "2026-06-10T06:36:49.079Z",
+      "fetchedAt": "2026-06-10T08:45:40.736Z",
       "source": "tec-api"
     },
     {
@@ -90,7 +102,7 @@
       "incumbent": true,
       "filingUrl": "https://ethics.state.tx.us/search/cf/SimpleSearch.php?q=Walle%2C%20Armando%20L.",
       "dataSource": "live",
-      "fetchedAt": "2026-06-10T06:36:49.079Z",
+      "fetchedAt": "2026-06-10T08:45:40.736Z",
       "source": "tec-api"
     },
     {
@@ -103,8 +115,68 @@
       "incumbent": true,
       "filingUrl": "https://ethics.state.tx.us/search/cf/SimpleSearch.php?q=Cook%2C%20Molly%20C.",
       "dataSource": "live",
-      "fetchedAt": "2026-06-10T06:36:49.079Z",
+      "fetchedAt": "2026-06-10T08:45:40.736Z",
       "source": "tec-api"
+    },
+    {
+      "name": "Laryssa Korduba",
+      "office": "Justice Of The Peace Pct 4 Pl 2",
+      "level": "county",
+      "party": "D",
+      "raised": 34265,
+      "spent": 4989.38,
+      "cash": 79724.52,
+      "asOf": "01/01/2021 - 06/30/2021",
+      "source": "pdf:KORDUBA-LARYSSA-JUSTICE-OF-THE-PEACE-PCT-4-PL-2-2023-07-17.pdf",
+      "confidence": "high"
+    },
+    {
+      "name": "Dolores Lozano",
+      "office": "Justice Of The Peace Pct 2 Pl 2",
+      "level": "county",
+      "party": "D",
+      "raised": 1668,
+      "spent": 18732.47,
+      "cash": 66559.63,
+      "asOf": "01/23/2026 - 02/21/2026",
+      "source": "pdf:LOZANO-DOLORES-JUSTICE-OF-THE-PEACE-PCT-2-PL-2-2026-02-23.pdf",
+      "confidence": "high"
+    },
+    {
+      "name": "Joe Stephens",
+      "office": "Justice Of The Peace Pct 3 Pl 1",
+      "level": "county",
+      "party": "R",
+      "raised": 23975,
+      "spent": 14017,
+      "cash": 28399,
+      "asOf": "Jan 2026",
+      "source": "pdf:STEPHENS-JOE-JUSTICE-OF-THE-PEACE-PCT-3-PL-1-2026-01-15.pdf",
+      "confidence": "high"
+    },
+    {
+      "name": "Victor Treviño III",
+      "office": "Justice of the Peace PCT 6 PL 1",
+      "level": "county",
+      "party": null,
+      "raised": 26260,
+      "spent": 25440.82,
+      "cash": 6945.56,
+      "asOf": "01/01/2014 - 06/30/2014",
+      "source": "pdf:III-VICTOR-TREVINO-JUSTICE-OF-THE-PEACE-PCT-6-PL-1-2015-01-15.pdf",
+      "confidence": "high"
+    },
+    {
+      "name": "Angela D. Rodriguez",
+      "office": "Justice of the Peace PCT 6 PL 2",
+      "level": "county",
+      "party": null,
+      "raised": 0,
+      "spent": 500,
+      "cash": 664.26,
+      "asOf": "01/01/2021 through 06/30/2021",
+      "source": "pdf:RODRIGUEZ-ANGELA-D-JUSTICE-OF-THE-PEACE-PCT-6-PL-2-2026-01-16.pdf",
+      "confidence": "high"
     },
     {
       "name": "Gina Hinojosa",
@@ -116,7 +188,7 @@
       "incumbent": false,
       "filingUrl": "https://ethics.state.tx.us/search/cf/SimpleSearch.php?q=Hinojosa%2C%20Gina",
       "dataSource": "error",
-      "fetchedAt": "2026-06-10T06:36:49.079Z",
+      "fetchedAt": "2026-06-10T08:45:40.736Z",
       "source": "tec-api"
     },
     {
@@ -131,7 +203,7 @@
       "incumbent": true,
       "filingUrl": "https://www.fec.gov/data/candidate/S0TX00999/",
       "dataSource": "error",
-      "fetchedAt": "2026-06-10T06:36:49.629Z",
+      "fetchedAt": "2026-06-10T08:45:40.318Z",
       "source": "fec-route"
     },
     {
@@ -146,37 +218,7 @@
       "incumbent": false,
       "filingUrl": "https://www.fec.gov/data/candidate/H4TX02177/",
       "dataSource": "error",
-      "fetchedAt": "2026-06-10T06:36:49.629Z",
-      "source": "fec-route"
-    },
-    {
-      "name": "Lizzie Fletcher",
-      "office": "U.S. Rep CD-07",
-      "level": "federal",
-      "party": "D",
-      "cash": 0,
-      "raised": 0,
-      "spent": 0,
-      "asOf": "N/A",
-      "incumbent": true,
-      "filingUrl": "https://www.fec.gov/data/candidate/H8TX07139/",
-      "dataSource": "error",
-      "fetchedAt": "2026-06-10T06:36:49.629Z",
-      "source": "fec-route"
-    },
-    {
-      "name": "Sylvia Garcia",
-      "office": "U.S. Rep CD-29",
-      "level": "federal",
-      "party": "D",
-      "cash": 0,
-      "raised": 0,
-      "spent": 0,
-      "asOf": "N/A",
-      "incumbent": true,
-      "filingUrl": "https://www.fec.gov/data/candidate/H8TX29049/",
-      "dataSource": "error",
-      "fetchedAt": "2026-06-10T06:36:49.629Z",
+      "fetchedAt": "2026-06-10T08:45:40.318Z",
       "source": "fec-route"
     },
     {
@@ -191,8 +233,50 @@
       "incumbent": true,
       "filingUrl": "https://www.fec.gov/data/candidate/H4TX18126/",
       "dataSource": "error",
-      "fetchedAt": "2026-06-10T06:36:49.629Z",
+      "fetchedAt": "2026-06-10T08:45:40.318Z",
       "source": "fec-route"
+    },
+    {
+      "name": "Lizzie Fletcher",
+      "office": "U.S. Rep CD-07",
+      "level": "federal",
+      "party": "D",
+      "cash": 0,
+      "raised": 0,
+      "spent": 0,
+      "asOf": "N/A",
+      "incumbent": true,
+      "filingUrl": "https://www.fec.gov/data/candidate/H8TX07139/",
+      "dataSource": "error",
+      "fetchedAt": "2026-06-10T08:45:40.318Z",
+      "source": "fec-route"
+    },
+    {
+      "name": "Sylvia Garcia",
+      "office": "U.S. Rep CD-29",
+      "level": "federal",
+      "party": "D",
+      "cash": 0,
+      "raised": 0,
+      "spent": 0,
+      "asOf": "N/A",
+      "incumbent": true,
+      "filingUrl": "https://www.fec.gov/data/candidate/H8TX29049/",
+      "dataSource": "error",
+      "fetchedAt": "2026-06-10T08:45:40.318Z",
+      "source": "fec-route"
+    },
+    {
+      "name": "James Lombardino",
+      "office": "Justice Of The Peace Pct 5 Pl 1",
+      "level": "county",
+      "party": "R",
+      "raised": 0,
+      "spent": 0,
+      "cash": 0,
+      "asOf": "01/01/2025 - 06/30/2025",
+      "source": "pdf:LOMBARDINO-JAMES-JUSTICE-OF-THE-PEACE-PCT-5-PL-1-2026-01-06.pdf",
+      "confidence": "high"
     }
   ]
 }

@@ -8,14 +8,30 @@ type Candidate = CandidateFinance;
 
 type Tab   = "story" | "leaderboard";
 type Level = "all" | "federal" | "state" | "houston" | "county";
+type CountyGroup = "all" | "commissioners" | "jp" | "courts" | "law" | "admin";
 
 const LEVEL_LABELS: Record<Level, string> = {
   all: "All", federal: "Federal", state: "State", houston: "City of Houston", county: "County",
 };
 
+const COUNTY_GROUPS: Record<CountyGroup, string> = {
+  all: "All County", commissioners: "Commissioners Court", jp: "Justices of the Peace",
+  courts: "County Courts", law: "Law Enforcement", admin: "Clerks & Admin",
+};
+
+function countyGroupOf(office: string): CountyGroup {
+  const o = office.toLowerCase();
+  if (o.includes("justice of the peace")) return "jp";
+  if (o.includes("county judge") || o.includes("commissioner")) return "commissioners";
+  if (o.includes("criminal court") || o.includes("civil court") || o.includes("probate") || o.includes("court at law")) return "courts";
+  if (o.includes("sheriff") || o.includes("constable") || o.includes("district attorney")) return "law";
+  return "admin";
+}
+
 export default function WhereIsTheDough() {
   const [tab, setTab]     = useState<Tab>("story");
   const [level, setLevel] = useState<Level>("all");
+  const [countyGroup, setCountyGroup] = useState<CountyGroup>("all");
   const [party, setParty] = useState<"all" | "D" | "R">("all");
   const [search, setSearch] = useState("");
   const [fecData, setFecData]   = useState<FECCandidate[]>([]);
@@ -66,6 +82,7 @@ export default function WhereIsTheDough() {
 
   const filtered = DATA
     .filter(d => level === "all" || d.level === level)
+    .filter(d => level !== "county" || countyGroup === "all" || countyGroupOf(d.office) === countyGroup)
     .filter(d => party === "all" || d.party === party)
     .filter(d => !search || d.name.toLowerCase().includes(search.toLowerCase()) || d.office.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => {
@@ -100,6 +117,23 @@ export default function WhereIsTheDough() {
           <p className="text-white/70 text-sm max-w-lg">
             Cash-on-hand for every Harris County official, candidate, and challenger. TEC &amp; FEC filings.
           </p>
+          <button
+            onClick={() => {
+              const url = window.location.href;
+              if (navigator.share) {
+                navigator.share({ title: "Where the Money Resides — Harris County Project", url });
+              } else {
+                navigator.clipboard.writeText(url).then(() => {
+                  const btn = document.getElementById("share-btn");
+                  if (btn) { btn.textContent = "✓ Copied!"; setTimeout(() => { btn.textContent = "Share"; }, 2000); }
+                });
+              }
+            }}
+            id="share-btn"
+            className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-full ring-1 ring-white/30 hover:bg-white/10 transition-colors text-white/70 hover:text-white"
+          >
+            Share
+          </button>
           {(fecData.length > 0 || tecData.length > 0) && (
             <p className="mt-2 text-[11px] text-sky-300/80 flex items-center gap-1.5">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-sky-400 alive-pulse" />
@@ -141,7 +175,7 @@ export default function WhereIsTheDough() {
             <>
               <span className="text-[var(--border)] hidden sm:block">|</span>
               {(Object.entries(LEVEL_LABELS) as [Level, string][]).map(([l, label]) => (
-                <button key={l} onClick={() => setLevel(l)}
+                <button key={l} onClick={() => { setLevel(l); if (l !== "county") setCountyGroup("all"); }}
                   className={`text-xs font-bold uppercase tracking-[0.1em] px-3 py-1.5 rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                     level === l ? "bg-[var(--accent)] text-white" : "bg-white ring-1 ring-[var(--border)] text-[var(--muted)] hover:ring-[var(--accent-light)]"
                   }`}>
@@ -162,6 +196,19 @@ export default function WhereIsTheDough() {
             </>
           )}
         </div>
+        {tab === "leaderboard" && level === "county" && (
+          <div className="max-w-6xl mx-auto flex flex-wrap items-center gap-2 mt-2.5">
+            <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--muted)]">Filter county:</span>
+            {(Object.entries(COUNTY_GROUPS) as [CountyGroup, string][]).map(([g, label]) => (
+              <button key={g} onClick={() => setCountyGroup(g)}
+                className={`text-[10px] font-bold uppercase tracking-[0.08em] px-2.5 py-1 rounded-full transition-all duration-300 ${
+                  countyGroup === g ? "bg-[var(--accent-light)] text-white" : "bg-white ring-1 ring-[var(--border)] text-[var(--muted)] hover:ring-[var(--accent-light)]"
+                }`}>
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-12">
@@ -287,7 +334,14 @@ export default function WhereIsTheDough() {
                 </div>
 
                 {filtered.length === 0 ? (
-                  <p className="p-10 text-center text-[var(--muted)] text-sm">No results found.</p>
+                  countyGroup === "courts" ? (
+                    <p className="p-10 text-center text-[var(--muted)] text-sm">
+                      County court judges (Criminal Courts at Law, Civil Courts at Law, Probate) are being added —
+                      their filings exist in the county portal and the roster is being verified. Justices of the Peace are under their own filter.
+                    </p>
+                  ) : (
+                    <p className="p-10 text-center text-[var(--muted)] text-sm">No results found.</p>
+                  )
                 ) : filtered.map((c, i) => {
                   const isD = c.party === "D";
                   const pct = Math.min((c.cash / maxCash) * 100, 100);
