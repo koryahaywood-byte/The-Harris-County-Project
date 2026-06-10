@@ -21,7 +21,7 @@ const BUDGET: BudgetLine[] = [
   { dept: "Debt Service",               category: "Debt",            amount: 1140, change:  1.8,               description: "General obligation and revenue bond principal and interest" },
   { dept: "Public Works & Engineering", category: "Infrastructure",  amount:  850, change:  3.7, employees: 1200, description: "Streets, drainage, traffic management, and capital improvements" },
   { dept: "Housing & Community Dev",    category: "Housing",         amount:  300, change:  5.3, employees:  180, description: "Affordable housing, community block grants, and anti-displacement programs" },
-  { dept: "Solid Waste Management",     category: "Operations",      amount:  100, change:    0, employees: 1100, description: "Moved to Combined Utility System — no longer a General Fund line item in FY27", note: "Shifted to utility" },
+  { dept: "Solid Waste Management",     category: "Operations",      amount:  134, change:    0, employees: 1100, description: "Moved to Combined Utility System — no longer a General Fund line item in FY27", note: "Shifted to utility" },
   { dept: "Parks & Recreation",         category: "Quality of Life", amount:  175, change:  4.2, employees: 1800, description: "Parks, pools, recreation centers, trails, and youth programming" },
   { dept: "General Administration",     category: "Administration",  amount:  220, change:  2.3, employees: 1500, description: "Mayor's Office, City Council, legal, HR, and support services" },
   { dept: "Health & Human Services",    category: "Health",          amount:  155, change:  4.7, employees:  650, description: "Public health clinics, environmental health, and social services" },
@@ -59,8 +59,8 @@ const MOVES = [
     step: "03",
     title: "City Charges Its Own Utility",
     sub: "Circular — but legal",
-    body: "The city bills the Combined Utility System a right-of-way fee for using public streets to run pipes. The utility pays $100–110M/year, which flows straight back into the General Fund. That money ultimately comes from your water and sewer bill.",
-    chip: "$100–110M/yr",
+    body: "The city bills the Combined Utility System a right-of-way fee for using public streets to run pipes. The utility pays $104M/year, which flows straight back into the General Fund. That money ultimately comes from your water and sewer bill.",
+    chip: "$104M/yr",
     note: "utility → General Fund annually",
     color: "#b45309",
     pct: 100,
@@ -75,25 +75,26 @@ interface CouncilMember {
   discretionaryM: number;
   topProject: string;
   slug?: string;
+  vote?: "yes" | "no" | "absent";
 }
 
 const COUNCIL: CouncilMember[] = [
-  { district: "District A", name: "Amy Peck",               party: "R",  discretionaryM: 1.2, topProject: "Addicks Reservoir area road repairs",          slug: "amy-peck" },
-  { district: "District B", name: "Tarsha Jackson",         party: "D",  discretionaryM: 1.2, topProject: "Kashmere Gardens drainage improvements",        slug: "tarsha-jackson" },
-  { district: "District C", name: "Joe Panzarella",         party: "R",  discretionaryM: 1.2, topProject: "Washington Ave corridor streetscaping",         slug: "joe-panzarella" },
-  { district: "District D", name: "Carolyn Evans-Shabazz",  party: "D",  discretionaryM: 1.2, topProject: "Third Ward sidewalk and crosswalk program",     slug: "carolyn-evans-shabazz" },
-  { district: "District E", name: "Fred Flickinger",        party: "R",  discretionaryM: 1.2, topProject: "Clear Lake area parks improvements",            slug: "fred-flickinger" },
-  { district: "District F", name: "Tiffany Thomas",         party: "D",  discretionaryM: 1.2, topProject: "Westheimer corridor mobility upgrades",         slug: "tiffany-thomas" },
-  { district: "District G", name: "Mary Nan Huffman",       party: "R",  discretionaryM: 1.2, topProject: "Meyerland drainage and trail work",             slug: "mary-nan-huffman" },
-  { district: "District H", name: "Mario Castillo",         party: "D",  discretionaryM: 1.2, topProject: "Near Northside pedestrian safety",             slug: "mario-castillo" },
-  { district: "District I", name: "Joaquin Martinez",       party: "D",  discretionaryM: 1.2, topProject: "East End connectivity and bike lanes",          slug: "joaquin-martinez" },
-  { district: "District J", name: "Edward Pollard",         party: "D",  discretionaryM: 1.2, topProject: "Sharpstown park and rec upgrades",             slug: "edward-pollard" },
-  { district: "District K", name: "Martha Castex-Tatum",    party: "D",  discretionaryM: 1.2, topProject: "Alief drainage and park improvements",          slug: "martha-castex-tatum" },
-  { district: "At-Large 1", name: "Julian Ramirez",         party: "R",  discretionaryM: 0.8, topProject: "Citywide public safety infrastructure",         slug: "julian-ramirez" },
-  { district: "At-Large 2", name: "Willie Davis",           party: "D",  discretionaryM: 0.8, topProject: "Minority business development initiatives",     slug: "willie-davis" },
-  { district: "At-Large 3", name: "Twila Carter",           party: "R",  discretionaryM: 0.8, topProject: "Youth workforce and community centers",         slug: "twila-carter" },
-  { district: "At-Large 4", name: "Alejandra Salinas",      party: "D",  discretionaryM: 0.8, topProject: "Resilience and climate infrastructure",         slug: "alejandra-salinas" },
-  { district: "At-Large 5", name: "Sallie Alcorn",          party: "D",  discretionaryM: 0.8, topProject: "Senior services and transit connections",       slug: "sallie-alcorn" },
+  { district: "District A", name: "Amy Peck",               party: "R",  discretionaryM: 1.2, topProject: "Addicks Reservoir area road repairs",          slug: "amy-peck",               vote: "yes" },
+  { district: "District B", name: "Tarsha Jackson",         party: "D",  discretionaryM: 1.2, topProject: "Kashmere Gardens drainage improvements",        slug: "tarsha-jackson",         vote: "yes" },
+  { district: "District C", name: "Joe Panzarella",         party: "R",  discretionaryM: 1.2, topProject: "Washington Ave corridor streetscaping",         slug: "joe-panzarella",         vote: "yes" },
+  { district: "District D", name: "Carolyn Evans-Shabazz",  party: "D",  discretionaryM: 1.2, topProject: "Third Ward sidewalk and crosswalk program",     slug: "carolyn-evans-shabazz",  vote: "yes" },
+  { district: "District E", name: "Fred Flickinger",        party: "R",  discretionaryM: 1.2, topProject: "Clear Lake area parks improvements",            slug: "fred-flickinger",        vote: "yes" },
+  { district: "District F", name: "Tiffany Thomas",         party: "D",  discretionaryM: 1.2, topProject: "Westheimer corridor mobility upgrades",         slug: "tiffany-thomas",         vote: "absent" },
+  { district: "District G", name: "Mary Nan Huffman",       party: "R",  discretionaryM: 1.2, topProject: "Meyerland drainage and trail work",             slug: "mary-nan-huffman",       vote: "yes" },
+  { district: "District H", name: "Mario Castillo",         party: "D",  discretionaryM: 1.2, topProject: "Near Northside pedestrian safety",             slug: "mario-castillo",         vote: "yes" },
+  { district: "District I", name: "Joaquin Martinez",       party: "D",  discretionaryM: 1.2, topProject: "East End connectivity and bike lanes",          slug: "joaquin-martinez",       vote: "yes" },
+  { district: "District J", name: "Edward Pollard",         party: "D",  discretionaryM: 1.2, topProject: "Sharpstown park and rec upgrades",             slug: "edward-pollard",         vote: "no" },
+  { district: "District K", name: "Martha Castex-Tatum",    party: "D",  discretionaryM: 1.2, topProject: "Alief drainage and park improvements",          slug: "martha-castex-tatum",    vote: "yes" },
+  { district: "At-Large 1", name: "Julian Ramirez",         party: "R",  discretionaryM: 0.8, topProject: "Citywide public safety infrastructure",         slug: "julian-ramirez",         vote: "yes" },
+  { district: "At-Large 2", name: "Willie Davis",           party: "D",  discretionaryM: 0.8, topProject: "Minority business development initiatives",     slug: "willie-davis",           vote: "yes" },
+  { district: "At-Large 3", name: "Twila Carter",           party: "R",  discretionaryM: 0.8, topProject: "Youth workforce and community centers",         slug: "twila-carter",           vote: "yes" },
+  { district: "At-Large 4", name: "Alejandra Salinas",      party: "D",  discretionaryM: 0.8, topProject: "Resilience and climate infrastructure",         slug: "alejandra-salinas",      vote: "yes" },
+  { district: "At-Large 5", name: "Sallie Alcorn",          party: "D",  discretionaryM: 0.8, topProject: "Senior services and transit connections",       slug: "sallie-alcorn",          vote: "yes" },
 ];
 
 const CAT_COLOR: Record<string, string> = {
@@ -217,26 +218,30 @@ export default function CityBudget() {
             Houston City Budget
           </h1>
           <p className="text-white/70 text-sm max-w-lg">
-            How Houston closed a $174M gap without raising taxes — and where your money actually goes. FY2027.
+            How Houston closed a $180M gap without raising taxes — and where your money actually goes. FY2027, passed 15–1 on June 10, 2026.
           </p>
           <ShareButton
             toolName="Houston City Budget"
             section="Money"
-            description="How Houston closed a $174M gap without raising taxes — and where your money goes. FY2027."
-            stats={[{ label: "General Fund", value: "$3.1B" }, { label: "Fiscal Year", value: "FY2027" }]}
+            description="How Houston closed a $180M gap without raising taxes — and where your money goes. FY2027."
+            stats={[{ label: "Total Budget", value: "$7.5B" }, { label: "General Fund", value: "$3.1B" }, { label: "Vote", value: "15–1" }]}
           />
           <div className="mt-5 flex gap-4 flex-wrap">
+            <div className="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-3">
+              <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">Total Budget</p>
+              <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif" }}>$7.5B</p>
+            </div>
             <div className="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-3">
               <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">General Fund</p>
               <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif" }}>$3.1B</p>
             </div>
             <div className="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-3">
-              <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">Gap to Close</p>
-              <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif" }}>$174M</p>
+              <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">Council Vote</p>
+              <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif" }}>15–1</p>
             </div>
             <div className="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-3">
-              <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">Tax Increase</p>
-              <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif" }}>$0</p>
+              <p className="text-sky-300/80 text-[9px] font-bold uppercase tracking-widest mb-0.5">Gap Closed</p>
+              <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif" }}>$180M</p>
             </div>
           </div>
         </div>
@@ -292,10 +297,10 @@ export default function CityBudget() {
                 <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[5px] md:col-span-2">
                   <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-6">
                     <p className="text-sm text-[var(--muted)] leading-relaxed mb-4">
-                      The city&apos;s <strong className="text-[var(--foreground)]">$3.1 billion General Fund</strong> — which pays for police, fire, libraries, parks, and trash pickup — has run structural deficits for over a decade. By FY26, Houston was staring at a <strong className="text-[var(--foreground)]">$107M shortfall</strong>. FY27 was worse: <strong className="text-[var(--foreground)]">$174M</strong>.
+                      The city&apos;s <strong className="text-[var(--foreground)]">$3.1 billion General Fund</strong> — which pays for police, fire, libraries, parks, and trash pickup — has run structural deficits for over a decade. By FY26, Houston was staring at a <strong className="text-[var(--foreground)]">$107M shortfall</strong>. FY27 was worse: <strong className="text-[var(--foreground)]">$180M</strong>.
                     </p>
                     <p className="text-sm text-[var(--muted)] leading-relaxed">
-                      Mayor Whitmire&apos;s FY27 budget claims to close the gap without raising property taxes. Three accounting moves make that possible — but City Controller Chris Hollins argues the moves trade one-year relief for long-term risk.
+                      Mayor Whitmire&apos;s FY27 budget, passed <strong className="text-[var(--foreground)]">15–1 on June 10, 2026</strong>, closes the gap without raising property taxes. Three accounting moves make that possible — but City Controller Chris Hollins argues the moves trade one-year relief for long-term risk.
                     </p>
                   </div>
                 </div>
@@ -303,7 +308,7 @@ export default function CityBudget() {
                 <div className="rounded-[1.75rem] bg-[var(--accent)]/5 ring-1 ring-[var(--accent)]/15 p-[5px]">
                   <div className="rounded-[1.35rem] bg-[var(--accent)]/5 p-6 h-full flex flex-col justify-center">
                     <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--accent)]/60 mb-3">FY27 Budget Gap</p>
-                    <p className="text-5xl font-bold text-[var(--accent)] mb-2" style={{ fontFamily: "var(--font-playfair), serif" }}>$174M</p>
+                    <p className="text-5xl font-bold text-[var(--accent)] mb-2" style={{ fontFamily: "var(--font-playfair), serif" }}>$180M</p>
                     <p className="text-xs text-[var(--muted)]">Structural shortfall requiring closure</p>
                     <div className="mt-4 pt-4 border-t border-[var(--accent)]/10">
                       <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--accent)]/60 mb-1">16th straight deficit year</p>
@@ -387,8 +392,9 @@ export default function CityBudget() {
               </div>
 
               <div className="mt-4 flex flex-wrap gap-1.5">
+                <SourceBadge source={{ label: "Houston Chronicle", detail: "Abby Church, June 10 2026 — budget passage coverage", type: "news" }} />
                 <SourceBadge source={{ label: "htxbudget.com", detail: "Local Insight / OCSI analysis", type: "news", url: "https://htxbudget.com" }} />
-                <SourceBadge source={{ label: "Houston Public Media", detail: "FY27 budget reporting", type: "news" }} />
+                <SourceBadge source={{ label: "Houston Public Media", detail: "FY27 budget coverage", type: "news" }} />
                 <SourceBadge source={{ label: "City of Houston", detail: "FY2027 Proposed Budget document", type: "government", url: "https://www.houstontx.gov/budget" }} />
               </div>
             </div>
@@ -410,6 +416,7 @@ export default function CityBudget() {
                     <div className="flex-shrink-0 text-center md:text-right">
                       <p className="text-5xl font-bold text-[#1d4ed8]" style={{ fontFamily: "var(--font-playfair), serif" }}>$1.25B</p>
                       <p className="text-xs text-[var(--muted)] uppercase tracking-widest mt-1">HPD FY2027</p>
+
                       <div className="mt-3 h-3 bg-gray-100 rounded-full overflow-hidden w-48 mx-auto md:ml-auto md:mr-0">
                         <div className="h-full rounded-full bg-[#1d4ed8]" style={{ width: "39%" }} />
                       </div>
@@ -417,6 +424,29 @@ export default function CityBudget() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Amendments */}
+            <div className="mb-16">
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-3">What Council Added</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-[var(--accent)] mb-6 leading-tight" style={{ fontFamily: "var(--font-playfair), serif" }}>
+                Key amendments passed alongside the budget.
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[
+                  { who: "Salinas", title: "$3M for Illegal Dumping", body: "Hire workers, buy equipment, expand surveillance and drop-off hours. Requires quarterly reports on staff hired, sites cleared, cameras installed, and dumping cases.", color: "#15803d" },
+                  { who: "Martinez / Castillo / Peck", title: "Fee Relief Study", body: "Administration must report whether the utility fund can reduce, offset, or eliminate the $5 fee for seniors, people with disabilities, and qualified veterans.", color: "#0891b2" },
+                  { who: "Salinas (vote in 2 weeks)", title: "W.A.T.E.R. Fund Expansion", body: "Lets residents paying the new trash fee access the city's Water Aid to Elderly Residents charitable fund, which helps seniors, disabled, and low-income families cover water bills.", color: "#7c3aed" },
+                ].map((a, i) => (
+                  <div key={i} className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[5px]">
+                    <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-5 h-full flex flex-col">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.15em] mb-2" style={{ color: a.color }}>{a.who}</p>
+                      <h3 className="font-bold text-[var(--accent)] text-base mb-2 leading-snug" style={{ fontFamily: "var(--font-playfair), serif" }}>{a.title}</h3>
+                      <p className="text-[11px] text-[var(--muted)] leading-relaxed flex-1">{a.body}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -457,7 +487,7 @@ export default function CityBudget() {
         {tab === "council" && (
           <div>
             <p className="text-sm text-[var(--muted)] mb-6 max-w-2xl">
-              Each Houston City Council member controls District Improvement Funds for capital projects, street repairs, and community investments. The FY27 budget vote is the key checkpoint — watch whether Council adopts the Whitmire fee/utility structure or forces changes.
+              Each Houston City Council member controls District Improvement Funds for capital projects, street repairs, and community investments. The FY27 budget passed 15–1 on June 10, 2026 — Pollard voted no, Thomas was absent.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {COUNCIL.map((cm) => (
@@ -478,9 +508,20 @@ export default function CityBudget() {
                           </h3>
                         )}
                       </div>
-                      <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white ${cm.party === "D" ? "bg-blue-700" : cm.party === "R" ? "bg-red-700" : "bg-gray-500"}`}>
-                        {cm.party}
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        {cm.vote && (
+                          <span className={`text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${
+                            cm.vote === "yes" ? "bg-emerald-100 text-emerald-700" :
+                            cm.vote === "no" ? "bg-red-100 text-red-700" :
+                            "bg-gray-100 text-gray-500"
+                          }`}>
+                            {cm.vote === "absent" ? "absent" : cm.vote}
+                          </span>
+                        )}
+                        <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white ${cm.party === "D" ? "bg-blue-700" : cm.party === "R" ? "bg-red-700" : "bg-gray-500"}`}>
+                          {cm.party}
+                        </span>
+                      </div>
                     </div>
                     <div className="bg-[var(--accent)]/5 rounded-xl px-3 py-2 mb-3">
                       <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted)] mb-0.5">Discretionary Funds</p>
