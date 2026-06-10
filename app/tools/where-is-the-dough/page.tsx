@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { FINANCE_DATA_MERGED, fmt, type CandidateFinance } from "@/lib/campaign-finance";
+import ShareButton from "@/components/ShareButton";
+import { useUrlState, readUrlParams } from "@/lib/useUrlState";
 import type { FECCandidate } from "@/app/api/finance/fec/route";
 import type { TECCandidate } from "@/app/api/finance/tec/route";
 
@@ -38,6 +40,20 @@ export default function WhereIsTheDough() {
   const [tecData, setTecData]   = useState<TECCandidate[]>([]);
   const [fecFetchedAt, setFecFetchedAt] = useState<string>("");
   const [tecFetchedAt, setTecFetchedAt] = useState<string>("");
+
+  // Hydrate filters from the URL once, then mirror them back so shared links restore the view
+  useEffect(() => {
+    const p = readUrlParams(["tab", "level", "group", "party", "q"]);
+    if (p.tab === "story" || p.tab === "leaderboard") setTab(p.tab);
+    if (p.level && p.level in LEVEL_LABELS) setLevel(p.level as Level);
+    if (p.group && p.group in COUNTY_GROUPS) setCountyGroup(p.group as CountyGroup);
+    if (p.party === "D" || p.party === "R") setParty(p.party);
+    if (p.q) setSearch(p.q);
+  }, []);
+  useUrlState(
+    { tab, level, group: countyGroup, party, q: search },
+    { tab: "story", level: "all", group: "all", party: "all", q: "" }
+  );
 
   useEffect(() => {
     fetch("/api/finance/fec")
@@ -97,7 +113,6 @@ export default function WhereIsTheDough() {
   const briones  = DATA.find(d => d.name === "Lesley Briones");
   const garcia   = DATA.find(d => d.name === "Adrian Garcia");
   const ramsey   = DATA.find(d => d.name === "Tom Ramsey");
-  const talarico = DATA.find(d => d.name === "James Talarico");
   const cornyn   = DATA.find(d => d.name === "John Cornyn");
   const whitmire = DATA.find(d => d.name === "John Whitmire");
   const hollins  = DATA.find(d => d.name === "Chris Hollins");
@@ -117,23 +132,23 @@ export default function WhereIsTheDough() {
           <p className="text-white/70 text-sm max-w-lg">
             Cash-on-hand for every Harris County official, candidate, and challenger. TEC &amp; FEC filings.
           </p>
-          <button
-            onClick={() => {
-              const url = window.location.href;
-              if (navigator.share) {
-                navigator.share({ title: "Where the Money Resides — Harris County Project", url });
-              } else {
-                navigator.clipboard.writeText(url).then(() => {
-                  const btn = document.getElementById("share-btn");
-                  if (btn) { btn.textContent = "✓ Copied!"; setTimeout(() => { btn.textContent = "Share"; }, 2000); }
-                });
-              }
-            }}
-            id="share-btn"
-            className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-full ring-1 ring-white/30 hover:bg-white/10 transition-colors text-white/70 hover:text-white"
-          >
-            Share
-          </button>
+          <ShareButton
+            toolName="Where the Money Resides"
+            section="Money"
+            description="Cash-on-hand for every Harris County official, candidate, and challenger. TEC & FEC filings."
+            summary={(() => {
+              const scope = level === "all" ? "All levels"
+                : level === "county" && countyGroup !== "all" ? `Harris County — ${COUNTY_GROUPS[countyGroup]}`
+                : LEVEL_LABELS[level];
+              const cash = filtered.reduce((s, d) => s + d.cash, 0);
+              return `${scope}: ${filtered.length} filers, ${fmt(cash)} cash on hand — via The Harris County Project`;
+            })()}
+            stats={[
+              { label: "Filers", value: String(filtered.length) },
+              { label: "Cash on hand", value: fmt(filtered.reduce((s, d) => s + d.cash, 0)) },
+              { label: "View", value: level === "county" && countyGroup !== "all" ? COUNTY_GROUPS[countyGroup] : LEVEL_LABELS[level] },
+            ]}
+          />
           {(fecData.length > 0 || tecData.length > 0) && (
             <p className="mt-2 text-[11px] text-sky-300/80 flex items-center gap-1.5">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-sky-400 alive-pulse" />
@@ -238,10 +253,10 @@ export default function WhereIsTheDough() {
                 eyebrow: "Senate Race",
                 color: "#7c3aed",
                 border: "#a78bfa",
-                stat: talarico ? fmt(talarico.cash) : "—",
-                statLabel: "Talarico · D nominee",
-                headline: "The Democratic challenger is outraising the Republican incumbent.",
-                body: `James Talarico raised ${talarico ? fmt(talarico.raised ?? 0) : "—"} and still holds ${talarico ? fmt(talarico.cash) : "—"} — more than John Cornyn's ${cornyn ? fmt(cornyn.cash) : "—"} on hand. Cornyn has already burned ${cornyn ? fmt(cornyn.spent ?? 0) : "—"} defending his seat. The money gap between a challenger and a 4-term Republican senator is a story Texas hasn't seen in years.`,
+                stat: cornyn ? fmt(cornyn.spent ?? 0) : "—",
+                statLabel: "Cornyn · spent, and lost",
+                headline: "Cornyn spent $15.8M defending his seat — and lost the runoff anyway.",
+                body: `Four-term Senator John Cornyn burned ${cornyn ? fmt(cornyn.spent ?? 0) : "—"} and still lost the Republican nomination to Ken Paxton in May. November is now an open brawl: Jasmine Crockett (D) vs Ken Paxton (R) — the first Texas Senate race in 24 years without an incumbent on the ballot.`,
               },
               {
                 eyebrow: "City Hall",
@@ -376,7 +391,7 @@ export default function WhereIsTheDough() {
                       <div className="flex-shrink-0 text-right">
                         {c.cash > 0 ? (
                           <>
-                            <p className={`text-base font-bold ${isD ? "text-blue-600" : "text-red-600"}`}
+                            <p className={`tnum text-base font-bold ${isD ? "text-blue-600" : "text-red-600"}`}
                               style={{ fontFamily: "var(--font-playfair), serif" }}>{fmt(c.cash)}</p>
                             <p className="text-[10px] text-[var(--muted)] mt-0.5 hidden md:block">{c.asOf}</p>
                           </>

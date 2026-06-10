@@ -235,9 +235,9 @@ const FEDERAL_FEEDS = [
 
 // November 2026 Harris County ballot
 const NOVEMBER_2026_BALLOT: BallotRace[] = [
-  { office: "Harris County Judge",     incumbent: "Lina Hidalgo (D)",    party: "D", competitive: "Toss-up", href: "/politicians" },
+  { office: "Harris County Judge",     incumbent: "Open — Plummer (D) vs Sanchez (R)", party: "D", competitive: "Toss-up", href: "/tools/districts" },
   { office: "U.S. House TX-07",        incumbent: "Lizzie Fletcher (D)", party: "D", competitive: "Toss-up", href: "/tools/congress-beat" },
-  { office: "U.S. Senate (TX)",        incumbent: "John Cornyn (R)",     party: "R", competitive: "Lean R",  href: "/tools/congress-beat" },
+  { office: "U.S. Senate (TX)",        incumbent: "Open — Crockett (D) vs Paxton (R)", party: "R", competitive: "Lean R",  href: "/tools/congress-beat" },
   { office: "TX Governor",             incumbent: "Greg Abbott (R)",     party: "R", competitive: "Lean R",  href: "/tools/state-beat" },
   { office: "HC Commissioner Pct. 2",  incumbent: "Adrian Garcia (D)",   party: "D", competitive: "Lean D", href: "/politicians" },
   { office: "U.S. House TX-22",        incumbent: "Troy Nehls (R)",      party: "R", competitive: "Lean R",  href: "/tools/congress-beat" },

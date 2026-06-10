@@ -307,7 +307,7 @@ export default function TIRZTool() {
 
       {/* ── Controls ──────────────────────────────────────────────────── */}
       <div className="sticky top-0 z-20 bg-[var(--background)]/90 backdrop-blur border-b border-[var(--border)] px-6 py-3">
-        <div className="max-w-6xl mx-auto flex items-center gap-3">
+        <div className="max-w-6xl mx-auto chip-row items-center" style={{ gap: "0.75rem" }}>
           <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted)]">Sort:</span>
           {([["revenue", "Tax Increment"], ["created", "Date Created"], ["projects", "# Projects"]] as const).map(([s, label]) => (
             <button key={s} onClick={() => setSort(s)}

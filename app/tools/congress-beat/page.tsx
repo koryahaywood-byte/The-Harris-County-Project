@@ -8,14 +8,14 @@ import ThreadsFeed from "@/components/ThreadsFeed";
 // precinct crosswalk built from Census TIGER 2024 boundaries).
 const REPS = [
   { name: "Christian Menefee",  district: "CD-18", party: "D", note: "Won 2025 special election",    photo: "" },
-  { name: "Al Green",           district: "CD-9",  party: "D", note: "Civil rights veteran",          photo: "https://unitedstates.github.io/images/congress/450x550/G000553.jpg" },
+  { name: "Al Green",           district: "CD-9",  party: "D", note: "Retiring — lost CD-18 runoff; term ends Jan 2027",          photo: "https://unitedstates.github.io/images/congress/450x550/G000553.jpg" },
   { name: "Lizzie Fletcher",    district: "CD-7",  party: "D", note: "Energy & Commerce Committee",  photo: "https://unitedstates.github.io/images/congress/450x550/F000468.jpg" },
   { name: "Sylvia Garcia",      district: "CD-29", party: "D", note: "House Judiciary Committee",    photo: "https://unitedstates.github.io/images/congress/450x550/G000587.jpg" },
   { name: "Dan Crenshaw",       district: "CD-2",  party: "R", note: "House Armed Services",         photo: "https://unitedstates.github.io/images/congress/450x550/C001120.jpg" },
   { name: "Morgan Luttrell",    district: "CD-8",  party: "R", note: "North Harris & Montgomery",    photo: "https://unitedstates.github.io/images/congress/450x550/L000595.jpg" },
   { name: "Troy Nehls",         district: "CD-22", party: "R", note: "Fort Bend & southwest Harris", photo: "https://unitedstates.github.io/images/congress/450x550/N000026.jpg" },
   { name: "Brian Babin",        district: "CD-36", party: "R", note: "East Harris & Ship Channel",   photo: "https://unitedstates.github.io/images/congress/450x550/B001291.jpg" },
-  { name: "Wesley Hunt",        district: "CD-38", party: "R", note: "West Houston",                 photo: "https://unitedstates.github.io/images/congress/450x550/H001090.jpg" },
+  { name: "Wesley Hunt",        district: "CD-38", party: "R", note: "Leaving — ran for Senate, lost primary; term ends Jan 2027",                 photo: "https://unitedstates.github.io/images/congress/450x550/H001090.jpg" },
 ];
 
 const CONGRESS = { name: "119th Congress", status: "In Session", term: "Jan 2025 – Jan 2027" };

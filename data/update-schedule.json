@@ -1,0 +1,20 @@
+{
+  "note": "Machine-readable companion to UPDATE-SCHEDULE.md. maxAgeDays drives scripts/check-data-freshness.js.",
+  "sources": [
+    { "name": "Civic calendar events",            "path": "lib/civic-events.ts",                    "frequency": "daily",      "maxAgeDays": 7 },
+    { "name": "Dashboard data (countdown/ballot)","path": "lib/dashboard-data.ts",                  "frequency": "daily",      "maxAgeDays": 14 },
+    { "name": "FEC static fallback",              "path": "lib/campaign-finance.ts",                "frequency": "quarterly",  "maxAgeDays": 100 },
+    { "name": "TEC route fallback",               "path": "app/api/finance/tec/route.ts",           "frequency": "quarterly",  "maxAgeDays": 100 },
+    { "name": "FEC route fallback",               "path": "app/api/finance/fec/route.ts",           "frequency": "quarterly",  "maxAgeDays": 100 },
+    { "name": "County/city finance pipeline",     "path": "lib/campaign-finance-generated.json",    "frequency": "biannual",   "maxAgeDays": 200 },
+    { "name": "Finance roster",                   "path": "data/finance-roster.json",               "frequency": "biannual",   "maxAgeDays": 200 },
+    { "name": "CVAP demographics",                "path": "public/data/cvap-districts.json",        "frequency": "annual",     "maxAgeDays": 400 },
+    { "name": "Precinct boundaries",              "path": "public/data/harris-precincts.geojson",   "frequency": "annual",     "maxAgeDays": 400 },
+    { "name": "Precinct-district crosswalk",      "path": "lib/precinct-crosswalk.json",            "frequency": "annual",     "maxAgeDays": 400 },
+    { "name": "Officials roster",                 "path": "lib/politicians.ts",                     "frequency": "annual",     "maxAgeDays": 400 },
+    { "name": "Heat Check results",               "path": "public/heat-check.html",                 "frequency": "election",   "maxAgeDays": 120 },
+    { "name": "Precinct turnout",                 "path": "public/data/precinct-turnout-2026.json", "frequency": "election",   "maxAgeDays": 120 },
+    { "name": "Matchups (lost-candidate purge)",  "path": "lib/matchups-2026.ts",                   "frequency": "election",   "maxAgeDays": 120 },
+    { "name": "District seat info",               "path": "lib/districts-data.ts",                  "frequency": "annual",     "maxAgeDays": 400 }
+  ]
+}

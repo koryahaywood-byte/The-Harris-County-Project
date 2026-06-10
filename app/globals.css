@@ -18,6 +18,53 @@
   /* Depth tokens */
   --lift-shadow: 0 20px 60px rgba(26,58,92,0.18), 0 4px 16px rgba(26,58,92,0.10);
   --lift-shadow-sm: 0 8px 28px rgba(26,58,92,0.13);
+
+  /* Design-system tokens — single source of truth for card/chip/tab treatments */
+  --radius-card: 1.35rem;
+  --radius-chip: 9999px;
+  --ring-card: 0 0 0 1px rgba(0,0,0,0.07);
+}
+
+/* ── Design system utilities (2026 refresh) ─────────────────────────────── */
+
+/* Numbers in data tables/leaderboards align like a terminal */
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* Standard card: one radius, one ring, white surface */
+.hcp-card {
+  background: var(--card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--ring-card);
+}
+
+/* Chip row: consistent wrap + gap for filter pills across all tools */
+.chip-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip-row > * { flex-shrink: 0; }
+
+/* Micro press feedback for buttons/chips */
+.pressable { transition: transform 0.15s ease; }
+.pressable:active { transform: scale(0.96); }
+
+/* Loading shimmer — intentional skeletons instead of bare "Loading…" text */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #ece9e2 25%, #f5f3ef 50%, #ece9e2 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s linear infinite;
+  border-radius: 8px;
+}
+
+/* Empty state — looks deliberate, not broken */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 3rem 1.5rem; gap: 0.5rem;
+  color: var(--muted);
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-card);
+  background: rgba(255,255,255,0.5);
 }
 
 html {

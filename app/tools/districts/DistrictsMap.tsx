@@ -78,9 +78,8 @@ export default function DistrictsMap({
 
   if (!geojson) {
     return (
-      <div className="flex items-center justify-center animate-pulse"
-        style={{ height: 540, background: "#f0f4f8" }}>
-        <p className="text-xs" style={{ color: "#9ca3af" }}>Loading precinct map…</p>
+      <div className="skeleton flex items-center justify-center" style={{ height: 540 }}>
+        <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "#9ca3af" }}>Loading 1,172 precincts…</p>
       </div>
     );
   }
@@ -90,8 +89,9 @@ export default function DistrictsMap({
     return crosswalk[prec]?.[districtField] === districtValue;
   };
 
-  // bounds of the active district
+  // bounds + outline layer for the active district
   let bounds: L.LatLngBounds | null = null;
+  let activeFC: GeoJsonObject | null = null;
   const fitKey = `${districtField}-${districtValue}`;
   try {
     const active = {
@@ -101,7 +101,8 @@ export default function DistrictsMap({
       ),
     };
     if (active.features.length > 0) {
-      const b = L.geoJSON(active as GeoJsonObject).getBounds();
+      activeFC = active as GeoJsonObject;
+      const b = L.geoJSON(activeFC).getBounds();
       if (b.isValid()) bounds = b;
     }
   } catch { /* ignore */ }
@@ -131,30 +132,29 @@ export default function DistrictsMap({
           if (isSelected) {
             return { fillColor: "#f59e0b", fillOpacity: 0.9, color: "#b45309", weight: 2 };
           }
-          if (!active) {
-            // continuous, dimmed — Heat Check treatment
-            return { fillColor: GREY_OUT, fillOpacity: 0.35, color: "rgba(255,255,255,0.7)", weight: 0.4 };
-          }
 
-          if (layer === "votes") {
-            const t = turnout[prec];
-            return {
-              fillColor: t ? demShareColor(t.dem, t.rep) : "#d6d3cd",
-              fillOpacity: 0.72,
-              color: "rgba(255,255,255,0.85)",
-              weight: 0.6,
-            };
-          }
+          // Heat Check treatment: EVERY precinct keeps its data color, always.
+          // Out-of-district precincts fade to low opacity but never go blank —
+          // the county reads as one continuous surface with the district popped.
+          let fill = GREY_OUT;
           if (layer === "results" && results) {
             const votes = results.byPrecinct[prec];
-            if (votes) {
-              const { color, opacity } = resultsColor(votes);
-              return { fillColor: color, fillOpacity: opacity, color: "rgba(255,255,255,0.85)", weight: 0.6 };
-            }
-            return { fillColor: "#d6d3cd", fillOpacity: 0.3, color: "rgba(255,255,255,0.85)", weight: 0.5 };
+            fill = votes ? resultsColor(votes).color : "#d6d3cd";
+          } else {
+            const t = turnout[prec];
+            fill = t ? demShareColor(t.dem, t.rep) : "#d6d3cd";
           }
-          // population layer — no demographic data wired yet; neutral active fill
-          return { fillColor: "#7ea8d8", fillOpacity: 0.35, color: "rgba(255,255,255,0.85)", weight: 0.6 };
+
+          let opacity = 0.72;
+          if (layer === "results" && results) {
+            const votes = results.byPrecinct[prec];
+            opacity = votes ? resultsColor(votes).opacity : 0.3;
+          }
+
+          if (!active) {
+            return { fillColor: fill, fillOpacity: 0.14, color: "rgba(255,255,255,0.6)", weight: 0.4 };
+          }
+          return { fillColor: fill, fillOpacity: opacity, color: "rgba(255,255,255,0.85)", weight: 0.6 };
         }}
         onEachFeature={(feature, lyr) => {
           const prec = (feature as PrecinctFeature).properties.PREC ?? "";
@@ -201,6 +201,16 @@ export default function DistrictsMap({
           });
         }}
       />
+
+      {/* Bold outline tracing the active district, drawn above the fills */}
+      {districtField && districtValue && activeFC && (
+        <GeoJSON
+          key={`outline_${fitKey}`}
+          data={activeFC}
+          interactive={false}
+          style={{ fill: false, color: "#1a3a5c", weight: 1.6, opacity: 0.9 }}
+        />
+      )}
     </MapContainer>
   );
 }

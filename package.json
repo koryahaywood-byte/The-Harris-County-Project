@@ -11,12 +11,12 @@
     "finance-extract": "node scripts/ingest-finance-pdfs.mjs",
     "finance-merge": "node scripts/merge-finance-data.mjs",
     "finance-publish": "node scripts/merge-finance-data.mjs --confirm",
-    "update-finance": "node scripts/fetch-finance-pdfs.mjs && node scripts/ingest-finance-pdfs.mjs && node scripts/merge-finance-data.mjs"
+    "update-finance": "node scripts/fetch-finance-pdfs.mjs && node scripts/ingest-finance-pdfs.mjs && node scripts/merge-finance-data.mjs",
+    "check-freshness": "node scripts/check-data-freshness.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.100.1",
     "@types/leaflet": "^1.9.21",
-    "html-to-image": "^1.11.13",
     "leaflet": "^1.9.4",
     "next": "16.2.7",
     "pdf-lib": "^1.17.1",

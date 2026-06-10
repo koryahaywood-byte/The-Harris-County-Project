@@ -1,14 +1,15 @@
 // Known November 2026 general-election matchups, keyed by district key
 // ("CD-18", "SD-15", "HD-148", "JP-4", "COH-District C", "HC-Countywide").
-// Only matchups confirmed by primary results / filings already in the project's
-// data are listed — everything else falls back to "challenger awaiting filings".
+// Source: Harris County March 2026 primary + May 2026 runoff results already
+// embedded in Heat Check (public/heat-check.html). Statewide races note that
+// Harris-only totals can't certify a statewide nominee.
 // Money for each name resolves through FINANCE_DATA_MERGED at render time.
 
 export interface MatchupSide {
   name: string;
   party: "D" | "R";
   incumbent: boolean;
-  note?: string; // e.g. "runoff winner pending"
+  note?: string;
 }
 
 export interface Matchup {
@@ -23,27 +24,28 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     office: "U.S. Senate",
     status: "set",
     sides: [
-      { name: "James Talarico", party: "D", incumbent: false, note: "Won March primary" },
-      { name: "John Cornyn",    party: "R", incumbent: true,  note: "R runoff vs Paxton pending" },
+      { name: "Jasmine Crockett", party: "D", incumbent: false, note: "Won March primary" },
+      { name: "Ken Paxton",       party: "R", incumbent: false, note: "Won May runoff over John Cornyn" },
     ],
-    detail: "Republican nomination heads to a May runoff between John Cornyn and Ken Paxton.",
+    detail: "Paxton beat Cornyn in the May runoff (93,872–52,041 in Harris County). Crockett led the Democratic primary with no runoff. Nominee status reflects Harris County results; statewide certification governs.",
   },
   "HC-Countywide": {
     office: "Harris County Judge",
-    status: "runoff-pending",
+    status: "set",
     sides: [
-      { name: "Lina Hidalgo",  party: "D", incumbent: true,  note: "D runoff vs Annise Parker pending" },
-      { name: "Warren Howell", party: "R", incumbent: false, note: "R nominee" },
+      { name: "Letitia Plummer",  party: "D", incumbent: false, note: "Won May runoff over Annise Parker" },
+      { name: "Orlando Sanchez",  party: "R", incumbent: false, note: "Won May runoff over Warren Howell" },
     ],
-    detail: "Democratic primary went to a runoff; the winner faces Warren Howell in November.",
+    detail: "Open seat — Lina Hidalgo did not seek reelection. Plummer beat Parker 57,893–55,395 in the Democratic runoff; Sanchez beat Howell 85,304–49,367 in the Republican runoff.",
   },
   "CD-18": {
     office: "U.S. Representative, District 18",
-    status: "runoff-pending",
+    status: "set",
     sides: [
-      { name: "Christian Menefee", party: "D", incumbent: true, note: "D runoff vs Al Green pending" },
+      { name: "Christian Menefee",       party: "D", incumbent: true, note: "Won May runoff over Al Green" },
+      { name: "Ronald Dwayne Whitfield", party: "R", incumbent: false, note: "Won March primary" },
     ],
-    detail: "Democratic runoff: Christian Menefee vs Al Green. Heavily Democratic seat — runoff winner is the strong favorite.",
+    detail: "Menefee beat Al Green 26,546–10,771 in the Democratic runoff. Heavily Democratic seat.",
   },
   "CD-2": {
     office: "U.S. Representative, District 2",
@@ -55,16 +57,140 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "CD-7": {
     office: "U.S. Representative, District 7",
-    status: "partial",
+    status: "set",
     sides: [
       { name: "Lizzie Fletcher", party: "D", incumbent: true },
+      { name: "Alexander Hale",  party: "R", incumbent: false, note: "Won May runoff" },
+    ],
+  },
+  "CD-8": {
+    office: "U.S. Representative, District 8",
+    status: "partial",
+    sides: [
+      { name: "Laura Jones",     party: "D", incumbent: false, note: "Won March primary" },
+      { name: "Morgan Luttrell", party: "R", incumbent: true, note: "Presumed nominee — no Harris-side R primary on ballot" },
+    ],
+  },
+  "CD-9": {
+    office: "U.S. Representative, District 9",
+    status: "set",
+    sides: [
+      { name: "Leticia Gutierrez", party: "D", incumbent: false, note: "Won March primary" },
+      { name: "Alex Mealer",       party: "R", incumbent: false, note: "Won May runoff over Briscoe Cain" },
+    ],
+    detail: "Open-seat race: incumbent Al Green ran in CD-18 instead (and lost that runoff).",
+  },
+  "CD-22": {
+    office: "U.S. Representative, District 22",
+    status: "partial",
+    sides: [
+      { name: "Marquette Greene-Scott", party: "D", incumbent: false, note: "Won March primary" },
+      { name: "Troy Nehls",             party: "R", incumbent: true, note: "Presumed nominee — primary outside Harris data" },
     ],
   },
   "CD-29": {
     office: "U.S. Representative, District 29",
     status: "partial",
     sides: [
-      { name: "Sylvia Garcia", party: "D", incumbent: true },
+      { name: "Sylvia Garcia", party: "D", incumbent: true, note: "Won March primary" },
+    ],
+  },
+  "CD-36": {
+    office: "U.S. Representative, District 36",
+    status: "partial",
+    sides: [
+      { name: "Rhonda Hart",  party: "D", incumbent: false, note: "Won March primary" },
+      { name: "Brian Babin",  party: "R", incumbent: true, note: "Presumed nominee — primary outside Harris data" },
+    ],
+  },
+  "CD-38": {
+    office: "U.S. Representative, District 38",
+    status: "set",
+    sides: [
+      { name: "Melissa McDonough", party: "D", incumbent: false, note: "Won March primary" },
+      { name: "Jon Bonck",         party: "R", incumbent: false, note: "Won May runoff" },
+    ],
+    detail: "Open seat — incumbent Wesley Hunt ran for U.S. Senate and lost the Republican primary.",
+  },
+  "SD-11": {
+    office: "State Senator, District 11",
+    status: "partial",
+    sides: [
+      { name: "Shannon Dicely", party: "D", incumbent: false, note: "Won March primary" },
+    ],
+    detail: "Incumbent Mayes Middleton won the Republican nomination for Attorney General; Republican nominee for this seat not in Harris primary data.",
+  },
+  "HD-126": {
+    office: "State Representative, District 126",
+    status: "set",
+    sides: [
+      { name: "Stefanie Bord", party: "D", incumbent: false, note: "Won March primary" },
+      { name: "Stan Stanart",  party: "R", incumbent: false, note: "Won May runoff" },
+    ],
+  },
+  "HD-131": {
+    office: "State Representative, District 131",
+    status: "partial",
+    sides: [
+      { name: "Staci Childs", party: "D", incumbent: false, note: "Won May runoff over Lawrence Allen Jr." },
+    ],
+  },
+  "HD-139": {
+    office: "State Representative, District 139",
+    status: "partial",
+    sides: [
+      { name: "Charlene Ward Johnson", party: "D", incumbent: true, note: "Won March primary" },
+    ],
+  },
+  "HD-142": {
+    office: "State Representative, District 142",
+    status: "partial",
+    sides: [
+      { name: "Harold Dutton Jr.", party: "D", incumbent: true, note: "Won March primary outright" },
+    ],
+  },
+  "HD-144": {
+    office: "State Representative, District 144",
+    status: "partial",
+    sides: [
+      { name: "Mary Ann Perez", party: "D", incumbent: true, note: "Won March primary" },
+    ],
+  },
+  "HD-149": {
+    office: "State Representative, District 149",
+    status: "partial",
+    sides: [
+      { name: "Darlene Breaux", party: "D", incumbent: false, note: "Won May runoff over incumbent Hubert Vo" },
+    ],
+    detail: "Incumbent Hubert Vo lost the Democratic runoff 1,623–1,053. He holds the seat until January 2027.",
+  },
+  "HD-150": {
+    office: "State Representative, District 150",
+    status: "partial",
+    sides: [
+      { name: "A'Yonna Kellum", party: "D", incumbent: false, note: "Won March primary" },
+    ],
+  },
+  "JP-2": {
+    office: "Justice of the Peace, Precinct 2",
+    status: "partial",
+    sides: [
+      { name: "Dolores Lozano", party: "D", incumbent: true, note: "Won March primary (Place 2)" },
+    ],
+  },
+  "JP-5": {
+    office: "Justice of the Peace, Precinct 5",
+    status: "set",
+    sides: [
+      { name: "Lisa Jefferson", party: "D", incumbent: false, note: "Won March primary (Place 2)" },
+      { name: "Mark Fury",      party: "R", incumbent: false, note: "Won March primary over incumbent Bob Wolfe (Place 2)" },
+    ],
+  },
+  "JP-7": {
+    office: "Justice of the Peace, Precinct 7",
+    status: "partial",
+    sides: [
+      { name: "Melanie Miles", party: "D", incumbent: false, note: "Won May runoff over incumbent Sharon Burney (Place 2)" },
     ],
   },
 };

@@ -10,6 +10,8 @@ import { DISTRICT_INFO } from "@/lib/districts-data";
 import { getMatchup } from "@/lib/matchups-2026";
 import { getFinanceByName, fmt } from "@/lib/campaign-finance";
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
+import ShareButton from "@/components/ShareButton";
+import { useUrlState, readUrlParams } from "@/lib/useUrlState";
 import type { MapLayer, PrecinctTurnout, ResultsUpload, PrecinctFeature } from "./DistrictsMap";
 
 const DistrictsMap = dynamic(() => import("./DistrictsMap"), {
@@ -188,21 +190,127 @@ function parseResultsCsv(text: string): ResultsUpload | null {
   return { candidates, byPrecinct };
 }
 
+/* ── Voter profile under the VS card ──────────────────────────────────────── */
+interface CvapEntry { total: number; asian?: number; black?: number; white?: number; hispanic?: number }
+export interface CvapData { cvap: { cd: Record<string, CvapEntry>; sd: Record<string, CvapEntry>; hd: Record<string, CvapEntry> } }
+
+const RACE_LABELS: [keyof CvapEntry, string, string][] = [
+  ["black", "Black", "#7c3aed"],
+  ["hispanic", "Hispanic/Latino", "#ea580c"],
+  ["white", "White", "#2563a8"],
+  ["asian", "Asian", "#0891b2"],
+];
+
+function VoterProfile({ type, district, agg, cvap }: {
+  type: TypeKey; district: string | null;
+  agg: { dem: number; rep: number; count: number; total: number };
+  cvap: CvapData | null;
+}) {
+  const entry = (type === "cd" || type === "sd" || type === "hd") && district && cvap
+    ? cvap.cvap[type]?.[district] : null;
+  const demPct = agg.total ? Math.round((agg.dem / agg.total) * 100) : 0;
+  const turnoutRate = entry?.total ? Math.round((agg.total / entry.total) * 1000) / 10 : null;
+
+  return (
+    <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] mt-4">
+      <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-5">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-4" style={{ color: "#6b7280" }}>
+          Who Actually Votes Here
+        </p>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div>
+            <p className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: "#9ca3af" }}>Party of 2026 primary voters</p>
+            <p className="text-lg font-bold" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>
+              {demPct}% D · {100 - demPct}% R
+            </p>
+            <div className="h-2 rounded-full overflow-hidden mt-1.5" style={{ background: "#fecaca" }}>
+              <div className="h-full" style={{ width: `${demPct}%`, background: "#2563a8" }} />
+            </div>
+            <p className="text-[9px] mt-1" style={{ color: "#9ca3af" }}>{agg.total.toLocaleString()} ballots cast</p>
+          </div>
+
+          <div>
+            <p className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: "#9ca3af" }}>Primary turnout rate</p>
+            {turnoutRate !== null ? (
+              <>
+                <p className="text-lg font-bold" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>{turnoutRate}%</p>
+                <p className="text-[9px] mt-1 leading-relaxed" style={{ color: "#9ca3af" }}>
+                  of {entry!.total.toLocaleString()} citizens of voting age (Census CVAP 2019–23)
+                </p>
+              </>
+            ) : (
+              <p className="text-[11px] italic mt-1" style={{ color: "#9ca3af" }}>
+                CVAP published for Congressional, State Senate &amp; House districts only
+              </p>
+            )}
+          </div>
+
+          <div className="col-span-2">
+            <p className="text-[9px] font-bold uppercase tracking-wider mb-1.5" style={{ color: "#9ca3af" }}>
+              Citizen voting-age population by race/ethnicity
+            </p>
+            {entry ? (
+              <div className="flex flex-col gap-1.5">
+                {RACE_LABELS.map(([k, label, color]) => {
+                  const v = entry[k] ?? 0;
+                  const pct = entry.total ? Math.round((v / entry.total) * 100) : 0;
+                  return (
+                    <div key={k} className="flex items-center gap-2">
+                      <span className="text-[10px] w-24 shrink-0" style={{ color: "#6b7280" }}>{label}</span>
+                      <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: "#f3f4f6" }}>
+                        <div className="h-full rounded-full" style={{ width: `${pct}%`, background: color }} />
+                      </div>
+                      <span className="text-[10px] font-bold w-8 text-right" style={{ color: "#1a3a5c" }}>{pct}%</span>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-[11px] italic" style={{ color: "#9ca3af" }}>
+                Not published at this district level — Census releases CVAP for Congressional, State Senate and State House geographies.
+              </p>
+            )}
+          </div>
+        </div>
+
+        <p className="text-[10px] leading-relaxed mt-4 pt-3" style={{ color: "#9ca3af", borderTop: "1px solid #f3f4f6" }}>
+          Age ranges, turnout across the last 3 elections, and primary-vs-general participation require the Harris County
+          voter file with vote history (harrisvotes.com → Voter Registration Data Request). Racial composition above is the
+          citizen voting-age population — the closest public proxy for the electorate; per-voter race is not in public data.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 /* ── Main page ────────────────────────────────────────────────────────────── */
 export default function DistrictsPage() {
   const [geojson, setGeojson] = useState<GeoJsonObject | null>(null);
   const [turnout, setTurnout] = useState<Record<string, PrecinctTurnout>>({});
+  const [cvap, setCvap] = useState<CvapData | null>(null);
   const [type, setType] = useState<TypeKey>("cd");
   const [district, setDistrict] = useState<string | null>("18");
   const [layer, setLayer] = useState<MapLayer>("votes");
   const [results, setResults] = useState<ResultsUpload | null>(null);
   const [selectedPrecinct, setSelectedPrecinct] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const [mapError, setMapError] = useState(false);
 
   useEffect(() => {
-    fetch("/data/harris-precincts.geojson").then(r => r.json()).then(setGeojson).catch(() => {});
+    fetch("/data/harris-precincts.geojson").then(r => r.json()).then(setGeojson).catch(() => setMapError(true));
     fetch("/data/precinct-turnout-2026.json").then(r => r.json()).then(d => setTurnout(d.precincts ?? {})).catch(() => {});
+    fetch("/data/cvap-districts.json").then(r => r.json()).then(setCvap).catch(() => {});
+    // Hydrate view from shared-link params
+    const p = readUrlParams(["type", "district", "layer"]);
+    if (p.type && TYPES.some(t => t.key === p.type)) setType(p.type as TypeKey);
+    if (p.district) setDistrict(p.district);
+    if (p.layer === "population" || p.layer === "votes") setLayer(p.layer);
   }, []);
+  useUrlState(
+    { type, district: district ?? undefined, layer },
+    { type: "cd", district: "18", layer: "votes" }
+  );
 
   const districtField: DistrictField | null = type === "countywide" ? null : type;
   const dKey = districtKey(type, district);
@@ -258,6 +366,17 @@ export default function DistrictsPage() {
           <p className="text-white/50 text-sm max-w-lg">
             Every Harris County voting precinct, mapped to its real districts. See who votes, who represents the seat, and the matchup for November.
           </p>
+          <ShareButton
+            toolName="Districts"
+            section="Elections"
+            description="Every Harris County voting precinct, mapped to its real districts."
+            summary={`${headerLabel(type, district)} — ${agg.total.toLocaleString()} 2026 primary ballots across ${agg.count} precincts (${demPct}% Dem) — via The Harris County Project`}
+            stats={[
+              { label: "District", value: headerLabel(type, district) },
+              { label: "Primary ballots", value: agg.total.toLocaleString() },
+              { label: "Dem share", value: `${demPct}%` },
+            ]}
+          />
         </div>
       </section>
 
@@ -268,10 +387,10 @@ export default function DistrictsPage() {
           <div className="flex-1 min-w-0">
 
             {/* Type pills */}
-            <div className="flex flex-wrap gap-2 mb-3">
+            <div className="chip-row mb-3">
               {TYPES.map(t => (
                 <button key={t.key} onClick={() => pickType(t.key)}
-                  className="rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-200"
+                  className="pressable rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-200"
                   style={{
                     background: type === t.key ? "#1a3a5c" : "#fff",
                     color:      type === t.key ? "#fff" : "#374151",
@@ -284,10 +403,10 @@ export default function DistrictsPage() {
 
             {/* District chips */}
             {districtField && (
-              <div className="flex flex-wrap gap-1.5 mb-4">
+              <div className="chip-row mb-4" style={{ gap: "0.375rem" }}>
                 {DISTRICT_LISTS[districtField].map(d => (
                   <button key={d} onClick={() => { setDistrict(d); setSelectedPrecinct(null); }}
-                    className="rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-150"
+                    className="pressable rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-150"
                     style={{
                       background: district === d ? "#1a3a5c" : "#fff",
                       color:      district === d ? "#fff" : "#374151",
@@ -300,7 +419,7 @@ export default function DistrictsPage() {
             )}
 
             {/* Layer toggle */}
-            <div className="flex flex-wrap items-center gap-2 mb-3">
+            <div className="chip-row items-center mb-3">
               <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>Layer:</span>
               {([
                 { key: "votes",      label: "Who Votes — 2026 Primary", live: true },
@@ -380,6 +499,16 @@ export default function DistrictsPage() {
             {/* Map — Heat Check treatment */}
             <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
               <div className="rounded-[1rem] overflow-hidden bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]">
+                {mapError ? (
+                  <div className="empty-state" style={{ height: 540, border: "none" }}>
+                    <p className="text-sm font-semibold" style={{ color: "#1a3a5c" }}>The precinct map didn&rsquo;t load.</p>
+                    <p className="text-xs max-w-xs">Usually a network hiccup — the boundary file is ~1MB.</p>
+                    <button onClick={() => { setMapError(false); fetch("/data/harris-precincts.geojson").then(r => r.json()).then(setGeojson).catch(() => setMapError(true)); }}
+                      className="pressable mt-2 rounded-full px-5 py-2 text-xs font-bold text-white" style={{ background: "#1a3a5c" }}>
+                      Try again
+                    </button>
+                  </div>
+                ) : (
                 <DistrictsMap
                   geojson={geojson}
                   crosswalk={CROSSWALK}
@@ -391,6 +520,7 @@ export default function DistrictsPage() {
                   selectedPrecinct={selectedPrecinct}
                   onPrecinctClick={setSelectedPrecinct}
                 />
+                )}
               </div>
             </div>
             <p className="mt-2 text-[11px]" style={{ color: "#9ca3af" }}>
@@ -400,6 +530,7 @@ export default function DistrictsPage() {
 
             {/* VS card */}
             <VsCard dKey={type === "countywide" ? "HC-Countywide" : dKey} office={polLabel} />
+            <VoterProfile type={type} district={district} agg={agg} cvap={cvap} />
           </div>
 
           {/* Right: Seat Portrait */}

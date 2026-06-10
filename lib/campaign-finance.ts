@@ -20,9 +20,9 @@ const FEC = (id: string) => `https://www.fec.gov/data/candidate/${id}/`;
 
 export const FINANCE_DATA: CandidateFinance[] = [
   // Federal
-  { name: "James Talarico",        office: "U.S. Senate (D nominee)",       level: "federal",  party: "D", cash: 9858865,   raised: 27000000, spent: 17141135, asOf: "Apr 2026", incumbent: false, filingUrl: FEC("S6TX00462") },
-  { name: "John Cornyn",           office: "U.S. Senate (R runoff)",         level: "federal",  party: "R", cash: 8200000,   raised: 9000000,  spent: 15800000, asOf: "Apr 2026", incumbent: true,  filingUrl: FEC("S0TX00999") },
-  { name: "Ken Paxton",            office: "U.S. Senate (R runoff)",         level: "federal",  party: "R", cash: 2600000,   raised: 2200000,  spent: 3200000,  asOf: "Apr 2026", incumbent: false, filingUrl: FEC("S4TX00462") },
+  { name: "Jasmine Crockett",      office: "U.S. Senate (D nominee)",        level: "federal",  party: "D", cash: 0,         asOf: "Pending",  incumbent: false, filingUrl: "https://www.fec.gov/data/search/?query=jasmine+crockett" },
+  { name: "John Cornyn",           office: "U.S. Senator (lost runoff — term ends Jan 2027)", level: "federal", party: "R", cash: 8200000, raised: 9000000, spent: 15800000, asOf: "Apr 2026", incumbent: true, filingUrl: FEC("S0TX00999") },
+  { name: "Ken Paxton",            office: "U.S. Senate (R nominee)",        level: "federal",  party: "R", cash: 2600000,   raised: 2200000,  spent: 3200000,  asOf: "Apr 2026", incumbent: false, filingUrl: FEC("S4TX00462") },
   { name: "Lizzie Fletcher",       office: "U.S. Rep CD-07",                 level: "federal",  party: "D", cash: 1750893,   asOf: "Apr 2026", incumbent: true,  filingUrl: FEC("H8TX07139") },
   { name: "Shaun Finnie",          office: "U.S. Rep CD-02 (D nominee)",     level: "federal",  party: "D", cash: 1543080,   asOf: "Apr 2026", incumbent: false, filingUrl: FEC("H4TX02177") },
   { name: "Al Green",              office: "CD-18 candidate (lost runoff)",  level: "federal",  party: "D", cash: 264570,    asOf: "Apr 2026", incumbent: false, filingUrl: FEC("H4TX09090") },

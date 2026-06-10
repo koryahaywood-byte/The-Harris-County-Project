@@ -1,0 +1,140 @@
+{
+  "generated": "2026-06-10T17:10:43.599Z",
+  "rows": [
+    {
+      "name": "Civic calendar events",
+      "path": "lib/civic-events.ts",
+      "frequency": "daily",
+      "maxAgeDays": 7,
+      "mtime": "2026-06-10",
+      "ageDays": 0,
+      "status": "current"
+    },
+    {
+      "name": "Dashboard data (countdown/ballot)",
+      "path": "lib/dashboard-data.ts",
+      "frequency": "daily",
+      "maxAgeDays": 14,
+      "mtime": "2026-06-10",
+      "ageDays": 0,
+      "status": "current"
+    },
+    {
+      "name": "FEC static fallback",
+      "path": "lib/campaign-finance.ts",
+      "frequency": "quarterly",
+      "maxAgeDays": 100,
+      "mtime": "2026-06-10",
+      "ageDays": 0,
+      "status": "current"
+    },
+    {
+      "name": "TEC route fallback",
+      "path": "app/api/finance/tec/route.ts",
+      "frequency": "quarterly",
+      "maxAgeDays": 100,
+      "mtime": "2026-06-10",
+      "ageDays": 0,
+      "status": "current"
+    },
+    {
+      "name": "FEC route fallback",
+      "path": "app/api/finance/fec/route.ts",
+      "frequency": "quarterly",
+      "maxAgeDays": 100,
+      "mtime": "2026-06-10",
+      "ageDays": 0,
+      "status": "current"
+    },
+    {
+      "name": "County/city finance pipeline",
+      "path": "lib/campaign-finance-generated.json",
+      "frequency": "biannual",
+      "maxAgeDays": 200,
+      "mtime": "2026-06-10",
+      "ageDays": 0,
+      "status": "current"
+    },
+    {
+      "name": "Finance roster",
+      "path": "data/finance-roster.json",
+      "frequency": "biannual",
+      "maxAgeDays": 200,
+      "mtime": "2026-06-10",
+      "ageDays": 0,
+      "status": "current"
+    },
+    {
+      "name": "CVAP demographics",
+      "path": "public/data/cvap-districts.json",
+      "frequency": "annual",
+      "maxAgeDays": 400,
+      "mtime": "2026-06-10",
+      "ageDays": 0,
+      "status": "current"
+    },
+    {
+      "name": "Precinct boundaries",
+      "path": "public/data/harris-precincts.geojson",
+      "frequency": "annual",
+      "maxAgeDays": 400,
+      "mtime": "2026-06-10",
+      "ageDays": 0,
+      "status": "current"
+    },
+    {
+      "name": "Precinct-district crosswalk",
+      "path": "lib/precinct-crosswalk.json",
+      "frequency": "annual",
+      "maxAgeDays": 400,
+      "mtime": "2026-06-10",
+      "ageDays": 0,
+      "status": "current"
+    },
+    {
+      "name": "Officials roster",
+      "path": "lib/politicians.ts",
+      "frequency": "annual",
+      "maxAgeDays": 400,
+      "mtime": "2026-06-10",
+      "ageDays": 0,
+      "status": "current"
+    },
+    {
+      "name": "Heat Check results",
+      "path": "public/heat-check.html",
+      "frequency": "election",
+      "maxAgeDays": 120,
+      "mtime": "2026-06-06",
+      "ageDays": 5,
+      "status": "current"
+    },
+    {
+      "name": "Precinct turnout",
+      "path": "public/data/precinct-turnout-2026.json",
+      "frequency": "election",
+      "maxAgeDays": 120,
+      "mtime": "2026-06-10",
+      "ageDays": 0,
+      "status": "current"
+    },
+    {
+      "name": "Matchups (lost-candidate purge)",
+      "path": "lib/matchups-2026.ts",
+      "frequency": "election",
+      "maxAgeDays": 120,
+      "mtime": "2026-06-10",
+      "ageDays": 0,
+      "status": "current"
+    },
+    {
+      "name": "District seat info",
+      "path": "lib/districts-data.ts",
+      "frequency": "annual",
+      "maxAgeDays": 400,
+      "mtime": "2026-06-05",
+      "ageDays": 5,
+      "status": "current"
+    }
+  ]
+}

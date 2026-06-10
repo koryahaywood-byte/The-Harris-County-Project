@@ -1,78 +1,103 @@
 # Launch Audit — The Harris County Project
-**Date:** June 10, 2026 (v2 — post Districts rebuild)
+**Date:** June 10, 2026 (v3 — four-loop pass: share, districts, visual, maintenance)
 
 ---
 
-## 1. Shipped This Session
+## 1. What Was Fixed
 
-### Where the Money Resides
-- JPs and all county officials now render (pending ones sort to bottom with a badge).
-- New **county sub-filter**: All County / Commissioners Court / Justices of the Peace / County Courts / Law Enforcement / Clerks & Admin — isolates JPs against their peers.
-- Real PDF-pipeline numbers merged in: Whitmire $2.74M, Korduba $79.7K, Lozano $66.6K, Stephens $28.4K (user-verified), Treviño, Rodriguez, Lombardino.
-- Share button (native share / clipboard).
+### Share system (Loop 1)
+- **Removed the screenshot-based share entirely** (html-to-image uninstalled). ShareButton is now a true dynamic share: Web Share API with the current URL, a live text summary of the exact view, clipboard fallback, and X intent — all using real URL state.
+- **Filter state now lives in the URL** on the two filter-heavy tools: Money (`?tab&level&group&party&q`) and Districts (`?type&district&layer`). Shared links reproduce the exact view. Verified: `?level=county&group=jp` restores the JP view; `?type=hd&district=131` restores HD-131.
+- **Dynamic OG images**: new `/api/og` edge route renders the share card server-side from query params (tool, section, description, up to 3 stats). Tested — returns a 1200×630 PNG.
+- **Per-tool OG metadata** added via layout files for all 9 share-enabled tools, so links unfurl with tool-specific cards on X/Threads/Slack.
+- Tested share on: where-is-the-dough, districts, city-budget (modal + OG render + live summary), and confirmed the remaining 5 tools (county-budget, bill-tracker, congressional-bills, consultant-flowchart, endorsement-flowchart, tirz) load the identical component with compatible props.
 
-### Beat pages (all four)
-- **Threads-style social feed** — single clean column, real avatars (pulled from X via unavatar), name + handle + time, post photos supported, action-icon row, thread connector lines.
-- "Who Covers It" tab: journalist directory + hashtag library per beat.
-- Houston Landing scrubbed everywhere (closed 2026); blogs page marks it Closed.
-- **Congressional delegation corrected**: was 8 members including Pete Olson (left office 2021) and McCaul CD-10 (not a Harris district). Now the verified 9: Crenshaw 2, Fletcher 7, Luttrell 8, Green 9, Menefee 18, Nehls 22, Garcia 29, Babin 36, Hunt 38.
+### Districts map (Loop 2)
+- **Heat Check parity:** every precinct now keeps its data color at all times. Out-of-district precincts fade to 14% opacity instead of going flat grey — the county reads as one continuous colored surface with the selected district popped, plus a dark outline traced around the active district. No gaps, no cutouts. (The earlier "broken" look was out-of-district grey at 35% swallowing the map.)
+- Map loading state is now a shimmer skeleton ("Loading 1,172 precincts…"); a failed boundary fetch shows a deliberate error card with a retry button instead of hanging on "Loading…".
 
-### Districts tool — full rebuild
-- **Heat Check-style precinct map**: same precinct shapes as Heat Check (extracted from county results data), continuous fills across the whole county, white hairline borders, out-of-district precincts dimmed warm-gray. No more scattered "cutout" precincts.
-- **Real district assignment**: built `lib/precinct-crosswalk.json` by point-in-polygon of all 1,172 precinct centroids against Census TIGER 2024 (Congress, State Senate, State House) and Harris County GIS (JP/Constable precincts) + City of Houston GIS (council districts). The old code was assigning precincts by `precinct number % district count` — literally random.
-- **"Who Votes" layer (real)**: March 2026 primary ballots cast per precinct (D vs R, from the county results), choropleth + per-precinct tooltips + district-level aggregate in the sidebar.
-- **"Population Demographics" layer (pending — see Data Needs)**.
-- **Election Night layer**: upload a CSV (`precinct,Candidate A,Candidate B,…`) and the map colors every precinct by who leads, with margins in tooltips. Re-upload as counts update.
-- **VS card under the map**: incumbent vs challenger for November 2026 with cash-on-hand bars (Talarico/Cornyn, Hidalgo/Howell w/ runoff badge, Menefee/Green runoff, Finnie/Crenshaw). Seats without confirmed challengers show "awaiting filings."
-- Removed all fake seeded-random demographics from the old tool.
+### Stale election data (Loop 2)
+The May 2026 runoff results were already embedded in Heat Check but the rest of the site predated them. Now reconciled:
+- `lib/matchups-2026.ts` rebuilt from actual primary + runoff totals: 20 races keyed to the Districts tool, statuses set/partial, with vote margins in the detail strings.
+- Dashboard November ballot: County Judge and U.S. Senate now show as open races with the real nominees.
+- Money tool's Senate story card rewritten (was "Talarico outraising Cornyn" — both lost).
 
----
+### Losers removed / flagged sitewide (Loop 2) — full log
+**Removed from candidate framing:**
+| Person | Lost | Action |
+|---|---|---|
+| James Talarico | D Senate primary (Crockett 190,615 — Talarico 170,564 in Harris) | Removed from money tool data + story card; roster label → "lost D primary" |
+| Annise Parker | D County Judge runoff (55,395 vs Plummer 57,893) | Replaced in matchups by Plummer |
+| Warren Howell | R County Judge runoff (49,367 vs Sanchez 85,304) | Replaced in matchups by Sanchez |
+| Al Green | CD-18 D runoff (10,771 vs Menefee 26,546) | Already labeled "lost runoff" in money tool; CD-18 matchup resolved to Menefee vs Whitfield |
+| John Cornyn | R Senate runoff (52,041 vs Paxton 93,872 in Harris) | Matchup → Paxton; money label → "lost runoff — term ends Jan 2027" (kept: sitting senator) |
 
-## 2. Data You Need to Provide (exact asks)
+**Flagged, not removed (still hold office until Jan 2027):**
+| Person | Why flagged | Where |
+|---|---|---|
+| Al Green (CD-9) | Lost CD-18 runoff, didn't seek CD-9 reelection | Congress-beat note: "Retiring — lost CD-18 runoff" |
+| Wesley Hunt (CD-38) | Lost R Senate primary, gave up seat | Congress-beat note: "Leaving — ran for Senate, lost primary" |
+| Hubert Vo (HD-149) | Lost D runoff to Darlene Breaux 1,053–1,623 | Matchup detail; still listed as sitting rep in politicians/bill-tracker (factually correct) |
+| Sharon Burney (JP 7-2), Bob Wolfe (JP 5-2) | Lost primary/runoff | Matchup notes; still sitting JPs |
+| Lina Hidalgo | Didn't run (not a loss) | County Judge race marked open; she remains County Judge in officials lists |
 
-1. **Census API key** — free, instant: https://api.census.gov/data/key_signup.html (the API now rejects keyless requests). Set it as `CENSUS_API_KEY` in `.env.local` and Vercel. Unlocks: population race/ethnicity/age + citizen-voting-age population (CVAP) per district → fills the Districts "Population" layer automatically.
-2. **Harris County voter file with vote history** — request from harrisvotes.com (Voter Registrar → Voter Registration Data Request). Needed format: CSV with at minimum `precinct, birth year, gender, vote history per election`. This is the only public source for *who actually shows up* demographics (race is modeled from surname/geography; age + gender are direct).
-3. **2026 county-court judge roster** — the county portal shows 24 filings under "Judge" searches but the scraper can't parse filer names from that result page. Until verified names are added to `data/finance-roster.json`, the "County Courts" money filter shows an explainer instead of rows.
+**Kept (historical records, year-tagged):** endorsement-flowchart and consultant-flowchart entries for Talarico/Edwards/etc. — they document who endorsed/worked for whom in past races, not current candidacies.
 
----
-
-## 3. Launch-Readiness Audit — Every Weakness, Direct
-
-### Trust problems (fix before promoting the site)
-1. **FEC live data returns $0 for all six federal candidates** — the leaderboard silently falls back to static numbers. If those static numbers are stale, you're showing wrong money with a "live" badge elsewhere on the page. Diagnose the FEC route or remove the badge.
-2. **Beat-page social posts are authored content, not real posts.** They read as if they're live pulls from X/Threads with timestamps ("2h ago") but they're hand-written. A journalist will notice in seconds. Either label the section "What the conversation looks like" or wire a real feed.
-3. **14 county officials still show "Pending" money** — including Hidalgo, Ellis, Garcia, Gonzalez, Teare. These are the most-watched officials in the county; the tool's headline promise ("cash for every official") is unmet. Their scanned PDFs exceeded extraction limits; manual entry of the 5 biggest names would close most of the gap.
-4. **JP money is from mixed filing periods** — Korduba's number is a 2021 filing, Treviño's is 2014 (most recent in the portal). The "as of" strings show it, but a casual reader compares them as if contemporaneous. Consider greying values older than 2024.
-5. **Seat-history lists in Districts contain unverified older entries** (e.g., pre-2000 holders). Spot-check before press attention.
-
-### Data gaps
-6. **No congressional members or JPs in `lib/politicians.ts`** — Districts VS cards show initials instead of photos for federal seats; JP seats have no "current rep" card. 53 politicians exist; adding ~25 (9 House + 16 JPs) completes coverage.
-7. **No county-court judges anywhere on the site** (politicians, money, districts).
-8. **`DISTRICT_INFO` lacks descriptions/history for CD-8, CD-36, CD-38, and all JP precincts** — sidebar shows a bare header for those.
-9. **Constables absent from harris-county-beat sidebar** despite being added to finance data.
-10. **Bob Wolfe and Louie Ditta (JPs)** — no portal filings found; confirm whether they file under different names.
-
-### Design inconsistencies
-11. **Three different hero styles** across tools (gradient+photo on beats, flat navy on money, navy gradient on districts). Pick one system.
-12. **Two different tab-bar styles** (rounded pills on money tool vs. rounded-top tabs on beats vs. sticky bar on city-hall).
-13. **Heat Check is an iframe with its own header/branding** — feels like leaving the site. Long-term: port it into the app shell like Districts now is.
-14. **Card radius/ring treatments vary** (1.75rem/1.35rem/2xl/3xl across tools).
-15. **Share button exists only on the money tool** — components/ShareButton.tsx exists but isn't used on beats/districts/heat-check.
-
-### Missing functionality
-16. **No URL state** on leaderboard or districts — filters can't be shared/bookmarked (your share button copies a URL that loses the current view).
-17. **Districts "Population" layer is an empty state** until the Census key arrives.
-18. **No mobile pass done this session** — the districts control rows (type pills + up to 24 district chips + layer toggle) will wrap heavily on a phone; the VS card grid likely cramps below ~360px. Needs a real device check.
-19. **Election-night upload doesn't persist** — refresh loses the results file (fine for v1, worth noting for election night ops).
-20. **No loading/error UI if `/data/harris-precincts.geojson` fails** — map just stays in "Loading…".
-
-### Done-but-verify (hot-reloaded on your local dev server now)
-- Money tool: County → "Justices of the Peace" chip should list 16 JPs.
-- Beats: Voices on Social tab should look like a Threads column with avatars; first post has a photo.
-- Districts: pick Congress → 18; map should fill the whole county with the district in color, everything else dimmed; VS card under the map shows Menefee vs Al Green runoff.
+### Mobile breaks (Loop 3)
+- `/tools/tv-station`: content panel overflowed to 454px at a 375px viewport (remote + non-wrapping pane). Fixed with a mobile min-width that forces the wrap. Now exactly 375.
+- `/tools/tirz`: sort bar overflowed to 379px. Converted to the shared chip-row. Now 375.
+- **All 23 routes audited at 375px** via same-origin iframe sweep — every route now ≤375px scroll width.
 
 ---
 
-## 4. Finance pipeline state
-- Pipeline: fetch ✓ (25 PDFs) → extract ✓ (7 high-confidence) → publish ✓ → merged into site ✓.
-- Discovery mode found judge filings but needs a parser fix for filer names (`scripts/fetch-finance-pdfs.mjs` discovery result page handling).
+## 2. What Was Added
+
+### Voter data in Districts (Loop 2)
+- **Real CVAP racial/ethnic composition** for every Congressional, State Senate, and State House district — extracted from the Census CVAP 2019–2023 special tabulation (the exact source you cited; the bulk CSV needs no API key). New file: `public/data/cvap-districts.json`. CD-18 example: 39% Black, 30% Hispanic, 23% White, 5% Asian of citizens of voting age.
+- **"Who Actually Votes Here" panel** under the VS card: party split of actual 2026 primary voters (real ballots), primary turnout rate (ballots ÷ CVAP), CVAP race bars, and an honest provenance note on what still requires the voter file.
+- VS card now resolves matchups for 20 races including all 9 Harris congressional districts, 7 state house seats, 3 JP precincts, SD-11, and County Judge.
+
+### Maintenance system (Loop 4)
+- `UPDATE-SCHEDULE.md` — every data source, grouped daily/quarterly/biannual/annual/election-cycle, with file paths and update commands.
+- `data/update-schedule.json` — machine-readable version with `maxAgeDays` per source.
+- `scripts/check-data-freshness.js` + `npm run check-freshness` — compares file mtimes vs the schedule, writes `DATA-FRESHNESS-REPORT.md` and `public/data/freshness.json`, exits non-zero when something is overdue (CI-friendly). Currently: 15/15 current.
+- `/admin/freshness` — unlinked, noindexed dashboard rendering the freshness snapshot.
+- `WEEKLY-CHECKLIST.md` — 10-minute Monday routine.
+
+### Design system (Loop 3)
+- New tokens + utilities in globals.css: `--radius-card`, `.hcp-card` (one card treatment), `.chip-row` (one filter-pill row treatment), `.tnum` (tabular numerals — applied to the money leaderboard), `.pressable` (button press micro-motion), `.skeleton` (shimmer loading), `.empty-state` (deliberate-looking empty states). Applied to districts controls, tirz sort bar, money leaderboard, map loading/error, admin table.
+
+---
+
+## 3. Decisions Made Autonomously
+1. **Lame ducks stay listed as officeholders.** "Remove every official who lost" was interpreted as removal from forward-looking candidate contexts only — deleting the sitting senator/JPs/state rep from officials lists would make the site factually wrong. They're flagged "term ends Jan 2027" instead.
+2. **Statewide nominees inferred from Harris-only data, with caveats.** Heat Check only holds Harris County totals. The Crockett and Paxton nominations are recorded as set, but each matchup's detail string says the basis is Harris results. (No Dem runoff existing for Senate implies an outright statewide winner; Harris had Crockett +5.5.)
+3. **Endorsement/consultant flowcharts keep losing candidates** as year-tagged historical records.
+4. **Per-tool OG metadata is static per tool; per-filter OG is via the share modal.** True per-URL OG tags would require converting 9 client pages to server-wrapper architecture — deferred, logged below.
+5. **Chip rows wrap on mobile rather than horizontally scroll.** A swipeable row was tried; DOM measurements vs rendered output disagreed under the preview's emulation, and wrapping is deterministic and accessible. No route overflows.
+6. **Design research done from knowledge, not live browsing** of Texas Tribune/Marshall Project/CityLab (the patterns applied — restrained type scale, one accent, tabular numerals, provenance lines, skeleton loading, micro-motion only — are their house idioms). Live side-by-side comparison wasn't worth the time cost.
+7. **Freshness uses file mtimes** with an explicit caveat (git clones reset mtimes). True content-based staleness would need per-source "asOf" parsing — overkill for v1.
+8. **Crockett added to money tool with $0/Pending** — her Senate committee finance isn't in any local data; FEC live route may fill it once her committee ID is added to the roster.
+
+## 4. Still Outstanding — with reasons
+1. **Census API key** (you): keyless access is fully shut off (verified again this session — HTTP "Missing Key" page). Without it: no age breakdowns, no ACS profile data for the Districts population layer. CVAP race data is in (bulk file needs no key). Get one at api.census.gov/data/key_signup.html → `.env.local` + Vercel as `CENSUS_API_KEY`.
+2. **Harris County voter file with vote history** (you): the only source for age ranges of actual voters, turnout across the last 3 elections, and primary-vs-general participation. harrisvotes.com → Voter Registrar → Voter Registration Data Request. Format: CSV with precinct, birth year, gender, per-election vote history. The "Who Actually Votes Here" panel states these gaps in-product.
+3. **FEC live route returns $0 for federal candidates** — still undiagnosed (likely missing/invalid FEC API key or dead committee IDs). Static fallbacks carry the page. Needs a session with the route's request/response.
+4. **Jasmine Crockett's Senate committee ID + finance** — shows "Pending" in the money tool until her FEC committee is added to `data/finance-roster.json`.
+5. **County court judges** — 24 portal filings found but filer names unparseable; needs the discovery-parser fix or a manual roster.
+6. **Top-5 pending county officials** (Hidalgo, Ellis, Garcia, Gonzalez, Teare) — scanned PDFs exceed extraction limits; manual entry is the fast path.
+7. **Per-URL OG tags** (filter state reflected in the unfurl image) — needs server-wrapper refactor per tool (decision #4).
+8. **Social posts on beat pages are authored content** styled as a live feed — unchanged this session; still the site's biggest trust risk. Label them or wire real APIs.
+9. **R-side nominees marked "presumed"** for CD-8/22/36 (primaries outside Harris data) and missing entirely for CD-29, SD-11, several HD/JP races — needs TX SOS statewide canvass.
+10. **Heat Check is still an iframe** with its own branding — porting it into the app shell is a larger refactor.
+11. **Election-night upload doesn't persist** across refresh (fine for v1; noted for election-night ops).
+12. **Before/after screenshots** were captured through the preview harness during this session rather than saved as image files — the preview's screenshot scaling was unreliable (zoomed compositing), so verification leaned on DOM measurements (scroll widths, computed styles). If you want a screenshot archive, say so and I'll script Playwright captures.
+
+---
+
+## What I need from you
+1. **Census API key** → `.env.local` + Vercel (`CENSUS_API_KEY`). Unlocks the population layer. 2 minutes.
+2. **Request the voter file** from harrisvotes.com (format above). Unlocks true turnout demographics.
+3. **An FEC API key** (free, api.data.gov) if you want the live federal numbers diagnosed — or just tell me to dig into the existing route.
+4. **County court judge roster** (or green-light a parser-fix session).
+5. Optional: statewide canvass source for the non-Harris R primaries (TX SOS results export) to upgrade "presumed" nominees.

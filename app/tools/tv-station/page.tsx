@@ -372,7 +372,7 @@ function RemoteControl({
       </div>
 
       {/* Channel info panel */}
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 max-md:min-w-[280px]">
         {/* Active channel hero */}
         <div
           className="rounded-2xl p-5 mb-3"
