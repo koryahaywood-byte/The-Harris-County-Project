@@ -91,51 +91,37 @@ function parseRssItems(xml: string): Array<{
   return items;
 }
 
-// ── Scrape og:image from an article URL (fast, head-only) ────────────────────
-// Follows redirects (Google News links → real article URL), extracts og:image.
-// Caps at 4s so it never blocks the dashboard render.
+// ── Fetch og:image via Microlink API ─────────────────────────────────────────
+// Microlink is a free metadata API that properly follows JS redirects
+// (e.g. Google News → real article URL) and returns the og:image.
+// Free tier: 100 req/day per IP — cached 30 min so 3 stories = 3 req per cycle.
 async function scrapeOgImage(articleUrl: string): Promise<string | null> {
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 4000);
+    const timeout = setTimeout(() => controller.abort(), 5000);
 
-    const res = await fetch(articleUrl, {
+    const api = `https://api.microlink.io?url=${encodeURIComponent(articleUrl)}&screenshot=false&video=false&audio=false`;
+    const res = await fetch(api, {
       signal: controller.signal,
-      headers: {
-        "User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
-        "Accept": "text/html",
-      },
-      // No cache — we want fresh og:image each revalidate cycle
+      headers: { "Accept": "application/json" },
       next: { revalidate: 1800 },
     });
     clearTimeout(timeout);
 
     if (!res.ok) return null;
+    const json = await res.json();
 
-    // Stream just the first 32 KB — enough to capture the <head> og:image tag
-    const reader = res.body?.getReader();
-    if (!reader) return null;
-    let html = "";
-    while (html.length < 32768) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      html += new TextDecoder().decode(value);
-      // Stop once we've passed </head>
-      if (html.includes("</head>")) break;
-    }
-    reader.cancel();
+    const img: string | null =
+      json?.data?.image?.url
+      ?? json?.data?.logo?.url
+      ?? null;
 
-    // Extract og:image content attribute
-    const match =
-      html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
-      ?? html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i)
-      ?? html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i)
-      ?? html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i);
+    // Reject tiny logos/icons masquerading as story images
+    const w = json?.data?.image?.width ?? 999;
+    const h = json?.data?.image?.height ?? 999;
+    if (!img || (w < 200 && h < 200)) return null;
 
-    const imgUrl = match?.[1]?.trim() ?? null;
-    // Reject placeholder/logo images (too small or branded)
-    if (!imgUrl || imgUrl.includes("logo") || imgUrl.includes("default") || imgUrl.includes("placeholder")) return null;
-    return imgUrl;
+    return img;
   } catch { return null; }
 }
 
@@ -251,8 +237,10 @@ export async function getDashboardData(): Promise<DashboardData> {
     daysAway: Math.ceil((new Date(next.date).getTime() - new Date(todayStr).getTime()) / 86400000),
   } : null;
 
+  // Countdown: only actual voting days (primary, runoff, general) — not filing or registration deadlines
+  const ELECTION_DAY_IDS = new Set(["primary-2026", "runoff-2026", "general-2026"]);
   const nextElectionEvent = EVENTS
-    .filter(e => e.category === "Elections" && e.importance === "high" && e.date > todayStr)
+    .filter(e => ELECTION_DAY_IDS.has(e.id) && e.date > todayStr)
     .sort((a, b) => a.date.localeCompare(b.date))[0] ?? null;
   const nextElection = nextElectionEvent ? {
     title: nextElectionEvent.title, date: nextElectionEvent.date,
