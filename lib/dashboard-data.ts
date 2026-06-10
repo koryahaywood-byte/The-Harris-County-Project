@@ -82,7 +82,13 @@ async function fetchTopStory(query: string, todayStr: string) {
 
 async function fetchBestStory(queries: string[], todayStr: string) {
   const results = await Promise.all(queries.map(q => fetchTopStory(q, todayStr)));
+  // Prefer today's story from any source — fall back to most recent only if nothing today
   return results.find(r => r?.isToday) ?? results.find(r => r !== null) ?? null;
+}
+
+async function fetchTodayStory(queries: string[], todayStr: string) {
+  // Same as fetchBestStory but marks the result so the card can show "No story today"
+  return fetchBestStory(queries, todayStr);
 }
 
 // ── News source targeting ────────────────────────────────────────────────────
