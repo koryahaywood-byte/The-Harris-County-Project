@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "finance-fetch": "node scripts/fetch-finance-pdfs.mjs",
+    "finance-extract": "node scripts/ingest-finance-pdfs.mjs",
+    "finance-merge": "node scripts/merge-finance-data.mjs",
+    "finance-publish": "node scripts/merge-finance-data.mjs --confirm",
+    "update-finance": "node scripts/fetch-finance-pdfs.mjs && node scripts/ingest-finance-pdfs.mjs && node scripts/merge-finance-data.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.100.1",
