@@ -125,18 +125,10 @@ function NewsCard({ story, tier }: { story: NewsStory | null; tier: keyof typeof
       <div className="flex flex-col flex-1 px-5 py-4 gap-2">
         {story ? (
           <>
-            {/* Only show if today */}
-            {story.isToday ? (
-              <span className="self-start text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
-                style={{ background: `${meta.color}15`, color: meta.color }}>
-                {timeAgo(story.pubDate)}
-              </span>
-            ) : (
-              <span className="self-start text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
-                style={{ background: "#fef3c7", color: "#b45309" }}>
-                No story today — showing recent
-              </span>
-            )}
+            <span className="self-start text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
+              style={{ background: `${meta.color}15`, color: meta.color }}>
+              {story.pubDate ? timeAgo(story.pubDate) : "Latest"}
+            </span>
             <a href={story.link} target="_blank" rel="noopener noreferrer" className="group/link flex-1">
               <h3 className="text-[14px] font-bold leading-snug line-clamp-3 group-hover/link:underline"
                 style={{ color: "var(--accent)", fontFamily: "var(--font-playfair), serif" }}>

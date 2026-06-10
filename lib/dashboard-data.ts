@@ -1,6 +1,7 @@
 // War room dashboard data layer.
-// Three news tiers sourced from the publications practitioners actually read.
-// Called by DashboardWidget (server component).
+// Primary: Google News RSS (aggregates paywalled publications, always fresh)
+// Fallback: Bing News RSS
+// Stories are always the most recent — never show "no story" for active publications.
 
 import { EVENTS } from "@/lib/civic-events";
 
@@ -31,7 +32,6 @@ export interface DashboardData {
   ballot: BallotRace[];
 }
 
-// Fallback landmark images per tier
 const FALLBACK_IMAGES: Record<string, string> = {
   federal: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Capitol_Building_Full_View.jpg/330px-Capitol_Building_Full_View.jpg",
   state:   "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/TexasStateCapitol-2010-01.JPG/330px-TexasStateCapitol-2010-01.JPG",
@@ -44,99 +44,131 @@ function isTodayDate(pubDate: string, todayStr: string): boolean {
   catch { return false; }
 }
 
-function parseBingItems(xml: string) {
+// ── RSS parser (handles Google News, Bing, Tribune, AP formats) ───────────────
+function parseRssItems(xml: string): Array<{
+  title: string; link: string; source: string; pubDate: string; image: string | null;
+}> {
   const items: Array<{ title: string; link: string; source: string; pubDate: string; image: string | null }> = [];
   const itemRe = /<item>([\s\S]*?)<\/item>/g;
   let m;
   while ((m = itemRe.exec(xml)) !== null) {
     const item = m[1];
-    const title = (item.match(/<title>([\s\S]*?)<\/title>/)?.[1]
-      ?.replace(/<!\[CDATA\[|\]\]>/g, "")
+
+    // Title — strip CDATA, HTML entities, trailing " - Source" suffixes
+    const rawTitle = item.match(/<title[^>]*>([\s\S]*?)<\/title>/)?.[1] ?? "";
+    const title = rawTitle
+      .replace(/<!\[CDATA\[|\]\]>/g, "")
+      .replace(/<[^>]+>/g, "")
       .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
-      .replace(/\s[-|]\s[^-|]{3,60}$/, "").trim() ?? "");
-    const rawLink = item.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.trim() ?? "";
-    const realUrl = rawLink.match(/[?&]url=([^&]+)/)?.[1];
-    const link    = realUrl ? decodeURIComponent(realUrl) : rawLink;
+      .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+      .replace(/\s[-|]\s[^-|]{3,60}$/, "")
+      .trim();
+
+    // Link — Google News wraps in <a>, Bing uses redirect URL
+    const rawLink = item.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.trim()
+      ?? item.match(/<guid[^>]*>([\s\S]*?)<\/guid>/)?.[1]?.trim() ?? "";
+    const bingUrl  = rawLink.match(/[?&]url=([^&]+)/)?.[1];
+    const link = bingUrl ? decodeURIComponent(bingUrl) : rawLink;
+
+    // Pub date
     const pubDate = item.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1]?.trim() ?? "";
-    const source  = item.match(/<News:Source>([\s\S]*?)<\/News:Source>/)?.[1]?.trim() ?? "";
-    const image   = item.match(/<News:Image>([\s\S]*?)<\/News:Image>/)?.[1]?.trim() ?? null;
+
+    // Source — Google News puts it in <source>, Bing in <News:Source>
+    const source =
+      item.match(/<source[^>]*>([\s\S]*?)<\/source>/)?.[1]?.replace(/<!\[CDATA\[|\]\]>/g, "").trim()
+      ?? item.match(/<News:Source>([\s\S]*?)<\/News:Source>/)?.[1]?.trim()
+      ?? "";
+
+    // Image — Bing <News:Image>, or og:image in enclosure, or media:content
+    const image =
+      item.match(/<News:Image>([\s\S]*?)<\/News:Image>/)?.[1]?.trim()
+      ?? item.match(/<media:content[^>]+url="([^"]+)"/)?.[1]
+      ?? item.match(/<enclosure[^>]+url="([^"]+)"/)?.[1]
+      ?? null;
+
     if (title && link) items.push({ title, link, source, pubDate, image });
   }
   return items;
 }
 
-async function fetchTopStory(query: string, todayStr: string) {
+// ── Fetch from a URL, parse, return best story ────────────────────────────────
+async function fetchFromFeed(url: string, todayStr: string, sourceName?: string) {
   try {
-    const res = await fetch(
-      `https://www.bing.com/news/search?q=${encodeURIComponent(query)}&format=rss`,
-      { next: { revalidate: 1800 }, headers: { "User-Agent": "Mozilla/5.0 (compatible; HarrisCountyProject/1.0)" } }
-    );
+    const res = await fetch(url, {
+      next: { revalidate: 1800 },
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; HarrisCountyProject/1.0)" },
+    });
     if (!res.ok) return null;
-    const items = parseBingItems(await res.text());
+    const xml   = await res.text();
+    const items = parseRssItems(xml);
     if (!items.length) return null;
+
+    // Prefer today's story, fall back to most recent
     const todayItems = items.filter(i => isTodayDate(i.pubDate, todayStr));
     const candidate  = todayItems[0] ?? items[0];
-    return { ...candidate, isToday: isTodayDate(candidate.pubDate, todayStr) };
+    return {
+      ...candidate,
+      source: sourceName ?? candidate.source,
+      isToday: isTodayDate(candidate.pubDate, todayStr),
+    };
   } catch { return null; }
 }
 
-async function fetchBestStory(queries: string[], todayStr: string) {
-  const results = await Promise.all(queries.map(q => fetchTopStory(q, todayStr)));
-  // Prefer today's story from any source — fall back to most recent only if nothing today
+// ── Google News RSS (always has today's headlines from paywalled sources) ─────
+const GN = "https://news.google.com/rss/search?hl=en-US&gl=US&ceid=US:en&q=";
+
+async function fetchTier(feeds: Array<{ url: string; source?: string }>, todayStr: string) {
+  // Try all feeds in parallel — prefer today's story from any source
+  const results = await Promise.all(feeds.map(f => fetchFromFeed(f.url, todayStr, f.source)));
   return results.find(r => r?.isToday) ?? results.find(r => r !== null) ?? null;
 }
 
-async function fetchTodayStory(queries: string[], todayStr: string) {
-  // Same as fetchBestStory but marks the result so the card can show "No story today"
-  return fetchBestStory(queries, todayStr);
-}
+// ── Feed definitions ──────────────────────────────────────────────────────────
 
-// ── News source targeting ────────────────────────────────────────────────────
-// LOCAL  — Houston Chronicle politics + Houston Public Media + Click2Houston
-// STATE  — Texas Tribune + Austin American-Statesman + Texas Monthly + AP Texas
-// FEDERAL — NYT Politics + Washington Post + Wall Street Journal + AP Politics
-
-const LOCAL_QUERIES = [
-  "site:houstonchronicle.com politics Harris County 2026",
-  "Houston Chronicle Harris County politics election",
-  "Houston Chronicle Mayor City Council Harris County",
-  "Harris County politics Houston government 2026",
-  "Houston politics election Lina Hidalgo Whitmire 2026",
+// LOCAL — Chronicle is primary. Google News aggregates their paywalled content.
+const LOCAL_FEEDS = [
+  { url: `${GN}${encodeURIComponent("Houston Chronicle politics")}`, source: "Houston Chronicle" },
+  { url: `${GN}${encodeURIComponent("Houston politics Harris County government")}` },
+  { url: `${GN}${encodeURIComponent("site:houstonchronicle.com politics")}`, source: "Houston Chronicle" },
+  { url: "https://www.bing.com/news/search?q=Houston+Chronicle+politics+Harris+County&format=rss" },
+  { url: "https://www.bing.com/news/search?q=Harris+County+Houston+politics+government&format=rss" },
 ];
 
-const STATE_QUERIES = [
-  "site:texastribune.org Texas politics 2026",
-  "Texas Tribune Texas politics election 2026",
-  "Texas Tribune Austin Statesman Texas government",
-  "Texas politics Greg Abbott 2026 election",
-  "Texas legislature 2026 Texas Monthly AP Texas",
+// STATE — Tribune is gold standard for TX political coverage
+const STATE_FEEDS = [
+  { url: "https://www.texastribune.org/feeds/", source: "Texas Tribune" },
+  { url: `${GN}${encodeURIComponent("Texas Tribune Texas politics")}`, source: "Texas Tribune" },
+  { url: `${GN}${encodeURIComponent("Texas politics Austin government 2026")}` },
+  { url: "https://www.bing.com/news/search?q=Texas+Tribune+Texas+politics&format=rss" },
+  { url: "https://www.bing.com/news/search?q=Texas+politics+Austin+Statesman&format=rss" },
 ];
 
-const FEDERAL_QUERIES = [
-  "site:nytimes.com politics Congress 2026 election",
-  "Washington Post Congress Senate election 2026",
-  "Wall Street Journal Congress midterm 2026 politics",
-  "AP politics Congress Senate 2026 election results",
-  "federal politics Congress midterms 2026",
+// FEDERAL — NYT/WaPo/WSJ political coverage
+const FEDERAL_FEEDS = [
+  { url: `${GN}${encodeURIComponent("Washington Post politics Congress")}`, source: "Washington Post" },
+  { url: `${GN}${encodeURIComponent("New York Times politics Congress 2026")}`, source: "New York Times" },
+  { url: `${GN}${encodeURIComponent("federal politics Congress Senate midterms 2026")}` },
+  { url: "https://www.bing.com/news/search?q=Washington+Post+Congress+politics&format=rss" },
+  { url: "https://www.bing.com/news/search?q=NYT+politics+Congress+Senate+2026&format=rss" },
 ];
 
-// November 2026 Harris County ballot — update as candidates file/withdraw
+// November 2026 Harris County ballot
 const NOVEMBER_2026_BALLOT: BallotRace[] = [
-  { office: "Harris County Judge",      incumbent: "Lina Hidalgo (D)",    party: "D", competitive: "Toss-up", href: "/politicians" },
-  { office: "U.S. House TX-07",         incumbent: "Lizzie Fletcher (D)", party: "D", competitive: "Toss-up", href: "/tools/congress-beat" },
-  { office: "U.S. Senate (TX)",         incumbent: "John Cornyn (R)",     party: "R", competitive: "Lean R",  href: "/tools/congress-beat" },
-  { office: "TX Governor",              incumbent: "Greg Abbott (R)",     party: "R", competitive: "Lean R",  href: "/tools/state-beat" },
-  { office: "HC Commissioner Pct. 2",   incumbent: "Adrian Garcia (D)",   party: "D", competitive: "Lean D", href: "/politicians" },
-  { office: "U.S. House TX-22",         incumbent: "Troy Nehls (R)",      party: "R", competitive: "Lean R",  href: "/tools/congress-beat" },
+  { office: "Harris County Judge",     incumbent: "Lina Hidalgo (D)",    party: "D", competitive: "Toss-up", href: "/politicians" },
+  { office: "U.S. House TX-07",        incumbent: "Lizzie Fletcher (D)", party: "D", competitive: "Toss-up", href: "/tools/congress-beat" },
+  { office: "U.S. Senate (TX)",        incumbent: "John Cornyn (R)",     party: "R", competitive: "Lean R",  href: "/tools/congress-beat" },
+  { office: "TX Governor",             incumbent: "Greg Abbott (R)",     party: "R", competitive: "Lean R",  href: "/tools/state-beat" },
+  { office: "HC Commissioner Pct. 2",  incumbent: "Adrian Garcia (D)",   party: "D", competitive: "Lean D", href: "/politicians" },
+  { office: "U.S. House TX-22",        incumbent: "Troy Nehls (R)",      party: "R", competitive: "Lean R",  href: "/tools/congress-beat" },
 ];
 
 export async function getDashboardData(): Promise<DashboardData> {
   const todayStr = new Date().toISOString().slice(0, 10);
 
   const [localRaw, stateRaw, federalRaw] = await Promise.all([
-    fetchBestStory(LOCAL_QUERIES,   todayStr),
-    fetchBestStory(STATE_QUERIES,   todayStr),
-    fetchBestStory(FEDERAL_QUERIES, todayStr),
+    fetchTier(LOCAL_FEEDS,   todayStr),
+    fetchTier(STATE_FEEDS,   todayStr),
+    fetchTier(FEDERAL_FEEDS, todayStr),
   ]);
 
   const local   = localRaw   ? { ...localRaw,   image: localRaw.image   ?? FALLBACK_IMAGES.local   } : null;
