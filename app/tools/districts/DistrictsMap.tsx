@@ -31,7 +31,7 @@ export interface DistrictsMapProps {
   highlightedPrecincts: Set<string>;   // precincts in the selected district
   precinctData: Record<string, PrecinctDemoData>;
   // Real district boundary overlay
-  districtType: "TX State House" | "TX State Senate" | null;
+  districtType: "TX State House" | "TX State Senate" | "U.S. Congressional" | null;
   districtNum: string | null;
 }
 
@@ -149,8 +149,13 @@ export default function DistrictsMap({
   const lastBoundaryKey = useRef("");
   useEffect(() => {
     if (!districtType || !districtNum) { setBoundaryGeo(null); return; }
-    if (districtType !== "TX State House" && districtType !== "TX State Senate") { setBoundaryGeo(null); return; }
-    const type = districtType === "TX State Senate" ? "senate" : "house";
+    const typeMap: Record<string, string> = {
+      "TX State House":     "house",
+      "TX State Senate":    "senate",
+      "U.S. Congressional": "congressional",
+    };
+    const type = typeMap[districtType];
+    if (!type) { setBoundaryGeo(null); return; }
     const key = `${type}-${districtNum}`;
     if (key === lastBoundaryKey.current) return;
     lastBoundaryKey.current = key;

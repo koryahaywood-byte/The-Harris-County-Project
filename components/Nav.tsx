@@ -13,6 +13,17 @@ export default function Nav() {
     pathname.startsWith("/blogs") ||
     pathname.startsWith("/politicians");
 
+  // Only these tools pull live data — everything else is static
+  const LIVE_TOOLS = [
+    "/tools/heat-check",
+    "/tools/where-is-the-dough",
+    "/tools/bill-tracker",
+    "/tools/congressional-bills",
+    "/tools/districts",
+    "/tools/city-hall",
+  ];
+  const isLive = LIVE_TOOLS.some((t) => pathname.startsWith(t));
+
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", handler, { passive: true });
@@ -48,13 +59,24 @@ export default function Nav() {
             The Harris County Project
           </span>
 
-          {/* Alive indicator */}
+          {/* Live / Static indicator */}
           <span className="ml-auto flex items-center gap-1.5">
-            <span className="relative flex h-2 w-2">
-              <span className="alive-halo absolute inline-flex h-full w-full rounded-full bg-emerald-400" />
-              <span className="alive-pulse relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-            </span>
-            <span className="text-[10px] font-semibold text-white/35 uppercase tracking-[0.18em]">Live</span>
+            {isLive ? (
+              <>
+                <span className="relative flex h-2 w-2">
+                  <span className="alive-halo absolute inline-flex h-full w-full rounded-full bg-emerald-400" />
+                  <span className="alive-pulse relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                </span>
+                <span className="text-[10px] font-semibold text-white/35 uppercase tracking-[0.18em]">Live</span>
+              </>
+            ) : (
+              <>
+                <span className="relative flex h-2 w-2">
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-white/20" />
+                </span>
+                <span className="text-[10px] font-semibold text-white/25 uppercase tracking-[0.18em]">Static</span>
+              </>
+            )}
           </span>
         </div>
       </header>

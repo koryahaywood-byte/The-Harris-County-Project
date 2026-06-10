@@ -557,9 +557,10 @@ export default function DistrictsPage() {
                     highlightedPrecincts={highlightedPrecincts}
                     precinctData={allPrecinctData}
                     districtType={
-                      selectedType === "TX State House" || selectedType === "TX State Senate"
-                        ? selectedType
-                        : null
+                      selectedType === "TX State House"     ? "TX State House"     :
+                      selectedType === "TX State Senate"    ? "TX State Senate"    :
+                      selectedType === "U.S. Congressional" ? "U.S. Congressional" :
+                      null
                     }
                     districtNum={selectedDistrict ?? null}
                   />
@@ -567,11 +568,13 @@ export default function DistrictsPage() {
               </div>
             </div>
 
-            {highlightedPrecincts.size > 0 && (
-              <p className="mt-2 text-[11px]" style={{ color: "#9ca3af" }}>
-                {highlightedPrecincts.size} precincts highlighted — approximate boundaries (TX Legislative Council crosswalk pending)
-              </p>
-            )}
+            <p className="mt-2 text-[11px]" style={{ color: "#9ca3af" }}>
+              {selectedType === "TX State House" || selectedType === "TX State Senate" || selectedType === "U.S. Congressional"
+                ? "District boundary from Census TIGER · Precinct shapes shown for reference"
+                : selectedType === "Harris County JP" || selectedType === "City Council"
+                ? "Precinct boundaries approximate — Census TIGER district crosswalk unavailable for this district type"
+                : ""}
+            </p>
           </div>
 
           {/* Right: Seat Portrait */}
