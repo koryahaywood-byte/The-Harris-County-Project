@@ -8,6 +8,12 @@
 // (react-force-graph-3d upgrade slots in here once the dependency is approved.)
 
 import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+
+const DonorGraph3D = dynamic(() => import("./DonorGraph3D"), {
+  ssr: false,
+  loading: () => <div className="skeleton h-[430px] rounded-xl" />,
+});
 
 const NAVY = "#1a3a5c";
 const MUTED = "#9ca3af";
@@ -91,6 +97,7 @@ function NetworkGraph({ net, donors, focus }: { net: DonorNetwork; donors: Donor
 export function MoneyTrailView() {
   const [net, setNet] = useState<DonorNetwork | null>(null);
   const [focus, setFocus] = useState<string | undefined>();
+  const [mode, setMode] = useState<"2d" | "3d">("2d");
   const [err, setErr] = useState(false);
   useEffect(() => { loadNetwork().then(setNet).catch(() => setErr(true)); }, []);
 
@@ -99,25 +106,38 @@ export function MoneyTrailView() {
 
   const shared = net.donors.filter(d => d.recipients.length >= 2);
   const graphDonors = [...shared, ...net.donors.filter(d => d.recipients.length === 1).slice(0, 120)];
-  const focusDonor = shared.find(d => d.name === focus);
 
   return (
     <div className="space-y-5">
       <div className="hcp-card p-5 md:p-6">
-        <div className="flex items-baseline justify-between flex-wrap gap-1 mb-1">
+        <div className="flex items-baseline justify-between flex-wrap gap-2 mb-1">
           <h3 className="text-lg font-bold" style={{ color: NAVY, fontFamily: "var(--font-playfair,serif)" }}>
             The Donor Network
           </h3>
-          <p className="text-[10px]" style={{ color: MUTED }}>
-            {net.donors.length} itemized donors · {shared.length} fund 2+ officials
-          </p>
+          <div className="flex items-center gap-3">
+            <div className="flex gap-1">
+              {(["2d", "3d"] as const).map(m => (
+                <button key={m} onClick={() => setMode(m)}
+                  className="text-[10px] font-bold px-2.5 py-1 rounded-full transition-all uppercase"
+                  style={{
+                    background: mode === m ? NAVY : "#fff", color: mode === m ? "#fff" : "#374151",
+                    border: `1px solid ${mode === m ? NAVY : "#e5e7eb"}`,
+                  }}>{m}</button>
+              ))}
+            </div>
+            <p className="text-[10px]" style={{ color: MUTED }}>
+              {net.donors.length} itemized donors · {shared.length} fund 2+ officials
+            </p>
+          </div>
         </div>
         <p className="text-xs leading-relaxed mb-4" style={{ color: "#374151" }}>
-          Officials on the ring, donors between them. <span style={{ color: "#d97706" }}>Amber</span> donors
+          Officials and the donors who fund them. <span style={{ color: "#d97706" }}>Amber</span> donors
           give to more than one tracked official — the connective tissue of Harris County money.
-          Line weight is contribution size. Hover any node.
+          Line weight is contribution size. Hover any node{mode === "3d" ? ", drag to orbit" : ""}.
         </p>
-        <NetworkGraph net={net} donors={graphDonors} focus={focus} />
+        {mode === "3d"
+          ? <DonorGraph3D net={net} />
+          : <NetworkGraph net={net} donors={graphDonors} focus={focus} />}
         <p className="text-[10px] mt-2 leading-relaxed" style={{ color: MUTED }}>{net.coverage}</p>
       </div>
 

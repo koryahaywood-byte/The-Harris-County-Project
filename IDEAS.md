@@ -31,9 +31,8 @@ Last updated: June 11, 2026
 7. **Head to Head** — /compare/[slugA]/[slugB] with both cards + 7-category leader table + OG
 8. **Quote of the day** — "Moment in time" Houston/Harris history (21 dated moments, nearest-anniversary picker) on the Briefing quote card
 
-## BLOCKED ON DEPENDENCY APPROVAL (user must OK install)
-- **3D landing hero** (R3F extruded precinct map: height=turnout, color=lean, rotate + scroll transition) — needs `three`, `@react-three/fiber`, `@react-three/drei`
-- **Money Trail 3D force graph** — needs `react-force-graph-3d` (flat SVG network shipped in the meantime)
+9. **3D landing hero** (approved + shipped) — extruded precinct map, height=2026 turnout, color=Heat Check lean, slow rotation, scroll tilt/sink + fade, navy left-edge gradient keeps the headline clean. Built in PLAIN three.js — @react-three/fiber's reconciler silently fails to initialize against Next 16's bundled React, so the renderer is managed imperatively (fiber/drei installed but unused; keep for future or prune)
+10. **Money Trail 3D force graph** (approved + shipped) — react-force-graph-3d behind a 2D/3D toggle on the Money Trail tab; officials as party-color spheres, amber shared donors, edge width = contribution. Desktop-only by usage (heavy), 2D SVG remains the default
 
 ## KEPT BUT NOT DONE (do not lose these)
 - **Hidden tools needing rework before relisting** (June 10): endorsement-flowchart, consultant-flowchart, infrastructure-funding — live at URLs with "unlisted" banner; restore cards from git history when reworked

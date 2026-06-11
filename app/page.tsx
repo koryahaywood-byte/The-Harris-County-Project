@@ -2,6 +2,7 @@ import Link from "next/link";
 import ScrollReveal from "@/components/ScrollReveal";
 import DashboardWidget from "@/components/DashboardWidget";
 import ToolboxOpener from "@/components/ToolboxOpener";
+import Hero3D from "@/components/Hero3D";
 
 /* ── Tool catalogue ─────────────────────────────────────────────────────── */
 interface Tool {
@@ -364,6 +365,8 @@ export default function Home() {
       <section className="bg-[var(--accent)] text-white flex flex-col justify-center px-6 py-24 md:py-32 relative overflow-hidden min-h-[90dvh]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_60%_40%,rgba(37,99,168,0.4),transparent)]" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_50%_at_90%_80%,rgba(125,211,252,0.06),transparent)]" />
+        {/* 3D extruded precinct map — height = turnout, color = partisan lean */}
+        <Hero3D />
 
         <div className="max-w-5xl mx-auto w-full relative z-10">
           <p className="text-sky-300/70 text-[10px] font-bold uppercase tracking-[0.3em] mb-10 flex items-center gap-2">
