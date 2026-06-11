@@ -3,6 +3,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import DashboardWidget from "@/components/DashboardWidget";
 import ToolboxOpener from "@/components/ToolboxOpener";
 import Hero3D from "@/components/Hero3D";
+import TerrainReport from "@/components/TerrainReport";
 
 /* ── Tool catalogue ─────────────────────────────────────────────────────── */
 interface Tool {
@@ -426,6 +427,13 @@ export default function Home() {
 
       {/* ── DASHBOARD WIDGET ─────────────────────────────────────── */}
       <DashboardWidget />
+
+      {/* ── THE TERRAIN REPORT — automated signals feed ──────────── */}
+      <section className="px-6 pb-4" style={{ background: "#f5f3ef" }}>
+        <div className="max-w-6xl mx-auto pt-14">
+          <TerrainReport />
+        </div>
+      </section>
 
       {/* ── FEATURED FLAGSHIP TOOLS ──────────────────────────────── */}
       <FeaturedSection />

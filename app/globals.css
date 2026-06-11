@@ -37,6 +37,19 @@
   box-shadow: var(--ring-card);
 }
 
+/* ── Terrain intelligence motif ─────────────────────────────────────────────
+   Subtle topographic contour texture — the platform reads like a field map.
+   Light surfaces get navy contours at ~4% opacity; dark surfaces get white.
+   Refined texture, never decorative noise. */
+.topo-light {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280' viewBox='0 0 280 280'%3E%3Cg fill='none' stroke='%231a3a5c' stroke-opacity='0.045' stroke-width='1'%3E%3Cpath d='M20 250c40-60 10-90 50-120s90-10 110-50 60-40 90-60'/%3E%3Cpath d='M0 230c50-55 25-85 62-112s85-15 108-52 58-36 92-58'/%3E%3Cpath d='M-15 210c55-50 40-80 74-104s80-20 106-54 56-32 94-56'/%3E%3Cpath d='M40 280c35-65 0-95 38-128s95-5 112-48 62-44 86-62'/%3E%3Cpath d='M65 280c30-60-5-88 32-122s90-8 110-46'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 280px 280px;
+}
+.topo-dark {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280' viewBox='0 0 280 280'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.05' stroke-width='1'%3E%3Cpath d='M20 250c40-60 10-90 50-120s90-10 110-50 60-40 90-60'/%3E%3Cpath d='M0 230c50-55 25-85 62-112s85-15 108-52 58-36 92-58'/%3E%3Cpath d='M-15 210c55-50 40-80 74-104s80-20 106-54 56-32 94-56'/%3E%3Cpath d='M40 280c35-65 0-95 38-128s95-5 112-48 62-44 86-62'/%3E%3Cpath d='M65 280c30-60-5-88 32-122s90-8 110-46'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 280px 280px;
+}
+
 /* Chip row: consistent wrap + gap for filter pills across all tools */
 .chip-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .chip-row > * { flex-shrink: 0; }

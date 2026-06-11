@@ -12,6 +12,7 @@ import { getFinanceByName, fmt } from "@/lib/campaign-finance";
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
 import ShareButton from "@/components/ShareButton";
 import DistrictHistory from "@/components/DistrictHistory";
+import TerrainReport from "@/components/TerrainReport";
 import { useUrlState, readUrlParams } from "@/lib/useUrlState";
 import type { MapLayer, PrecinctTurnout, ResultsUpload, PrecinctFeature } from "./DistrictsMap";
 
@@ -594,6 +595,11 @@ export default function DistrictsPage() {
             {/* Historical depth layer — four cycles, combined view, surname module */}
             <div className="mt-4">
               <DistrictHistory field={districtField} value={district} />
+            </div>
+
+            {/* Terrain Report — turnout signals */}
+            <div className="mt-4">
+              <TerrainReport types={["turnout"]} compact />
             </div>
           </div>
 

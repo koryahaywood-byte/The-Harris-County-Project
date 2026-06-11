@@ -1,0 +1,4 @@
+{"job":"jp-courts","status":"blocked","detail":"JP records are on Harris County's Odyssey portal (PACER is federal-only). Needs a source decision: Odyssey scraper, January Advisers eviction dataset, or TDCJ bulk export.","error":null,"at":"2026-06-11T16:33:08.959Z","durationMs":1}
+{"job":"census-acs","status":"blocked","detail":"CENSUS_API_KEY not set — get one at api.census.gov/data/key_signup.html (2 min), add to .env.local + Vercel","error":null,"at":"2026-06-11T16:33:08.990Z","durationMs":1}
+{"job":"commissioners-court","status":"ok","detail":"agenda index archived (79KB) — vote extraction is the next parser step","error":null,"at":"2026-06-11T16:33:09.485Z","durationMs":467}
+{"job":"terrain-report","status":"ok","detail":"signals rebuilt","error":null,"at":"2026-06-11T16:33:09.603Z","durationMs":41}

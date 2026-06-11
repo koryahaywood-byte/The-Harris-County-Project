@@ -1,0 +1,42 @@
+{
+ "generatedAt": "2026-06-11T16:33:09.598Z",
+ "framing": "Statistical screens, not conclusions. Every signal shows its sources and confidence; the judgment is the reader's.",
+ "signals": [
+  {
+   "id": "turnout-drop-2024",
+   "type": "turnout",
+   "severity": "significant",
+   "headline": "16 precincts shed 18+ points of presidential-year turnout between 2020 and 2024",
+   "body": "Steepest: precinct 0952 (61% → 30% of registered voters). Heaviest concentration: CD-29 (4 precincts). Same-type cycles compared (presidential vs presidential), registration-adjusted, precincts under 500 registered excluded.",
+   "sources": [
+    "TLC TED voter data 2020G/2024G",
+    "TX SOS registration",
+    "current precinct lines"
+   ],
+   "confidence": "high",
+   "confidenceNote": "Official certified counts; the screen measures change, not its cause — boundary-stable join covers 1,170 of 1,172 precincts.",
+   "links": [
+    {
+     "label": "Districts — history layer",
+     "href": "/tools/districts"
+    }
+   ],
+   "entities": {
+    "precincts": [
+     "0952",
+     "0954",
+     "1041",
+     "0541",
+     "1092",
+     "1080",
+     "0497",
+     "0045A",
+     "0182",
+     "1040",
+     "0865",
+     "0317"
+    ]
+   }
+  }
+ ]
+}

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { FINANCE_DATA_MERGED, fmt, type CandidateFinance } from "@/lib/campaign-finance";
 import ShareButton from "@/components/ShareButton";
 import { MoneyTrailView } from "@/components/MoneyTrail";
+import TerrainReport from "@/components/TerrainReport";
 import { useUrlState, readUrlParams } from "@/lib/useUrlState";
 import type { FECCandidate } from "@/app/api/finance/fec/route";
 import type { TECCandidate } from "@/app/api/finance/tec/route";
@@ -330,7 +331,12 @@ export default function WhereIsTheDough() {
         )}
 
         {/* ── MONEY TRAIL ───────────────────────────────────────────── */}
-        {tab === "trail" && <MoneyTrailView />}
+        {tab === "trail" && (
+          <div className="space-y-8">
+            <MoneyTrailView />
+            <TerrainReport types={["money"]} compact />
+          </div>
+        )}
 
         {/* ── LEADERBOARD ───────────────────────────────────────────── */}
         {tab === "leaderboard" && (
