@@ -8,6 +8,7 @@ import { computeStats, STAT_LABELS } from "@/lib/politician-stats";
 import { computeAccountability } from "@/lib/accountability";
 import type { Politician } from "@/lib/politicians";
 import FollowButton from "@/components/FollowButton";
+import DistrictHistory from "@/components/DistrictHistory";
 import Link from "next/link";
 
 // ── Accountability Score panel (hero) ────────────────────────────────────────
@@ -1442,6 +1443,29 @@ export default function PoliticianProfile() {
             )}
 
           </div>
+
+          {/* ── District shift — historical depth layer ── */}
+          {(() => {
+            const d = pol.district;
+            const filt: [string, string] | null =
+              d.startsWith("SD-") ? ["sd", d.slice(3)] :
+              d.startsWith("HD-") ? ["hd", d.slice(3)] :
+              d.startsWith("CD-") ? ["cd", d.slice(3)] :
+              pol.chamber === "City" && d.startsWith("District ") ? ["council", d.slice(9)] :
+              pol.chamber === "County" && d.startsWith("Precinct ") ? ["pct", d.slice(9)] :
+              pol.chamber === "County" && d === "Countywide" ? [null as unknown as string, null as unknown as string] :
+              null;
+            if (filt === null && !(pol.chamber === "County" && d === "Countywide")) return null;
+            const [f, v] = filt ?? [null, null];
+            return (
+              <div className="max-w-5xl mx-auto px-4 pb-12">
+                <DistrictHistory
+                  field={f} value={v}
+                  title={`How ${d === "Countywide" ? "Harris County" : d} Has Shifted`}
+                />
+              </div>
+            );
+          })()}
         </div>
       )}
     </div>

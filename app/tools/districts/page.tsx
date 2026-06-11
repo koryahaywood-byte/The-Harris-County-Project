@@ -11,6 +11,7 @@ import { getMatchup } from "@/lib/matchups-2026";
 import { getFinanceByName, fmt } from "@/lib/campaign-finance";
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
 import ShareButton from "@/components/ShareButton";
+import DistrictHistory from "@/components/DistrictHistory";
 import { useUrlState, readUrlParams } from "@/lib/useUrlState";
 import type { MapLayer, PrecinctTurnout, ResultsUpload, PrecinctFeature } from "./DistrictsMap";
 
@@ -589,6 +590,11 @@ export default function DistrictsPage() {
             {/* VS card */}
             <VsCard dKey={type === "countywide" ? "HC-Countywide" : dKey} office={polLabel} />
             <VoterProfile type={type} district={district} agg={agg} cvap={cvap} />
+
+            {/* Historical depth layer — four cycles, combined view, surname module */}
+            <div className="mt-4">
+              <DistrictHistory field={districtField} value={district} />
+            </div>
           </div>
 
           {/* Right: Seat Portrait */}
