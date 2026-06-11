@@ -5,7 +5,51 @@ import { POLITICIANS } from "@/lib/politicians";
 import { getFinanceByName, fmt } from "@/lib/campaign-finance";
 import { computeBadges, TIER_STYLES, type Badge } from "@/lib/badges";
 import { computeStats, STAT_LABELS } from "@/lib/politician-stats";
+import { computeAccountability } from "@/lib/accountability";
+import type { Politician } from "@/lib/politicians";
 import Link from "next/link";
+
+// ── Accountability Score panel (hero) ────────────────────────────────────────
+function AccountabilityPanel({ pol, billCount, lawCount }: { pol: Politician; billCount: number; lawCount: number }) {
+  const [open, setOpen] = useState(false);
+  const acct = computeAccountability(pol, { billCount, lawCount });
+  const color = acct.score >= 75 ? "#4ade80" : acct.score >= 50 ? "#fbbf24" : "#f87171";
+  return (
+    <div className="rounded-2xl px-4 py-3"
+      style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}>
+      <div className="flex items-center justify-between cursor-pointer" onClick={() => setOpen(o => !o)}>
+        <div>
+          <p className="text-[9px] font-black uppercase tracking-[0.22em] text-white/40">Accountability Score</p>
+          <Link href="/methodology" onClick={e => e.stopPropagation()}
+            className="text-[10px] text-white/35 underline hover:text-white/60 transition-colors">
+            How this is computed
+          </Link>
+        </div>
+        <div className="flex items-center gap-3">
+          <p className="text-3xl font-black leading-none" style={{ color, textShadow: `0 0 24px ${color}50` }}>
+            {acct.score}
+          </p>
+          <span className="text-white/30 text-xs">{open ? "▴" : "▾"}</span>
+        </div>
+      </div>
+      {open && (
+        <div className="mt-3 pt-3 space-y-2" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+          {acct.components.map(c => (
+            <div key={c.key}>
+              <div className="flex items-baseline justify-between">
+                <span className="text-[10px] font-bold text-white/60">{c.label} <span className="text-white/30 font-normal">· {Math.round(c.weight * 100)}%</span></span>
+                <span className="text-[11px] font-bold" style={{ color: c.value === null ? "rgba(255,255,255,0.25)" : "#fff" }}>
+                  {c.value === null ? "no data" : c.value}
+                </span>
+              </div>
+              <p className="text-[9px] text-white/30 leading-relaxed">{c.basis}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 type Bill = {
   bill_id: number;
@@ -973,6 +1017,9 @@ export default function PoliticianProfile() {
                 )}
               </div>
             </div>
+
+            {/* Accountability Score */}
+            <AccountabilityPanel pol={pol} billCount={billTotal} lawCount={lawBills.length} />
 
             {/* Attribute bars */}
             <div className="space-y-2.5">
