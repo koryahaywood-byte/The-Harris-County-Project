@@ -42,3 +42,6 @@ next-env.d.ts
 data/finance-pdfs/*.pdf
 data/finance-pdfs/_fetch-log.json
 data/finance-processed/*.json
+
+# Follow-an-Official subscriber store (PII — webhook is the durable copy)
+data/follows/

@@ -7,6 +7,7 @@ import { computeBadges, TIER_STYLES, type Badge } from "@/lib/badges";
 import { computeStats, STAT_LABELS } from "@/lib/politician-stats";
 import { computeAccountability } from "@/lib/accountability";
 import type { Politician } from "@/lib/politicians";
+import FollowButton from "@/components/FollowButton";
 import Link from "next/link";
 
 // ── Accountability Score panel (hero) ────────────────────────────────────────
@@ -948,6 +949,7 @@ export default function PoliticianProfile() {
             All Officials
           </Link>
           <div className="flex items-center gap-2.5">
+            <FollowButton slug={pol.slug} name={pol.name} />
             {/* Card View toggle */}
             <Link href={`/politicians/${pol.slug}/card`}
               className="pressable text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full transition-colors"
