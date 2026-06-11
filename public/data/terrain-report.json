@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-06-11T16:33:09.598Z",
+ "generatedAt": "2026-06-11T18:41:58.811Z",
  "framing": "Statistical screens, not conclusions. Every signal shows its sources and confidence; the judgment is the reader's.",
  "signals": [
   {
@@ -38,5 +38,6 @@
     ]
    }
   }
- ]
+ ],
+ "threads": []
 }

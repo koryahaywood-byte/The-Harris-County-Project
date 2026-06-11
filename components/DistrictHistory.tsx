@@ -12,7 +12,9 @@ import {
   surnameAnalysis, linearTrend, precinctSetFor,
   type PrecinctHistory, type CombinedPoint,
 } from "@/lib/precinct-history";
+import { computeFieldPositions, summarizeFieldPositions, FIELD_POSITION_METHOD } from "@/lib/field-position";
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
+import FieldNotes from "@/components/FieldNotes";
 
 const NAVY = "#1a3a5c";
 const D_BLUE = "#2563a8";
@@ -155,7 +157,53 @@ function CombinedView({ h, precincts }: { h: PrecinctHistory; precincts: Set<str
   );
 }
 
-/* ── 3. Surname-origin performance (research-grade) ─────────────────────── */
+/* ── 3. Field Position — directional precinct model ─────────────────────── */
+function FieldPositionModule({ h, precincts }: { h: PrecinctHistory; precincts: Set<string> | null }) {
+  const [showMethod, setShowMethod] = useState(false);
+  const fps = useMemo(() => computeFieldPositions(h, precincts), [h, precincts]);
+  if (fps.length < 3) return null;
+  const sum = summarizeFieldPositions(fps);
+  const ORDER = ["Firm D", "Lean D", "Contested", "Lean R", "Firm R"] as const;
+  const COLORS: Record<string, string> = { "Firm D": "#1e3a8a", "Lean D": "#7ea8d8", "Contested": "#a78bfa", "Lean R": "#e58f8f", "Firm R": "#991b1b" };
+  return (
+    <div>
+      <div className="flex items-baseline justify-between flex-wrap gap-2 mb-1">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: MUTED }}>
+          Field Position · directional read per precinct
+        </p>
+        <button onClick={() => setShowMethod(m => !m)} className="text-[10px] underline" style={{ color: MUTED }}>
+          {showMethod ? "hide methodology" : "methodology"}
+        </button>
+      </div>
+      <p className="text-xs leading-relaxed mb-3" style={{ color: "#374151" }}>
+        Average Field Position here: <strong style={{ color: sum.avg >= 0 ? D_BLUE : R_RED }}>
+        {sum.avg > 0 ? "+" : ""}{sum.avg}</strong> on a −100 (firm Republican) to +100 (firm Democratic)
+        scale, from four cycles of certified results. A signal from past behavior — not a forecast.
+      </p>
+      <div className="flex h-[18px] rounded-full overflow-hidden mb-2" style={{ background: "#00000008" }}>
+        {ORDER.map(k => sum.counts[k] > 0 && (
+          <div key={k} style={{ width: `${(sum.counts[k] / sum.total) * 100}%`, background: COLORS[k] }}
+            title={`${k}: ${sum.counts[k]} precincts`} />
+        ))}
+      </div>
+      <div className="flex flex-wrap gap-x-4 gap-y-1 mb-2">
+        {ORDER.map(k => (
+          <span key={k} className="text-[10px]" style={{ color: "#374151" }}>
+            <span className="inline-block w-2 h-2 rounded-full mr-1" style={{ background: COLORS[k] }} />
+            {k} · <strong className="tnum">{sum.counts[k]}</strong>
+          </span>
+        ))}
+      </div>
+      {showMethod && (
+        <div className="rounded-xl px-3.5 py-2.5" style={{ background: "#1a3a5c0a", border: "1px solid #1a3a5c1a" }}>
+          <p className="text-[10px] leading-relaxed" style={{ color: "#374151" }}>{FIELD_POSITION_METHOD}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── 4. Surname-origin performance (research-grade) ─────────────────────── */
 function SurnameModule({ h, precincts }: { h: PrecinctHistory; precincts: Set<string> | null }) {
   const buckets = useMemo(() => surnameAnalysis(h, precincts), [h, precincts]);
   if (buckets.length < 2) return null;
@@ -243,9 +291,12 @@ export default function DistrictHistory({
           <div className="my-6 h-px" style={{ background: "#00000010" }} />
           <CombinedView h={h} precincts={precincts} />
           <div className="my-6 h-px" style={{ background: "#00000010" }} />
+          <FieldPositionModule h={h} precincts={precincts} />
+          <div className="my-6 h-px" style={{ background: "#00000010" }} />
           <SurnameModule h={h} precincts={precincts} />
         </>
       )}
+      <FieldNotes target={`district:${field ?? "countywide"}-${value ?? "all"}`} />
       <p className="text-[9.5px] mt-4" style={{ color: MUTED }}>
         Sources: Texas Legislative Council election returns re-tabulated on current precinct
         geography · TX SOS voter registration &amp; Spanish-surname registration · 2020 Census VAP ·

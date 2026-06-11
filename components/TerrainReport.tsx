@@ -8,6 +8,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import FieldNotes from "@/components/FieldNotes";
 
 const NAVY = "#1a3a5c";
 const MUTED = "#9ca3af";
@@ -25,7 +26,8 @@ export interface Signal {
   entities?: Record<string, string[]>;
 }
 
-interface Report { generatedAt: string; framing: string; signals: Signal[] }
+interface Thread { id: string; title: string; signalIds: string[]; entities: Record<string, string[]>; note: string }
+interface Report { generatedAt: string; framing: string; signals: Signal[]; threads?: Thread[] }
 
 let cache: Promise<Report> | null = null;
 function loadReport(): Promise<Report> {
@@ -74,6 +76,7 @@ function SignalCard({ s }: { s: Signal }) {
           </Link>
         ))}
       </div>
+      <FieldNotes target={`signal:${s.id}`} />
     </div>
   );
 }
@@ -123,6 +126,23 @@ export default function TerrainReport({ types, limit, compact = false }: {
       <div className="grid md:grid-cols-2 gap-3.5">
         {signals.map(s => <SignalCard key={s.id} s={s} />)}
       </div>
+      {!compact && (report.threads?.length ?? 0) > 0 && (
+        <div className="mt-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-2" style={{ color: MUTED }}>Story Threads · auto-clustered</p>
+          <div className="space-y-2.5">
+            {report.threads!.map(th => (
+              <div key={th.id} className="hcp-card topo-light p-4">
+                <p className="text-sm font-bold" style={{ color: NAVY, fontFamily: "var(--font-playfair,serif)" }}>{th.title}</p>
+                <p className="text-[11px] mt-1" style={{ color: "#374151" }}>
+                  {Object.entries(th.entities).map(([k, v]) => `${k}: ${v.slice(0, 5).join(", ")}`).join(" · ")}
+                </p>
+                <p className="text-[10px] mt-1" style={{ color: MUTED }}>{th.note}</p>
+                <FieldNotes target={`thread:${th.id}`} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

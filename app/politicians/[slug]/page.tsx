@@ -10,6 +10,7 @@ import type { Politician } from "@/lib/politicians";
 import FollowButton from "@/components/FollowButton";
 import DistrictHistory from "@/components/DistrictHistory";
 import { SharedDonors } from "@/components/MoneyTrail";
+import NarrativePanel from "@/components/NarrativePanel";
 import Link from "next/link";
 
 // ── Accountability Score panel (hero) ────────────────────────────────────────
@@ -1097,6 +1098,9 @@ export default function PoliticianProfile() {
           </div>
         )}
       </div>
+
+      {/* ── Field Briefing — auto-updating narrative ───────────────────── */}
+      <NarrativePanel pol={pol} billCount={billTotal} lawCount={lawBills.length} />
 
       {/* ── Tabs + Content ─────────────────────────────────────────────── */}
       {(pol.legiscanName || pol.salary) && (

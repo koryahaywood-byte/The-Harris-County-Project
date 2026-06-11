@@ -1,0 +1,8 @@
+{
+  "_comment": "Verified annotator registry. Three tiers: media (Chronicle + media partners), academic (researchers), community (org leaders). Keys are issued manually — rotate by editing this file. Display name + affiliation appear on every Field Note they post.",
+  "annotators": [
+    { "key": "hcp-media-demo-001",     "name": "Newsroom Demo",   "affiliation": "Media partner (demo)",     "tier": "media" },
+    { "key": "hcp-academic-demo-001",  "name": "Researcher Demo", "affiliation": "Academic (demo)",          "tier": "academic" },
+    { "key": "hcp-community-demo-001", "name": "Organizer Demo",  "affiliation": "Community org (demo)",     "tier": "community" }
+  ]
+}

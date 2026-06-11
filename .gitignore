@@ -45,3 +45,6 @@ data/finance-processed/*.json
 
 # Follow-an-Official subscriber store (PII — webhook is the durable copy)
 data/follows/
+
+# Community flags may carry contact info — webhook holds the durable copy
+data/field-notes/flags.jsonl

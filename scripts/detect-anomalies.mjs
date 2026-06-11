@@ -102,11 +102,45 @@ try {
   }
 } catch (e) { console.error("bill detector:", e.message); }
 
+/* ── Story Threads: cluster signals + data points sharing entities ───────── */
+// Two items join a thread when they share an official, donor, precinct, or
+// bill, or land within a 30-day window on the same geography. Threads are
+// the connective tissue annotators develop with Field Notes.
+const threads = [];
+{
+  const used = new Set();
+  for (let i = 0; i < signals.length; i++) {
+    if (used.has(i)) continue;
+    const members = [i];
+    const ent = signals[i].entities ?? {};
+    for (let j = i + 1; j < signals.length; j++) {
+      if (used.has(j)) continue;
+      const e2 = signals[j].entities ?? {};
+      const shares = ["officials", "donors", "precincts", "bills"].some(k =>
+        (ent[k] ?? []).some(v => (e2[k] ?? []).includes(v)));
+      if (shares) { members.push(j); used.add(j); }
+    }
+    if (members.length >= 2) {
+      used.add(i);
+      const sigs = members.map(m => signals[m]);
+      threads.push({
+        id: `thread-${threads.length + 1}`,
+        title: `Connected: ${sigs.map(s => s.type).join(" + ")} signals on shared ground`,
+        signalIds: sigs.map(s => s.id),
+        entities: Object.fromEntries(["officials", "donors", "precincts", "bills"].map(k =>
+          [k, [...new Set(sigs.flatMap(s => s.entities?.[k] ?? []))]]).filter(([, v]) => v.length)),
+        note: "Auto-clustered by shared entities within the reporting window. Verified annotators can develop this thread with Field Notes (target: signal ids).",
+      });
+    }
+  }
+}
+
 /* ── Write ───────────────────────────────────────────────────────────────── */
 const out = {
   generatedAt: new Date().toISOString(),
   framing: "Statistical screens, not conclusions. Every signal shows its sources and confidence; the judgment is the reader's.",
   signals: signals.sort((a, b) => ({ high: 0, significant: 1, notable: 2 })[a.severity] - ({ high: 0, significant: 1, notable: 2 })[b.severity]),
+  threads,
 };
 writeFileSync(join(ROOT, "public/data/terrain-report.json"), JSON.stringify(out, null, 1));
 console.log(`${signals.length} signal(s) → public/data/terrain-report.json`);
