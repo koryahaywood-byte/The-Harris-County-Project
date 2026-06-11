@@ -9,6 +9,7 @@ import { computeAccountability } from "@/lib/accountability";
 import type { Politician } from "@/lib/politicians";
 import FollowButton from "@/components/FollowButton";
 import DistrictHistory from "@/components/DistrictHistory";
+import { SharedDonors } from "@/components/MoneyTrail";
 import Link from "next/link";
 
 // ── Accountability Score panel (hero) ────────────────────────────────────────
@@ -1382,6 +1383,9 @@ export default function PoliticianProfile() {
                       Full finance leaderboard →
                     </Link>
                   </div>
+
+                  {/* Money Trail — shared donors across officials */}
+                  <SharedDonors officialName={pol.name} />
                 </div>
               );
             })()}

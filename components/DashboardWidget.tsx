@@ -137,6 +137,44 @@ function getDailyQuote() {
   return QUOTES[day % QUOTES.length];
 }
 
+// ── This day in Houston / Harris County history ──────────────────────────────
+// One moment per card; picks today's anniversary when we have it, otherwise
+// the nearest prior moment so the card always shows something real.
+const MOMENTS: { m: number; d: number; year: number; text: string }[] = [
+  { m: 1, d: 10, year: 1901, text: "The Lucas gusher blew at Spindletop, igniting the Texas oil boom that would build Houston's economy." },
+  { m: 1, d: 17, year: 1839, text: "The Republic of Texas Congress voted to move the capital from Houston to the new town of Austin." },
+  { m: 2, d: 1,  year: 2003, text: "Space Shuttle Columbia was lost on reentry; Mission Control in Houston led the nation's mourning and the program's reckoning." },
+  { m: 2, d: 20, year: 1962, text: "From Mission Control's predecessor era, Houston tracked John Glenn as he became the first American to orbit the Earth." },
+  { m: 3, d: 2,  year: 1836, text: "Texas declared independence at Washington-on-the-Brazos; within months the new republic's seat of government would be Harris County." },
+  { m: 3, d: 22, year: 1967, text: "Muhammad Ali was stripped of his title after refusing induction at the Houston induction center — a case that began in Harris County and ended at the Supreme Court." },
+  { m: 4, d: 9,  year: 1965, text: "The Astrodome opened — the world's first domed stadium, billed as the Eighth Wonder of the World." },
+  { m: 4, d: 21, year: 1836, text: "The Battle of San Jacinto was fought in present-day Harris County — 18 minutes that won Texas its independence." },
+  { m: 5, d: 11, year: 1969, text: "Mission Control in Houston cleared Apollo 10 for its lunar dress rehearsal, the final test before the Moon landing." },
+  { m: 6, d: 5,  year: 1837, text: "Houston was incorporated as a city — and briefly served as capital of the Republic of Texas." },
+  { m: 6, d: 19, year: 1865, text: "Juneteenth: Union troops in Galveston announced emancipation. Freed Houstonians later pooled $800 to buy Emancipation Park, the city's oldest." },
+  { m: 7, d: 20, year: 1969, text: "“Houston, Tranquility Base here. The Eagle has landed.” The first word spoken from the Moon was this county's name." },
+  { m: 8, d: 25, year: 2017, text: "Hurricane Harvey made landfall — over 50 inches of rain on parts of Harris County, the heaviest tropical rainfall in U.S. history." },
+  { m: 8, d: 30, year: 1836, text: "The Allen brothers advertised lots in a new town on Buffalo Bayou named for Sam Houston — the city's founding day." },
+  { m: 9, d: 8,  year: 1900, text: "The Great Galveston Hurricane killed thousands and shifted Texas commerce inland — the disaster that made Houston the region's port and metropolis." },
+  { m: 9, d: 12, year: 1962, text: "At Rice University, President Kennedy declared “we choose to go to the Moon” — and Houston became Space City." },
+  { m: 10, d: 14, year: 1947, text: "Chuck Yeager broke the sound barrier in an aircraft program with deep Houston-area aerospace roots to follow." },
+  { m: 11, d: 7,  year: 1972, text: "Houston's Barbara Jordan became the first Black woman elected to Congress from the South." },
+  { m: 11, d: 10, year: 1914, text: "The deep-water Houston Ship Channel formally opened — President Wilson fired the opening cannon by remote telegraph." },
+  { m: 12, d: 4,  year: 1998, text: "The Unity module launched — the first U.S.-built piece of the International Space Station, run from Johnson Space Center." },
+  { m: 12, d: 31, year: 1981, text: "Kathy Whitmire took office days later as Houston's first woman mayor, after winning the December 1981 runoff." },
+];
+
+function getDailyMoment() {
+  const now = new Date();
+  const m = now.getMonth() + 1, d = now.getDate();
+  const score = (mo: { m: number; d: number }) => {
+    // days since the moment's anniversary (0 = today), wrapping the year
+    const diff = (m - mo.m) * 31 + (d - mo.d);
+    return diff >= 0 ? diff : diff + 372;
+  };
+  return [...MOMENTS].sort((a, b) => score(a) - score(b))[0];
+}
+
 function timeAgo(pubDate: string): string {
   if (!pubDate) return "";
   const diff = Date.now() - new Date(pubDate).getTime();
@@ -392,6 +430,19 @@ function QuoteCard() {
         <p className="text-[12px] font-bold text-[var(--accent)]">{q.author}</p>
         <p className="text-[10px] text-[var(--muted)] mt-0.5">{q.title}</p>
       </div>
+
+      {/* Moment in time — Houston / Harris County history */}
+      {(() => {
+        const mo = getDailyMoment();
+        return (
+          <div className="relative z-10 mt-4 pt-4" style={{ borderTop: "1px solid #f0ede8" }}>
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--muted)] mb-1.5">
+              Moment in time · {new Date(2000, mo.m - 1, mo.d).toLocaleDateString("en-US", { month: "long", day: "numeric" })}, {mo.year}
+            </p>
+            <p className="text-[12px] leading-relaxed text-[var(--accent)]">{mo.text}</p>
+          </div>
+        );
+      })()}
     </div>
   );
 }

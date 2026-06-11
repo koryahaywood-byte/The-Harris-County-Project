@@ -47,6 +47,10 @@ const ROWS: { section: string; tools: Tool[] }[] = [
   {
     section: "Elections",
     tools: [
+      { href: "/my-officials", name: "Who Represents Me?",
+        description: "Enter your address — every official who answers to you, JP to Congress.",
+        gradient: "linear-gradient(135deg,#92400e 0%,#d97706 100%)",
+        photo: U("1449157291145-7efd050a4d0e") },
       { href: "/tools/heat-check", name: "Heat Check",
         description: "Harris County primary & runoff results, precinct by precinct.",
         gradient: "linear-gradient(135deg,#991b1b 0%,#dc2626 100%)",

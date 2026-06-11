@@ -2,13 +2,14 @@
 import { useState, useEffect } from "react";
 import { FINANCE_DATA_MERGED, fmt, type CandidateFinance } from "@/lib/campaign-finance";
 import ShareButton from "@/components/ShareButton";
+import { MoneyTrailView } from "@/components/MoneyTrail";
 import { useUrlState, readUrlParams } from "@/lib/useUrlState";
 import type { FECCandidate } from "@/app/api/finance/fec/route";
 import type { TECCandidate } from "@/app/api/finance/tec/route";
 
 type Candidate = CandidateFinance;
 
-type Tab   = "story" | "leaderboard";
+type Tab   = "story" | "leaderboard" | "trail";
 type Level = "all" | "federal" | "state" | "houston" | "county";
 type CountyGroup = "all" | "commissioners" | "jp" | "courts" | "law" | "admin";
 
@@ -44,7 +45,7 @@ export default function WhereIsTheDough() {
   // Hydrate filters from the URL once, then mirror them back so shared links restore the view
   useEffect(() => {
     const p = readUrlParams(["tab", "level", "group", "party", "q"]);
-    if (p.tab === "story" || p.tab === "leaderboard") setTab(p.tab);
+    if (p.tab === "story" || p.tab === "leaderboard" || p.tab === "trail") setTab(p.tab);
     if (p.level && p.level in LEVEL_LABELS) setLevel(p.level as Level);
     if (p.group && p.group in COUNTY_GROUPS) setCountyGroup(p.group as CountyGroup);
     if (p.party === "D" || p.party === "R") setParty(p.party);
@@ -177,12 +178,12 @@ export default function WhereIsTheDough() {
       {/* ── Tab bar ───────────────────────────────────────────────────── */}
       <div className="sticky top-0 z-20 bg-[var(--background)]/90 backdrop-blur border-b border-[var(--border)] px-6 py-3">
         <div className="max-w-6xl mx-auto flex flex-wrap items-center gap-3">
-          {(["story","leaderboard"] as Tab[]).map(t => (
+          {(["story","leaderboard","trail"] as Tab[]).map(t => (
             <button key={t} onClick={() => setTab(t)}
               className={`text-xs font-bold uppercase tracking-[0.12em] px-4 py-2 rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                 tab === t ? "bg-[var(--accent)] text-white" : "bg-white ring-1 ring-[var(--border)] text-[var(--muted)] hover:ring-[var(--accent-light)]"
               }`}>
-              {t === "story" ? "The Story" : "Leaderboard"}
+              {t === "story" ? "The Story" : t === "trail" ? "Money Trail" : "Leaderboard"}
             </button>
           ))}
 
@@ -327,6 +328,9 @@ export default function WhereIsTheDough() {
             <p className="text-xs text-[var(--muted)] text-center">Source: Texas Ethics Commission (TEC) semi-annual reports · FEC filings. Data as of Jan–Apr 2026.</p>
           </div>
         )}
+
+        {/* ── MONEY TRAIL ───────────────────────────────────────────── */}
+        {tab === "trail" && <MoneyTrailView />}
 
         {/* ── LEADERBOARD ───────────────────────────────────────────── */}
         {tab === "leaderboard" && (

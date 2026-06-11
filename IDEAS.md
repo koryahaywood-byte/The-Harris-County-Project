@@ -21,16 +21,19 @@ Last updated: June 11, 2026
 - Data freshness system (/admin/freshness, check-freshness script)
 - Finance pipeline: FEC + TEC + Harris County OCR + Houston COH postback
 
-## IN PROGRESS (this session — June 11, 2026)
-1. **Voter Lookup** — /my-officials: address → every official who represents you (JP → Congress)
-2. **Officials Card View** — liquid-glass flip card on profiles + standalone shareable /politicians/[slug]/card URL with OG
-3. **Data Moat Layer** — multi-cycle precinct history + combined demo/turnout/performance view + linear trends + surname-origin correlation analysis (research-grade, Districts tool only)
-4. **Accountability Score** — published per-official score (fundraising trajectory, bills passed, peer rank, tenure) + methodology page + sortable index column
-5. **Follow an Official** — email alerts on new filings / donors / bill movement (queue-based, email-only v1)
-6. **Money Trail** — cross-official donor network + react-force-graph-3d view (data-gated: needs itemized donor ingestion)
-7. **Head to Head** — /compare/[a]/[b] side-by-side cards with category winners + OG sharing
-8. **3D hero** — R3F extruded precinct map on landing (height=turnout, color=lean, rotating, scroll transition)
-9. **Quote of the day** — add "moment in time" Houston/Harris history for the day
+## SHIPPED June 11, 2026 (seven-feature session)
+1. **Voter Lookup** — /my-officials: address → Census geocode → precinct → every official JP→Congress. Homepage card added.
+2. **Officials Card View** — liquid-glass flip card (gold/white, backdrop-blur, SVG district map on back) + Card View toggle on profiles + shareable /politicians/[slug]/card with OG
+3. **Data Moat Layer** — public/data/precinct-history.json: 2020/2022/2024 general returns re-tabulated on CURRENT precinct lines (TLC TED API, 1170/1172 join) + SSVR + turnout + 2020 Census VAP + 2026 primary. DistrictHistory panel (trend w/ projection, combined demo×turnout×performance scatter, SSVR-bucketed Cruz-vs-Trump surname analysis w/ embedded caveat) in Districts tool + every profile. Rebuild: `node scripts/build-precinct-history.mjs`
+4. **Accountability Score** — lib/accountability.ts + /methodology + profile panel w/ breakdown + sortable /politicians index
+5. **Follow an Official** — /api/follow + FollowButton + scripts/send-follow-alerts.mjs queue worker (email v1; delivery needs EMAIL_WEBHOOK_URL)
+6. **Money Trail** — scripts/build-donor-network.mjs (FEC itemized Schedule A) + Money Trail tab in Where the Money Resides (SVG network graph, shared-donor tracer) + SharedDonors on profile Money tab. PARTIAL DATA: DEMO_KEY rate-limited; full coverage needs FEC_API_KEY. Found + worked around STALE FEC candidate IDs in finance-roster.json (likely cause of the $0 live-route bug — script resolves by name)
+7. **Head to Head** — /compare/[slugA]/[slugB] with both cards + 7-category leader table + OG
+8. **Quote of the day** — "Moment in time" Houston/Harris history (21 dated moments, nearest-anniversary picker) on the Briefing quote card
+
+## BLOCKED ON DEPENDENCY APPROVAL (user must OK install)
+- **3D landing hero** (R3F extruded precinct map: height=turnout, color=lean, rotate + scroll transition) — needs `three`, `@react-three/fiber`, `@react-three/drei`
+- **Money Trail 3D force graph** — needs `react-force-graph-3d` (flat SVG network shipped in the meantime)
 
 ## KEPT BUT NOT DONE (do not lose these)
 - **Hidden tools needing rework before relisting** (June 10): endorsement-flowchart, consultant-flowchart, infrastructure-funding — live at URLs with "unlisted" banner; restore cards from git history when reworked
