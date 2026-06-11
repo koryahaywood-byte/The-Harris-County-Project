@@ -903,13 +903,21 @@ export default function PoliticianProfile() {
             </svg>
             All Officials
           </Link>
-          {/* Party chip */}
-          <span
-            className="text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full"
-            style={{ background: `${accentColor}25`, color: accentColor, border: `1px solid ${accentColor}50` }}
-          >
-            {pol.party === "D" ? "Democrat" : pol.party === "R" ? "Republican" : pol.party}
-          </span>
+          <div className="flex items-center gap-2.5">
+            {/* Card View toggle */}
+            <Link href={`/politicians/${pol.slug}/card`}
+              className="pressable text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full transition-colors"
+              style={{ background: "rgba(212,175,55,0.12)", color: "#fbbf24", border: "1px solid rgba(212,175,55,0.35)" }}>
+              Card View
+            </Link>
+            {/* Party chip */}
+            <span
+              className="text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full"
+              style={{ background: `${accentColor}25`, color: accentColor, border: `1px solid ${accentColor}50` }}
+            >
+              {pol.party === "D" ? "Democrat" : pol.party === "R" ? "Republican" : pol.party}
+            </span>
+          </div>
         </div>
 
         {/* Main hero grid: figure left, stats right */}
