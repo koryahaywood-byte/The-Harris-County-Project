@@ -36,7 +36,7 @@ const COMPONENTS = [
 export default function MethodologyPage() {
   return (
     <div style={{ background: "#f5f3ef", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
-      <section className="relative overflow-hidden"
+      <section className="relative overflow-hidden topo-dark"
         style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#0f2540 60%,#162e4a 100%)", paddingTop: "3.5rem", paddingBottom: "3.5rem" }}>
         <div className="relative max-w-3xl mx-auto px-5">
           <p className="text-sky-300 text-xs font-bold uppercase tracking-[0.22em] mb-3">Methodology · Published in full</p>

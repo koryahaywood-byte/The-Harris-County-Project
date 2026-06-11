@@ -34,6 +34,17 @@ Last updated: June 11, 2026
 9. **3D landing hero** (approved + shipped) — extruded precinct map, height=2026 turnout, color=Heat Check lean, slow rotation, scroll tilt/sink + fade, navy left-edge gradient keeps the headline clean. Built in PLAIN three.js — @react-three/fiber's reconciler silently fails to initialize against Next 16's bundled React, so the renderer is managed imperatively (fiber/drei installed but unused; keep for future or prune)
 10. **Money Trail 3D force graph** (approved + shipped) — react-force-graph-3d behind a 2D/3D toggle on the Money Trail tab; officials as party-color spheres, amber shared donors, edge width = contribution. Desktop-only by usage (heavy), 2D SVG remains the default
 
+## SHIPPED June 12, 2026 (system layers 9–12 + redesigns)
+- **Pipeline orchestrator** (scripts/run-pipelines.mjs) + /admin/pipelines health dashboard — 11 jobs, ok/failed/blocked statuses
+- **The Terrain Report** — anomaly feed (turnout drops, donor max-out clusters, unstalled bills) on homepage + tool pages, signals w/ sources + confidence
+- **Field Briefing** — auto-updating narrative on every profile (deterministic, source-cited)
+- **Field Position** — −100..+100 directional precinct model in district history, methodology published
+- **Field Notes** — 3-tier verified annotators + community flags + /admin/review + Story Threads
+- **Terrain motif** — topo contour textures (.topo-light/.topo-dark) on signal cards, briefings, tool heroes
+- **Hero v2** — fully interactive: hover any of 1,172 precincts (tooltip + amber glow), cursor parallax, click→Districts
+- **Profile arena** — character-select treatment: spotlight cone, glowing platform, rotating select rings (video-game presentation)
+- **TEC bulk donor ingest** (scripts/ingest-tec-bulk.mjs) — the 1GB nightly TEC export = every itemized TX contribution, registered as pipeline job. THE master source for state/county donors; run post-deadline
+
 ## KEPT BUT NOT DONE (do not lose these)
 - **Hidden tools needing rework before relisting** (June 10): endorsement-flowchart, consultant-flowchart, infrastructure-funding — live at URLs with "unlisted" banner; restore cards from git history when reworked
 - **OVR leaderboard page** — all 49 officials ranked by OVR, sortable per attribute (partial: /politicians/leaderboard exists, needs sort-by-attribute)

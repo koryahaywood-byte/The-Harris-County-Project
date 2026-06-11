@@ -124,7 +124,7 @@ export default function WhereIsTheDough() {
     <div className="bg-[var(--background)] min-h-screen">
 
       {/* ── Hero ──────────────────────────────────────────────────────── */}
-      <div className="bg-[var(--accent)] text-white px-6 py-16 md:py-24 relative overflow-hidden">
+      <div className="bg-[var(--accent)] text-white px-6 py-16 md:py-24 relative overflow-hidden topo-dark">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_80%_50%,rgba(37,99,168,0.4),transparent)]"/>
         <div className="max-w-6xl mx-auto relative z-10">
           <p className="text-sky-300/80 text-[11px] font-bold uppercase tracking-[0.25em] mb-3">Money</p>

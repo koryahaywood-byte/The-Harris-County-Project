@@ -972,8 +972,40 @@ export default function PoliticianProfile() {
         {/* Main hero grid: figure left, stats right */}
         <div className="relative max-w-6xl mx-auto px-4 pt-2 pb-6 grid grid-cols-1 md:grid-cols-[340px_1fr] gap-0 md:gap-6 items-end">
 
-          {/* Figure column */}
+          {/* Figure column — character-select arena */}
           <div className="relative">
+            <style>{`
+              @keyframes arena-ring   { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
+              @keyframes arena-pulse  { 0%,100% { opacity: 0.55; transform: scaleX(1) } 50% { opacity: 0.9; transform: scaleX(1.04) } }
+              @keyframes arena-scan   { 0%,100% { opacity: 0.12 } 50% { opacity: 0.3 } }
+            `}</style>
+            {/* spotlight cone */}
+            <div className="absolute pointer-events-none" aria-hidden
+              style={{
+                left: "10%", right: "10%", top: "-6%", bottom: "8%",
+                background: `conic-gradient(from 180deg at 50% 0%, transparent 42%, ${accentColor}14 47%, ${accentColor}22 50%, ${accentColor}14 53%, transparent 58%)`,
+                animation: "arena-scan 6s ease-in-out infinite",
+              }} />
+            {/* platform: glow ellipse + rotating select ring */}
+            <div className="absolute pointer-events-none" aria-hidden
+              style={{ left: "14%", right: "14%", bottom: "1.5%", height: "9%" }}>
+              <div className="absolute inset-0 rounded-[50%]"
+                style={{
+                  background: `radial-gradient(ellipse at center, ${accentColor}40 0%, ${accentColor}14 45%, transparent 72%)`,
+                  animation: "arena-pulse 4s ease-in-out infinite",
+                }} />
+              <svg viewBox="0 0 200 60" className="absolute inset-0 w-full h-full" style={{ overflow: "visible" }}>
+                <g style={{ animation: "arena-ring 24s linear infinite", transformOrigin: "100px 30px" }}>
+                  <ellipse cx="100" cy="30" rx="92" ry="26" fill="none" stroke={accentColor} strokeWidth="1.1"
+                    strokeDasharray="20 9 4 9" opacity="0.55" />
+                </g>
+                <g style={{ animation: "arena-ring 38s linear infinite reverse", transformOrigin: "100px 30px" }}>
+                  <ellipse cx="100" cy="30" rx="78" ry="21" fill="none" stroke="#fbbf24" strokeWidth="0.7"
+                    strokeDasharray="2 14" opacity="0.5" />
+                </g>
+                <ellipse cx="100" cy="30" rx="62" ry="16" fill="none" stroke={accentColor} strokeWidth="0.6" opacity="0.3" />
+              </svg>
+            </div>
             <VitruvianFigure
               slug={pol.slug}
               photo={pol.photo}

@@ -48,3 +48,6 @@ data/follows/
 
 # Community flags may carry contact info — webhook holds the durable copy
 data/field-notes/flags.jsonl
+
+# Bulk download scratch
+data/tmp/
