@@ -11,6 +11,7 @@ import FollowButton from "@/components/FollowButton";
 import DistrictHistory from "@/components/DistrictHistory";
 import { SharedDonors } from "@/components/MoneyTrail";
 import NarrativePanel from "@/components/NarrativePanel";
+import PlayerFigure from "@/components/PlayerFigure";
 import Link from "next/link";
 
 // ── Accountability Score panel (hero) ────────────────────────────────────────
@@ -1006,12 +1007,11 @@ export default function PoliticianProfile() {
                 <ellipse cx="100" cy="30" rx="62" ry="16" fill="none" stroke={accentColor} strokeWidth="0.6" opacity="0.3" />
               </svg>
             </div>
-            <VitruvianFigure
+            <PlayerFigure
               slug={pol.slug}
               photo={pol.photo}
               party={pol.party}
               name={pol.name}
-              legiscanName={pol.legiscanName}
             />
           </div>
 

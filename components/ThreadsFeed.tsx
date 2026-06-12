@@ -93,6 +93,16 @@ function PostCard({ post, isLast }: { post: ThreadsPost; isLast: boolean }) {
 export default function ThreadsFeed({ posts, footer }: { posts: ThreadsPost[]; footer?: React.ReactNode }) {
   return (
     <div className="max-w-xl">
+      {/* Honesty label — these are editorial summaries in feed format, not live posts */}
+      <div className="flex items-center gap-2 mb-2.5 px-1">
+        <span className="text-[9px] font-bold uppercase tracking-[0.16em] px-2.5 py-1 rounded-full"
+          style={{ background: "#d9770614", color: "#b45309", border: "1px solid #d9770630" }}>
+          Curated Digest
+        </span>
+        <p className="text-[10px] leading-snug" style={{ color: "#9ca3af" }}>
+          Written by our newsroom in feed format — not live social posts. Follow the linked accounts for their actual feeds.
+        </p>
+      </div>
       <div className="rounded-3xl bg-white ring-1 ring-black/8 overflow-hidden shadow-[0_1px_8px_rgba(26,58,92,0.06)]">
         {posts.map((post, i) => (
           <PostCard key={i} post={post} isLast={i === posts.length - 1} />
