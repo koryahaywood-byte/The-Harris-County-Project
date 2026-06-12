@@ -1,48 +1,219 @@
 {
-  "_comment": "Single source of truth for the finance pipeline. searchName is the EXACT string the portal expects (Last, First for Harris County; split last/first for Houston). Judges who file locally (JP, County Courts at Law, Probate) are under harrisCounty. State district court judges file with the TEC, not the county — they go under tec. Run `npm run finance-fetch -- --discover` to find judge filers in the county portal and append them to harrisCounty after review.",
-
+  "_comment": "Single source of truth for the finance pipeline. searchName is the EXACT string the portal expects (Last, First for Harris County; split last/first for Houston). Judges who file locally (JP, County Courts at Law, Probate) are under harrisCounty. State district court judges file with the TEC, not the county \u2014 they go under tec. Run `npm run finance-fetch -- --discover` to find judge filers in the county portal and append them to harrisCounty after review.",
   "harrisCounty": [
-    { "searchName": "Hidalgo, Lina",    "name": "Lina Hidalgo",      "office": "County Judge",       "party": "D" },
-    { "searchName": "Ellis, Rodney",    "name": "Rodney Ellis",      "office": "Commissioner PCT 1", "party": "D" },
-    { "searchName": "Garcia, Adrian",   "name": "Adrian Garcia",     "office": "Commissioner PCT 2", "party": "D" },
-    { "searchName": "Ramsey, Tom",      "name": "Tom Ramsey",        "office": "Commissioner PCT 3", "party": "R" },
-    { "searchName": "Briones, Lesley",  "name": "Lesley Briones",    "office": "Commissioner PCT 4", "party": "D" },
-    { "searchName": "Gonzalez, Ed",     "name": "Ed Gonzalez",       "office": "Sheriff",            "party": "D" },
-    { "searchName": "Teare, Sean",      "name": "Sean Teare",        "office": "District Attorney",  "party": "D" },
-    { "searchName": "Burgess, Marilyn", "name": "Marilyn Burgess",   "office": "District Clerk",    "party": "D" },
-    { "searchName": "Hudspeth, Teneshia", "name": "Teneshia Hudspeth", "office": "County Clerk",    "party": "D" },
-    { "searchName": "Ramirez, Annette", "name": "Annette Ramirez",   "office": "Tax Assessor-Collector", "party": "D" },
-
-    { "searchName": "Carter, Eric",      "name": "Eric William Carter", "office": "Justice of the Peace PCT 1 PL 1", "party": "R" },
-    { "searchName": "Duble, Steve",      "name": "Steve Duble",         "office": "Justice of the Peace PCT 1 PL 2", "party": "R" },
-    { "searchName": "Delgado, Jo Ann",   "name": "Jo Ann Delgado",      "office": "Justice of the Peace PCT 2 PL 1", "party": "D" },
-    { "searchName": "Lozano, Dolores",   "name": "Dolores Lozano",      "office": "Justice of the Peace PCT 2 PL 2", "party": "D" },
-    { "searchName": "Stephens, Joe",     "name": "Joe Stephens",        "office": "Justice of the Peace PCT 3 PL 1", "party": "R" },
-    { "searchName": "Bates, Lucia",      "name": "Lucia Bates",         "office": "Justice of the Peace PCT 3 PL 2", "party": "R" },
-    { "searchName": "Goodwin, Lincoln",  "name": "Lincoln Goodwin",     "office": "Justice of the Peace PCT 4 PL 1", "party": "D" },
-    { "searchName": "Korduba, Laryssa",  "name": "Laryssa Korduba",     "office": "Justice of the Peace PCT 4 PL 2", "party": "D" },
-    { "searchName": "Lombardino, James", "name": "James Lombardino",    "office": "Justice of the Peace PCT 5 PL 1", "party": "R" },
-    { "searchName": "Wolfe, Bob",        "name": "Bob Wolfe",           "office": "Justice of the Peace PCT 5 PL 2", "party": "R" },
-    { "searchName": "Trevino, Victor",   "name": "Victor Treviño III",  "office": "Justice of the Peace PCT 6 PL 1", "party": "D" },
-    { "searchName": "Rodriguez, Angela", "name": "Angela D. Rodriguez", "office": "Justice of the Peace PCT 6 PL 2", "party": "D" },
-    { "searchName": "Adams, Wanda",      "name": "Wanda E. Adams",      "office": "Justice of the Peace PCT 7 PL 1", "party": "D" },
-    { "searchName": "Burney, Sharon",    "name": "Sharon M. Burney",    "office": "Justice of the Peace PCT 7 PL 2", "party": "D" },
-    { "searchName": "Williamson, Holly", "name": "Holly Williamson",    "office": "Justice of the Peace PCT 8 PL 1", "party": "R" },
-    { "searchName": "Ditta, Louie",      "name": "Louie Ditta",         "office": "Justice of the Peace PCT 8 PL 2", "party": "R" },
-
-    { "searchName": "Rosen, Alan",       "name": "Alan Rosen",          "office": "Constable PCT 1", "party": "D" },
-    { "searchName": "Garcia, Jerry",     "name": "Jerry Garcia",        "office": "Constable PCT 2", "party": "D" },
-    { "searchName": "Eagleton, Sherman", "name": "Sherman Eagleton",    "office": "Constable PCT 3", "party": "D" },
-    { "searchName": "Herman, Mark",      "name": "Mark Herman",         "office": "Constable PCT 4", "party": "R" },
-    { "searchName": "Allbritton, Terry", "name": "Terry Allbritton",    "office": "Constable PCT 5", "party": "R" },
-    { "searchName": "Trevino, Silvia",   "name": "Silvia Trevino",      "office": "Constable PCT 6", "party": "D" },
-    { "searchName": "Phillips, James",   "name": "James Phillips",      "office": "Constable PCT 7", "party": "D" },
-    { "searchName": "Sandlin, Phil",     "name": "Phil Sandlin",        "office": "Constable PCT 8", "party": "R" },
-    { "searchName": "Wyatt, Carla",      "name": "Carla Wyatt",         "office": "County Treasurer", "party": "D" }
+    {
+      "searchName": "Hidalgo, Lina",
+      "name": "Lina Hidalgo",
+      "office": "County Judge",
+      "party": "D"
+    },
+    {
+      "searchName": "Ellis, Rodney",
+      "name": "Rodney Ellis",
+      "office": "Commissioner PCT 1",
+      "party": "D"
+    },
+    {
+      "searchName": "Garcia, Adrian",
+      "name": "Adrian Garcia",
+      "office": "Commissioner PCT 2",
+      "party": "D"
+    },
+    {
+      "searchName": "Ramsey, Tom",
+      "name": "Tom Ramsey",
+      "office": "Commissioner PCT 3",
+      "party": "R"
+    },
+    {
+      "searchName": "Briones, Lesley",
+      "name": "Lesley Briones",
+      "office": "Commissioner PCT 4",
+      "party": "D"
+    },
+    {
+      "searchName": "Gonzalez, Ed",
+      "name": "Ed Gonzalez",
+      "office": "Sheriff",
+      "party": "D"
+    },
+    {
+      "searchName": "Teare, Sean",
+      "name": "Sean Teare",
+      "office": "District Attorney",
+      "party": "D"
+    },
+    {
+      "searchName": "Burgess, Marilyn",
+      "name": "Marilyn Burgess",
+      "office": "District Clerk",
+      "party": "D"
+    },
+    {
+      "searchName": "Hudspeth, Teneshia",
+      "name": "Teneshia Hudspeth",
+      "office": "County Clerk",
+      "party": "D"
+    },
+    {
+      "searchName": "Ramirez, Annette",
+      "name": "Annette Ramirez",
+      "office": "Tax Assessor-Collector",
+      "party": "D"
+    },
+    {
+      "searchName": "Carter, Eric",
+      "name": "Eric William Carter",
+      "office": "Justice of the Peace PCT 1 PL 1",
+      "party": "R"
+    },
+    {
+      "searchName": "Duble, Steve",
+      "name": "Steve Duble",
+      "office": "Justice of the Peace PCT 1 PL 2",
+      "party": "R"
+    },
+    {
+      "searchName": "Delgado, Jo Ann",
+      "name": "Jo Ann Delgado",
+      "office": "Justice of the Peace PCT 2 PL 1",
+      "party": "D"
+    },
+    {
+      "searchName": "Lozano, Dolores",
+      "name": "Dolores Lozano",
+      "office": "Justice of the Peace PCT 2 PL 2",
+      "party": "D"
+    },
+    {
+      "searchName": "Stephens, Joe",
+      "name": "Joe Stephens",
+      "office": "Justice of the Peace PCT 3 PL 1",
+      "party": "R"
+    },
+    {
+      "searchName": "Bates, Lucia",
+      "name": "Lucia Bates",
+      "office": "Justice of the Peace PCT 3 PL 2",
+      "party": "R"
+    },
+    {
+      "searchName": "Goodwin, Lincoln",
+      "name": "Lincoln Goodwin",
+      "office": "Justice of the Peace PCT 4 PL 1",
+      "party": "D"
+    },
+    {
+      "searchName": "Korduba, Laryssa",
+      "name": "Laryssa Korduba",
+      "office": "Justice of the Peace PCT 4 PL 2",
+      "party": "D"
+    },
+    {
+      "searchName": "Lombardino, James",
+      "name": "James Lombardino",
+      "office": "Justice of the Peace PCT 5 PL 1",
+      "party": "R"
+    },
+    {
+      "searchName": "Wolfe, Bob",
+      "name": "Bob Wolfe",
+      "office": "Justice of the Peace PCT 5 PL 2",
+      "party": "R"
+    },
+    {
+      "searchName": "Trevino, Victor",
+      "name": "Victor Trevi\u00f1o III",
+      "office": "Justice of the Peace PCT 6 PL 1",
+      "party": "D"
+    },
+    {
+      "searchName": "Rodriguez, Angela",
+      "name": "Angela D. Rodriguez",
+      "office": "Justice of the Peace PCT 6 PL 2",
+      "party": "D"
+    },
+    {
+      "searchName": "Adams, Wanda",
+      "name": "Wanda E. Adams",
+      "office": "Justice of the Peace PCT 7 PL 1",
+      "party": "D"
+    },
+    {
+      "searchName": "Burney, Sharon",
+      "name": "Sharon M. Burney",
+      "office": "Justice of the Peace PCT 7 PL 2",
+      "party": "D"
+    },
+    {
+      "searchName": "Williamson, Holly",
+      "name": "Holly Williamson",
+      "office": "Justice of the Peace PCT 8 PL 1",
+      "party": "R"
+    },
+    {
+      "searchName": "Ditta, Louie",
+      "name": "Louie Ditta",
+      "office": "Justice of the Peace PCT 8 PL 2",
+      "party": "R"
+    },
+    {
+      "searchName": "Rosen, Alan",
+      "name": "Alan Rosen",
+      "office": "Constable PCT 1",
+      "party": "D"
+    },
+    {
+      "searchName": "Garcia, Jerry",
+      "name": "Jerry Garcia",
+      "office": "Constable PCT 2",
+      "party": "D"
+    },
+    {
+      "searchName": "Eagleton, Sherman",
+      "name": "Sherman Eagleton",
+      "office": "Constable PCT 3",
+      "party": "D"
+    },
+    {
+      "searchName": "Herman, Mark",
+      "name": "Mark Herman",
+      "office": "Constable PCT 4",
+      "party": "R"
+    },
+    {
+      "searchName": "Allbritton, Terry",
+      "name": "Terry Allbritton",
+      "office": "Constable PCT 5",
+      "party": "R"
+    },
+    {
+      "searchName": "Trevino, Silvia",
+      "name": "Silvia Trevino",
+      "office": "Constable PCT 6",
+      "party": "D"
+    },
+    {
+      "searchName": "Phillips, James",
+      "name": "James Phillips",
+      "office": "Constable PCT 7",
+      "party": "D"
+    },
+    {
+      "searchName": "Sandlin, Phil",
+      "name": "Phil Sandlin",
+      "office": "Constable PCT 8",
+      "party": "R"
+    },
+    {
+      "searchName": "Wyatt, Carla",
+      "name": "Carla Wyatt",
+      "office": "County Treasurer",
+      "party": "D"
+    }
   ],
-
   "_harrisCountyDiscovery": {
-    "_comment": "Office-title search terms for --discover mode. Finds judge filers in the county portal (County Criminal Courts at Law 1-16, County Civil Courts at Law 1-4, Probate Courts 1-5). Discovered filers land in data/finance-roster-discovered.json for review — verify each name, then move into harrisCounty above.",
+    "_comment": "Office-title search terms for --discover mode. Finds judge filers in the county portal (County Criminal Courts at Law 1-16, County Civil Courts at Law 1-4, Probate Courts 1-5). Discovered filers land in data/finance-roster-discovered.json for review \u2014 verify each name, then move into harrisCounty above.",
     "searchTerms": [
       "County Criminal Court",
       "County Civil Court",
@@ -50,44 +221,213 @@
       "Judge"
     ]
   },
-
   "houston": [
-    { "last": "Whitmire",      "first": "John",      "name": "John Whitmire",         "office": "Mayor",                   "party": "D" },
-    { "last": "Hollins",       "first": "Chris",     "name": "Chris Hollins",         "office": "City Controller",         "party": "D" },
-    { "last": "Peck",          "first": "Amy",       "name": "Amy Peck",              "office": "City Council District A", "party": "R" },
-    { "last": "Jackson",       "first": "Tarsha",    "name": "Tarsha Jackson",        "office": "City Council District B", "party": "D" },
-    { "last": "Panzarella",    "first": "Joe",       "name": "Joe Panzarella",        "office": "City Council District C", "party": "R" },
-    { "last": "Evans-Shabazz", "first": "Carolyn",   "name": "Carolyn Evans-Shabazz", "office": "City Council District D", "party": "D" },
-    { "last": "Flickinger",    "first": "Fred",      "name": "Fred Flickinger",       "office": "City Council District E", "party": "R" },
-    { "last": "Thomas",        "first": "Tiffany",   "name": "Tiffany Thomas",        "office": "City Council District F", "party": "D" },
-    { "last": "Huffman",       "first": "Mary Nan",  "name": "Mary Nan Huffman",      "office": "City Council District G", "party": "R" },
-    { "last": "Castillo",      "first": "Mario",     "name": "Mario Castillo",        "office": "City Council District H", "party": "D" },
-    { "last": "Martinez",      "first": "Joaquin",   "name": "Joaquin Martinez",      "office": "City Council District I", "party": "D" },
-    { "last": "Pollard",       "first": "Edward",    "name": "Edward Pollard",        "office": "City Council At-Large 2", "party": "D" },
-    { "last": "Castex-Tatum",  "first": "Martha",    "name": "Martha Castex-Tatum",   "office": "City Council District K", "party": "D" },
-    { "last": "Ramirez",       "first": "Julian",    "name": "Julian Ramirez",        "office": "City Council At-Large 1", "party": "R" },
-    { "last": "Carter",        "first": "Twila",     "name": "Twila Carter",          "office": "City Council At-Large 3", "party": "R" },
-    { "last": "Salinas",       "first": "Alejandra", "name": "Alejandra Salinas",     "office": "City Council At-Large 4", "party": "D" },
-    { "last": "Alcorn",        "first": "Sallie",    "name": "Sallie Alcorn",         "office": "City Council At-Large 5", "party": "D" }
+    {
+      "last": "Whitmire",
+      "first": "John",
+      "name": "John Whitmire",
+      "office": "Mayor",
+      "party": "D"
+    },
+    {
+      "last": "Hollins",
+      "first": "Chris",
+      "name": "Chris Hollins",
+      "office": "City Controller",
+      "party": "D"
+    },
+    {
+      "last": "Peck",
+      "first": "Amy",
+      "name": "Amy Peck",
+      "office": "City Council District A",
+      "party": "R"
+    },
+    {
+      "last": "Jackson",
+      "first": "Tarsha",
+      "name": "Tarsha Jackson",
+      "office": "City Council District B",
+      "party": "D"
+    },
+    {
+      "last": "Panzarella",
+      "first": "Joe",
+      "name": "Joe Panzarella",
+      "office": "City Council District C",
+      "party": "R"
+    },
+    {
+      "last": "Evans-Shabazz",
+      "first": "Carolyn",
+      "name": "Carolyn Evans-Shabazz",
+      "office": "City Council District D",
+      "party": "D"
+    },
+    {
+      "last": "Flickinger",
+      "first": "Fred",
+      "name": "Fred Flickinger",
+      "office": "City Council District E",
+      "party": "R"
+    },
+    {
+      "last": "Thomas",
+      "first": "Tiffany",
+      "name": "Tiffany Thomas",
+      "office": "City Council District F",
+      "party": "D"
+    },
+    {
+      "last": "Huffman",
+      "first": "Mary Nan",
+      "name": "Mary Nan Huffman",
+      "office": "City Council District G",
+      "party": "R"
+    },
+    {
+      "last": "Castillo",
+      "first": "Mario",
+      "name": "Mario Castillo",
+      "office": "City Council District H",
+      "party": "D"
+    },
+    {
+      "last": "Martinez",
+      "first": "Joaquin",
+      "name": "Joaquin Martinez",
+      "office": "City Council District I",
+      "party": "D"
+    },
+    {
+      "last": "Pollard",
+      "first": "Edward",
+      "name": "Edward Pollard",
+      "office": "City Council At-Large 2",
+      "party": "D"
+    },
+    {
+      "last": "Castex-Tatum",
+      "first": "Martha",
+      "name": "Martha Castex-Tatum",
+      "office": "City Council District K",
+      "party": "D"
+    },
+    {
+      "last": "Ramirez",
+      "first": "Julian",
+      "name": "Julian Ramirez",
+      "office": "City Council At-Large 1",
+      "party": "R"
+    },
+    {
+      "last": "Carter",
+      "first": "Twila",
+      "name": "Twila Carter",
+      "office": "City Council At-Large 3",
+      "party": "R"
+    },
+    {
+      "last": "Salinas",
+      "first": "Alejandra",
+      "name": "Alejandra Salinas",
+      "office": "City Council At-Large 4",
+      "party": "D"
+    },
+    {
+      "last": "Alcorn",
+      "first": "Sallie",
+      "name": "Sallie Alcorn",
+      "office": "City Council At-Large 5",
+      "party": "D"
+    }
   ],
-
   "_tecNote": "State legislators AND state district court judges file with the TEC. The tec list below feeds the existing /api/finance/tec route at merge time. District judges should be added here once their TEC filer IDs are confirmed via --discover-tec (searches TEC by office).",
   "tec": [
-    { "tecName": "Alvarado, Carol",     "name": "Carol Alvarado",     "office": "State Senator SD-6",  "party": "D" },
-    { "tecName": "Cook, Molly C.",      "name": "Molly Cook",         "office": "State Senator SD-15", "party": "D" },
-    { "tecName": "Thompson, Senfronia", "name": "Senfronia Thompson", "office": "State Rep HD-141",    "party": "D" },
-    { "tecName": "Johnson, Ann",        "name": "Ann Johnson",        "office": "State Rep HD-134",    "party": "D" },
-    { "tecName": "Hernandez, Ana E.",   "name": "Ana Hernandez",      "office": "State Rep HD-143",    "party": "D" },
-    { "tecName": "Walle, Armando L.",   "name": "Armando Walle",      "office": "State Rep HD-140",    "party": "D" },
-    { "tecName": "Perez, Mary Ann G.",  "name": "Mary Ann Perez",     "office": "State Rep HD-144",    "party": "D" }
+    {
+      "tecName": "Alvarado, Carol",
+      "name": "Carol Alvarado",
+      "office": "State Senator SD-6",
+      "party": "D"
+    },
+    {
+      "tecName": "Cook, Molly C.",
+      "name": "Molly Cook",
+      "office": "State Senator SD-15",
+      "party": "D"
+    },
+    {
+      "tecName": "Thompson, Senfronia",
+      "name": "Senfronia Thompson",
+      "office": "State Rep HD-141",
+      "party": "D"
+    },
+    {
+      "tecName": "Johnson, Ann",
+      "name": "Ann Johnson",
+      "office": "State Rep HD-134",
+      "party": "D"
+    },
+    {
+      "tecName": "Hernandez, Ana E.",
+      "name": "Ana Hernandez",
+      "office": "State Rep HD-143",
+      "party": "D"
+    },
+    {
+      "tecName": "Walle, Armando L.",
+      "name": "Armando Walle",
+      "office": "State Rep HD-140",
+      "party": "D"
+    },
+    {
+      "tecName": "Perez, Mary Ann G.",
+      "name": "Mary Ann Perez",
+      "office": "State Rep HD-144",
+      "party": "D"
+    }
   ],
-
   "fec": [
-    { "id": "S6TX00462", "name": "James Talarico",    "office": "U.S. Senate (lost D primary)",    "party": "D" },
-    { "id": "S0TX00999", "name": "John Cornyn",       "office": "U.S. Senate",                "party": "R" },
-    { "id": "H8TX07139", "name": "Lizzie Fletcher",   "office": "U.S. Rep CD-07",             "party": "D" },
-    { "id": "H4TX02177", "name": "Shaun Finnie",      "office": "U.S. Rep CD-02 (D nominee)", "party": "D" },
-    { "id": "H4TX18126", "name": "Christian Menefee", "office": "U.S. Rep CD-18",             "party": "D" },
-    { "id": "H8TX29049", "name": "Sylvia Garcia",     "office": "U.S. Rep CD-29",             "party": "D" }
+    {
+      "id": "S6TX00462",
+      "name": "James Talarico",
+      "office": "U.S. Senate (lost D primary)",
+      "party": "D"
+    },
+    {
+      "id": "S2TX00106",
+      "name": "John Cornyn",
+      "office": "U.S. Senate",
+      "party": "R",
+      "committeeId": "C00369033"
+    },
+    {
+      "id": "H8TX07140",
+      "name": "Lizzie Fletcher",
+      "office": "U.S. Rep CD-07",
+      "party": "D",
+      "committeeId": "C00640045"
+    },
+    {
+      "id": "H6TX02251",
+      "name": "Shaun Finnie",
+      "office": "U.S. Rep CD-02 (D nominee)",
+      "party": "D",
+      "committeeId": "C00909051"
+    },
+    {
+      "id": "H6TX18232",
+      "name": "Christian Menefee",
+      "office": "U.S. Rep CD-18",
+      "party": "D",
+      "committeeId": "C00899831"
+    },
+    {
+      "id": "H8TX29052",
+      "name": "Sylvia Garcia",
+      "office": "U.S. Rep CD-29",
+      "party": "D",
+      "committeeId": "C00660555"
+    }
   ]
 }

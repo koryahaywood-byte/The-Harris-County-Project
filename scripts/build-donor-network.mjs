@@ -45,15 +45,20 @@ const donorMap = new Map(); // norm name -> { name, employer, recipients: Map(of
 for (const cand of fecCandidates) {
   await sleep(4000); // stay under DEMO_KEY throttle
   // Resolve principal committee by name (stored IDs are stale)
-  let committee = null, resolvedId = null;
-  try {
+  let committee = cand.committeeId ?? null, resolvedId = cand.id;
+  if (!committee) try {
     const search = await fec("/candidates/search/", { q: cand.name.split(" ").pop(), state: "TX" });
-    const hit = search.results.find(r =>
-      r.name.toUpperCase().includes(cand.name.split(" ").pop().toUpperCase()) &&
-      r.name.toUpperCase().includes(cand.name.split(" ")[0].toUpperCase()) &&
-      r.principal_committees?.length);
+    const last = cand.name.split(" ").pop().toUpperCase();
+    const first = cand.name.split(" ")[0].toUpperCase();
+    const withCommittee = search.results.filter(r => r.principal_committees?.length && r.name.toUpperCase().includes(last));
+    // exact first-name match, else lone last-name match (nicknames: Lizzie/Elizabeth)
+    const NICKNAMES = { LIZZIE: "ELIZABETH", DAN: "DANIEL", TROY: "TROY", SHEILA: "SHEILA" };
+    const hit = withCommittee.find(r => r.name.toUpperCase().includes(first))
+      ?? withCommittee.find(r => NICKNAMES[first] && r.name.toUpperCase().includes(NICKNAMES[first]))
+      ?? (withCommittee.length === 1 ? withCommittee[0] : undefined);
     if (hit) { committee = hit.principal_committees[0].committee_id; resolvedId = hit.candidate_id; }
   } catch (e) { console.error(`search failed for ${cand.name}: ${e.message}`); }
+  else console.log(`${cand.name}: pinned committee ${committee}`);
   if (!committee) { console.log(`SKIP ${cand.name} — no principal committee resolved`); continue; }
   console.log(`${cand.name}: ${resolvedId} → ${committee}${resolvedId !== cand.id ? `  (roster had stale ${cand.id})` : ""}`);
 
