@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-06-11T18:41:58.811Z",
+ "generatedAt": "2026-06-12T15:11:00.590Z",
  "framing": "Statistical screens, not conclusions. Every signal shows its sources and confidence; the judgment is the reader's.",
  "signals": [
   {
@@ -37,7 +37,224 @@
      "0317"
     ]
    }
+  },
+  {
+   "id": "donor-cluster-texas-trial-lawyers-association-pac",
+   "type": "money",
+   "severity": "significant",
+   "headline": "Texas Trial Lawyers Association PAC is at or near the itemized maximum with 8 tracked officials",
+   "body": "$883,046 total across Rodney Ellis, Senfronia Thompson, Carol Alvarado, Ana Hernandez, Armando Walle, Mary Ann Perez, Ann Johnson, Molly Cook · employer on filings: Texas Trial Lawyers Association Pac. Filing windows overlap within the 2026 cycle.",
+   "sources": [
+    "FEC itemized Schedule A, 2026 cycle"
+   ],
+   "confidence": "high",
+   "confidenceNote": "Name-matched aggregation across committees — common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
+   "links": [
+    {
+     "label": "Money Trail",
+     "href": "/tools/where-is-the-dough?tab=trail"
+    }
+   ],
+   "entities": {
+    "donors": [
+     "Texas Trial Lawyers Association PAC"
+    ],
+    "officials": [
+     "Rodney Ellis",
+     "Senfronia Thompson",
+     "Carol Alvarado",
+     "Ana Hernandez",
+     "Armando Walle",
+     "Mary Ann Perez",
+     "Ann Johnson",
+     "Molly Cook"
+    ]
+   }
+  },
+  {
+   "id": "donor-cluster-texas-house-democratic-campaign-committee",
+   "type": "money",
+   "severity": "significant",
+   "headline": "Texas House Democratic Campaign Committee is at or near the itemized maximum with 4 tracked officials",
+   "body": "$539,267 total across Ana Hernandez, Ann Johnson, Mary Ann Perez, Armando Walle. Filing windows overlap within the 2026 cycle.",
+   "sources": [
+    "FEC itemized Schedule A, 2026 cycle"
+   ],
+   "confidence": "high",
+   "confidenceNote": "Name-matched aggregation across committees — common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
+   "links": [
+    {
+     "label": "Money Trail",
+     "href": "/tools/where-is-the-dough?tab=trail"
+    }
+   ],
+   "entities": {
+    "donors": [
+     "Texas House Democratic Campaign Committee"
+    ],
+    "officials": [
+     "Ana Hernandez",
+     "Ann Johnson",
+     "Mary Ann Perez",
+     "Armando Walle"
+    ]
+   }
+  },
+  {
+   "id": "donor-cluster-leaders-we-deserve",
+   "type": "money",
+   "severity": "significant",
+   "headline": "LEADERS WE DESERVE is at or near the itemized maximum with 2 tracked officials",
+   "body": "$499,698 total across Christian Menefee, Molly Cook. Filing windows overlap within the 2026 cycle.",
+   "sources": [
+    "FEC itemized Schedule A, 2026 cycle"
+   ],
+   "confidence": "high",
+   "confidenceNote": "Name-matched aggregation across committees — common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
+   "links": [
+    {
+     "label": "Money Trail",
+     "href": "/tools/where-is-the-dough?tab=trail"
+    }
+   ],
+   "entities": {
+    "donors": [
+     "LEADERS WE DESERVE"
+    ],
+    "officials": [
+     "Christian Menefee",
+     "Molly Cook"
+    ]
+   }
+  },
+  {
+   "id": "donor-cluster-texans-for-lawsuit-reform-pac",
+   "type": "money",
+   "severity": "significant",
+   "headline": "Texans For Lawsuit Reform PAC is at or near the itemized maximum with 6 tracked officials",
+   "body": "$384,675 total across Rodney Ellis, Senfronia Thompson, Carol Alvarado, Ana Hernandez, Armando Walle, Mary Ann Perez. Filing windows overlap within the 2026 cycle.",
+   "sources": [
+    "FEC itemized Schedule A, 2026 cycle"
+   ],
+   "confidence": "high",
+   "confidenceNote": "Name-matched aggregation across committees — common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
+   "links": [
+    {
+     "label": "Money Trail",
+     "href": "/tools/where-is-the-dough?tab=trail"
+    }
+   ],
+   "entities": {
+    "donors": [
+     "Texans For Lawsuit Reform PAC"
+    ],
+    "officials": [
+     "Rodney Ellis",
+     "Senfronia Thompson",
+     "Carol Alvarado",
+     "Ana Hernandez",
+     "Armando Walle",
+     "Mary Ann Perez"
+    ]
+   }
+  },
+  {
+   "id": "donor-cluster-annie-s-list",
+   "type": "money",
+   "severity": "significant",
+   "headline": "Annie's List is at or near the itemized maximum with 5 tracked officials",
+   "body": "$355,430 total across Carol Alvarado, Ana Hernandez, Ann Johnson, Mary Ann Perez, Molly Cook. Filing windows overlap within the 2026 cycle.",
+   "sources": [
+    "FEC itemized Schedule A, 2026 cycle"
+   ],
+   "confidence": "high",
+   "confidenceNote": "Name-matched aggregation across committees — common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
+   "links": [
+    {
+     "label": "Money Trail",
+     "href": "/tools/where-is-the-dough?tab=trail"
+    }
+   ],
+   "entities": {
+    "donors": [
+     "Annie's List"
+    ],
+    "officials": [
+     "Carol Alvarado",
+     "Ana Hernandez",
+     "Ann Johnson",
+     "Mary Ann Perez",
+     "Molly Cook"
+    ]
+   }
+  },
+  {
+   "id": "donor-cluster-border-health-pac",
+   "type": "money",
+   "severity": "significant",
+   "headline": "Border Health PAC is at or near the itemized maximum with 7 tracked officials",
+   "body": "$287,500 total across Rodney Ellis, Senfronia Thompson, Carol Alvarado, Ana Hernandez, Armando Walle, Mary Ann Perez, Ann Johnson. Filing windows overlap within the 2026 cycle.",
+   "sources": [
+    "FEC itemized Schedule A, 2026 cycle"
+   ],
+   "confidence": "high",
+   "confidenceNote": "Name-matched aggregation across committees — common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
+   "links": [
+    {
+     "label": "Money Trail",
+     "href": "/tools/where-is-the-dough?tab=trail"
+    }
+   ],
+   "entities": {
+    "donors": [
+     "Border Health PAC"
+    ],
+    "officials": [
+     "Rodney Ellis",
+     "Senfronia Thompson",
+     "Carol Alvarado",
+     "Ana Hernandez",
+     "Armando Walle",
+     "Mary Ann Perez",
+     "Ann Johnson"
+    ]
+   }
   }
  ],
- "threads": []
+ "threads": [
+  {
+   "id": "thread-1",
+   "title": "Connected: money + money + money + money + money + money signals on shared ground",
+   "signalIds": [
+    "donor-cluster-texas-trial-lawyers-association-pac",
+    "donor-cluster-texas-house-democratic-campaign-committee",
+    "donor-cluster-leaders-we-deserve",
+    "donor-cluster-texans-for-lawsuit-reform-pac",
+    "donor-cluster-annie-s-list",
+    "donor-cluster-border-health-pac"
+   ],
+   "entities": {
+    "officials": [
+     "Rodney Ellis",
+     "Senfronia Thompson",
+     "Carol Alvarado",
+     "Ana Hernandez",
+     "Armando Walle",
+     "Mary Ann Perez",
+     "Ann Johnson",
+     "Molly Cook",
+     "Christian Menefee"
+    ],
+    "donors": [
+     "Texas Trial Lawyers Association PAC",
+     "Texas House Democratic Campaign Committee",
+     "LEADERS WE DESERVE",
+     "Texans For Lawsuit Reform PAC",
+     "Annie's List",
+     "Border Health PAC"
+    ]
+   },
+   "note": "Auto-clustered by shared entities within the reporting window. Verified annotators can develop this thread with Field Notes (target: signal ids)."
+  }
+ ]
 }
