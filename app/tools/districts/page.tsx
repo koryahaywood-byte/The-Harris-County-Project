@@ -73,7 +73,7 @@ function politicianLabel(type: TypeKey, value: string | null): string {
   if (type === "sd") return `SD-${value}`;
   if (type === "hd") return `HD-${value}`;
   if (type === "jp") return `JP ${value}`;
-  if (type === "pct") return `Commissioner PCT ${value}`;
+  if (type === "pct") return `Precinct ${value}`;
   return `District ${value}`;
 }
 
