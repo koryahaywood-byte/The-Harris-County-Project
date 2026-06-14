@@ -924,7 +924,7 @@ export default function PoliticianProfile() {
   const statOrder = ["warChest", "lawmaker", "influence", "access", "tenure"] as const;
 
   return (
-    <div className="bg-[var(--background)]">
+    <div className="bg-[var(--background)] topo-light">
 
       {/* ── NBA 2K Hero ────────────────────────────────────────────────── */}
       <div

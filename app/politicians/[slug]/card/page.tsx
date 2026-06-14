@@ -33,7 +33,7 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
   if (!pol) notFound();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-5 py-12"
+    <div className="topo-dark min-h-screen flex flex-col items-center justify-center px-5 py-12"
       style={{
         background: "radial-gradient(ellipse 80% 60% at 50% 0%, #16304d 0%, #0a1623 55%, #060d16 100%)",
         fontFamily: "var(--font-outfit,sans-serif)",

@@ -65,7 +65,7 @@ export default async function ComparePage({ params }: { params: Promise<{ slugs:
   const winsB = rows.filter(r => r.winner === "b").length;
 
   return (
-    <div className="min-h-screen px-5 py-12"
+    <div className="topo-dark min-h-screen px-5 py-12"
       style={{
         background: "radial-gradient(ellipse 80% 60% at 50% 0%, #16304d 0%, #0a1623 55%, #060d16 100%)",
         fontFamily: "var(--font-outfit,sans-serif)",

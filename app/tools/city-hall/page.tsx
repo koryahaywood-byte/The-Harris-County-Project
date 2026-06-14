@@ -227,7 +227,7 @@ export default function CityHallPage() {
   for (const it of allItems) counts[it.significance]++;
 
   return (
-    <div style={{ background: "var(--background)", minHeight: "100vh" }}>
+    <div className="topo-light" style={{ background: "var(--background)", minHeight: "100vh" }}>
 
       {/* Hero */}
       <section className="relative overflow-hidden"
