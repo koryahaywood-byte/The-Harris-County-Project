@@ -954,11 +954,16 @@ export default function PoliticianProfile() {
           </Link>
           <div className="flex items-center gap-2.5">
             <FollowButton slug={pol.slug} name={pol.name} />
-            {/* Card View toggle */}
+            {/* Share Card */}
             <Link href={`/politicians/${pol.slug}/card`}
-              className="pressable text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full transition-colors"
+              className="pressable flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full transition-colors"
               style={{ background: "rgba(212,175,55,0.12)", color: "#fbbf24", border: "1px solid rgba(212,175,55,0.35)" }}>
-              Card View
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                <polyline points="16 6 12 2 8 6"/>
+                <line x1="12" y1="2" x2="12" y2="15"/>
+              </svg>
+              Share Card
             </Link>
             {/* Party chip */}
             <span

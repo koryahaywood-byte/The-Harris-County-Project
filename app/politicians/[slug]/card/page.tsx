@@ -6,6 +6,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { POLITICIANS } from "@/lib/politicians";
 import OfficialCard from "@/components/OfficialCard";
+import CardShareButton from "@/components/CardShareButton";
 
 export function generateStaticParams() {
   return POLITICIANS.map(p => ({ slug: p.slug }));
@@ -38,16 +39,21 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
         fontFamily: "var(--font-outfit,sans-serif)",
       }}>
       <OfficialCard pol={pol} />
-      <div className="mt-7 flex items-center gap-4">
-        <Link href={`/politicians/${pol.slug}`}
-          className="pressable text-xs font-bold px-5 py-2.5 rounded-full text-white/80"
-          style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.14)" }}>
-          Full profile →
-        </Link>
-        <Link href="/politicians"
-          className="text-xs text-white/35 hover:text-white/60 transition-colors">
-          All officials
-        </Link>
+
+      {/* share + nav row */}
+      <div className="mt-7 flex flex-col items-center gap-3">
+        <CardShareButton slug={pol.slug} name={pol.name} office={pol.office} />
+        <div className="flex items-center gap-4 mt-1">
+          <Link href={`/politicians/${pol.slug}`}
+            className="pressable text-xs font-bold px-5 py-2.5 rounded-full text-white/70"
+            style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)" }}>
+            Full profile →
+          </Link>
+          <Link href="/politicians"
+            className="text-xs text-white/30 hover:text-white/55 transition-colors">
+            All officials
+          </Link>
+        </div>
       </div>
     </div>
   );
