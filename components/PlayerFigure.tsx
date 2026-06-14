@@ -179,7 +179,7 @@ export default function PlayerFigure({ slug, photo, party, name }: {
               backdropFilter: "blur(2px)",
             }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={photo} alt={name} className="w-full h-full object-cover object-center" style={{ display: "block" }} />
+            <img src={photo} alt={name} className="w-full h-full object-cover object-center" style={{ display: "block", filter: "url('#hcp-cel')" }} />
           </div>
         </div>
       )}

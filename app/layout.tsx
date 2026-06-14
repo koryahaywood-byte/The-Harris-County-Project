@@ -19,6 +19,36 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${outfit.variable} ${playfair.variable} ${dancing.variable}`}>
       <body className="min-h-screen flex flex-col" style={{ fontFamily: "var(--font-outfit), sans-serif" }}>
+        {/* Global SVG filter defs — cel-shade effect applied to politician photos */}
+        <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+          <defs>
+            <filter id="hcp-cel" colorInterpolationFilters="sRGB" x="-2%" y="-2%" width="104%" height="104%">
+              {/* 1. Slight blur to kill JPEG noise before processing */}
+              <feGaussianBlur in="SourceGraphic" stdDeviation="0.6" result="blurred"/>
+              {/* 2. Posterize to 7 levels — smooth enough for skin tones */}
+              <feComponentTransfer in="blurred" result="poster">
+                <feFuncR type="discrete" tableValues="0 0.17 0.33 0.5 0.67 0.83 1"/>
+                <feFuncG type="discrete" tableValues="0 0.17 0.33 0.5 0.67 0.83 1"/>
+                <feFuncB type="discrete" tableValues="0 0.17 0.33 0.5 0.67 0.83 1"/>
+              </feComponentTransfer>
+              {/* 3. Saturation pop */}
+              <feColorMatrix type="saturate" values="1.2" in="poster" result="vivid"/>
+              {/* 4. Edge detect on the blurred source (not raw JPEG) */}
+              <feConvolveMatrix order="3" kernelMatrix="-1 -1 -1 -1 8 -1 -1 -1 -1"
+                in="blurred" result="edge" preserveAlpha="false" divisor="4"/>
+              {/* 5. Desaturate edges */}
+              <feColorMatrix type="saturate" values="0" in="edge" result="grayEdge"/>
+              {/* 6. Invert: bright edges → dark ink lines */}
+              <feComponentTransfer in="grayEdge" result="ink">
+                <feFuncR type="linear" slope="-1" intercept="1"/>
+                <feFuncG type="linear" slope="-1" intercept="1"/>
+                <feFuncB type="linear" slope="-1" intercept="1"/>
+              </feComponentTransfer>
+              {/* 7. Multiply ink lines onto vivid posterized base */}
+              <feBlend mode="multiply" in="vivid" in2="ink"/>
+            </filter>
+          </defs>
+        </svg>
         <EmailGate />
         <Nav />
         <main className="flex-1">{children}</main>
