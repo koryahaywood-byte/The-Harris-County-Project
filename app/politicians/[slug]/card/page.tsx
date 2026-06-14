@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!pol) return {};
   const title = `${pol.name} — Official Card`;
   const desc = `${pol.office}, ${pol.district}. Stats, money, and record — via The Harris County Project.`;
-  const og = `/api/og?tool=${encodeURIComponent(pol.name)}&section=${encodeURIComponent(pol.office)}&desc=${encodeURIComponent(desc)}`;
+  const og = `/api/og/card/${pol.slug}`;
   return {
     title: `${title} · The Harris County Project`,
     description: desc,
