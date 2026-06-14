@@ -194,8 +194,10 @@ export default function OfficialCard({ pol, defaultSide = "front" }: { pol: Poli
                 <p className="text-[8px] uppercase tracking-[0.14em] text-white/40 font-bold">In office</p>
               </div>
               <div className="rounded-xl py-2 text-center" style={{ background: "rgba(255,255,255,0.05)" }}>
-                <p className="text-sm font-bold" style={{ color: GOLD_BRIGHT }}>#{rank}</p>
-                <p className="text-[8px] uppercase tracking-[0.14em] text-white/40 font-bold">of {of} peers</p>
+                <p className="text-sm font-bold" style={{ color: GOLD_BRIGHT }}>
+                  {finance?.cash ? fmt(finance.cash) : "—"}
+                </p>
+                <p className="text-[8px] uppercase tracking-[0.14em] text-white/40 font-bold">Cash on hand</p>
               </div>
             </div>
             {topBadge && (
