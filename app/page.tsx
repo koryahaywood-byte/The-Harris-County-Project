@@ -408,8 +408,6 @@ export default function Home() {
           <div className="mt-16 flex flex-wrap gap-8">
             {[
               { value: "22", label: "Civic tools" },
-              { value: "4.7M", label: "Residents served" },
-              { value: "Free", label: "Always" },
               { value: "100%", label: "Public data" },
             ].map(({ value, label }) => (
               <div key={label}>
