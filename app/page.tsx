@@ -369,7 +369,7 @@ export default function Home() {
         {/* 3D extruded precinct map — height = turnout, color = partisan lean */}
         <Hero3D />
 
-        <div className="max-w-5xl mx-auto w-full relative z-10">
+        <div className="max-w-5xl mx-auto w-full relative z-10 pointer-events-none">
           <p className="text-sky-300/70 text-[10px] font-bold uppercase tracking-[0.3em] mb-10 flex items-center gap-2">
             <span className="w-5 h-px bg-sky-300/40" />
             Harris County, Texas
@@ -389,7 +389,7 @@ export default function Home() {
             their government — how it votes, where it spends, and when it decides.
           </p>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-3 pointer-events-auto w-fit">
             <a
               href="#start-here"
               className="group inline-flex items-center gap-3 bg-sky-300 hover:bg-sky-200 text-[var(--accent)] font-bold rounded-full px-7 py-4 text-sm transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_0_48px_rgba(125,211,252,0.35)] active:scale-[0.98]"
