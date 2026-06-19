@@ -37,7 +37,7 @@ const TEC_CANDIDATES = [
   { tecName: "Cunningham, Charles",   name: "Charles Cunningham",  office: "State Rep HD-127",             level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "Cain, Briscoe",        name: "Briscoe Cain",        office: "State Rep HD-128",             level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "DeAyala, Mano",        name: "Mano DeAyala",        office: "State Rep HD-133",             level: "state" as const, party: "R" as const, incumbent: true },
-  { tecName: "Swanson, Valoree",     name: "Valoree Swanson",     office: "State Rep HD-150",             level: "state" as const, party: "R" as const, incumbent: true },
+  { tecName: "Dorazio, Mark",        name: "Mark Dorazio",        office: "State Rep HD-150",             level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "Kellum, A'Yonna",      name: "A'Yonna Kellum",      office: "State Rep HD-150 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Breaux, Darlene",       name: "Darlene Breaux",      office: "State Rep HD-149 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Kamin, Abbie",          name: "Abbie Kamin",         office: "County Attorney (D nominee)",  level: "state" as const, party: "D" as const, incumbent: false },

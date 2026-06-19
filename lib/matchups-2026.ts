@@ -288,9 +288,9 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     lean: "safe-r",
     sides: [
       { name: "A'Yonna Kellum", party: "D", incumbent: false, note: "Won March primary" },
-      { name: "Valoree Swanson", party: "R", incumbent: true, note: "Seeking reelection" },
+      { name: "Mark Dorazio",   party: "R", incumbent: true,  note: "Seeking reelection" },
     ],
-    detail: "Valoree Swanson has held HD-150 (NW Houston / Spring-Klein area) since 2016. Safe Republican district. A'Yonna Kellum won the D primary.",
+    detail: "Mark Dorazio has held HD-150 (Katy / Cinco Ranch / far west Harris County) since 2023, succeeding Valoree Swanson. Safe Republican district. A'Yonna Kellum won the D primary.",
   },
   "HD-127": {
     office: "State Representative, District 127",

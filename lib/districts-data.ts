@@ -97,10 +97,11 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "HD-128": {
-    description: "Pasadena, Deer Park, Baytown — Southeast industrial",
+    description: "Pasadena, Deer Park, La Porte — Southeast industrial. Open seat 2026: Briscoe Cain ran for CD-9 instead of reelection.",
     seatHistory: [
       { name: "John Davis", years: "2003–2016", party: "R" },
-      { name: "Briscoe Cain", years: "2017–present", party: "R" },
+      { name: "Briscoe Cain", years: "2017–2026", party: "R" },
+      { name: "TBD (2026 General)", years: "2027–present", party: "R" },
     ],
   },
   "HD-129": {
@@ -251,7 +252,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "HD-150": {
-    description: "Katy, Cinco Ranch — far west Harris County",
+    description: "Katy, Cinco Ranch — far west Harris County. Mark Dorazio (R, incumbent) vs. A'Yonna Kellum (D) in November 2026.",
     seatHistory: [
       { name: "Debbie Riddle", years: "2003–2016", party: "R" },
       { name: "Valoree Swanson", years: "2017–2022", party: "R" },

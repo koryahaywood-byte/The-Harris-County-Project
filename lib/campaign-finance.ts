@@ -62,7 +62,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Charles Cunningham",    office: "State Rep HD-127",               level: "state",    party: "R", cash: 0,          asOf: "pending",  incumbent: true,  filingUrl: TEC("Charles Cunningham") },
   { name: "Briscoe Cain",         office: "State Rep HD-128 (ran for CD-9)", level: "state",   party: "R", cash: 0,          asOf: "pending",  incumbent: true,  filingUrl: TEC("Briscoe Cain") },
   { name: "Mano DeAyala",         office: "State Rep HD-133",               level: "state",    party: "R", cash: 0,          asOf: "pending",  incumbent: true,  filingUrl: TEC("Mano DeAyala") },
-  { name: "Valoree Swanson",      office: "State Rep HD-150",               level: "state",    party: "R", cash: 0,          asOf: "pending",  incumbent: true,  filingUrl: TEC("Valoree Swanson") },
+  { name: "Mark Dorazio",         office: "State Rep HD-150",               level: "state",    party: "R", cash: 0,          asOf: "pending",  incumbent: true,  filingUrl: TEC("Mark Dorazio") },
   { name: "A'Yonna Kellum",       office: "State Rep HD-150 (D nominee)",   level: "state",    party: "D", cash: 0,          asOf: "pending",  incumbent: false, filingUrl: TEC("A'Yonna Kellum") },
   { name: "Darlene Breaux",        office: "State Rep HD-149 (D nominee)",   level: "state",    party: "D", cash: 0,         asOf: "pending",  incumbent: false, filingUrl: TEC("Darlene Breaux") },
   { name: "Shannon Dicely",        office: "State Senator SD-11 (D nominee)", level: "state",   party: "D", cash: 0,         asOf: "pending",  incumbent: false, filingUrl: TEC("Shannon Dicely") },
