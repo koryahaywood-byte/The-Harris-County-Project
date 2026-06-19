@@ -23,6 +23,7 @@ const TOOL_CONTEXT: Record<string, string> = {
   "/tools/precinct-lookup": "The user is viewing 'Precinct History' — a lookup tool for individual Harris County voting precincts showing vote history, turnout trends, and Field Intel GOTV classification (Surge/Hold/Battleground/R-Base).",
   "/tools/ballot-2026": "The user is viewing the '2026 General Election Ballot' — showing every race on a Harris County voter's November 2026 ballot, with D vs R matchup, candidate names, money on hand, competitiveness rating (Safe D → Toss-up → Safe R), and race status. Sections: Statewide Texas (Governor, Lt. Gov, AG open seat, Comptroller), Top of Ticket (US Senate: Crockett D vs Paxton R; Harris County Judge: Plummer D vs Sanchez R), Congress (8 CDs including CD-7 and CD-9 as toss-ups), State Legislature (SDs and HDs), County Offices (Sheriff, DA, etc.), and Local/JP/Constable races.",
   "/tools/pac-tracker": "The user is viewing 'Outside Money' — showing independent expenditures by PACs and Super PACs in Texas 2026 federal races. Data from FEC Schedule E filings. Key PACs: DCCC/NRCC (House), DSCC/NRSC (Senate), Club for Growth, Senate Majority PAC, Congressional Leadership Fund, House Majority PAC. State PAC activity tracked via TEC separately.",
+  "/tools/districts": "The user is viewing the 'Districts' tool — a detailed portrait of any Harris County voting district. Features: interactive precinct map with 2026 primary turnout layer, 2026 D vs R matchup card (from matchups-2026 data), voter profile (CVAP demographics, party split), seat history, and the Win Number card. The Win Number card shows: estimated November 3 2026 turnout (2022 off-year baseline × registration growth factor), D votes needed to win (50.5% of projected total), 2022 D baseline, gap (ahead or behind), and March 2026 primary edge. Supports Congressional (CD), State Senate (SD), State House (HD), Commissioner Precinct (PCT), JP, City Council, and countywide views.",
   "/politicians": "The user is viewing Politician Profiles — detailed profiles of Harris County elected officials with bills, campaign money, and district info.",
 };
 
@@ -44,8 +45,13 @@ Harris County context:
 - Texas has a biennial legislature (odd years only, Jan–Jun)
 - Harris County is governed by 4 commissioners + County Judge
 - 2026 is a big election year for TX (US Senate, Governor, Harris County Judge — open seat)
+- November 3, 2026 is the General Election Day (Tuesday after first Monday in November)
+- Voter registration deadline for 2026 general: October 5, 2026 (30 days before; Oct 4 falls on Sunday)
+- Early voting: October 19–30, 2026
 - 2026 County Judge race: Letitia Plummer (D) vs. Orlando Sanchez (R); Lina Hidalgo did not seek reelection
-- US Senate 2026: Jasmine Crockett (D) vs. Ken Paxton (R) — Paxton beat Cornyn in the R runoff`;
+- US Senate 2026: Jasmine Crockett (D) vs. Ken Paxton (R) — Paxton beat Cornyn in the R runoff
+- TX Governor 2026: Gina Hinojosa (D, former HD-49) vs. Greg Abbott (R, incumbent)
+- TX AG 2026: Open seat — Mayes Middleton (R nominee); D nominee TBD. Paxton vacated to run for US Senate.`;
 
 export async function POST(req: NextRequest) {
   const { messages, path } = await req.json();
