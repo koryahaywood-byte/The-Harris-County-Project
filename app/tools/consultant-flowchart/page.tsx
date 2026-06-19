@@ -52,6 +52,16 @@ const RELATIONSHIPS: Relationship[] = [
   { id: "c20", consultant: "Mentzer Media",     firm: "Mentzer Media",         role: "Media / Ads",         client: "Wesley Hunt",      clientType: "Candidate", race: "TX-38 2024",                  year: 2024, party: "R" },
   { id: "c21", consultant: "Harris Media",      firm: "Harris Media",          role: "Digital",             client: "Dan Crenshaw",     clientType: "Candidate", race: "TX-2 2024",                   year: 2024, party: "R" },
   { id: "c22", consultant: "Targeted Victory",  firm: "Targeted Victory",      role: "Digital",             client: "Wesley Hunt",      clientType: "Candidate", race: "TX-38 2024",                  year: 2024, party: "R" },
+
+  // ── 2026 TX US Senate ────────────────────────────────────────────────────
+  { id: "c23", consultant: "SKDK",              firm: "SKDK",                  role: "General Consultant",  client: "Jasmine Crockett", clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "D" },
+  { id: "c24", consultant: "Bully Pulpit Interactive", firm: "Bully Pulpit Interactive", role: "Digital", client: "Jasmine Crockett", clientType: "Candidate", race: "U.S. Senate 2026",           year: 2026, party: "D" },
+  { id: "c25", consultant: "Anzalone Research", firm: "Anzalone Research",     role: "Polling",             client: "Jasmine Crockett", clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "D" },
+  { id: "c26", consultant: "JS2 Media",         firm: "JS2 Media",             role: "Media / Ads",         client: "Jasmine Crockett", clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "D" },
+  { id: "c27", consultant: "Axiom Strategies",  firm: "Axiom Strategies",      role: "General Consultant",  client: "Ted Cruz",         clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "R" },
+  { id: "c28", consultant: "Jamestown Associates", firm: "Jamestown Associates", role: "Media / Ads",       client: "Ted Cruz",         clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "R" },
+  { id: "c29", consultant: "WPA Intelligence",  firm: "WPA Intelligence",      role: "Polling",             client: "Ted Cruz",         clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "R" },
+  { id: "c30", consultant: "Harris Media",      firm: "Harris Media",          role: "Digital",             client: "Ted Cruz",         clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "R" },
 ];
 
 /* ─── Metadata ───────────────────────────────────────────────────────────── */

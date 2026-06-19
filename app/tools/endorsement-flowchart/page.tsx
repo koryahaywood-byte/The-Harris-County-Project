@@ -62,6 +62,23 @@ const ENDORSEMENTS: Endorsement[] = [
   { id: "e28", endorser: "Emily's List",            endorserType: "Civic Org",        candidate: "Lina Hidalgo",     race: "Harris County Judge 2022",  year: 2022 },
   { id: "e29", endorser: "Sylvia Garcia",           endorserType: "Elected Official", candidate: "Lina Hidalgo",     race: "Harris County Judge 2022",  year: 2022 },
   { id: "e30", endorser: "SEIU Texas",              endorserType: "Union",            candidate: "Lina Hidalgo",     race: "Harris County Judge 2022",  year: 2022 },
+
+  // ── 2026 TX US Senate — additional endorsers ─────────────────────────────
+  { id: "e31", endorser: "Texas Democratic Party",   endorserType: "Party Org",       candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026 },
+  { id: "e32", endorser: "Texas NAACP",              endorserType: "Civic Org",       candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026 },
+  { id: "e33", endorser: "Planned Parenthood Action", endorserType: "Civic Org",      candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026 },
+  { id: "e34", endorser: "CWA Texas",                endorserType: "Union",           candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026, notes: "Communications Workers of America" },
+  { id: "e35", endorser: "Lizzie Fletcher",          endorserType: "Elected Official", candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026 },
+
+  // ── 2026 TX US Senate — Ted Cruz (R incumbent) ───────────────────────────
+  { id: "e36", endorser: "Donald Trump",             endorserType: "Elected Official", candidate: "Ted Cruz",         race: "U.S. Senate 2026",          year: 2026 },
+  { id: "e37", endorser: "Texas Republican Party",   endorserType: "Party Org",       candidate: "Ted Cruz",         race: "U.S. Senate 2026",          year: 2026 },
+  { id: "e38", endorser: "NRA Political Victory Fund", endorserType: "Civic Org",     candidate: "Ted Cruz",         race: "U.S. Senate 2026",          year: 2026 },
+  { id: "e39", endorser: "Club for Growth",          endorserType: "Civic Org",       candidate: "Ted Cruz",         race: "U.S. Senate 2026",          year: 2026 },
+
+  // ── 2026 Harris County Judge — Republican primary ────────────────────────
+  { id: "e40", endorser: "Texas Republican Party",   endorserType: "Party Org",       candidate: "Greg Plummer",     race: "Harris County Judge 2026",  year: 2026, notes: "Won May 2026 GOP runoff" },
+  { id: "e41", endorser: "Harris County Republicans", endorserType: "Party Org",      candidate: "Greg Plummer",     race: "Harris County Judge 2026",  year: 2026 },
 ];
 
 /* ─── Metadata ───────────────────────────────────────────────────────────── */

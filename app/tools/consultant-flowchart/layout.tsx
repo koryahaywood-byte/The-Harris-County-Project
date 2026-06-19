@@ -1,26 +1,16 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  robots: { index: false, follow: false },
-  title: "Consultant Flowchart · The Harris County Project",
-  description: "Who runs Harris County campaigns — the consultant network, mapped.",
+  title: "Consultant Network · The Harris County Project",
+  description: "The political consulting firms behind every Harris County candidate — who shares the same playbook.",
   openGraph: {
-    title: "Consultant Flowchart",
-    description: "Who runs Harris County campaigns — the consultant network, mapped.",
-    images: [{ url: "/api/og?tool=Consultant+Flowchart&section=Elections&desc=Who+runs+Harris+County+campaigns+%E2%80%94+the+consultant+network%2C+mapped.", width: 1200, height: 630 }],
+    title: "Consultant Network",
+    description: "The political consulting firms behind every Harris County candidate.",
+    images: [{ url: "/api/og?tool=Consultant+Network&section=Networks&desc=The+consultant+network+behind+Harris+County+campaigns.", width: 1200, height: 630 }],
   },
   twitter: { card: "summary_large_image" },
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <div style={{ background: "#fffbeb", borderBottom: "1px solid #fde68a" }} className="px-6 py-2.5 text-center">
-        <p className="text-[11px] font-semibold" style={{ color: "#92400e" }}>
-          🚧 This tool is in development and unlisted — data and design are not final.
-        </p>
-      </div>
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }
