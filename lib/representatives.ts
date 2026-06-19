@@ -47,7 +47,7 @@ const JP_BENCH: Record<string, { jps: { name: string; place: number; party: "D" 
 };
 
 function fromPol(p: Politician, level: RepEntry["level"]): RepEntry {
-  return { name: p.name, office: p.office, district: p.district, party: p.party, level, slug: p.slug };
+  return { name: p.name, office: p.office, district: p.district, party: p.party, level, slug: p.slug, ...(p.note ? { note: p.note } : {}) };
 }
 
 export interface CrosswalkEntry {

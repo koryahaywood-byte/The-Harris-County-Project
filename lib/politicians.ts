@@ -528,6 +528,21 @@ export const POLITICIANS: Politician[] = [
     termStart: 2023,
   },
 
+  {
+    slug: "christian-menefee",
+    name: "Christian Menefee",
+    office: "Harris County Attorney",
+    district: "Countywide",
+    chamber: "County",
+    party: "D",
+    salary: 193000,
+    photo: "https://www.harriscountytx.gov/ImageRepository/Document?documentID=18985",
+    website: "https://www.harriscountytx.gov/attorney",
+    twitter: "MenefeeForTexas",
+    termStart: 2021,
+    note: "Won CD-18 D primary runoff; serving as County Attorney through Jan 2027",
+  },
+
   // ── City of Houston ───────────────────────────────────────────────────
   // Source: houstontx.gov/council — verified June 2026
   {
@@ -801,6 +816,7 @@ export const POLITICIANS: Politician[] = [
     district: "Countywide",
     chamber: "County",
     party: "R",
+    termStart: 2027,
   },
   {
     slug: "darlene-breaux",
@@ -818,6 +834,7 @@ export const POLITICIANS: Politician[] = [
     district: "Countywide",
     chamber: "County",
     party: "D",
+    termStart: 2027,
   },
   {
     slug: "mark-fury",
@@ -826,6 +843,7 @@ export const POLITICIANS: Politician[] = [
     district: "PCT 5 PL 2",
     chamber: "County",
     party: "R",
+    termStart: 2027,
   },
   {
     slug: "lisa-jefferson",
@@ -834,6 +852,7 @@ export const POLITICIANS: Politician[] = [
     district: "PCT 5 PL 2",
     chamber: "County",
     party: "D",
+    termStart: 2027,
   },
   {
     slug: "melanie-miles",
@@ -842,6 +861,7 @@ export const POLITICIANS: Politician[] = [
     district: "PCT 7 PL 2",
     chamber: "County",
     party: "D",
+    termStart: 2027,
   },
   // 2026 State Legislature Nominees
   {

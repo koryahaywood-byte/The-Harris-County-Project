@@ -56,6 +56,8 @@ Harris County context:
 - HD-126 open seat: Stefanie Bord (D) vs Stan Stanart (R); HD-131 open seat: Staci Childs (D); HD-128 open seat (Briscoe Cain ran for CD-9 instead)
 - HD-134 (Ann Johnson D), HD-135 (Jon Rosenthal D) are the most competitive suburban seats
 - CD-7 (Fletcher D vs Hale R) and CD-9 (Gutierrez D vs Mealer R) are the top two toss-up congressional races in Harris County
+- CD-18 (Menefee D vs Whitfield R): Christian Menefee is the sitting Harris County Attorney running for Congress; safe-D district
+- CD-38 open seat (McDonough D vs Bonck R, lean R): Wesley Hunt vacated to run for U.S. Senate (lost R primary)
 - SD-11 open seat: Shannon Dicely (D nominee); R nominee TBD after Middleton left for AG race`;
 
 export async function POST(req: NextRequest) {

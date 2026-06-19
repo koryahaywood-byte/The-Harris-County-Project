@@ -746,6 +746,7 @@ export default function DistrictsPage() {
                         }}>
                         {currentRep.party === "D" ? "Democrat" : currentRep.party === "R" ? "Republican" : "Nonpartisan"}
                       </span>
+                      {currentRep.note && <p className="text-[10px] mt-1" style={{ color: "#b45309" }}>{currentRep.note}</p>}
                     </div>
                   </Link>
                 </div>
