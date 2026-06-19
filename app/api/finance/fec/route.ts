@@ -2,12 +2,14 @@ import { NextResponse } from "next/server";
 
 // FEC candidate IDs for Harris County-area federal candidates
 const FEDERAL_CANDIDATES = [
-  { id: "S6TX00462", name: "James Talarico",  office: "U.S. Senate (lost D primary)",   party: "D" as const, incumbent: false },
-  { id: "S0TX00999", name: "John Cornyn",      office: "U.S. Senate",               party: "R" as const, incumbent: true  },
-  { id: "H8TX07139", name: "Lizzie Fletcher",  office: "U.S. Rep CD-07",            party: "D" as const, incumbent: true  },
-  { id: "H4TX02177", name: "Shaun Finnie",     office: "U.S. Rep CD-02 (D nominee)",party: "D" as const, incumbent: false },
-  { id: "H4TX18126", name: "Christian Menefee",office: "U.S. Rep CD-18",            party: "D" as const, incumbent: true  },
-  { id: "H8TX29049", name: "Sylvia Garcia",    office: "U.S. Rep CD-29",            party: "D" as const, incumbent: true  },
+  { id: "S6TX00338", name: "Jasmine Crockett", office: "U.S. Senate (D nominee)",        party: "D" as const, incumbent: false },
+  { id: "S4TX00462", name: "Ken Paxton",        office: "U.S. Senate (R nominee)",        party: "R" as const, incumbent: false },
+  { id: "S6TX00462", name: "James Talarico",    office: "U.S. Senate (lost D primary)",   party: "D" as const, incumbent: false },
+  { id: "S0TX00999", name: "John Cornyn",       office: "U.S. Senate",                    party: "R" as const, incumbent: true  },
+  { id: "H8TX07139", name: "Lizzie Fletcher",   office: "U.S. Rep CD-07",                 party: "D" as const, incumbent: true  },
+  { id: "H4TX02177", name: "Shaun Finnie",      office: "U.S. Rep CD-02 (D nominee)",     party: "D" as const, incumbent: false },
+  { id: "H4TX18126", name: "Christian Menefee", office: "U.S. Rep CD-18",                 party: "D" as const, incumbent: true  },
+  { id: "H8TX29049", name: "Sylvia Garcia",     office: "U.S. Rep CD-29",                 party: "D" as const, incumbent: true  },
 ];
 
 const FEC_KEY = process.env.FEC_API_KEY ?? "DEMO_KEY";
