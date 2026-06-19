@@ -481,6 +481,34 @@
       "office": "Governor (D nominee)",
       "party": "D",
       "note": "Former State Rep HD-49 (Austin). Won 2026 D gubernatorial primary."
+    },
+    {
+      "tecName": "Creighton, Brandon",
+      "name": "Brandon Creighton",
+      "office": "State Senator SD-4 (R incumbent)",
+      "party": "R",
+      "note": "Seeking reelection. SD-4 covers NW Harris County + Montgomery + Galveston counties."
+    },
+    {
+      "tecName": "Miles, Borris",
+      "name": "Borris Miles",
+      "office": "State Senator SD-13 (D incumbent)",
+      "party": "D",
+      "note": "Seeking reelection. SD-13 covers Third Ward, Sunnyside, SE Houston."
+    },
+    {
+      "tecName": "Huffman, Joan",
+      "name": "Joan Huffman",
+      "office": "State Senator SD-17 (R incumbent)",
+      "party": "R",
+      "note": "Seeking reelection. SD-17 covers Bellaire, Pearland, SW Houston suburbs."
+    },
+    {
+      "tecName": "Kolkhorst, Lois",
+      "name": "Lois Kolkhorst",
+      "office": "State Senator SD-18 (R incumbent)",
+      "party": "R",
+      "note": "Seeking reelection. SD-18 touches far NW Harris County (Cypress/Katy area)."
     }
   ],
   "fec": [
