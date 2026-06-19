@@ -104,6 +104,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Shaun Finnie",  party: "D", incumbent: false, note: "D nominee" },
       { name: "Dan Crenshaw",  party: "R", incumbent: true },
     ],
+    detail: "Dan Crenshaw (R) has held CD-2 (NW Harris County into Montgomery Co.) since 2019. A former Navy SEAL and nationally prominent voice for the GOP, Crenshaw faces nominal D opposition in a safe-R district.",
   },
   "CD-7": {
     office: "U.S. Representative, District 7",
@@ -113,6 +114,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Lizzie Fletcher", party: "D", incumbent: true },
       { name: "Alexander Hale",  party: "R", incumbent: false, note: "Won May runoff" },
     ],
+    detail: "CD-7 (West Houston — Bellaire, River Oaks, Memorial, Katy) is the most competitive congressional seat in Harris County. Fletcher flipped it D in 2018 and has held on every cycle; Hale won the R runoff and is backed by national Republican money.",
   },
   "CD-8": {
     office: "U.S. Representative, District 8",
@@ -122,6 +124,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Laura Jones",     party: "D", incumbent: false, note: "Won March primary" },
       { name: "Morgan Luttrell", party: "R", incumbent: true, note: "Presumed nominee — no Harris-side R primary on ballot" },
     ],
+    detail: "CD-8 covers NE Harris County (Kingwood, Lake Houston, Atascocita) into Montgomery and east Texas. Morgan Luttrell (R) has held the seat since 2023; safe Republican territory.",
   },
   "CD-9": {
     office: "U.S. Representative, District 9",
@@ -141,6 +144,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Marquette Greene-Scott", party: "D", incumbent: false, note: "Won March primary" },
       { name: "Troy Nehls",             party: "R", incumbent: true, note: "Presumed nominee — primary outside Harris data" },
     ],
+    detail: "CD-22 covers south Harris County (Pearland, Friendswood, Manvel, Missouri City) into Fort Bend and Brazoria counties. Troy Nehls (R) has held the seat since 2021; safe Republican district.",
   },
   "CD-29": {
     office: "U.S. Representative, District 29",
@@ -149,6 +153,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     sides: [
       { name: "Sylvia Garcia", party: "D", incumbent: true, note: "Won March primary" },
     ],
+    detail: "CD-29 covers northeast Houston (Galena Park, Jacinto City, Cloverleaf) and runs toward Pasadena. Sylvia Garcia (D) has held the seat since 2019; majority-Latino district. No Republican general opponent confirmed.",
   },
   "CD-36": {
     office: "U.S. Representative, District 36",
@@ -158,6 +163,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Rhonda Hart",  party: "D", incumbent: false, note: "Won March primary" },
       { name: "Brian Babin",  party: "R", incumbent: true, note: "Presumed nominee — primary outside Harris data" },
     ],
+    detail: "CD-36 covers far southeast Harris County (Baytown, La Marque, Deer Park) into Chambers, Hardin, Jefferson, and Orange counties. Brian Babin (R) has held the seat since 2015; safe Republican district.",
   },
   "CD-38": {
     office: "U.S. Representative, District 38",
@@ -240,6 +246,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Stefanie Bord", party: "D", incumbent: false, note: "Won March primary" },
       { name: "Stan Stanart",  party: "R", incumbent: false, note: "Won May runoff" },
     ],
+    detail: "Open seat — incumbent Sam Harless (R) did not seek reelection. District covers NW Houston (FM 1960, Willowbrook, Copperfield). R-leaning suburb but Stanart is a controversial figure (former Harris County Tax Assessor); Bord could overperform in an anti-MAGA environment.",
   },
   "HD-131": {
     office: "State Representative, District 131",
@@ -248,6 +255,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     sides: [
       { name: "Staci Childs", party: "D", incumbent: false, note: "Won May runoff over Lawrence Allen Jr." },
     ],
+    detail: "Open seat — Alma Allen (D) retired after holding HD-131 since 2003. Childs won the Democratic runoff; district covers SW Houston (Fondren/Southwest area) and is overwhelmingly Democratic. No Republican filed.",
   },
   "HD-139": {
     office: "State Representative, District 139",
@@ -256,6 +264,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     sides: [
       { name: "Charlene Ward Johnson", party: "D", incumbent: true, note: "Won March primary" },
     ],
+    detail: "Charlene Ward Johnson (HD-139, Fifth Ward / Trinity Gardens) has served since 2017. Heavily Democratic majority-Black district. R nominee TBD.",
   },
   "HD-142": {
     office: "State Representative, District 142",
@@ -264,6 +273,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     sides: [
       { name: "Harold Dutton Jr.", party: "D", incumbent: true, note: "Won March primary outright" },
     ],
+    detail: "Harold Dutton Jr. (HD-142, Kashmere Gardens / Trinity Gardens / NE Houston) has served since 1985 — one of the longest-serving members of the Texas House. Heavily Democratic majority-Black district. R nominee TBD.",
   },
   "HD-144": {
     office: "State Representative, District 144",
@@ -272,6 +282,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     sides: [
       { name: "Mary Ann Perez", party: "D", incumbent: true, note: "Won March primary" },
     ],
+    detail: "Mary Ann Perez (HD-144, Galena Park / Pasadena / east Harris County) has served since 2017. Majority-Latino district on the Ship Channel's east side — lean-D but historically competitive. R nominee TBD.",
   },
   "HD-149": {
     office: "State Representative, District 149",
@@ -495,21 +506,21 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   // Countywide offices — law enforcement & admin
   "HC-Sheriff": {
     office: "Harris County Sheriff",
-    status: "partial",
-    lean: "safe-d",
+    status: "set",
+    lean: "uncontested-d",
     sides: [
-      { name: "Ed Gonzalez", party: "D", incumbent: true, note: "Incumbent — won March primary" },
+      { name: "Ed Gonzalez", party: "D", incumbent: true, note: "Incumbent — no R opponent filed" },
     ],
-    detail: "Ed Gonzalez has held the Sheriff's office since 2017. No Republican general opponent confirmed as of June 2026.",
+    detail: "Ed Gonzalez has held the Sheriff's office since 2017. No Republican filed for the general election — running uncontested.",
   },
   "HC-DA": {
     office: "District Attorney",
-    status: "partial",
-    lean: "safe-d",
+    status: "set",
+    lean: "uncontested-d",
     sides: [
-      { name: "Sean Teare", party: "D", incumbent: true, note: "Incumbent — won March primary" },
+      { name: "Sean Teare", party: "D", incumbent: true, note: "Incumbent — no R opponent filed" },
     ],
-    detail: "Sean Teare has served as DA since 2022. No Republican general opponent confirmed as of June 2026.",
+    detail: "Sean Teare has served as DA since 2022. No Republican filed for the general election — running uncontested.",
   },
   "HC-County-Attorney": {
     office: "County Attorney",
