@@ -416,30 +416,14 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     ],
     detail: "Penny Morales Shaw (HD-148, Midtown / Heights / Near NW) has served since 2019. Gentrifying urban district trending D. R nominee TBD.",
   },
-  "JP-2": {
-    office: "Justice of the Peace, Precinct 2",
+  "JP-2-PL2": {
+    office: "Justice of the Peace PCT 2 PL 2",
     status: "partial",
     lean: "lean-d",
     sides: [
-      { name: "Dolores Lozano", party: "D", incumbent: true, note: "Won March primary (Place 2)" },
+      { name: "Dolores Lozano", party: "D", incumbent: true, note: "Won March primary" },
     ],
-  },
-  "JP-5": {
-    office: "Justice of the Peace, Precinct 5",
-    status: "set",
-    lean: "lean-r",
-    sides: [
-      { name: "Lisa Jefferson", party: "D", incumbent: false, note: "Won March primary (Place 2)" },
-      { name: "Mark Fury",      party: "R", incumbent: false, note: "Won March primary over incumbent Bob Wolfe (Place 2)" },
-    ],
-  },
-  "JP-7": {
-    office: "Justice of the Peace, Precinct 7",
-    status: "partial",
-    lean: "likely-d",
-    sides: [
-      { name: "Melanie Miles", party: "D", incumbent: false, note: "Won May runoff over incumbent Sharon Burney (Place 2)" },
-    ],
+    detail: "Dolores Lozano (incumbent Place 2, JP Precinct 2) won the Democratic primary. R nominee TBD.",
   },
 
   // Commissioner Precincts
