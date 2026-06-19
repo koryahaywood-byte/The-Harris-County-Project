@@ -38,12 +38,13 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "SD-11": {
-    description: "Southeast Harris County, Galveston, Brazoria",
+    description: "Southeast Harris County, Galveston, Brazoria. Open seat 2026 — Mayes Middleton did not seek reelection (ran for Texas AG). Shannon Dicely (D) vs. R nominee TBD.",
     seatHistory: [
       { name: "Kent Caperton", years: "1975–1991", party: "D" },
       { name: "Buster Brown", years: "1992–2012", party: "R" },
       { name: "Larry Taylor", years: "2013–2022", party: "R" },
-      { name: "Mayes Middleton", years: "2023–present", party: "R" },
+      { name: "Mayes Middleton", years: "2023–2026", party: "R" },
+      { name: "TBD (2026 General)", years: "2027–present", party: "R" },
     ],
   },
   "SD-13": {
@@ -72,10 +73,11 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
 
   // ── TX State House ───────────────────────────────────────────────────────
   "HD-126": {
-    description: "Northwest Houston — FM 1960, Willowbrook, Copperfield",
+    description: "Northwest Houston — FM 1960, Willowbrook, Copperfield. Open seat 2026: Stan Stanart (R) vs. Stefanie Bord (D).",
     seatHistory: [
       { name: "Patricia Harless", years: "2007–2018", party: "R" },
-      { name: "Sam Harless", years: "2019–present", party: "R" },
+      { name: "Sam Harless", years: "2019–2026", party: "R" },
+      { name: "TBD (2026 General)", years: "2027–present", party: "R" },
     ],
   },
   "HD-127": {
@@ -107,10 +109,11 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "HD-131": {
-    description: "South Park, Sunnyside, South Houston — historically Black community",
+    description: "South Park, Sunnyside, South Houston — historically Black community. Open seat 2026 — Alma Allen retired. Staci Childs (D) won the runoff; R nominee TBD.",
     seatHistory: [
       { name: "Al Edwards", years: "1979–2009", party: "D" },
-      { name: "Alma Allen", years: "2005–present", party: "D" },
+      { name: "Alma Allen", years: "2005–2026", party: "D" },
+      { name: "Staci Childs (D nominee)", years: "2027–present", party: "D" },
     ],
   },
   "HD-132": {
@@ -249,10 +252,11 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
 
   // ── Harris County ────────────────────────────────────────────────────────
   "HC-Countywide": {
-    description: "Harris County — 4.7 million residents, 3rd largest county in the US",
+    description: "Harris County — 4.7 million residents, 3rd largest county in the US. County Judge 2026: Letitia Plummer (D) vs. Orlando Sanchez (R). Lina Hidalgo did not seek reelection.",
     seatHistory: [
       { name: "Ed Emmett", years: "2007–2018", party: "R" },
-      { name: "Lina Hidalgo", years: "2019–present", party: "D" },
+      { name: "Lina Hidalgo", years: "2019–2026", party: "D" },
+      { name: "TBD (2026 General)", years: "2027–present", party: "D" },
     ],
   },
   "HC-Precinct 1": {

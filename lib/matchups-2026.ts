@@ -12,10 +12,17 @@ export interface MatchupSide {
   note?: string;
 }
 
+export type RaceLean =
+  | "safe-d" | "likely-d" | "lean-d"
+  | "toss-up"
+  | "lean-r" | "likely-r" | "safe-r"
+  | "uncontested-d" | "uncontested-r";
+
 export interface Matchup {
   office: string;
   sides: MatchupSide[];   // usually [D, R]
   status: "set" | "runoff-pending" | "partial";
+  lean?: RaceLean;        // competitiveness rating for Harris County
   detail?: string;
 }
 
@@ -23,6 +30,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "US-Senate": {
     office: "U.S. Senate",
     status: "set",
+    lean: "lean-d",
     sides: [
       { name: "Jasmine Crockett", party: "D", incumbent: false, note: "Won March primary" },
       { name: "Ken Paxton",       party: "R", incumbent: false, note: "Won May runoff over John Cornyn" },
@@ -32,6 +40,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "HC-Countywide": {
     office: "Harris County Judge",
     status: "set",
+    lean: "lean-d",
     sides: [
       { name: "Letitia Plummer",  party: "D", incumbent: false, note: "Won May runoff over Annise Parker" },
       { name: "Orlando Sanchez",  party: "R", incumbent: false, note: "Won May runoff over Warren Howell" },
@@ -41,6 +50,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "CD-18": {
     office: "U.S. Representative, District 18",
     status: "set",
+    lean: "safe-d",
     sides: [
       { name: "Christian Menefee",       party: "D", incumbent: true, note: "Won May runoff over Al Green" },
       { name: "Ronald Dwayne Whitfield", party: "R", incumbent: false, note: "Won March primary" },
@@ -50,6 +60,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "CD-2": {
     office: "U.S. Representative, District 2",
     status: "set",
+    lean: "safe-r",
     sides: [
       { name: "Shaun Finnie",  party: "D", incumbent: false, note: "D nominee" },
       { name: "Dan Crenshaw",  party: "R", incumbent: true },
@@ -58,6 +69,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "CD-7": {
     office: "U.S. Representative, District 7",
     status: "set",
+    lean: "toss-up",
     sides: [
       { name: "Lizzie Fletcher", party: "D", incumbent: true },
       { name: "Alexander Hale",  party: "R", incumbent: false, note: "Won May runoff" },
@@ -66,6 +78,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "CD-8": {
     office: "U.S. Representative, District 8",
     status: "partial",
+    lean: "safe-r",
     sides: [
       { name: "Laura Jones",     party: "D", incumbent: false, note: "Won March primary" },
       { name: "Morgan Luttrell", party: "R", incumbent: true, note: "Presumed nominee — no Harris-side R primary on ballot" },
@@ -74,15 +87,17 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "CD-9": {
     office: "U.S. Representative, District 9",
     status: "set",
+    lean: "toss-up",
     sides: [
       { name: "Leticia Gutierrez", party: "D", incumbent: false, note: "Won March primary" },
       { name: "Alex Mealer",       party: "R", incumbent: false, note: "Won May runoff over Briscoe Cain" },
     ],
-    detail: "Open-seat race: incumbent Al Green ran in CD-18 instead (and lost that runoff).",
+    detail: "Open-seat race: incumbent Al Green ran in CD-18 instead (and lost that runoff). Mealer ran a close County Judge race in 2022.",
   },
   "CD-22": {
     office: "U.S. Representative, District 22",
     status: "partial",
+    lean: "safe-r",
     sides: [
       { name: "Marquette Greene-Scott", party: "D", incumbent: false, note: "Won March primary" },
       { name: "Troy Nehls",             party: "R", incumbent: true, note: "Presumed nominee — primary outside Harris data" },
@@ -91,6 +106,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "CD-29": {
     office: "U.S. Representative, District 29",
     status: "partial",
+    lean: "safe-d",
     sides: [
       { name: "Sylvia Garcia", party: "D", incumbent: true, note: "Won March primary" },
     ],
@@ -98,6 +114,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "CD-36": {
     office: "U.S. Representative, District 36",
     status: "partial",
+    lean: "safe-r",
     sides: [
       { name: "Rhonda Hart",  party: "D", incumbent: false, note: "Won March primary" },
       { name: "Brian Babin",  party: "R", incumbent: true, note: "Presumed nominee — primary outside Harris data" },
@@ -106,6 +123,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "CD-38": {
     office: "U.S. Representative, District 38",
     status: "set",
+    lean: "lean-r",
     sides: [
       { name: "Melissa McDonough", party: "D", incumbent: false, note: "Won March primary" },
       { name: "Jon Bonck",         party: "R", incumbent: false, note: "Won May runoff" },
@@ -115,6 +133,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "SD-11": {
     office: "State Senator, District 11",
     status: "partial",
+    lean: "likely-r",
     sides: [
       { name: "Shannon Dicely", party: "D", incumbent: false, note: "Won March primary" },
     ],
@@ -123,6 +142,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "HD-126": {
     office: "State Representative, District 126",
     status: "set",
+    lean: "lean-r",
     sides: [
       { name: "Stefanie Bord", party: "D", incumbent: false, note: "Won March primary" },
       { name: "Stan Stanart",  party: "R", incumbent: false, note: "Won May runoff" },
@@ -131,6 +151,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "HD-131": {
     office: "State Representative, District 131",
     status: "partial",
+    lean: "safe-d",
     sides: [
       { name: "Staci Childs", party: "D", incumbent: false, note: "Won May runoff over Lawrence Allen Jr." },
     ],
@@ -138,6 +159,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "HD-139": {
     office: "State Representative, District 139",
     status: "partial",
+    lean: "safe-d",
     sides: [
       { name: "Charlene Ward Johnson", party: "D", incumbent: true, note: "Won March primary" },
     ],
@@ -145,6 +167,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "HD-142": {
     office: "State Representative, District 142",
     status: "partial",
+    lean: "safe-d",
     sides: [
       { name: "Harold Dutton Jr.", party: "D", incumbent: true, note: "Won March primary outright" },
     ],
@@ -152,6 +175,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "HD-144": {
     office: "State Representative, District 144",
     status: "partial",
+    lean: "lean-d",
     sides: [
       { name: "Mary Ann Perez", party: "D", incumbent: true, note: "Won March primary" },
     ],
@@ -159,6 +183,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "HD-149": {
     office: "State Representative, District 149",
     status: "partial",
+    lean: "lean-d",
     sides: [
       { name: "Darlene Breaux", party: "D", incumbent: false, note: "Won May runoff over incumbent Hubert Vo" },
     ],
@@ -167,6 +192,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "HD-150": {
     office: "State Representative, District 150",
     status: "partial",
+    lean: "safe-r",
     sides: [
       { name: "A'Yonna Kellum", party: "D", incumbent: false, note: "Won March primary" },
     ],
@@ -174,6 +200,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "JP-2": {
     office: "Justice of the Peace, Precinct 2",
     status: "partial",
+    lean: "lean-d",
     sides: [
       { name: "Dolores Lozano", party: "D", incumbent: true, note: "Won March primary (Place 2)" },
     ],
@@ -181,6 +208,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "JP-5": {
     office: "Justice of the Peace, Precinct 5",
     status: "set",
+    lean: "lean-r",
     sides: [
       { name: "Lisa Jefferson", party: "D", incumbent: false, note: "Won March primary (Place 2)" },
       { name: "Mark Fury",      party: "R", incumbent: false, note: "Won March primary over incumbent Bob Wolfe (Place 2)" },
@@ -189,6 +217,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "JP-7": {
     office: "Justice of the Peace, Precinct 7",
     status: "partial",
+    lean: "likely-d",
     sides: [
       { name: "Melanie Miles", party: "D", incumbent: false, note: "Won May runoff over incumbent Sharon Burney (Place 2)" },
     ],
@@ -198,6 +227,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "PCT-1": {
     office: "Commissioner Precinct 1",
     status: "partial",
+    lean: "uncontested-d",
     sides: [
       { name: "Rodney Ellis", party: "D", incumbent: true, note: "Incumbent — no R challenger filed" },
     ],
@@ -206,6 +236,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "PCT-2": {
     office: "Commissioner Precinct 2",
     status: "set",
+    lean: "likely-d",
     sides: [
       { name: "Adrian Garcia",  party: "D", incumbent: true,  note: "Incumbent" },
       { name: "Richard Vega",   party: "R", incumbent: false, note: "R general candidate" },
@@ -215,6 +246,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "PCT-3": {
     office: "Commissioner Precinct 3",
     status: "partial",
+    lean: "uncontested-r",
     sides: [
       { name: "Tom Ramsey", party: "R", incumbent: true, note: "Incumbent — no D challenger filed" },
     ],
@@ -223,6 +255,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "PCT-4": {
     office: "Commissioner Precinct 4",
     status: "partial",
+    lean: "uncontested-d",
     sides: [
       { name: "Lesley Briones", party: "D", incumbent: true, note: "Incumbent — no R challenger filed" },
     ],
@@ -233,6 +266,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "HC-Sheriff": {
     office: "Harris County Sheriff",
     status: "partial",
+    lean: "safe-d",
     sides: [
       { name: "Ed Gonzalez", party: "D", incumbent: true, note: "Incumbent — won March primary" },
     ],
@@ -241,6 +275,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "HC-DA": {
     office: "District Attorney",
     status: "partial",
+    lean: "safe-d",
     sides: [
       { name: "Sean Teare", party: "D", incumbent: true, note: "Incumbent — won March primary" },
     ],
@@ -249,6 +284,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "HC-County-Attorney": {
     office: "County Attorney",
     status: "partial",
+    lean: "likely-d",
     sides: [
       { name: "Abbie Kamin", party: "D", incumbent: false, note: "D nominee — open seat" },
     ],
@@ -257,6 +293,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "HC-District-Clerk": {
     office: "District Clerk",
     status: "partial",
+    lean: "safe-d",
     sides: [
       { name: "Marilyn Burgess", party: "D", incumbent: true, note: "Incumbent" },
     ],
@@ -264,6 +301,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "HC-County-Clerk": {
     office: "County Clerk",
     status: "partial",
+    lean: "safe-d",
     sides: [
       { name: "Teneshia Hudspeth", party: "D", incumbent: true, note: "Incumbent" },
     ],
@@ -271,6 +309,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "HC-Tax-Assessor": {
     office: "Tax Assessor-Collector",
     status: "partial",
+    lean: "safe-d",
     sides: [
       { name: "Annette Ramirez", party: "D", incumbent: true, note: "Incumbent" },
     ],
@@ -280,48 +319,56 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "CONSTABLE-1": {
     office: "Constable Precinct 1",
     status: "partial",
+    lean: "safe-d",
     sides: [{ name: "Alan Rosen",       party: "D", incumbent: true, note: "Incumbent" }],
     detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
   },
   "CONSTABLE-2": {
     office: "Constable Precinct 2",
     status: "partial",
+    lean: "safe-d",
     sides: [{ name: "Jerry Garcia",     party: "D", incumbent: true, note: "Incumbent" }],
     detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
   },
   "CONSTABLE-3": {
     office: "Constable Precinct 3",
     status: "partial",
+    lean: "safe-d",
     sides: [{ name: "Sherman Eagleton", party: "D", incumbent: true, note: "Incumbent" }],
     detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
   },
   "CONSTABLE-4": {
     office: "Constable Precinct 4",
     status: "partial",
+    lean: "safe-r",
     sides: [{ name: "Mark Herman",      party: "R", incumbent: true, note: "Incumbent" }],
     detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
   },
   "CONSTABLE-5": {
     office: "Constable Precinct 5",
     status: "partial",
+    lean: "safe-r",
     sides: [{ name: "Terry Allbritton", party: "R", incumbent: true, note: "Incumbent" }],
     detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
   },
   "CONSTABLE-6": {
     office: "Constable Precinct 6",
     status: "partial",
+    lean: "safe-d",
     sides: [{ name: "Silvia Trevino",   party: "D", incumbent: true, note: "Incumbent" }],
     detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
   },
   "CONSTABLE-7": {
     office: "Constable Precinct 7",
     status: "partial",
+    lean: "safe-d",
     sides: [{ name: "James Phillips",   party: "D", incumbent: true, note: "Incumbent" }],
     detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
   },
   "CONSTABLE-8": {
     office: "Constable Precinct 8",
     status: "partial",
+    lean: "safe-r",
     sides: [{ name: "Phil Sandlin",     party: "R", incumbent: true, note: "Incumbent" }],
     detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
   },
@@ -330,6 +377,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "JP-5-PL2": {
     office: "Justice of the Peace PCT 5 PL 2",
     status: "set",
+    lean: "toss-up",
     sides: [
       { name: "Lisa Jefferson", party: "D", incumbent: false, note: "Won March primary" },
       { name: "Mark Fury",      party: "R", incumbent: false, note: "Won March primary over incumbent Bob Wolfe" },
@@ -339,6 +387,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "JP-7-PL2": {
     office: "Justice of the Peace PCT 7 PL 2",
     status: "partial",
+    lean: "likely-d",
     sides: [
       { name: "Melanie Miles", party: "D", incumbent: false, note: "Won May runoff over incumbent Sharon Burney" },
     ],
