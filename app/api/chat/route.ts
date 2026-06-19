@@ -18,6 +18,9 @@ const TOOL_CONTEXT: Record<string, string> = {
   "/tools/endorsement-flowchart": "The user is viewing the 'Endorsement Flowchart' — showing who endorsed whom in Harris County races. You can discuss endorsement networks, endorsing organizations, and specific candidates.",
   "/tools/consultant-flowchart": "The user is viewing the 'Consultant Flowchart' — showing political consultants and their client networks in Harris County. You can discuss consultant roles, campaign strategy, and FEC/TEC filings.",
   "/tools/tv-station": "The user is viewing the 'TV Station' — live streams of public government meetings including Commissioners Court, City Council, HISD Board, and the Texas Legislature.",
+  "/tools/field-sweep": "The user is viewing 'Field Sweep' — a bulk GOTV precinct classifier showing all 1,000+ Harris County precincts ranked by Democratic opportunity: Surge (D≥65%), Hold (55-65%), Battleground (44-55%), and Strong Republican (<44%). Based on top-of-ticket D% across 2020/2022/2024 generals.",
+  "/tools/donor-network": "The user is viewing the 'Donor Network' — showing 876 cross-official donors who gave to multiple Harris County candidates. Data comes from FEC itemized Schedule A (federal), TEC bulk export (state/county). City of Houston donors pending.",
+  "/tools/precinct-lookup": "The user is viewing 'Precinct History' — a lookup tool for individual Harris County voting precincts showing vote history, turnout trends, and Field Intel GOTV classification (Surge/Hold/Battleground/R-Base).",
   "/politicians": "The user is viewing Politician Profiles — detailed profiles of Harris County elected officials with bills, campaign money, and district info.",
 };
 
@@ -38,7 +41,9 @@ Harris County context:
 - Key bodies: Commissioners Court (5 members), Houston City Council (16 members), HISD Board of Managers
 - Texas has a biennial legislature (odd years only, Jan–Jun)
 - Harris County is governed by 4 commissioners + County Judge
-- 2026 is a big election year for TX (US Senate, Governor, etc.)`;
+- 2026 is a big election year for TX (US Senate, Governor, Harris County Judge — open seat)
+- 2026 County Judge race: Letitia Plummer (D) vs. Orlando Sanchez (R); Lina Hidalgo did not seek reelection
+- US Senate 2026: Jasmine Crockett (D) vs. Ken Paxton (R) — Paxton beat Cornyn in the R runoff`;
 
 export async function POST(req: NextRequest) {
   const { messages, path } = await req.json();
