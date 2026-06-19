@@ -284,8 +284,12 @@ export async function getDashboardData(): Promise<DashboardData> {
     .filter(e => ELECTION_DAY_IDS.has(e.id) && e.date > todayStr)
     .sort((a, b) => a.date.localeCompare(b.date))[0] ?? null;
 
-  // Secondary: next candidate filing deadline (state general or city council)
-  const FILING_CLOSE_IDS = new Set(["candidate-filing-close", "hcc-filing-close-2027"]);
+  // Secondary: next candidate filing deadline OR campaign finance report deadline
+  const FILING_CLOSE_IDS = new Set([
+    "candidate-filing-close", "hcc-filing-close-2027",
+    "tec-jan-2026", "tec-jul-2026", "tec-jan-2027",
+    "fec-q2-2026", "fec-q3-2026", "fec-pre-general-2026",
+  ]);
   const nextFilingEvent = EVENTS
     .filter(e => FILING_CLOSE_IDS.has(e.id) && e.date > todayStr)
     .sort((a, b) => a.date.localeCompare(b.date))[0] ?? null;

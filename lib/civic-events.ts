@@ -147,6 +147,19 @@ export const EVENTS: CivicEvent[] = [
   { id: "candidate-filing-open",  title: "Candidate Filing Opens — Nov 2026 General",    date: "2026-07-18", category: "Elections", description: "Filing period opens for candidates seeking a place on the November 3, 2026 General Election ballot.", importance: "high" },
   { id: "candidate-filing-close", title: "Candidate Filing Deadline — Nov 2026 General",  date: "2026-08-17", category: "Elections", description: "Last day to file as a candidate for the November 3, 2026 General Election.", importance: "high" },
 
+  // ── Campaign Finance Filing Deadlines ───────────────────────────────────────
+  // TEC semi-annual reports due Jan 15 and Jul 15 each year (covers 6-month periods)
+  { id: "tec-jan-2026",  title: "TEC Semi-Annual Report Due (Jan)",  date: "2026-01-15", category: "Elections", description: "Texas Ethics Commission semi-annual campaign finance reports due. Covers July–December 2025 period. State and county candidates who file with TEC must submit.", importance: "high" },
+  { id: "tec-jul-2026",  title: "TEC Semi-Annual Report Due (Jul)",  date: "2026-07-15", category: "Elections", description: "Texas Ethics Commission semi-annual campaign finance reports due. Covers January–June 2026 period. Key pre-general filing showing funds raised through the primary and runoff cycles.", importance: "high" },
+  { id: "tec-jan-2027",  title: "TEC Semi-Annual Report Due (Jan)",  date: "2027-01-15", category: "Elections", description: "TEC semi-annual report covering July–December 2026 (post-general). Final 2026 election cycle financial disclosure.", importance: "high" },
+  // FEC quarterly reports (federal candidates: Congress, Senate)
+  { id: "fec-q2-2026",   title: "FEC Q2 2026 Quarterly Report Due", date: "2026-07-15", category: "Elections", description: "Federal Election Commission Q2 2026 report due (covers April–June 2026). U.S. Senate and Congressional candidates must report. Key pre-general snapshot.", importance: "high" },
+  { id: "fec-q3-2026",   title: "FEC Q3 2026 Quarterly Report Due", date: "2026-10-15", category: "Elections", description: "FEC Q3 2026 report due (covers July–September 2026). Final FEC quarterly before the November general election.", importance: "high" },
+  { id: "fec-pre-general-2026", title: "FEC Pre-General Report Due", date: "2026-10-22", category: "Elections", description: "FEC Pre-General Election report due (12 days before election). Covers through Oct 14, filed by Oct 22. Most current money-in-politics snapshot before Election Day.", importance: "high" },
+  // COH (Houston City) reports
+  { id: "coh-semi-jan-2026", title: "Houston COH Semi-Annual Report (Jan)", date: "2026-01-15", category: "Elections", description: "Houston City campaign finance semi-annual reports due for city candidates. Covers July–December 2025.", importance: "normal" },
+  { id: "coh-semi-jul-2026", title: "Houston COH Semi-Annual Report (Jul)", date: "2026-07-15", category: "Elections", description: "Houston City campaign finance semi-annual reports due. Covers January–June 2026.", importance: "normal" },
+
   // ── 2027 Houston City Council Elections (odd-year municipal cycle) ─────────
   { id: "hcc-filing-open-2027",   title: "City Council Filing Opens — 2027 Municipal",    date: "2027-07-17", category: "Elections", description: "Candidate filing opens for Houston City Council, Mayor, City Controller, and other municipal offices on the November 2027 ballot.", importance: "high" },
   { id: "hcc-filing-close-2027",  title: "City Council Filing Deadline — 2027 Municipal", date: "2027-08-16", category: "Elections", description: "Last day to file as a candidate for Houston City Council and other municipal offices.", importance: "high" },
