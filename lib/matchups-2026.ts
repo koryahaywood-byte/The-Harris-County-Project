@@ -305,10 +305,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     office: "State Representative, District 128",
     status: "partial",
     lean: "safe-r",
-    sides: [
-      { name: "Briscoe Cain", party: "R", incumbent: true, note: "Seeking reelection" },
-    ],
-    detail: "Briscoe Cain has held HD-128 (Deer Park / La Porte / East Pasadena) since 2017. Deep-red district along the Ship Channel's east side. D nominee TBD.",
+    sides: [],
+    detail: "Open seat — incumbent Briscoe Cain ran for CD-9 instead (lost May runoff to Alex Mealer). R and D nominees for this deep-red Deer Park / La Porte / East Pasadena district TBD.",
   },
   "HD-129": {
     office: "State Representative, District 129",

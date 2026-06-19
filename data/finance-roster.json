@@ -427,6 +427,41 @@
       "note": "Open seat. Won D primary. Files at TEC (county attorney is a state-law filer)."
     },
     {
+      "tecName": "Flynn, Josh",
+      "name": "Josh Flynn",
+      "office": "State Rep HD-127",
+      "party": "R",
+      "note": "Incumbent. Kingwood/Atascocita area."
+    },
+    {
+      "tecName": "Cain, Briscoe",
+      "name": "Briscoe Cain",
+      "office": "State Rep HD-128",
+      "party": "R",
+      "note": "Incumbent. Deer Park/La Porte/East Pasadena."
+    },
+    {
+      "tecName": "DeAyala, Mano",
+      "name": "Mano DeAyala",
+      "office": "State Rep HD-133",
+      "party": "R",
+      "note": "Incumbent. Memorial/Briargrove/West Houston."
+    },
+    {
+      "tecName": "Swanson, Valoree",
+      "name": "Valoree Swanson",
+      "office": "State Rep HD-150",
+      "party": "R",
+      "note": "Incumbent. Spring-Klein/NW Harris County."
+    },
+    {
+      "tecName": "Kellum, A'Yonna",
+      "name": "A'Yonna Kellum",
+      "office": "State Rep HD-150 (D nominee)",
+      "party": "D",
+      "note": "Won March 2026 D primary."
+    },
+    {
       "tecName": "Breaux, Darlene",
       "name": "Darlene Breaux",
       "office": "State Rep HD-149 (D nominee)",

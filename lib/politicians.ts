@@ -23,6 +23,8 @@ export type Politician = {
   committees?: string[];
   // If they chair or vice-chair a committee
   committeeRoles?: { committee: string; role: "Chair" | "Vice Chair" }[];
+  // Brief contextual note (e.g. "ran for CD-9; holds seat through Jan 2027")
+  note?: string;
   // Leadership roles: caucus, party, honorary (dean, etc.)
   roles?: ("caucus-chair" | "caucus-vice-chair" | "party-leader" | "dean" | "mayor" | "county-judge")[];
   // District racial/ethnic demographics (%, from Census ACS; add to 100)
@@ -365,6 +367,7 @@ export const POLITICIANS: Politician[] = [
     legiscanName: "Cain",
     committees: ["Judiciary & Civil Jurisprudence"],
     committeeRoles: [{ committee: "Judiciary & Civil Jurisprudence", role: "Chair" }],
+    note: "Ran for CD-9 in 2026 (lost runoff); holds HD-128 seat through Jan 2027",
   },
   {
     slug: "tom-oliverson",
@@ -866,6 +869,7 @@ export const POLITICIANS: Politician[] = [
     district: "HD-126",
     chamber: "House",
     party: "R",
+    termStart: 2027,
   },
   {
     slug: "staci-childs",
