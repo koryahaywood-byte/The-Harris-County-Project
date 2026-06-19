@@ -5,7 +5,11 @@ const TEC_BASE = "https://ethics.state.tx.us/search/cf";
 // TEC filer names exactly as they appear in the report (Last, First)
 // Maps to our display name + metadata
 const TEC_CANDIDATES = [
+  { tecName: "Creighton, Brandon",     name: "Brandon Creighton", office: "State Senator SD-4",          level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "Alvarado, Carol",       name: "Carol Alvarado",     office: "State Senator SD-6",          level: "state" as const, party: "D" as const, incumbent: true },
+  { tecName: "Miles, Borris",         name: "Borris Miles",       office: "State Senator SD-13",         level: "state" as const, party: "D" as const, incumbent: true },
+  { tecName: "Huffman, Joan",         name: "Joan Huffman",       office: "State Senator SD-17",         level: "state" as const, party: "R" as const, incumbent: true },
+  { tecName: "Kolkhorst, Lois",       name: "Lois Kolkhorst",     office: "State Senator SD-18",         level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "Cook, Molly C.",        name: "Molly Cook",          office: "State Senator SD-15",         level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Thompson, Senfronia",   name: "Senfronia Thompson",  office: "State Rep HD-141",            level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Johnson, Ann",          name: "Ann Johnson",         office: "State Rep HD-134",            level: "state" as const, party: "D" as const, incumbent: true },

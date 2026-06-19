@@ -187,6 +187,51 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     ],
     detail: "Molly Cook won the 2024 special election to replace John Whitmire (who became Houston Mayor). SD-15 seat is on the 2026 ballot; Cook must win a full 4-year term. Heights, Montrose, Galleria corridor — heavily Democratic.",
   },
+  "SD-4": {
+    office: "State Senator, District 4",
+    status: "partial",
+    lean: "safe-r",
+    sides: [
+      { name: "Brandon Creighton", party: "R", incumbent: true, note: "Seeking 3rd full term" },
+    ],
+    detail: "Brandon Creighton is the Republican incumbent in a district that spans NW Harris County through Montgomery and Galveston counties. D nominee TBD.",
+  },
+  "SD-6": {
+    office: "State Senator, District 6",
+    status: "partial",
+    lean: "safe-d",
+    sides: [
+      { name: "Carol Alvarado", party: "D", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Carol Alvarado has held SD-6 since 2018. The district covers Houston's Heights, EaDo, Near Northside, and East End — one of Harris County's most Democratic state senate seats. R nominee TBD.",
+  },
+  "SD-13": {
+    office: "State Senator, District 13",
+    status: "partial",
+    lean: "safe-d",
+    sides: [
+      { name: "Borris Miles", party: "D", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Borris Miles has served SD-13 since 2006. The district covers Third Ward, Sunnyside, Hiram Clarke, Missouri City — a majority-Black district that is among the most heavily Democratic in Texas. R nominee TBD.",
+  },
+  "SD-17": {
+    office: "State Senator, District 17",
+    status: "partial",
+    lean: "safe-r",
+    sides: [
+      { name: "Joan Huffman", party: "R", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Joan Huffman is a senior Republican senator who chairs the Senate Redistricting Committee. SD-17 covers SW Houston suburbs (Bellaire, Pearland, Sugar Land) — reliably Republican. D nominee TBD.",
+  },
+  "SD-18": {
+    office: "State Senator, District 18",
+    status: "partial",
+    lean: "safe-r",
+    sides: [
+      { name: "Lois Kolkhorst", party: "R", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Lois Kolkhorst's SD-18 touches only the far northwestern corner of Harris County (Cypress/Katy area). D nominee TBD.",
+  },
   "HD-126": {
     office: "State Representative, District 126",
     status: "set",
