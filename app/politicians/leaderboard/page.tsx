@@ -65,6 +65,7 @@ export default function LeaderboardPage() {
   const rows = useMemo(() => {
     return POLITICIANS
       .filter(p => {
+        if (p.termStart && p.termStart > 2026) return false; // exclude 2026 nominees
         if (chamber !== "All" && p.chamber !== chamber) return false;
         if (party !== "All" && p.party !== party) return false;
         if (search && !p.name.toLowerCase().includes(search.toLowerCase()) &&
