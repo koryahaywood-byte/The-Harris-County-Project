@@ -78,6 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Link href="/tools/tv-station" className="hover:text-white transition-colors duration-300">TV Station</Link>
                 <Link href="/tools/endorsement-flowchart" className="hover:text-white transition-colors duration-300">Endorsements</Link>
                 <Link href="/tools/ballot-2026" className="hover:text-white transition-colors duration-300">2026 Ballot</Link>
+                <Link href="/tools/pac-tracker" className="hover:text-white transition-colors duration-300">Outside Money</Link>
                 <Link href="/tools/field-sweep" className="hover:text-white transition-colors duration-300">Field Sweep</Link>
                 <Link href="/tools/donor-network" className="hover:text-white transition-colors duration-300">Donor Network</Link>
               </div>

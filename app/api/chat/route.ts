@@ -22,6 +22,7 @@ const TOOL_CONTEXT: Record<string, string> = {
   "/tools/donor-network": "The user is viewing the 'Donor Network' — showing 876 cross-official donors who gave to multiple Harris County candidates. Data comes from FEC itemized Schedule A (federal), TEC bulk export (state/county). City of Houston donors pending.",
   "/tools/precinct-lookup": "The user is viewing 'Precinct History' — a lookup tool for individual Harris County voting precincts showing vote history, turnout trends, and Field Intel GOTV classification (Surge/Hold/Battleground/R-Base).",
   "/tools/ballot-2026": "The user is viewing the '2026 General Election Ballot' — showing every Harris County race for November 2026, with D vs R matchup, candidate names, money on hand, competitiveness rating (Safe D → Toss-up → Safe R), and race status. Races include US Senate (Crockett D vs Paxton R), Harris County Judge (Plummer D vs Sanchez R), all 8 Congressional districts, State Senate and House races, Commissioners Court, JP races, and all 8 Constable precincts.",
+  "/tools/pac-tracker": "The user is viewing 'Outside Money' — showing independent expenditures by PACs and Super PACs in Texas 2026 federal races. Data from FEC Schedule E filings. Key PACs: DCCC/NRCC (House), DSCC/NRSC (Senate), Club for Growth, Senate Majority PAC, Congressional Leadership Fund, House Majority PAC. State PAC activity tracked via TEC separately.",
   "/politicians": "The user is viewing Politician Profiles — detailed profiles of Harris County elected officials with bills, campaign money, and district info.",
 };
 
