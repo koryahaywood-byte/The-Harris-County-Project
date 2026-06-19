@@ -12,8 +12,18 @@ const TEC_CANDIDATES = [
   { tecName: "Hernandez, Ana E.",     name: "Ana Hernandez",       office: "State Rep HD-143",            level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Walle, Armando L.",     name: "Armando Walle",       office: "State Rep HD-140",            level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Perez, Mary Ann G.",    name: "Mary Ann Perez",      office: "State Rep HD-144",            level: "state" as const, party: "D" as const, incumbent: true },
-  { tecName: "Talarico, James",       name: "James Talarico",      office: "U.S. Senate (lost D primary)",     level: "state" as const, party: "D" as const, incumbent: false },
+  { tecName: "Talarico, James",       name: "James Talarico",      office: "U.S. Senate (lost D primary)", level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Hinojosa, Gina",        name: "Gina Hinojosa",       office: "Governor (D nominee)",        level: "state" as const, party: "D" as const, incumbent: false },
+  { tecName: "Breaux, Darlene",       name: "Darlene Breaux",      office: "State Rep HD-149 (D nominee)",level: "state" as const, party: "D" as const, incumbent: false },
+  { tecName: "Kamin, Abbie",          name: "Abbie Kamin",         office: "County Attorney (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
+  // Commissioners Court — file with TEC
+  { tecName: "Ellis, Rodney",         name: "Rodney Ellis",        office: "Commissioner PCT 1",          level: "state" as const, party: "D" as const, incumbent: true },
+  { tecName: "Garcia, Adrian",        name: "Adrian Garcia",       office: "Commissioner PCT 2",          level: "state" as const, party: "D" as const, incumbent: true },
+  { tecName: "Ramsey, Tom",           name: "Tom Ramsey",          office: "Commissioner PCT 3",          level: "state" as const, party: "R" as const, incumbent: true },
+  { tecName: "Briones, Lesley",       name: "Lesley Briones",      office: "Commissioner PCT 4",          level: "state" as const, party: "D" as const, incumbent: true },
+  // County Judge nominees (open seat)
+  { tecName: "Plummer, Letitia",      name: "Letitia Plummer",     office: "County Judge (D nominee)",    level: "state" as const, party: "D" as const, incumbent: false },
+  { tecName: "Sanchez, Orlando",      name: "Orlando Sanchez",     office: "County Judge (R nominee)",    level: "state" as const, party: "R" as const, incumbent: false },
 ];
 
 export interface TECCandidate {
