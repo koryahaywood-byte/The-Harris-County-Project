@@ -14,6 +14,8 @@ const TEC_CANDIDATES = [
   { tecName: "Perez, Mary Ann G.",    name: "Mary Ann Perez",      office: "State Rep HD-144",            level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Talarico, James",       name: "James Talarico",      office: "U.S. Senate (lost D primary)", level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Hinojosa, Gina",        name: "Gina Hinojosa",       office: "Governor (D nominee)",        level: "state" as const, party: "D" as const, incumbent: false },
+  { tecName: "Patrick, Dan",          name: "Dan Patrick",         office: "Lt. Governor",                level: "state" as const, party: "R" as const, incumbent: true },
+  { tecName: "Hegar, Glenn",          name: "Glenn Hegar",         office: "Comptroller",                 level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "Breaux, Darlene",       name: "Darlene Breaux",      office: "State Rep HD-149 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Kamin, Abbie",          name: "Abbie Kamin",         office: "County Attorney (D nominee)",  level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Dicely, Shannon",       name: "Shannon Dicely",      office: "State Senator SD-11 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },

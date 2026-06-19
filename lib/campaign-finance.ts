@@ -30,6 +30,8 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Sylvia Garcia",         office: "U.S. Rep CD-29",                 level: "federal",  party: "D", cash: 175662,    asOf: "Apr 2026", incumbent: true,  filingUrl: FEC("H8TX29049") },
   // State
   { name: "Greg Abbott",           office: "Governor",                        level: "state",    party: "R", cash: 105700000, raised: 22700000, asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Greg Abbott") },
+  { name: "Dan Patrick",          office: "Lt. Governor",                    level: "state",    party: "R", cash: 0,          asOf: "pending",  incumbent: true,  filingUrl: TEC("Dan Patrick") },
+  { name: "Glenn Hegar",          office: "Comptroller",                     level: "state",    party: "R", cash: 0,          asOf: "pending",  incumbent: true,  filingUrl: TEC("Glenn Hegar") },
   { name: "Carol Alvarado",        office: "State Senator SD-6",             level: "state",    party: "D", cash: 1564381,   asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Carol Alvarado") },
   { name: "Senfronia Thompson",    office: "State Rep HD-141",               level: "state",    party: "D", cash: 1032927,   asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Senfronia Thompson") },
   { name: "Gina Hinojosa",         office: "Governor (D nominee)",            level: "state",    party: "D", cash: 1000000,   raised: 1300000, spent: 300000,   asOf: "Jan 2026 est.", incumbent: false, filingUrl: TEC("Gina Hinojosa") },

@@ -460,6 +460,27 @@
       "office": "State Rep HD-131 (D nominee)",
       "party": "D",
       "note": "Won May 2026 D runoff over Lawrence Allen Jr. HD-131 open seat — Alma Allen retired."
+    },
+    {
+      "tecName": "Patrick, Dan",
+      "name": "Dan Patrick",
+      "office": "Lt. Governor (R incumbent)",
+      "party": "R",
+      "note": "Seeking 3rd term. Statewide race."
+    },
+    {
+      "tecName": "Hegar, Glenn",
+      "name": "Glenn Hegar",
+      "office": "Comptroller (R incumbent)",
+      "party": "R",
+      "note": "Seeking 3rd term. Statewide race."
+    },
+    {
+      "tecName": "Hinojosa, Gina",
+      "name": "Gina Hinojosa",
+      "office": "Governor (D nominee)",
+      "party": "D",
+      "note": "Former State Rep HD-49 (Austin). Won 2026 D gubernatorial primary."
     }
   ],
   "fec": [

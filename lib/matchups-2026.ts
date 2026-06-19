@@ -30,12 +30,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   // ── Statewide Texas races ──────────────────────────────────────────────────
   "TX-Governor": {
     office: "Texas Governor",
-    status: "partial",
+    status: "set",
     lean: "safe-r",
     sides: [
-      { name: "Greg Abbott", party: "R", incumbent: true, note: "Seeking 3rd term" },
+      { name: "Gina Hinojosa", party: "D", incumbent: false, note: "Former State Rep HD-49 (Austin); won D primary" },
+      { name: "Greg Abbott",   party: "R", incumbent: true,  note: "Seeking 3rd term" },
     ],
-    detail: "Abbott is the Republican incumbent. Democratic nominee pending confirmation from Harris County primary data.",
+    detail: "Statewide race. Abbott has dominated Texas since 2014. Hinojosa is a former state representative from Austin who won the Democratic nomination.",
   },
   "TX-LtGov": {
     office: "Lt. Governor of Texas",
@@ -174,6 +175,15 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Shannon Dicely", party: "D", incumbent: false, note: "Won March primary" },
     ],
     detail: "Incumbent Mayes Middleton won the Republican nomination for Attorney General; Republican nominee for this seat not in Harris primary data.",
+  },
+  "SD-15": {
+    office: "State Senator, District 15",
+    status: "partial",
+    lean: "safe-d",
+    sides: [
+      { name: "Molly Cook", party: "D", incumbent: true, note: "Won 2024 special election; seeking first full term" },
+    ],
+    detail: "Molly Cook won the 2024 special election to replace John Whitmire (who became Houston Mayor). SD-15 seat is on the 2026 ballot; Cook must win a full 4-year term. Heights, Montrose, Galleria corridor — heavily Democratic.",
   },
   "HD-126": {
     office: "State Representative, District 126",
