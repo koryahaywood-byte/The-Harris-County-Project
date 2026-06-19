@@ -94,7 +94,7 @@ export default function LeaderboardPage() {
             OVR Leaderboard
           </h1>
           <p className="text-white/65 text-sm max-w-lg">
-            All 49 Harris County officials ranked by composite score. Sort by any attribute.
+            {rows.length} elected officials serving Harris County residents — ranked by composite score. Sort by any attribute.
           </p>
 
           {/* Top 3 podium */}

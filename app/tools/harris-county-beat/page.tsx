@@ -115,7 +115,7 @@ export default function HarrisCountyBeatPage() {
               <div className="rounded-2xl mb-6 p-4 flex gap-4 items-start" style={{ background: "rgba(37,99,168,0.06)", border: "1px solid rgba(37,99,168,0.15)" }}>
                 <div className="flex-shrink-0 w-2 h-2 mt-1.5 rounded-full bg-[var(--accent)]" />
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "var(--accent)" }}>Open Seat · November 4, 2026</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "var(--accent)" }}>Open Seat · November 3, 2026</p>
                   <p className="text-xs font-semibold text-[var(--fg)] mb-0.5">Harris County Judge</p>
                   <p className="text-[11px] text-[var(--muted)]">
                     <span className="text-blue-700 font-bold">Letitia Plummer</span> (D) vs. <span className="text-red-700 font-bold">Orlando Sanchez</span> (R) — Lina Hidalgo did not seek reelection.
