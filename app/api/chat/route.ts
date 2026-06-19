@@ -21,6 +21,7 @@ const TOOL_CONTEXT: Record<string, string> = {
   "/tools/field-sweep": "The user is viewing 'Field Sweep' — a bulk GOTV precinct classifier showing all 1,000+ Harris County precincts ranked by Democratic opportunity: Surge (D≥65%), Hold (55-65%), Battleground (44-55%), and Strong Republican (<44%). Based on top-of-ticket D% across 2020/2022/2024 generals.",
   "/tools/donor-network": "The user is viewing the 'Donor Network' — showing 876 cross-official donors who gave to multiple Harris County candidates. Data comes from FEC itemized Schedule A (federal), TEC bulk export (state/county). City of Houston donors pending.",
   "/tools/precinct-lookup": "The user is viewing 'Precinct History' — a lookup tool for individual Harris County voting precincts showing vote history, turnout trends, and Field Intel GOTV classification (Surge/Hold/Battleground/R-Base).",
+  "/tools/ballot-2026": "The user is viewing the '2026 General Election Ballot' — showing every Harris County race for November 2026, with D vs R matchup, candidate names, money on hand, competitiveness rating (Safe D → Toss-up → Safe R), and race status. Races include US Senate (Crockett D vs Paxton R), Harris County Judge (Plummer D vs Sanchez R), all 8 Congressional districts, State Senate and House races, Commissioners Court, JP races, and all 8 Constable precincts.",
   "/politicians": "The user is viewing Politician Profiles — detailed profiles of Harris County elected officials with bills, campaign money, and district info.",
 };
 

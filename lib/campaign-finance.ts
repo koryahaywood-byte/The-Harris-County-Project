@@ -39,6 +39,16 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Mary Ann Perez",        office: "State Rep HD-144",               level: "state",    party: "D", cash: 211703,    asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Mary Ann Perez") },
   { name: "Molly Cook",            office: "State Senator SD-15",            level: "state",    party: "D", cash: 155853,    asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Molly Cook") },
   { name: "Darlene Breaux",        office: "State Rep HD-149 (D nominee)",   level: "state",    party: "D", cash: 0,         asOf: "pending",  incumbent: false, filingUrl: TEC("Darlene Breaux") },
+  { name: "Shannon Dicely",        office: "State Senator SD-11 (D nominee)", level: "state",   party: "D", cash: 0,         asOf: "pending",  incumbent: false, filingUrl: TEC("Shannon Dicely") },
+  { name: "Stefanie Bord",         office: "State Rep HD-126 (D nominee)",   level: "state",    party: "D", cash: 0,         asOf: "pending",  incumbent: false, filingUrl: TEC("Stefanie Bord") },
+  { name: "Stan Stanart",          office: "State Rep HD-126 (R nominee)",   level: "state",    party: "R", cash: 0,         asOf: "pending",  incumbent: false, filingUrl: TEC("Stan Stanart") },
+  { name: "Staci Childs",          office: "State Rep HD-131 (D nominee)",   level: "state",    party: "D", cash: 0,         asOf: "pending",  incumbent: false, filingUrl: TEC("Staci Childs") },
+  // Federal 2026 nominees not yet in FEC system
+  { name: "Alexander Hale",        office: "U.S. Rep CD-07 (R nominee)",     level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: false },
+  { name: "Leticia Gutierrez",     office: "U.S. Rep CD-09 (D nominee)",     level: "federal",  party: "D", cash: 0,         asOf: "pending",  incumbent: false },
+  { name: "Alex Mealer",           office: "U.S. Rep CD-09 (R nominee)",     level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: false },
+  { name: "Melissa McDonough",     office: "U.S. Rep CD-38 (D nominee)",     level: "federal",  party: "D", cash: 0,         asOf: "pending",  incumbent: false },
+  { name: "Jon Bonck",             office: "U.S. Rep CD-38 (R nominee)",     level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: false },
   // County
   { name: "Rodney Ellis",          office: "Commissioner PCT 1",             level: "county",   party: "D", cash: 7783681,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Rodney Ellis") },
   { name: "Lesley Briones",        office: "Commissioner PCT 4",             level: "county",   party: "D", cash: 4058292,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Lesley Briones") },

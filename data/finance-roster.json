@@ -432,9 +432,51 @@
       "office": "State Rep HD-149 (D nominee)",
       "party": "D",
       "note": "Won May 2026 D runoff over incumbent Hubert Vo (1,623-1,053)."
+    },
+    {
+      "tecName": "Dicely, Shannon",
+      "name": "Shannon Dicely",
+      "office": "State Senator SD-11 (D nominee)",
+      "party": "D",
+      "note": "Won March 2026 D primary. SD-11 open seat — Middleton ran for AG."
+    },
+    {
+      "tecName": "Bord, Stefanie",
+      "name": "Stefanie Bord",
+      "office": "State Rep HD-126 (D nominee)",
+      "party": "D",
+      "note": "Won March 2026 D primary. HD-126 open seat — Sam Harless did not run."
+    },
+    {
+      "tecName": "Stanart, Stan",
+      "name": "Stan Stanart",
+      "office": "State Rep HD-126 (R nominee)",
+      "party": "R",
+      "note": "Won May 2026 R runoff. HD-126 open seat."
+    },
+    {
+      "tecName": "Childs, Staci",
+      "name": "Staci Childs",
+      "office": "State Rep HD-131 (D nominee)",
+      "party": "D",
+      "note": "Won May 2026 D runoff over Lawrence Allen Jr. HD-131 open seat — Alma Allen retired."
     }
   ],
   "fec": [
+    {
+      "id": "S6TX00338",
+      "name": "Jasmine Crockett",
+      "office": "U.S. Senate (D nominee)",
+      "party": "D",
+      "note": "Won March 2026 D primary. General Nov 2026 vs. Paxton."
+    },
+    {
+      "id": "S4TX00462",
+      "name": "Ken Paxton",
+      "office": "U.S. Senate (R nominee)",
+      "party": "R",
+      "note": "Won May 2026 R runoff over Cornyn 93,872-52,041 in Harris County."
+    },
     {
       "id": "S6TX00462",
       "name": "James Talarico",
