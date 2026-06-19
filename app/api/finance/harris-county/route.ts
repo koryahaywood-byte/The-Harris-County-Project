@@ -39,6 +39,15 @@ const HC_CANDIDATES = [
   { searchName: "Miles, Melanie",      name: "Melanie Miles",         office: "Justice of the Peace PCT 7 PL 2 (D nominee)", party: "D" as const, incumbent: false },
   { searchName: "Williamson, Holly",   name: "Holly Williamson",      office: "Justice of the Peace PCT 8 PL 1", party: "R" as const, incumbent: true },
   { searchName: "Ditta, Louie",        name: "Louie Ditta",           office: "Justice of the Peace PCT 8 PL 2", party: "R" as const, incumbent: true },
+  // Constables — also file at ethics.harrisvotes.com
+  { searchName: "Rosen, Alan",         name: "Alan Rosen",            office: "Constable PCT 1",                 party: "D" as const, incumbent: true },
+  { searchName: "Garcia, Jerry",       name: "Jerry Garcia",          office: "Constable PCT 2",                 party: "D" as const, incumbent: true },
+  { searchName: "Eagleton, Sherman",   name: "Sherman Eagleton",      office: "Constable PCT 3",                 party: "D" as const, incumbent: true },
+  { searchName: "Herman, Mark",        name: "Mark Herman",           office: "Constable PCT 4",                 party: "R" as const, incumbent: true },
+  { searchName: "Allbritton, Terry",   name: "Terry Allbritton",      office: "Constable PCT 5",                 party: "R" as const, incumbent: true },
+  { searchName: "Trevino, Silvia",     name: "Silvia Trevino",        office: "Constable PCT 6",                 party: "D" as const, incumbent: true },
+  { searchName: "Phillips, James",     name: "James Phillips",        office: "Constable PCT 7",                 party: "D" as const, incumbent: true },
+  { searchName: "Sandlin, Phil",       name: "Phil Sandlin",          office: "Constable PCT 8",                 party: "R" as const, incumbent: true },
 ];
 
 export interface HCCandidate {
