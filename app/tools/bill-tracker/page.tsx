@@ -62,6 +62,13 @@ const REPS: Rep[] = [
   { name: "Dennis Paul",           district: "HD-129", chamber: "House",  party: "R" },
   { name: "Greg Bonnen",           district: "HD-24",  chamber: "House",  party: "R" },
   { name: "Mike Schofield",        district: "HD-132", chamber: "House",  party: "R" },
+  { name: "Charles Cunningham",    district: "HD-127", chamber: "House",  party: "R" },
+  { name: "Briscoe Cain",          district: "HD-128", chamber: "House",  party: "R" },
+  { name: "Mano DeAyala",          district: "HD-133", chamber: "House",  party: "R" },
+  { name: "Mark Dorazio",          district: "HD-150", chamber: "House",  party: "R" },
+  { name: "Brandon Creighton",     district: "SD-4",   chamber: "Senate", party: "R" },
+  { name: "Joan Huffman",          district: "SD-17",  chamber: "Senate", party: "R" },
+  { name: "Lois Kolkhorst",        district: "SD-18",  chamber: "Senate", party: "R" },
   { name: "Penny Morales Shaw",    district: "HD-148", chamber: "House",  party: "D" },
 ];
 
