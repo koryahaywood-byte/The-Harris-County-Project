@@ -44,6 +44,10 @@ const ROWS: { section: string; tools: Tool[] }[] = [
         description: "How each council member spends their district improvement dollars.",
         gradient: "linear-gradient(135deg,#0e7490 0%,#0891b2 100%)",
         photo: U("1529156069898-49953e39b3ac") },
+      { href: "/tools/infrastructure-funding", name: "Infrastructure Funding",
+        description: "Federal grants and construction projects flowing into Harris County — where the dollars land.",
+        gradient: "linear-gradient(135deg,#0f2540 0%,#1e3a5c 100%)",
+        photo: U("1558618666-fcd25c85cd64") },
     ],
   },
   {
@@ -56,8 +60,15 @@ const ROWS: { section: string; tools: Tool[] }[] = [
       { href: "/tools/heat-check", name: "Heat Check",
         description: "Harris County primary & runoff results, precinct by precinct.",
         gradient: "linear-gradient(135deg,#991b1b 0%,#dc2626 100%)",
-        // Aerial / street map grid — precinct map feel
         photo: U("1524661135-1165ef7b63f4") },
+      { href: "/tools/precinct-lookup", name: "Precinct History",
+        description: "Enter any precinct number — see how it voted in 2020, 2022, 2024, and 2026.",
+        gradient: "linear-gradient(135deg,#1e3a8a 0%,#2563a8 100%)",
+        photo: U("1507041957456-9c397ce39c97") },
+      { href: "/tools/voter-search", name: "Voter Search",
+        description: "Search Harris County's 2.4M registered voters — see who voted, when, and how.",
+        gradient: "linear-gradient(135deg,#1e3a5c 0%,#0f766e 100%)",
+        photo: U("1540910419892-4a036eb0ebc1") },
       { href: "/tools/districts", name: "Districts",
         description: "Portrait of a seat — demographics, history, and who represents it.",
         gradient: "linear-gradient(135deg,#0f2540 0%,#1a3a5c 100%)",
@@ -104,6 +115,19 @@ const ROWS: { section: string; tools: Tool[] }[] = [
         description: "Harris County's US representatives — floor speeches, votes, and committee work in Washington.",
         gradient: "linear-gradient(135deg,#991b1b 0%,#b91c1c 60%,#dc2626 100%)",
         photo: U("1503198515498-d0bd9ed16902") },
+    ],
+  },
+  {
+    section: "Networks",
+    tools: [
+      { href: "/tools/endorsement-flowchart", name: "Endorsement Map",
+        description: "Who endorsed whom across every major Harris County race — unions, officials, party orgs.",
+        gradient: "linear-gradient(135deg,#1e3a5c 0%,#4f46e5 100%)",
+        photo: U("1521737604-43416ae6b50a") },
+      { href: "/tools/consultant-flowchart", name: "Consultant Network",
+        description: "The political consulting firms behind every candidate — who shares the same playbook.",
+        gradient: "linear-gradient(135deg,#1e3a5c 0%,#0f766e 100%)",
+        photo: U("1519389950473-47ba0277781c") },
     ],
   },
   {
@@ -401,13 +425,13 @@ export default function Home() {
               href="#toolbox"
               className="inline-flex items-center gap-2 text-white/55 hover:text-white font-semibold text-sm transition-colors duration-300 px-4 py-4"
             >
-              Browse all 22 tools
+              Browse all 25 tools
             </a>
           </div>
 
           <div className="mt-16 flex flex-wrap gap-8">
             {[
-              { value: "22", label: "Civic tools" },
+              { value: "25", label: "Civic tools" },
               { value: "100%", label: "Public data" },
             ].map(({ value, label }) => (
               <div key={label}>

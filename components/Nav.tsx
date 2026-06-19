@@ -16,6 +16,8 @@ export default function Nav() {
   // Only these tools pull live data — everything else is static
   const LIVE_TOOLS = [
     "/tools/heat-check",
+    "/tools/precinct-lookup",
+    "/tools/voter-search",
     "/tools/where-is-the-dough",
     "/tools/bill-tracker",
     "/tools/congressional-bills",

@@ -10,7 +10,7 @@ import type { TECCandidate } from "@/app/api/finance/tec/route";
 
 type Candidate = CandidateFinance;
 
-type Tab   = "story" | "leaderboard" | "trail";
+type Tab   = "story" | "leaderboard" | "trail" | "scanner";
 type Level = "all" | "federal" | "state" | "houston" | "county";
 type CountyGroup = "all" | "commissioners" | "jp" | "courts" | "law" | "admin";
 
@@ -32,6 +32,164 @@ function countyGroupOf(office: string): CountyGroup {
   return "admin";
 }
 
+/* ── Finance Scanner ─────────────────────────────────────────────────────── */
+type ScanState = "idle" | "loading" | "done" | "error" | "no_key";
+interface ScanResult {
+  filer?: string; period?: string;
+  raised?: number | null; spent?: number | null; cash?: number | null;
+  topContributors?: { name: string; amount: number; city?: string }[];
+  topExpenses?: { payee: string; amount: number; purpose?: string }[];
+  error?: string;
+}
+
+function fmt$( n: number | null | undefined) {
+  if (n == null) return "—";
+  return "$" + n.toLocaleString();
+}
+
+function FinanceScanner() {
+  const [url, setUrl] = useState("");
+  const [state, setState] = useState<ScanState>("idle");
+  const [result, setResult] = useState<ScanResult | null>(null);
+
+  async function scan(e: React.FormEvent) {
+    e.preventDefault();
+    if (!url.trim()) return;
+    setState("loading");
+    setResult(null);
+    try {
+      const res = await fetch("/api/finance/scan-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: url.trim() }),
+      });
+      const data = await res.json();
+      if (data.status === "no_key") { setState("no_key"); return; }
+      if (data.status === "error") { setState("error"); setResult({ error: data.error }); return; }
+      setState("done");
+      setResult(data);
+    } catch (err) {
+      setState("error");
+      setResult({ error: String(err) });
+    }
+  }
+
+  return (
+    <div className="max-w-3xl mx-auto py-8">
+      <div className="mb-6">
+        <h2 className="text-xl font-bold mb-1" style={{ color: "var(--accent)", fontFamily: "var(--font-playfair), serif" }}>
+          Finance File Scanner
+        </h2>
+        <p className="text-sm" style={{ color: "var(--muted)" }}>
+          Paste a TEC or Harris County C/OH PDF URL — Claude reads it and extracts totals, top donors, and top expenses instantly.
+        </p>
+      </div>
+
+      <form onSubmit={scan} className="flex gap-2 mb-6">
+        <input
+          type="url"
+          value={url}
+          onChange={e => setUrl(e.target.value)}
+          placeholder="https://ethics.state.tx.us/data/search/cf/2024/…/12345.pdf"
+          className="flex-1 px-4 py-2.5 rounded-full text-sm bg-white ring-1 ring-[var(--border)] focus:ring-[var(--accent)] focus:outline-none"
+          required
+        />
+        <button type="submit" disabled={state === "loading"}
+          className="px-5 py-2.5 rounded-full text-sm font-bold text-white transition-all duration-300 disabled:opacity-50"
+          style={{ background: "var(--accent)" }}>
+          {state === "loading" ? "Scanning…" : "Scan"}
+        </button>
+      </form>
+
+      {state === "loading" && (
+        <div className="flex items-center gap-3 py-10 justify-center">
+          <div className="w-5 h-5 rounded-full border-2 animate-spin" style={{ borderColor: "var(--accent)", borderTopColor: "transparent" }} />
+          <p className="text-sm" style={{ color: "var(--muted)" }}>Reading the filing with Claude…</p>
+        </div>
+      )}
+
+      {state === "no_key" && (
+        <div className="rounded-2xl p-8 text-center" style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)" }}>
+          <p className="font-bold mb-1" style={{ color: "var(--accent)" }}>ANTHROPIC_API_KEY not set</p>
+          <p className="text-sm" style={{ color: "var(--muted)" }}>
+            Add <code className="px-1 rounded text-xs" style={{ background: "#f3f4f6" }}>ANTHROPIC_API_KEY</code> to your Vercel environment variables to enable PDF extraction.
+          </p>
+        </div>
+      )}
+
+      {state === "error" && (
+        <div className="rounded-2xl p-6" style={{ background: "#fff7f7", border: "1px solid #fca5a5" }}>
+          <p className="font-bold text-red-700 mb-1">Error</p>
+          <p className="text-sm text-red-600">{result?.error ?? "Unknown error"}</p>
+        </div>
+      )}
+
+      {state === "done" && result && (
+        <div className="space-y-4">
+          {/* Header card */}
+          <div className="rounded-2xl p-6 ring-1 ring-[var(--border)]" style={{ background: "#fff" }}>
+            <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-1" style={{ color: "var(--muted)" }}>Filing</p>
+            <h3 className="text-lg font-bold mb-0.5" style={{ color: "var(--accent)", fontFamily: "var(--font-playfair), serif" }}>
+              {result.filer ?? "Unknown filer"}
+            </h3>
+            {result.period && <p className="text-xs mb-4" style={{ color: "var(--muted)" }}>{result.period}</p>}
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { label: "Raised", val: result.raised },
+                { label: "Spent", val: result.spent },
+                { label: "Cash on Hand", val: result.cash },
+              ].map(({ label, val }) => (
+                <div key={label} className="rounded-xl p-3" style={{ background: "rgba(37,99,168,0.06)" }}>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.15em] mb-1" style={{ color: "var(--muted)" }}>{label}</p>
+                  <p className="text-lg font-bold" style={{ color: "var(--accent)", fontFamily: "var(--font-playfair), serif" }}>
+                    {fmt$(val)}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Contributors */}
+          {(result.topContributors?.length ?? 0) > 0 && (
+            <div className="rounded-2xl p-6 ring-1 ring-[var(--border)]" style={{ background: "#fff" }}>
+              <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-4" style={{ color: "var(--muted)" }}>Top Contributors</p>
+              <div className="space-y-2">
+                {result.topContributors!.map((c, i) => (
+                  <div key={i} className="flex items-center justify-between gap-4 py-1.5 border-b border-black/5 last:border-0">
+                    <div>
+                      <p className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>{c.name}</p>
+                      {c.city && <p className="text-[11px]" style={{ color: "var(--muted)" }}>{c.city}</p>}
+                    </div>
+                    <p className="text-sm font-bold flex-shrink-0" style={{ color: "var(--accent)" }}>{fmt$(c.amount)}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Expenses */}
+          {(result.topExpenses?.length ?? 0) > 0 && (
+            <div className="rounded-2xl p-6 ring-1 ring-[var(--border)]" style={{ background: "#fff" }}>
+              <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-4" style={{ color: "var(--muted)" }}>Top Expenditures</p>
+              <div className="space-y-2">
+                {result.topExpenses!.map((e, i) => (
+                  <div key={i} className="flex items-center justify-between gap-4 py-1.5 border-b border-black/5 last:border-0">
+                    <div>
+                      <p className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>{e.payee}</p>
+                      {e.purpose && <p className="text-[11px]" style={{ color: "var(--muted)" }}>{e.purpose}</p>}
+                    </div>
+                    <p className="text-sm font-bold flex-shrink-0" style={{ color: "#b45309" }}>{fmt$(e.amount)}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function WhereIsTheDough() {
   const [tab, setTab]     = useState<Tab>("story");
   const [level, setLevel] = useState<Level>("all");
@@ -46,7 +204,7 @@ export default function WhereIsTheDough() {
   // Hydrate filters from the URL once, then mirror them back so shared links restore the view
   useEffect(() => {
     const p = readUrlParams(["tab", "level", "group", "party", "q"]);
-    if (p.tab === "story" || p.tab === "leaderboard" || p.tab === "trail") setTab(p.tab);
+    if (p.tab === "story" || p.tab === "leaderboard" || p.tab === "trail" || p.tab === "scanner") setTab(p.tab as Tab);
     if (p.level && p.level in LEVEL_LABELS) setLevel(p.level as Level);
     if (p.group && p.group in COUNTY_GROUPS) setCountyGroup(p.group as CountyGroup);
     if (p.party === "D" || p.party === "R") setParty(p.party);
@@ -179,12 +337,12 @@ export default function WhereIsTheDough() {
       {/* ── Tab bar ───────────────────────────────────────────────────── */}
       <div className="sticky top-0 z-20 bg-[var(--background)]/90 backdrop-blur border-b border-[var(--border)] px-6 py-3">
         <div className="max-w-6xl mx-auto flex flex-wrap items-center gap-3">
-          {(["story","leaderboard","trail"] as Tab[]).map(t => (
+          {(["story","leaderboard","trail","scanner"] as Tab[]).map(t => (
             <button key={t} onClick={() => setTab(t)}
               className={`text-xs font-bold uppercase tracking-[0.12em] px-4 py-2 rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                 tab === t ? "bg-[var(--accent)] text-white" : "bg-white ring-1 ring-[var(--border)] text-[var(--muted)] hover:ring-[var(--accent-light)]"
               }`}>
-              {t === "story" ? "The Story" : t === "trail" ? "Money Trail" : "Leaderboard"}
+              {t === "story" ? "The Story" : t === "trail" ? "Money Trail" : t === "scanner" ? "File Scanner" : "Leaderboard"}
             </button>
           ))}
 
@@ -337,6 +495,9 @@ export default function WhereIsTheDough() {
             <TerrainReport types={["money"]} compact />
           </div>
         )}
+
+        {/* ── FILE SCANNER ──────────────────────────────────────────── */}
+        {tab === "scanner" && <FinanceScanner />}
 
         {/* ── LEADERBOARD ───────────────────────────────────────────── */}
         {tab === "leaderboard" && (
