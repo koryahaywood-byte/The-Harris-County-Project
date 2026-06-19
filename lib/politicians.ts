@@ -212,7 +212,7 @@ export const POLITICIANS: Politician[] = [
   },
   {
     slug: "harold-dutton",
-    name: "Harold Dutton",
+    name: "Harold Dutton Jr.",
     office: "Texas State Representative",
     district: "HD-142",
     chamber: "House",

@@ -13,7 +13,7 @@ const TEC_CANDIDATES = [
   { tecName: "Cook, Molly C.",        name: "Molly Cook",          office: "State Senator SD-15",         level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Bettencourt, Paul",     name: "Paul Bettencourt",    office: "State Senator SD-7",          level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "Thompson, Senfronia",   name: "Senfronia Thompson",  office: "State Rep HD-141",            level: "state" as const, party: "D" as const, incumbent: true },
-  { tecName: "Dutton, Harold V.",     name: "Harold Dutton",       office: "State Rep HD-142",            level: "state" as const, party: "D" as const, incumbent: true },
+  { tecName: "Dutton, Harold V.",     name: "Harold Dutton Jr.",   office: "State Rep HD-142",            level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Wu, Gene",              name: "Gene Wu",             office: "State Rep HD-137",            level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Jones, Jolanda E.",     name: "Jolanda Jones",       office: "State Rep HD-147",            level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Simmons, Lauren Ashley",name: "Lauren Ashley Simmons",office: "State Rep HD-146",           level: "state" as const, party: "D" as const, incumbent: true },
