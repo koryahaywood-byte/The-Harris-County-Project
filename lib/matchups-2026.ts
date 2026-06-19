@@ -51,8 +51,10 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     office: "Texas Attorney General",
     status: "partial",
     lean: "safe-r",
-    sides: [],
-    detail: "Open seat — Ken Paxton vacated to run for U.S. Senate. Both party nominees pending runoff confirmation.",
+    sides: [
+      { name: "Mayes Middleton", party: "R", incumbent: false, note: "Won R primary; former State Senator SD-11" },
+    ],
+    detail: "Open seat — Paxton vacated to run for U.S. Senate. Middleton (former SD-11 senator) won the Republican nomination. Democratic nominee pending.",
   },
   "TX-Comptroller": {
     office: "Texas Comptroller",

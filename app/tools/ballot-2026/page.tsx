@@ -148,17 +148,52 @@ export default function Ballot2026() {
   const totalContested = rows.filter(r => r.dSide && r.rSide).length;
   const totalPartial    = rows.filter(r => !(r.dSide && r.rSide)).length;
 
+  const moneyTotals = useMemo(() => {
+    let dTotal = 0, rTotal = 0, dCount = 0, rCount = 0;
+    for (const r of rows) {
+      if (r.dSide) { const f = financeFor(r.dSide.name); if (f?.cash) { dTotal += f.cash; dCount++; } }
+      if (r.rSide) { const f = financeFor(r.rSide.name); if (f?.cash) { rTotal += f.cash; rCount++; } }
+    }
+    return { dTotal, rTotal, dCount, rCount };
+  }, [rows]);
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-6">
-      <div className="mb-6">
+      <div className="mb-4">
         <h1 className="text-2xl font-bold text-gray-900">2026 General Election Ballot</h1>
         <p className="text-sm text-gray-500 mt-1">
-          Every Harris County race for November 2026.{" "}
+          Every race on a Harris County voter&rsquo;s November 2026 ballot — statewide Texas through local.{" "}
           <span className="text-green-700 font-medium">{totalContested} full matchups</span>
           {" · "}
-          <span className="text-amber-700 font-medium">{totalPartial} awaiting R/D nominee</span>
+          <span className="text-amber-700 font-medium">{totalPartial} awaiting confirmation</span>
         </p>
       </div>
+
+      {/* Money summary bar */}
+      {(moneyTotals.dTotal > 0 || moneyTotals.rTotal > 0) && (() => {
+        const total = moneyTotals.dTotal + moneyTotals.rTotal;
+        const dPct = total ? Math.round(moneyTotals.dTotal / total * 100) : 50;
+        return (
+          <div className="mb-5 rounded-xl border border-gray-200 bg-white px-4 py-3">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Total Cash on Hand — All Tracked Races</span>
+              <span className="text-[10px] text-gray-400">{moneyTotals.dCount + moneyTotals.rCount} candidates with data</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-blue-700 w-20 text-right">{fmt(moneyTotals.dTotal)}</span>
+              <div className="flex-1 rounded-full overflow-hidden h-2.5 bg-gray-100">
+                <div className="h-full rounded-full" style={{ width: `${dPct}%`, background: "linear-gradient(90deg, #1d4ed8, #3b82f6)" }} />
+              </div>
+              <span className="text-xs font-bold text-red-700 w-20">{fmt(moneyTotals.rTotal)}</span>
+            </div>
+            <div className="flex justify-between mt-0.5 px-0.5">
+              <span className="text-[9px] text-blue-600 font-bold">D {dPct}%</span>
+              <span className="text-[9px] text-red-600 font-bold">R {100 - dPct}%</span>
+            </div>
+          </div>
+        );
+      })()}
+
 
       {/* Filters */}
       <div className="flex flex-wrap gap-2 mb-6 items-center">
