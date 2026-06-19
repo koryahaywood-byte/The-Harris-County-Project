@@ -40,11 +40,14 @@ const STATUS_STYLES: Record<BillStatus, { label: string; bg: string; text: strin
 type Counts = { total: number; committee: number; passed: number; law: number; pct: number };
 
 // Harris County US Representatives — 119th Congress (2025-2027)
+// CD-18 is vacant since SJL's death Jul 2024; Menefee is the 2026 D nominee, not current rep.
 const REPS: Rep[] = [
   { name: "Sylvia Garcia",       district: "TX-29", chamber: "House",  party: "D", role: "U.S. Representative" },
   { name: "Lizzie Fletcher",     district: "TX-7",  chamber: "House",  party: "D", role: "U.S. Representative" },
-  { name: "Christian Menefee",   district: "TX-18", chamber: "House",  party: "D", role: "U.S. Representative" },
+  { name: "Al Green",            district: "TX-9",  chamber: "House",  party: "D", role: "U.S. Representative" },
   { name: "Dan Crenshaw",        district: "TX-2",  chamber: "House",  party: "R", role: "U.S. Representative" },
+  { name: "Morgan Luttrell",     district: "TX-8",  chamber: "House",  party: "R", role: "U.S. Representative" },
+  { name: "Troy Nehls",          district: "TX-22", chamber: "House",  party: "R", role: "U.S. Representative" },
   { name: "Brian Babin",         district: "TX-36", chamber: "House",  party: "R", role: "U.S. Representative" },
   { name: "Wesley Hunt",         district: "TX-38", chamber: "House",  party: "R", role: "U.S. Representative" },
   { name: "John Cornyn",         district: "TX",    chamber: "Senate", party: "R", role: "U.S. Senator" },

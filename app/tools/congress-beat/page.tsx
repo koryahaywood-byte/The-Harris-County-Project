@@ -7,7 +7,7 @@ import ThreadsFeed from "@/components/ThreadsFeed";
 // The 9 congressional districts that cover Harris County (verified against the
 // precinct crosswalk: congressional = 2025 PLANC2333, state/local = TIGER 2024).
 const REPS = [
-  { name: "Christian Menefee",  district: "CD-18", party: "D", note: "Won 2025 special election",    photo: "" },
+  { name: "Seat Vacant (CD-18)", district: "CD-18", party: "D", note: "D nominee: Christian Menefee — seat vacant since SJL's death Jul 2024",    photo: "" },
   { name: "Al Green",           district: "CD-9",  party: "D", note: "Retiring — lost CD-18 runoff; term ends Jan 2027",          photo: "https://unitedstates.github.io/images/congress/450x550/G000553.jpg" },
   { name: "Lizzie Fletcher",    district: "CD-7",  party: "D", note: "Energy & Commerce Committee",  photo: "https://unitedstates.github.io/images/congress/450x550/F000468.jpg" },
   { name: "Sylvia Garcia",      district: "CD-29", party: "D", note: "House Judiciary Committee",    photo: "https://unitedstates.github.io/images/congress/450x550/G000587.jpg" },
@@ -39,7 +39,7 @@ const HASHTAGS = [
   { tag: "#HoustonCongress",  desc: "Houston delegation floor votes, committee work, and federal funding wins" },
   { tag: "#HarrisCounty",     desc: "County-level angle on federal legislation and FEMA disaster relief" },
   { tag: "#CD7",              desc: "Lizzie Fletcher's district — energy corridor, Westheimer, Katy" },
-  { tag: "#CD18",             desc: "Christian Menefee's district — Third Ward, Midtown, Heights" },
+  { tag: "#CD18",             desc: "CD-18 (Third Ward, Midtown, Heights) — seat vacant; Menefee is the D nominee for November" },
   { tag: "#HoustonChron",     desc: "Houston Chronicle breaking news and investigations" },
   { tag: "#texastribune",     desc: "Texas Tribune non-partisan accountability journalism" },
 ];
@@ -47,7 +47,7 @@ const HASHTAGS = [
 interface SocialPost { platform: "Threads"|"Facebook"|"Twitter/X"; author: string; handle: string; content: string; url: string; time: string; image?: string; verified?: boolean; }
 const SOCIAL: SocialPost[] = [
   { platform: "Twitter/X", author: "Houston Chronicle",  handle: "@HoustonChron",    verified: true, image: "https://images.unsplash.com/photo-1503198515498-d0bd9ed16902?auto=format&fit=crop&w=800&q=70", content: "Houston's congressional delegation split on the latest federal budget deal. Green, Garcia, Fletcher voted yes. Crenshaw, Nehls, Hunt voted no. Full breakdown in our story.", url: "https://twitter.com/HoustonChron",      time: "2h ago" },
-  { platform: "Twitter/X", author: "Mike Morris",        handle: "@mmorrisHC",       content: "FEMA approved the supplemental disaster relief for Harris County — $800M heading our way. Bipartisan push from Menefee and Crenshaw made it happen.",                      url: "https://twitter.com/mmorrisHC",         time: "4h ago" },
+  { platform: "Twitter/X", author: "Mike Morris",        handle: "@mmorrisHC",       content: "FEMA approved supplemental disaster relief for Harris County — $800M incoming. Bipartisan push led by Crenshaw and Garcia cleared the committee hurdle.",             url: "https://twitter.com/mmorrisHC",         time: "4h ago" },
   { platform: "Threads",   author: "Texas Tribune",      handle: "@texastribune",    content: "Babin's Science Committee hearing on NASA's budget drew sharp questions about Johnson Space Center funding. Full transcript available.",                url: "https://www.threads.net/@texastribune", time: "5h ago" },
   { platform: "Twitter/X", author: "Dylan McGuinness",   handle: "@dylmcguinness",   content: "Lizzie Fletcher secured $45M in federal transit funding for the Westpark Tollway expansion in today's Transportation appropriations markup. Quiet win, big impact.",        url: "https://twitter.com/dylmcguinness",     time: "7h ago" },
   { platform: "Twitter/X", author: "Dan Crenshaw",       handle: "@DanCrenshawTX",   content: "Voted against the spending bill today. $2T in new debt our kids will pay for. I won't sign off on fiscal irresponsibility no matter which party brings it.",              url: "https://twitter.com/DanCrenshawTX",     time: "8h ago" },
