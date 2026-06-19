@@ -256,7 +256,7 @@ export const POLITICIANS: Politician[] = [
   {
     slug: "hubert-vo",
     name: "Hubert Vo",
-    office: "Texas State Representative (term ends Jan 2027 — lost May 2026 D runoff to Darlene Breaux)",
+    office: "Texas State Representative",
     district: "HD-149",
     chamber: "House",
     party: "D",
@@ -265,6 +265,7 @@ export const POLITICIANS: Politician[] = [
     website: "https://house.texas.gov/members/member-page/?district=149",
     legiscanName: "Vo",
     termStart: 2004,
+    note: "Lost May 2026 D runoff to Darlene Breaux; holds HD-149 seat through Jan 2027",
     committees: ["Appropriations", "Business & Industry"],
   },
   {
@@ -291,6 +292,7 @@ export const POLITICIANS: Politician[] = [
     website: "https://house.texas.gov/members/member-page/?district=131",
     legiscanName: "Allen",
     termStart: 2005,
+    note: "Retiring — not seeking reelection 2026; holds seat through Jan 2027",
     committees: ["Public Education", "Higher Education"],
     committeeRoles: [{ committee: "Public Education", role: "Vice Chair" }],
   },
