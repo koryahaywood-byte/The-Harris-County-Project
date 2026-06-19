@@ -538,6 +538,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     sides: [
       { name: "Marilyn Burgess", party: "D", incumbent: true, note: "Incumbent" },
     ],
+    detail: "Marilyn Burgess has served as District Clerk since 2010. R opponent status TBD — safe D district regardless.",
   },
   "HC-County-Clerk": {
     office: "County Clerk",
@@ -546,6 +547,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     sides: [
       { name: "Teneshia Hudspeth", party: "D", incumbent: true, note: "Incumbent" },
     ],
+    detail: "Teneshia Hudspeth has served as County Clerk since 2018. R opponent status TBD — safe D district regardless.",
   },
   "HC-Tax-Assessor": {
     office: "Tax Assessor-Collector",
@@ -554,6 +556,16 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     sides: [
       { name: "Annette Ramirez", party: "D", incumbent: true, note: "Incumbent" },
     ],
+    detail: "Annette Ramirez has served as Tax Assessor-Collector since 2023. R opponent status TBD — safe D district regardless.",
+  },
+  "HC-County-Treasurer": {
+    office: "County Treasurer",
+    status: "partial",
+    lean: "safe-d",
+    sides: [
+      { name: "Carla Wyatt", party: "D", incumbent: true, note: "Incumbent" },
+    ],
+    detail: "Carla Wyatt has served as County Treasurer since 2019. R opponent status TBD — countywide office in safe D territory.",
   },
 
   // Constables — all 8 precincts

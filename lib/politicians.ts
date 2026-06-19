@@ -587,6 +587,17 @@ export const POLITICIANS: Politician[] = [
     termStart: 2018,
   },
   {
+    slug: "carla-wyatt",
+    name: "Carla Wyatt",
+    office: "Harris County Treasurer",
+    district: "Countywide",
+    chamber: "County",
+    party: "D",
+    salary: 147000,
+    website: "https://www.harriscountytx.gov/Treasurer",
+    termStart: 2019,
+  },
+  {
     slug: "christian-menefee",
     name: "Christian Menefee",
     office: "Harris County Attorney",

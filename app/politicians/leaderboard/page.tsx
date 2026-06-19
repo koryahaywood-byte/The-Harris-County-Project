@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { POLITICIANS } from "@/lib/politicians";
 import { computeStats, STAT_LABELS } from "@/lib/politician-stats";
+import { getFinanceByName } from "@/lib/campaign-finance";
 
 type SortKey = "ovr" | "warChest" | "lawmaker" | "influence" | "access" | "tenure";
 
@@ -72,7 +73,7 @@ export default function LeaderboardPage() {
             !p.office.toLowerCase().includes(search.toLowerCase())) return false;
         return true;
       })
-      .map(p => ({ pol: p, stats: computeStats(p, null, 0, 0) }))
+      .map(p => ({ pol: p, stats: computeStats(p, getFinanceByName(p.name), 0, 0) }))
       .sort((a, b) => b.stats[sortBy] - a.stats[sortBy]);
   }, [sortBy, chamber, party, search]);
 
