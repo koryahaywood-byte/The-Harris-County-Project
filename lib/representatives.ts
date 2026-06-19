@@ -22,7 +22,7 @@ const CONGRESS: Record<string, { name: string; party: "D" | "R"; note?: string }
   "7":  { name: "Lizzie Fletcher",   party: "D" },
   "8":  { name: "Morgan Luttrell",   party: "R" },
   "9":  { name: "Al Green",          party: "D", note: "Retiring — lost CD-18 runoff; term ends Jan 2027" },
-  "18": { name: "Christian Menefee", party: "D" },
+  "18": { name: "Christian Menefee", party: "D", note: "D nominee 2026 — currently serving as Harris County Attorney; seat vacant since SJL's death (2024)" },
   "22": { name: "Troy Nehls",        party: "R" },
   "29": { name: "Sylvia Garcia",     party: "D" },
   "36": { name: "Brian Babin",       party: "R" },

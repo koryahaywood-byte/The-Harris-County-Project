@@ -91,7 +91,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Christian Menefee",       party: "D", incumbent: true, note: "Won May runoff over Al Green" },
+      { name: "Christian Menefee",       party: "D", incumbent: false, note: "Won May runoff over Al Green; currently serving as Harris County Attorney" },
       { name: "Ronald Dwayne Whitfield", party: "R", incumbent: false, note: "Won March primary" },
     ],
     detail: "Menefee beat Al Green 26,546–10,771 in the Democratic runoff. Heavily Democratic seat.",
