@@ -8,9 +8,12 @@ const SEARCH_URL = `${HC_BASE}/CampaignFinanceReports/COR.aspx`;
 // Harris County local filers — search name must be "Last, First"
 // All county elected officials file at ethics.harrisvotes.com
 const HC_CANDIDATES = [
+  // 2026 County Judge nominees (open seat)
+  { searchName: "Plummer, Letitia",    name: "Letitia Plummer",       office: "County Judge (D nominee)",    party: "D" as const, incumbent: false },
+  { searchName: "Sanchez, Orlando",    name: "Orlando Sanchez",       office: "County Judge (R nominee)",    party: "R" as const, incumbent: false },
   // Commissioners Court
   { searchName: "Ellis, Rodney",       name: "Rodney Ellis",          office: "Commissioner PCT 1",          party: "D" as const, incumbent: true },
-  { searchName: "Hidalgo, Lina",       name: "Lina Hidalgo",          office: "County Judge",                party: "D" as const, incumbent: true },
+  { searchName: "Hidalgo, Lina",       name: "Lina Hidalgo",          office: "County Judge (lame duck)",    party: "D" as const, incumbent: true },
   { searchName: "Garcia, Adrian",      name: "Adrian Garcia",         office: "Commissioner PCT 2",          party: "D" as const, incumbent: true },
   { searchName: "Ramsey, Tom",         name: "Tom Ramsey",            office: "Commissioner PCT 3",          party: "R" as const, incumbent: true },
   { searchName: "Briones, Lesley",     name: "Lesley Briones",        office: "Commissioner PCT 4",          party: "D" as const, incumbent: true },
@@ -24,11 +27,16 @@ const HC_CANDIDATES = [
   { searchName: "Goodwin, Lincoln",    name: "Lincoln Goodwin",       office: "Justice of the Peace PCT 4 PL 1", party: "D" as const, incumbent: true },
   { searchName: "Korduba, Laryssa",    name: "Laryssa Korduba",       office: "Justice of the Peace PCT 4 PL 2", party: "D" as const, incumbent: true },
   { searchName: "Lombardino, James",   name: "James Lombardino",      office: "Justice of the Peace PCT 5 PL 1", party: "R" as const, incumbent: true },
-  { searchName: "Wolfe, Bob",          name: "Bob Wolfe",             office: "Justice of the Peace PCT 5 PL 2", party: "R" as const, incumbent: true },
+  // Bob Wolfe lost May 2026 R primary to Mark Fury — keep for historical data, add nominees
+  { searchName: "Wolfe, Bob",          name: "Bob Wolfe",             office: "Justice of the Peace PCT 5 PL 2 (lost R primary)", party: "R" as const, incumbent: false },
+  { searchName: "Fury, Mark",          name: "Mark Fury",             office: "Justice of the Peace PCT 5 PL 2 (R nominee)", party: "R" as const, incumbent: false },
+  { searchName: "Jefferson, Lisa",     name: "Lisa Jefferson",        office: "Justice of the Peace PCT 5 PL 2 (D nominee)", party: "D" as const, incumbent: false },
   { searchName: "Trevino, Victor",     name: "Victor Treviño III",    office: "Justice of the Peace PCT 6 PL 1", party: "D" as const, incumbent: true },
   { searchName: "Rodriguez, Angela",   name: "Angela D. Rodriguez",   office: "Justice of the Peace PCT 6 PL 2", party: "D" as const, incumbent: true },
   { searchName: "Adams, Wanda",        name: "Wanda E. Adams",        office: "Justice of the Peace PCT 7 PL 1", party: "D" as const, incumbent: true },
-  { searchName: "Burney, Sharon",      name: "Sharon M. Burney",      office: "Justice of the Peace PCT 7 PL 2", party: "D" as const, incumbent: true },
+  // Sharon Burney lost May 2026 D runoff to Melanie Miles
+  { searchName: "Burney, Sharon",      name: "Sharon M. Burney",      office: "Justice of the Peace PCT 7 PL 2 (lost D runoff)", party: "D" as const, incumbent: false },
+  { searchName: "Miles, Melanie",      name: "Melanie Miles",         office: "Justice of the Peace PCT 7 PL 2 (D nominee)", party: "D" as const, incumbent: false },
   { searchName: "Williamson, Holly",   name: "Holly Williamson",      office: "Justice of the Peace PCT 8 PL 1", party: "R" as const, incumbent: true },
   { searchName: "Ditta, Louie",        name: "Louie Ditta",           office: "Justice of the Peace PCT 8 PL 2", party: "R" as const, incumbent: true },
 ];

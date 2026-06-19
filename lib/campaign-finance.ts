@@ -38,6 +38,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Armando Walle",         office: "State Rep HD-140",               level: "state",    party: "D", cash: 267898,    asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Armando Walle") },
   { name: "Mary Ann Perez",        office: "State Rep HD-144",               level: "state",    party: "D", cash: 211703,    asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Mary Ann Perez") },
   { name: "Molly Cook",            office: "State Senator SD-15",            level: "state",    party: "D", cash: 155853,    asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Molly Cook") },
+  { name: "Darlene Breaux",        office: "State Rep HD-149 (D nominee)",   level: "state",    party: "D", cash: 0,         asOf: "pending",  incumbent: false, filingUrl: TEC("Darlene Breaux") },
   // County
   { name: "Rodney Ellis",          office: "Commissioner PCT 1",             level: "county",   party: "D", cash: 7783681,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Rodney Ellis") },
   { name: "Lesley Briones",        office: "Commissioner PCT 4",             level: "county",   party: "D", cash: 4058292,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Lesley Briones") },

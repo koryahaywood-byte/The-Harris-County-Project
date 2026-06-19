@@ -234,7 +234,8 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     description: "Alief, Westwood — Southwest Houston, diverse immigrant communities",
     seatHistory: [
       { name: "Martha Wong", years: "1991–2002", party: "R" },
-      { name: "Hubert Vo", years: "2005–present", party: "D" },
+      { name: "Hubert Vo", years: "2005–2027", party: "D" },
+      { name: "Darlene Breaux", years: "2027–present", party: "D" },
     ],
   },
   "HD-150": {

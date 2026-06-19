@@ -119,8 +119,20 @@
     {
       "searchName": "Wolfe, Bob",
       "name": "Bob Wolfe",
-      "office": "Justice of the Peace PCT 5 PL 2",
+      "office": "Justice of the Peace PCT 5 PL 2 (lost R primary)",
       "party": "R"
+    },
+    {
+      "searchName": "Fury, Mark",
+      "name": "Mark Fury",
+      "office": "Justice of the Peace PCT 5 PL 2 (R nominee)",
+      "party": "R"
+    },
+    {
+      "searchName": "Jefferson, Lisa",
+      "name": "Lisa Jefferson",
+      "office": "Justice of the Peace PCT 5 PL 2 (D nominee)",
+      "party": "D"
     },
     {
       "searchName": "Trevino, Victor",
@@ -143,7 +155,13 @@
     {
       "searchName": "Burney, Sharon",
       "name": "Sharon M. Burney",
-      "office": "Justice of the Peace PCT 7 PL 2",
+      "office": "Justice of the Peace PCT 7 PL 2 (lost D runoff)",
+      "party": "D"
+    },
+    {
+      "searchName": "Miles, Melanie",
+      "name": "Melanie Miles",
+      "office": "Justice of the Peace PCT 7 PL 2 (D nominee)",
       "party": "D"
     },
     {
@@ -400,6 +418,20 @@
       "name": "Mary Ann Perez",
       "office": "State Rep HD-144",
       "party": "D"
+    },
+    {
+      "tecName": "Kamin, Abbie",
+      "name": "Abbie Kamin",
+      "office": "County Attorney (D nominee 2026)",
+      "party": "D",
+      "note": "Open seat. Won D primary. Files at TEC (county attorney is a state-law filer)."
+    },
+    {
+      "tecName": "Breaux, Darlene",
+      "name": "Darlene Breaux",
+      "office": "State Rep HD-149 (D nominee)",
+      "party": "D",
+      "note": "Won May 2026 D runoff over incumbent Hubert Vo (1,623-1,053)."
     }
   ],
   "fec": [
