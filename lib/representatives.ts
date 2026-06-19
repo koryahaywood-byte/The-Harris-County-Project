@@ -65,12 +65,14 @@ export function findRepresentatives(cw: CrosswalkEntry): RepEntry[] {
   }
 
   // ── Texas Legislature ──
+  // termStart > 2026 = 2026 nominee not yet in office; exclude from current-rep lookup
+  const isCurrent = (p: { termStart?: number }) => !p.termStart || p.termStart <= 2026;
   if (cw.sd) {
-    const p = POLITICIANS.find(x => x.district === `SD-${cw.sd}`);
+    const p = POLITICIANS.find(x => x.district === `SD-${cw.sd}` && isCurrent(x));
     if (p) reps.push(fromPol(p, "Texas Legislature"));
   }
   if (cw.hd) {
-    const p = POLITICIANS.find(x => x.district === `HD-${cw.hd}`);
+    const p = POLITICIANS.find(x => x.district === `HD-${cw.hd}` && isCurrent(x));
     if (p) reps.push(fromPol(p, "Texas Legislature"));
   }
 
