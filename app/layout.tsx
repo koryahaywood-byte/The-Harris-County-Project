@@ -77,6 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Link href="/tools/civic-calendar" className="hover:text-white transition-colors duration-300">Civic Calendar</Link>
                 <Link href="/tools/tv-station" className="hover:text-white transition-colors duration-300">TV Station</Link>
                 <Link href="/tools/endorsement-flowchart" className="hover:text-white transition-colors duration-300">Endorsements</Link>
+                <Link href="/tools/field-sweep" className="hover:text-white transition-colors duration-300">Field Sweep</Link>
               </div>
               <div className="flex flex-col gap-2">
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 mb-1">Site</p>
