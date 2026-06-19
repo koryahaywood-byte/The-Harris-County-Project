@@ -284,11 +284,31 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HD-150": {
     office: "State Representative, District 150",
-    status: "partial",
+    status: "set",
     lean: "safe-r",
     sides: [
       { name: "A'Yonna Kellum", party: "D", incumbent: false, note: "Won March primary" },
+      { name: "Valoree Swanson", party: "R", incumbent: true, note: "Seeking reelection" },
     ],
+    detail: "Valoree Swanson has held HD-150 (NW Houston / Spring-Klein area) since 2016. Safe Republican district. A'Yonna Kellum won the D primary.",
+  },
+  "HD-127": {
+    office: "State Representative, District 127",
+    status: "partial",
+    lean: "safe-r",
+    sides: [
+      { name: "Josh Flynn", party: "R", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Josh Flynn has held HD-127 (Kingwood / Atascocita / NE Harris County) since 2023, succeeding Dan Huberty. Solidly Republican suburban district. D nominee TBD.",
+  },
+  "HD-128": {
+    office: "State Representative, District 128",
+    status: "partial",
+    lean: "safe-r",
+    sides: [
+      { name: "Briscoe Cain", party: "R", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Briscoe Cain has held HD-128 (Deer Park / La Porte / East Pasadena) since 2017. Deep-red district along the Ship Channel's east side. D nominee TBD.",
   },
   "HD-129": {
     office: "State Representative, District 129",
@@ -298,6 +318,15 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Dennis Paul", party: "R", incumbent: true, note: "Seeking reelection" },
     ],
     detail: "Dennis Paul has held HD-129 (Clear Lake, Bay Area) since 2017. D nominee TBD.",
+  },
+  "HD-133": {
+    office: "State Representative, District 133",
+    status: "partial",
+    lean: "safe-r",
+    sides: [
+      { name: "Mano DeAyala", party: "R", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Mano DeAyala has held HD-133 (Memorial / Briargrove / West Houston) since 2021. Suburban west Houston — reliably Republican. D nominee TBD.",
   },
   "HD-130": {
     office: "State Representative, District 130",
