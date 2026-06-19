@@ -50,7 +50,7 @@ function toGroup(key: string): { group: RaceGroup; groupLabel: string } {
   if (key === "US-Senate" || key === "HC-Countywide") return { group: "top", groupLabel: "Top of Ticket" };
   if (key.startsWith("CD-")) return { group: "congress", groupLabel: "Congress" };
   if (key.startsWith("SD-") || key.startsWith("HD-")) return { group: "statelegis", groupLabel: "State Legislature" };
-  if (["HC-Sheriff","HC-DA","HC-County-Attorney","HC-District-Clerk","HC-County-Clerk","HC-Tax-Assessor"].includes(key))
+  if (key.startsWith("PCT-") || ["HC-Sheriff","HC-DA","HC-County-Attorney","HC-District-Clerk","HC-County-Clerk","HC-Tax-Assessor"].includes(key))
     return { group: "countywide", groupLabel: "County Offices" };
   return { group: "local", groupLabel: "Local / JP / Constable" };
 }
