@@ -234,6 +234,112 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
   );
 }
 
+/* ── Win Number card ──────────────────────────────────────────────────────── */
+interface WinNum {
+  precinctCount: number;
+  turnout2022: number;
+  dVotes2022: number;
+  dPct2022: number | null;
+  estimatedTurnout2026: number;
+  targetDVotes: number;
+  gap: number;
+  status: "ahead" | "behind" | "toss-up";
+  primary2026DemBallots: number;
+  primary2026RepBallots: number;
+  primary2026DemEdge: number;
+}
+
+function WinNumber({ dKey }: { dKey: string }) {
+  const [data, setData] = useState<WinNum | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    setData(null);
+    fetch(`/api/districts/win-number?district=${encodeURIComponent(dKey)}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { setData(d); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, [dKey]);
+
+  if (loading) return (
+    <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] mt-4">
+      <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
+        <div className="h-3 w-24 rounded bg-gray-100 animate-pulse mb-4" />
+        <div className="h-8 w-32 rounded bg-gray-100 animate-pulse" />
+      </div>
+    </div>
+  );
+  if (!data) return null;
+
+  const fmt = (n: number) => n.toLocaleString();
+  const gapAbs = Math.abs(data.gap);
+  const isAhead = data.gap <= 0;
+  const gapColor = isAhead ? "#16a34a" : "#dc2626";
+  const primEdgePos = data.primary2026DemEdge > 0;
+
+  return (
+    <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] mt-4">
+      <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>
+          Win Number — 2026 Outlook
+        </p>
+
+        {/* Target to win */}
+        <div className="flex items-baseline gap-2 mb-4">
+          <span className="text-3xl font-black tabular-nums leading-none" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>
+            {fmt(data.targetDVotes)}
+          </span>
+          <span className="text-[11px]" style={{ color: "#9ca3af" }}>D votes needed</span>
+        </div>
+
+        {/* Gap status bar */}
+        <div className={`rounded-lg px-3 py-2 mb-4 flex items-center gap-2`}
+          style={{ background: isAhead ? "#f0fdf4" : "#fef2f2" }}>
+          <span className="text-lg">{isAhead ? "▲" : "▼"}</span>
+          <div>
+            <p className="text-[12px] font-bold" style={{ color: gapColor }}>
+              {isAhead ? `${fmt(gapAbs)} votes ahead of target` : `${fmt(gapAbs)} more votes needed`}
+            </p>
+            <p className="text-[10px]" style={{ color: "#9ca3af" }}>
+              vs. 2022 governor baseline ({data.dPct2022}% D)
+            </p>
+          </div>
+        </div>
+
+        {/* Key numbers grid */}
+        <div className="grid grid-cols-3 gap-2 mb-4">
+          {[
+            { label: "2022 D Votes", value: fmt(data.dVotes2022), sub: "off-year base" },
+            { label: "2022 Total", value: fmt(data.turnout2022), sub: "actual turnout" },
+            { label: "Est. 2026 Total", value: fmt(data.estimatedTurnout2026), sub: "reg-adjusted" },
+          ].map(s => (
+            <div key={s.label} className="text-center rounded-xl py-2 px-1" style={{ background: "#f8f9fa" }}>
+              <p className="text-sm font-bold leading-none" style={{ color: "#1a3a5c" }}>{s.value}</p>
+              <p className="text-[9px] mt-1 uppercase tracking-wider leading-tight" style={{ color: "#9ca3af" }}>{s.label}</p>
+              <p className="text-[8px] leading-tight mt-0.5" style={{ color: "#cbd5e1" }}>{s.sub}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* 2026 primary edge signal */}
+        {(data.primary2026DemBallots + data.primary2026RepBallots) > 0 && (
+          <div className="pt-3 border-t border-gray-100">
+            <p className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: "#9ca3af" }}>March 2026 Primary Edge</p>
+            <p className="text-[11px] font-semibold" style={{ color: primEdgePos ? "#2563a8" : "#dc2626" }}>
+              {primEdgePos ? "+" : ""}{fmt(data.primary2026DemEdge)} Dem ballot edge
+            </p>
+            <div className="flex justify-between text-[10px] mt-0.5" style={{ color: "#9ca3af" }}>
+              <span>D {fmt(data.primary2026DemBallots)}</span>
+              <span>R {fmt(data.primary2026RepBallots)}</span>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ── Results upload (election night mode) ─────────────────────────────────── */
 function parseResultsCsv(text: string): ResultsUpload | null {
   const lines = text.trim().split(/\r?\n/);
@@ -672,6 +778,11 @@ export default function DistrictsPage() {
                   </div>
                 </div>
               </div>
+            )}
+
+            {/* Win Number */}
+            {(type === "cd" || type === "sd" || type === "hd" || type === "pct" || type === "countywide") && (
+              <WinNumber dKey={type === "countywide" ? "HC-Countywide" : dKey} />
             )}
 
             {/* Seat history */}
