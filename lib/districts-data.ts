@@ -13,6 +13,80 @@ export interface DistrictInfo {
 }
 
 export const DISTRICT_INFO: Record<string, DistrictInfo> = {
+  // ── Congressional Districts ───────────────────────────────────────────────
+  "CD-2": {
+    description: "NW Harris County into Montgomery County — The Woodlands, Spring, Cypress, Katy. Safe Republican.",
+    seatHistory: [
+      { name: "Jack Fields", years: "1981–1997", party: "R" },
+      { name: "Ted Poe", years: "2005–2019", party: "R" },
+      { name: "Dan Crenshaw", years: "2019–present", party: "R" },
+    ],
+  },
+  "CD-7": {
+    description: "West Houston — River Oaks, Bellaire, Memorial, Westheimer, Katy. Most competitive congressional seat in Harris County.",
+    seatHistory: [
+      { name: "Bill Archer", years: "1971–2001", party: "R" },
+      { name: "John Culberson", years: "2001–2019", party: "R" },
+      { name: "Lizzie Fletcher", years: "2019–present", party: "D" },
+    ],
+  },
+  "CD-8": {
+    description: "NE Harris County (Kingwood, Humble, Atascocita) into Montgomery, San Jacinto, and east Texas. Safe Republican.",
+    seatHistory: [
+      { name: "Jack Fields", years: "1981–1997", party: "R" },
+      { name: "Kevin Brady", years: "1997–2023", party: "R" },
+      { name: "Morgan Luttrell", years: "2023–present", party: "R" },
+    ],
+  },
+  "CD-9": {
+    description: "SE Houston and suburbs — Pearland, Sunnyside, Missouri City, Third Ward. Open seat 2026 — Al Green ran for CD-18 and lost.",
+    seatHistory: [
+      { name: "Jack Brooks / Craig Washington", years: "1953–1995", party: "D" },
+      { name: "Nick Lampson", years: "1997–2005", party: "D" },
+      { name: "Al Green", years: "2005–2027", party: "D" },
+      { name: "TBD (2026 General)", years: "2027–present", party: "D" },
+    ],
+  },
+  "CD-18": {
+    description: "Houston urban core — Third Ward, Midtown, Montrose, Heights, Near Northside. Seat vacant since SJL's death July 2024. Safe Democratic.",
+    seatHistory: [
+      { name: "Craig Washington", years: "1989–1995", party: "D" },
+      { name: "Sheila Jackson Lee", years: "1995–2024", party: "D" },
+      { name: "Vacant", years: "2024–2027", party: "D" },
+      { name: "TBD (2026 General — Menefee D nominee)", years: "2027–present", party: "D" },
+    ],
+  },
+  "CD-22": {
+    description: "South Harris County, Pearland, Fort Bend, Brazoria. Safe Republican since Tom DeLay era.",
+    seatHistory: [
+      { name: "Tom DeLay", years: "1985–2006", party: "R" },
+      { name: "Nick Lampson (D, special)", years: "2007–2009", party: "D" },
+      { name: "Pete Olson", years: "2009–2021", party: "R" },
+      { name: "Troy Nehls", years: "2021–present", party: "R" },
+    ],
+  },
+  "CD-29": {
+    description: "NE Houston — Galena Park, Pasadena, Jacinto City. Heavily Hispanic and Democratic. No R opponent 2026.",
+    seatHistory: [
+      { name: "Gene Green", years: "1993–2019", party: "D" },
+      { name: "Sylvia Garcia", years: "2019–present", party: "D" },
+    ],
+  },
+  "CD-36": {
+    description: "SE Harris County into Liberty, Hardin, and deep east Texas. Safe Republican.",
+    seatHistory: [
+      { name: "Steve Stockman", years: "1995–1997; 2013–2015", party: "R" },
+      { name: "Brian Babin", years: "2015–present", party: "R" },
+    ],
+  },
+  "CD-38": {
+    description: "SW Harris County, Katy, Fort Bend — created in 2023 redistricting. Open seat 2026 — Wesley Hunt ran for U.S. Senate (lost R primary).",
+    seatHistory: [
+      { name: "Wesley Hunt", years: "2023–2027", party: "R" },
+      { name: "TBD (2026 General — Bonck R vs McDonough D)", years: "2027–present", party: "R" },
+    ],
+  },
+
   // ── TX State Senate ──────────────────────────────────────────────────────
   "SD-4": {
     description: "North Houston suburbs — The Woodlands, Spring, Humble",

@@ -35,7 +35,7 @@ interface PrecintEVData {
 const RACES: Race[] = [
   // Marquee statewide
   { id: "us-sen", label: "U.S. Senate", category: "Federal",
-    candidates: [{ name: "Jasmine Crockett", party: "D" }, { name: "Ken Paxton", party: "R" }] },
+    candidates: [{ name: "James Talarico", party: "D" }, { name: "Ken Paxton", party: "R" }] },
   // Marquee county
   { id: "county-judge", label: "Harris County Judge", category: "County",
     candidates: [{ name: "Letitia Plummer", party: "D" }, { name: "Orlando Sanchez", party: "R" }] },

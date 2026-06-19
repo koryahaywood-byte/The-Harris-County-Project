@@ -30,7 +30,7 @@ const TEC_CANDIDATES = [
   { tecName: "Hernandez, Ana E.",     name: "Ana Hernandez",       office: "State Rep HD-143",            level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Walle, Armando L.",     name: "Armando Walle",       office: "State Rep HD-140",            level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Perez, Mary Ann G.",    name: "Mary Ann Perez",      office: "State Rep HD-144",            level: "state" as const, party: "D" as const, incumbent: true },
-  { tecName: "Talarico, James",       name: "James Talarico",      office: "U.S. Senate (lost D primary)", level: "state" as const, party: "D" as const, incumbent: false },
+  { tecName: "Talarico, James",       name: "James Talarico",      office: "U.S. Senate (D nominee)",     level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Hinojosa, Gina",        name: "Gina Hinojosa",       office: "Governor (D nominee)",        level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Patrick, Dan",          name: "Dan Patrick",         office: "Lt. Governor",                level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "Hegar, Glenn",          name: "Glenn Hegar",         office: "Comptroller",                 level: "state" as const, party: "R" as const, incumbent: true },

@@ -20,7 +20,8 @@ const FEC = (id: string) => `https://www.fec.gov/data/candidate/${id}/`;
 
 export const FINANCE_DATA: CandidateFinance[] = [
   // Federal
-  { name: "Jasmine Crockett",      office: "U.S. Senate (D nominee)",        level: "federal",  party: "D", cash: 3800000,   raised: 5200000,  spent: 1400000,  asOf: "Mar 2026 est.", incumbent: false, filingUrl: "https://www.fec.gov/data/candidate/S6TX00338/" },
+  { name: "James Talarico",        office: "U.S. Senate (D nominee)",        level: "federal",  party: "D", cash: 0,        asOf: "pending",   incumbent: false, filingUrl: "https://www.fec.gov/data/candidate/S6TX00462/" },
+  { name: "Jasmine Crockett",      office: "U.S. Senate (lost D runoff to Talarico)", level: "federal",  party: "D", cash: 3800000,   raised: 5200000,  spent: 1400000,  asOf: "Mar 2026 est.", incumbent: false, filingUrl: "https://www.fec.gov/data/candidate/S6TX00338/" },
   { name: "John Cornyn",           office: "U.S. Senator (lost R runoff — term ends Jan 2027)", level: "federal", party: "R", cash: 8200000, raised: 9000000, spent: 15800000, asOf: "Apr 2026", incumbent: true, filingUrl: FEC("S0TX00999") },
   { name: "Ken Paxton",            office: "U.S. Senate (R nominee)",        level: "federal",  party: "R", cash: 2600000,   raised: 2200000,  spent: 3200000,  asOf: "Apr 2026", incumbent: false, filingUrl: FEC("S4TX00462") },
   { name: "Lizzie Fletcher",       office: "U.S. Rep CD-07",                 level: "federal",  party: "D", cash: 1750893,   asOf: "Apr 2026", incumbent: true,  filingUrl: FEC("H8TX07139") },
@@ -112,8 +113,8 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Phil Sandlin",          office: "Constable PCT 8",                level: "county",   party: "R", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
   // City of Houston
   { name: "John Whitmire",         office: "Mayor",                          level: "houston",  party: "D", cash: 2741969,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("John Whitmire") },
-  { name: "Edward Pollard",        office: "City Council District J",        level: "houston",  party: "D", cash: 2197573,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Edward Pollard") },
-  { name: "Willie Davis",          office: "City Council At-Large 2",        level: "houston",  party: "D", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: TEC("Willie Davis") },
+  { name: "Ed Pollard",             office: "City Council District J",        level: "houston",  party: "D", cash: 2197573,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Ed Pollard") },
+  { name: "Willie Davis",          office: "City Council At-Large 2",        level: "houston",  party: "R", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: TEC("Willie Davis") },
   { name: "Chris Hollins",         office: "City Controller",                level: "houston",  party: "D", cash: 530765,    asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Chris Hollins") },
   { name: "Martha Castex-Tatum",   office: "City Council District K",        level: "houston",  party: "D", cash: 366298,    asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Martha Castex-Tatum") },
   { name: "Tiffany Thomas",        office: "City Council District F",        level: "houston",  party: "D", cash: 262877,    asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Tiffany Thomas") },
@@ -127,17 +128,17 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Joaquin Martinez",      office: "City Council District I",        level: "houston",  party: "D", cash: 29304,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Joaquin Martinez") },
   { name: "Carolyn Evans-Shabazz", office: "City Council District D",        level: "houston",  party: "D", cash: 17235,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Carolyn Evans-Shabazz") },
   { name: "Tarsha Jackson",        office: "City Council District B",        level: "houston",  party: "D", cash: 9689,      asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Tarsha Jackson") },
-  { name: "Joe Panzarella",        office: "City Council District C",        level: "houston",  party: "R", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: TEC("Joe Panzarella") },
+  { name: "Joe Panzarella",        office: "City Council District C",        level: "houston",  party: "D", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: TEC("Joe Panzarella") },
   { name: "Mary Nan Huffman",      office: "City Council District G",        level: "houston",  party: "R", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: TEC("Mary Nan Huffman") },
 
   // Harris County Justice of the Peace — file at ethics.harrisvotes.com (same as commissioners)
   // Names verified from jp.hctx.net; cash populated by live HC scrape (page 4 of CFR PDF)
-  { name: "Eric William Carter",   office: "Justice of the Peace PCT 1 PL 1", level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
-  { name: "Steve Duble",           office: "Justice of the Peace PCT 1 PL 2", level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Eric William Carter",   office: "Justice of the Peace PCT 1 PL 1", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Steve Duble",           office: "Justice of the Peace PCT 1 PL 2", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
   { name: "Jo Ann Delgado",        office: "Justice of the Peace PCT 2 PL 1", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
   { name: "Dolores Lozano",        office: "Justice of the Peace PCT 2 PL 2", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
-  { name: "Joe Stephens",          office: "Justice of the Peace PCT 3 PL 1", level: "county",   party: "R", cash: 28399, raised: 23975, spent: 14017, asOf: "Jan 2026", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
-  { name: "Lucia Bates",           office: "Justice of the Peace PCT 3 PL 2", level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Joe Stephens",          office: "Justice of the Peace PCT 3 PL 1", level: "county",   party: "D", cash: 28399, raised: 23975, spent: 14017, asOf: "Jan 2026", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Lucia Bates",           office: "Justice of the Peace PCT 3 PL 2", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
   { name: "Lincoln Goodwin",       office: "Justice of the Peace PCT 4 PL 1", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
   { name: "Laryssa Korduba",       office: "Justice of the Peace PCT 4 PL 2", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
   { name: "James Lombardino",      office: "Justice of the Peace PCT 5 PL 1", level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },

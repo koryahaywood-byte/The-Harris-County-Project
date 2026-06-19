@@ -71,10 +71,10 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "lean-d",
     sides: [
-      { name: "Jasmine Crockett", party: "D", incumbent: false, note: "Won March primary" },
-      { name: "Ken Paxton",       party: "R", incumbent: false, note: "Won May runoff over John Cornyn" },
+      { name: "James Talarico", party: "D", incumbent: false, note: "Won May runoff over Jasmine Crockett" },
+      { name: "Ken Paxton",     party: "R", incumbent: false, note: "Won May runoff over John Cornyn" },
     ],
-    detail: "Paxton beat Cornyn in the May runoff (93,872–52,041 in Harris County). Crockett led the Democratic primary with no runoff. Nominee status reflects Harris County results; statewide certification governs.",
+    detail: "Paxton beat Cornyn in the May runoff. Talarico beat Crockett in the Democratic runoff. Former state rep HD-52 (Austin area).",
   },
   "HC-Countywide": {
     office: "Harris County Judge",

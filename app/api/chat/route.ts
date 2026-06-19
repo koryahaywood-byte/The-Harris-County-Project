@@ -50,7 +50,7 @@ Harris County context:
 - Voter registration deadline for 2026 general: October 5, 2026 (30 days before; Oct 4 falls on Sunday)
 - Early voting: October 19–30, 2026
 - 2026 County Judge race: Letitia Plummer (D) vs. Orlando Sanchez (R); Lina Hidalgo did not seek reelection
-- US Senate 2026: Jasmine Crockett (D) vs. Ken Paxton (R) — Paxton beat Cornyn in the R runoff
+- US Senate 2026: James Talarico (D) vs. Ken Paxton (R) — Talarico beat Crockett in D runoff; Paxton beat Cornyn in R runoff
 - TX Governor 2026: Gina Hinojosa (D, former HD-49) vs. Greg Abbott (R, incumbent)
 - TX AG 2026: Open seat — Mayes Middleton (R nominee); D nominee TBD. Paxton vacated to run for US Senate.
 - Harris County has 27 State House districts (HD-126 through HD-150, plus HD-24); 7 State Senate districts partially or fully in county (SD-4, SD-6, SD-11, SD-13, SD-15, SD-17, SD-18)
