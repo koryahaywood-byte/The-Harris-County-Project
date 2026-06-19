@@ -58,7 +58,7 @@ const ROWS: { section: string; tools: Tool[] }[] = [
         gradient: "linear-gradient(135deg,#92400e 0%,#d97706 100%)",
         photo: U("1449157291145-7efd050a4d0e") },
       { href: "/tools/ballot-2026", name: "2026 Ballot",
-        description: "Every Harris County general election race — D vs. R matchup, money, and status.",
+        description: "Every race on your November 2026 ballot — Governor to JP. D vs. R matchup, money on hand, and competitiveness rating.",
         gradient: "linear-gradient(135deg,#1e3a5f 0%,#2563a8 100%)",
         photo: U("1554224155-8d04cb9a382a") },
       { href: "/tools/pac-tracker", name: "Outside Money",

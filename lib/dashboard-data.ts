@@ -233,14 +233,14 @@ const FEDERAL_FEEDS = [
   { url: "https://www.bing.com/news/search?q=Congress+Senate+White+House+federal+politics+2026&format=rss" },
 ];
 
-// November 2026 Harris County ballot
+// November 2026 Harris County ballot — lean ratings sync'd with matchups-2026.ts
 const NOVEMBER_2026_BALLOT: BallotRace[] = [
-  { office: "Harris County Judge",     incumbent: "Open — Plummer (D) vs Sanchez (R)", party: "D", competitive: "Toss-up", href: "/tools/districts" },
-  { office: "U.S. House TX-07",        incumbent: "Lizzie Fletcher (D)", party: "D", competitive: "Toss-up", href: "/tools/congress-beat" },
-  { office: "U.S. Senate (TX)",        incumbent: "Open — Crockett (D) vs Paxton (R)", party: "R", competitive: "Lean R",  href: "/tools/congress-beat" },
-  { office: "TX Governor",             incumbent: "Greg Abbott (R)",     party: "R", competitive: "Lean R",  href: "/tools/state-beat" },
-  { office: "HC Commissioner Pct. 2",  incumbent: "Adrian Garcia (D)",   party: "D", competitive: "Lean D", href: "/politicians" },
-  { office: "U.S. House TX-22",        incumbent: "Troy Nehls (R)",      party: "R", competitive: "Lean R",  href: "/tools/congress-beat" },
+  { office: "Harris County Judge",     incumbent: "Plummer (D) vs Sanchez (R) — open", party: "D", competitive: "Lean D",  href: "/tools/ballot-2026" },
+  { office: "U.S. Senate (TX)",        incumbent: "Crockett (D) vs Paxton (R)",         party: "D", competitive: "Lean D",  href: "/tools/ballot-2026" },
+  { office: "U.S. House TX-07",        incumbent: "Fletcher (D) vs Hale (R)",           party: "D", competitive: "Toss-up", href: "/tools/ballot-2026" },
+  { office: "U.S. House TX-09",        incumbent: "Open — Gutierrez (D) vs Mealer (R)", party: "D", competitive: "Toss-up", href: "/tools/ballot-2026" },
+  { office: "U.S. House TX-38",        incumbent: "McDonough (D) vs Bonck (R) — open",  party: "R", competitive: "Lean R",  href: "/tools/ballot-2026" },
+  { office: "TX Governor",             incumbent: "Hinojosa (D) vs Abbott (R)",         party: "R", competitive: "Safe R",  href: "/tools/ballot-2026" },
 ];
 
 export async function getDashboardData(): Promise<DashboardData> {
