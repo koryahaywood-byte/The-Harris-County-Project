@@ -51,7 +51,12 @@ Harris County context:
 - 2026 County Judge race: Letitia Plummer (D) vs. Orlando Sanchez (R); Lina Hidalgo did not seek reelection
 - US Senate 2026: Jasmine Crockett (D) vs. Ken Paxton (R) — Paxton beat Cornyn in the R runoff
 - TX Governor 2026: Gina Hinojosa (D, former HD-49) vs. Greg Abbott (R, incumbent)
-- TX AG 2026: Open seat — Mayes Middleton (R nominee); D nominee TBD. Paxton vacated to run for US Senate.`;
+- TX AG 2026: Open seat — Mayes Middleton (R nominee); D nominee TBD. Paxton vacated to run for US Senate.
+- Harris County has 27 State House districts (HD-126 through HD-150, plus HD-24); 7 State Senate districts partially or fully in county (SD-4, SD-6, SD-11, SD-13, SD-15, SD-17, SD-18)
+- HD-126 open seat: Stefanie Bord (D) vs Stan Stanart (R); HD-131 open seat: Staci Childs (D); HD-128 open seat (Briscoe Cain ran for CD-9 instead)
+- HD-134 (Ann Johnson D), HD-135 (Jon Rosenthal D) are the most competitive suburban seats
+- CD-7 (Fletcher D vs Hale R) and CD-9 (Gutierrez D vs Mealer R) are the top two toss-up congressional races in Harris County
+- SD-11 open seat: Shannon Dicely (D nominee); R nominee TBD after Middleton left for AG race`;
 
 export async function POST(req: NextRequest) {
   const { messages, path } = await req.json();

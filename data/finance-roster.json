@@ -390,9 +390,96 @@
       "party": "D"
     },
     {
+      "tecName": "Bettencourt, Paul",
+      "name": "Paul Bettencourt",
+      "office": "State Senator SD-7",
+      "party": "R",
+      "note": "SD-7 not up in 2026 (elected 2024). Active filer."
+    },
+    {
       "tecName": "Thompson, Senfronia",
       "name": "Senfronia Thompson",
       "office": "State Rep HD-141",
+      "party": "D"
+    },
+    {
+      "tecName": "Dutton, Harold V.",
+      "name": "Harold Dutton",
+      "office": "State Rep HD-142",
+      "party": "D",
+      "note": "Seeking reelection."
+    },
+    {
+      "tecName": "Wu, Gene",
+      "name": "Gene Wu",
+      "office": "State Rep HD-137",
+      "party": "D"
+    },
+    {
+      "tecName": "Jones, Jolanda E.",
+      "name": "Jolanda Jones",
+      "office": "State Rep HD-147",
+      "party": "D"
+    },
+    {
+      "tecName": "Simmons, Lauren Ashley",
+      "name": "Lauren Ashley Simmons",
+      "office": "State Rep HD-146",
+      "party": "D"
+    },
+    {
+      "tecName": "Morales, Christina",
+      "name": "Christina Morales",
+      "office": "State Rep HD-145",
+      "party": "D"
+    },
+    {
+      "tecName": "Johnson, Charlene",
+      "name": "Charlene Ward Johnson",
+      "office": "State Rep HD-139",
+      "party": "D"
+    },
+    {
+      "tecName": "Rosenthal, Jon",
+      "name": "Jon Rosenthal",
+      "office": "State Rep HD-135",
+      "party": "D",
+      "note": "Key competitive seat — one of most-watched HD races in Harris County."
+    },
+    {
+      "tecName": "Hull, Lacey",
+      "name": "Lacey Hull",
+      "office": "State Rep HD-138",
+      "party": "R"
+    },
+    {
+      "tecName": "Oliverson, Tom",
+      "name": "Tom Oliverson",
+      "office": "State Rep HD-130",
+      "party": "R"
+    },
+    {
+      "tecName": "Paul, Dennis",
+      "name": "Dennis Paul",
+      "office": "State Rep HD-129",
+      "party": "R"
+    },
+    {
+      "tecName": "Bonnen, Greg",
+      "name": "Greg Bonnen",
+      "office": "State Rep HD-24",
+      "party": "R"
+    },
+    {
+      "tecName": "Schofield, Mike",
+      "name": "Mike Schofield",
+      "office": "State Rep HD-132",
+      "party": "R"
+    },
+    {
+      "tecName": "Shaw, Penny Morales",
+      "name": "Penny Morales Shaw",
+      "office": "State Rep HD-148",
       "party": "D"
     },
     {
