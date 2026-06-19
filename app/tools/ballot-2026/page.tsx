@@ -73,6 +73,27 @@ function MoneyCell({ name }: { name: string | null }) {
   );
 }
 
+function MoneyEdgeBadge({ dName, rName }: { dName: string | null; rName: string | null }) {
+  const dCash = financeFor(dName)?.cash ?? 0;
+  const rCash = financeFor(rName)?.cash ?? 0;
+  if (!dCash && !rCash) return null;
+  if (!dCash || !rCash) return null; // need both to show edge
+  const edge = dCash - rCash;
+  const absPct = Math.round(Math.abs(edge) / Math.max(dCash, rCash) * 100);
+  if (absPct < 5) return <span className="text-[9px] text-gray-400 italic">Money even</span>;
+  const isDLeading = edge > 0;
+  return (
+    <span
+      className="text-[9px] font-bold px-1.5 py-0.5 rounded"
+      style={isDLeading
+        ? { background: "#dbeafe", color: "#1d4ed8" }
+        : { background: "#fee2e2", color: "#b91c1c" }}
+    >
+      {isDLeading ? "D+" : "R+"}{fmt(Math.abs(edge)).replace("$", "")} money edge
+    </span>
+  );
+}
+
 const STATUS_LABEL: Record<string, string> = {
   set: "Full matchup",
   partial: "Partial",
@@ -237,6 +258,9 @@ export default function Ballot2026() {
                           >
                             {STATUS_LABEL[r.status]}
                           </span>
+                        </div>
+                        <div className="mt-1">
+                          <MoneyEdgeBadge dName={r.dSide?.name ?? null} rName={r.rSide?.name ?? null} />
                         </div>
                         <Link
                           href={r.districtLink ?? "/tools/districts"}

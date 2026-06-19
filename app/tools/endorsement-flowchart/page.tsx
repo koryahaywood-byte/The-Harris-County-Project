@@ -70,11 +70,11 @@ const ENDORSEMENTS: Endorsement[] = [
   { id: "e34", endorser: "CWA Texas",                endorserType: "Union",           candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026, notes: "Communications Workers of America" },
   { id: "e35", endorser: "Lizzie Fletcher",          endorserType: "Elected Official", candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026 },
 
-  // ── 2026 TX US Senate — Ted Cruz (R incumbent) ───────────────────────────
-  { id: "e36", endorser: "Donald Trump",             endorserType: "Elected Official", candidate: "Ted Cruz",         race: "U.S. Senate 2026",          year: 2026 },
-  { id: "e37", endorser: "Texas Republican Party",   endorserType: "Party Org",       candidate: "Ted Cruz",         race: "U.S. Senate 2026",          year: 2026 },
-  { id: "e38", endorser: "NRA Political Victory Fund", endorserType: "Civic Org",     candidate: "Ted Cruz",         race: "U.S. Senate 2026",          year: 2026 },
-  { id: "e39", endorser: "Club for Growth",          endorserType: "Civic Org",       candidate: "Ted Cruz",         race: "U.S. Senate 2026",          year: 2026 },
+  // ── 2026 TX US Senate — Ken Paxton (R nominee) ──────────────────────────
+  { id: "e36", endorser: "Donald Trump",             endorserType: "Elected Official", candidate: "Ken Paxton",       race: "U.S. Senate 2026",          year: 2026, notes: "Trump backed Paxton over Cornyn in the R primary" },
+  { id: "e37", endorser: "Texas Republican Party",   endorserType: "Party Org",       candidate: "Ken Paxton",       race: "U.S. Senate 2026",          year: 2026 },
+  { id: "e38", endorser: "NRA Political Victory Fund", endorserType: "Civic Org",     candidate: "Ken Paxton",       race: "U.S. Senate 2026",          year: 2026 },
+  { id: "e39", endorser: "Club for Growth",          endorserType: "Civic Org",       candidate: "Ken Paxton",       race: "U.S. Senate 2026",          year: 2026 },
 
   // ── 2026 Harris County Judge — Republican primary ────────────────────────
   { id: "e40", endorser: "Texas Republican Party",   endorserType: "Party Org",       candidate: "Orlando Sanchez",  race: "Harris County Judge 2026",  year: 2026, notes: "Won May 2026 GOP runoff over Warren Howell 85,304–49,367" },

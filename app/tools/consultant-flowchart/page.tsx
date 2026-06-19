@@ -58,10 +58,10 @@ const RELATIONSHIPS: Relationship[] = [
   { id: "c24", consultant: "Bully Pulpit Interactive", firm: "Bully Pulpit Interactive", role: "Digital", client: "Jasmine Crockett", clientType: "Candidate", race: "U.S. Senate 2026",           year: 2026, party: "D" },
   { id: "c25", consultant: "Anzalone Research", firm: "Anzalone Research",     role: "Polling",             client: "Jasmine Crockett", clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "D" },
   { id: "c26", consultant: "JS2 Media",         firm: "JS2 Media",             role: "Media / Ads",         client: "Jasmine Crockett", clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "D" },
-  { id: "c27", consultant: "Axiom Strategies",  firm: "Axiom Strategies",      role: "General Consultant",  client: "Ted Cruz",         clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "R" },
-  { id: "c28", consultant: "Jamestown Associates", firm: "Jamestown Associates", role: "Media / Ads",       client: "Ted Cruz",         clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "R" },
-  { id: "c29", consultant: "WPA Intelligence",  firm: "WPA Intelligence",      role: "Polling",             client: "Ted Cruz",         clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "R" },
-  { id: "c30", consultant: "Harris Media",      firm: "Harris Media",          role: "Digital",             client: "Ted Cruz",         clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "R" },
+  { id: "c27", consultant: "Axiom Strategies",  firm: "Axiom Strategies",      role: "General Consultant",  client: "Ken Paxton",       clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "R" },
+  { id: "c28", consultant: "Jamestown Associates", firm: "Jamestown Associates", role: "Media / Ads",       client: "Ken Paxton",       clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "R" },
+  { id: "c29", consultant: "WPA Intelligence",  firm: "WPA Intelligence",      role: "Polling",             client: "Ken Paxton",       clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "R" },
+  { id: "c30", consultant: "Harris Media",      firm: "Harris Media",          role: "Digital",             client: "Ken Paxton",       clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "R" },
 
   // ── 2026 Harris County Judge ─────────────────────────────────────────────
   { id: "c31", consultant: "Mustafa Tameez",    firm: "Outreach Strategists",  role: "General Consultant",  client: "Letitia Plummer",  clientType: "Candidate", race: "Harris County Judge 2026",    year: 2026, party: "D" },
