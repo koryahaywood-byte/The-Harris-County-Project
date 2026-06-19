@@ -132,6 +132,10 @@ const ROWS: { section: string; tools: Tool[] }[] = [
         description: "The political consulting firms behind every candidate — who shares the same playbook.",
         gradient: "linear-gradient(135deg,#1e3a5c 0%,#0f766e 100%)",
         photo: U("1519389950473-47ba0277781c") },
+      { href: "/tools/donor-network", name: "Donor Network",
+        description: "876 cross-official donors — see who funds multiple candidates and how money flows between Rs and Ds.",
+        gradient: "linear-gradient(135deg,#78350f 0%,#d97706 100%)",
+        photo: U("1604594849809-dfedbc827105") },
     ],
   },
   {
