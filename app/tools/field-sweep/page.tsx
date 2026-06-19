@@ -16,6 +16,9 @@ interface SweepPrecinct {
   turnout2024: number | null;
   turnoutDelta: number | null;
   ssvr: number | null;
+  primary2026DemBallots: number | null;
+  primary2026RepBallots: number | null;
+  primary2026DemEdge: number | null;
 }
 
 const CLASS_META: Record<FieldClass, { color: string; bg: string; text: string }> = {
@@ -26,7 +29,7 @@ const CLASS_META: Record<FieldClass, { color: string; bg: string; text: string }
   unknown:    { color: "#6b7280", bg: "#f3f4f6", text: "Unknown" },
 };
 
-type SortKey = "precinct" | "avgDPct" | "dPct2024" | "turnoutDelta" | "reg2024" | "turnout2024" | "ssvr";
+type SortKey = "precinct" | "avgDPct" | "dPct2024" | "turnoutDelta" | "reg2024" | "turnout2024" | "ssvr" | "primary2026DemEdge";
 
 export default function FieldSweepPage() {
   const [data, setData] = useState<SweepPrecinct[]>([]);
@@ -70,11 +73,12 @@ export default function FieldSweepPage() {
   }
 
   function exportCsv() {
-    const header = ["Precinct","Classification","Label","Avg D%","D% 2024","D% 2022","D% 2020","Reg 2024","Turnout 2024","Turnout Delta (24-20)","SSVR"];
+    const header = ["Precinct","Classification","Label","Avg D%","D% 2024","D% 2022","D% 2020","Reg 2024","Turnout 2024","Turnout Delta (24-20)","SSVR","2026 Dem Ballots","2026 Rep Ballots","2026 Dem Edge"];
     const rows = sorted.map(p => [
       p.precinct, p.classification, p.label,
       p.avgDPct ?? "", p.dPct2024 ?? "", p.dPct2022 ?? "", p.dPct2020 ?? "",
       p.reg2024 ?? "", p.turnout2024 ?? "", p.turnoutDelta ?? "", p.ssvr ?? "",
+      p.primary2026DemBallots ?? "", p.primary2026RepBallots ?? "", p.primary2026DemEdge ?? "",
     ]);
     const csv = [header, ...rows].map(r => r.join(",")).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
@@ -169,6 +173,9 @@ export default function FieldSweepPage() {
               <SortHdr label="Turnout 2024" k="turnout2024" />
               <SortHdr label="Δ Turnout" k="turnoutDelta" />
               <SortHdr label="SSVR" k="ssvr" />
+              <SortHdr label="2026 D Ballots" k="primary2026DemEdge" />
+              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wide whitespace-nowrap">2026 R Ballots</th>
+              <SortHdr label="2026 Edge" k="primary2026DemEdge" />
             </tr>
           </thead>
           <tbody>
@@ -194,12 +201,19 @@ export default function FieldSweepPage() {
                     {p.turnoutDelta !== null ? (p.turnoutDelta > 0 ? `+${p.turnoutDelta.toLocaleString()}` : p.turnoutDelta.toLocaleString()) : "—"}
                   </td>
                   <td className="px-3 py-2 text-gray-700">{p.ssvr?.toLocaleString() ?? "—"}</td>
+                  <td className="px-3 py-2 text-blue-700 font-medium">{p.primary2026DemBallots?.toLocaleString() ?? "—"}</td>
+                  <td className="px-3 py-2 text-red-700">{p.primary2026RepBallots?.toLocaleString() ?? "—"}</td>
+                  <td className="px-3 py-2 font-medium" style={{ color: (p.primary2026DemEdge ?? 0) > 0 ? "#1d4ed8" : "#b91c1c" }}>
+                    {p.primary2026DemEdge !== null
+                      ? (p.primary2026DemEdge > 0 ? `+${p.primary2026DemEdge.toLocaleString()}` : p.primary2026DemEdge.toLocaleString())
+                      : "—"}
+                  </td>
                 </tr>
               );
             })}
             {sorted.length > 500 && (
               <tr>
-                <td colSpan={10} className="px-3 py-2 text-center text-gray-400 text-xs italic">
+                <td colSpan={13} className="px-3 py-2 text-center text-gray-400 text-xs italic">
                   Showing 500 of {sorted.length} — use filter or Export CSV for full list
                 </td>
               </tr>

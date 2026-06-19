@@ -18,6 +18,9 @@ export interface SweepPrecinct {
   turnout2024: number | null;
   turnoutDelta: number | null;  // 2024 - 2020 actual votes
   ssvr: number | null;          // Spanish-surname voter registration
+  primary2026DemBallots: number | null;  // March 2026 Dem primary ballots cast
+  primary2026RepBallots: number | null;  // March 2026 Rep primary ballots cast
+  primary2026DemEdge: number | null;     // Dem - Rep margin (positive = Dem advantage)
 }
 
 function classifyAvg(avg: number): { cls: FieldClass; label: string } {
@@ -29,6 +32,7 @@ function classifyAvg(avg: number): { cls: FieldClass; label: string } {
 
 export async function GET() {
   const filePath = join(process.cwd(), "public", "data", "precinct-history.json");
+  const turnout26Path = join(process.cwd(), "public", "data", "precinct-turnout-2026.json");
 
   let raw: string;
   try {
@@ -40,6 +44,13 @@ export async function GET() {
   const data = JSON.parse(raw);
   const cycles = data.cycles ?? {};
   const demographics: Record<string, { vap: number; anglo: number; black: number; hisp: number; asian: number }> = data.demographics ?? {};
+
+  // 2026 primary party split (March 2026 — US Senate race ballots)
+  let primary2026: Record<string, { dem: number; rep: number }> = {};
+  try {
+    const t26raw = readFileSync(turnout26Path, "utf-8");
+    primary2026 = JSON.parse(t26raw).precincts ?? {};
+  } catch { /* optional — silently missing is ok */ }
 
   // Helper: find D and R candidate indices in a race
   function dRIdx(race: { candidates: { party: string }[] }) {
@@ -99,6 +110,7 @@ export async function GET() {
       label = c.label;
     }
 
+    const p26 = primary2026[pct];
     results.push({
       precinct: pct,
       classification,
@@ -111,6 +123,9 @@ export async function GET() {
       turnout2024: vr24?.turnout ?? null,
       turnoutDelta: vr24 && vr20 ? vr24.turnout - vr20.turnout : null,
       ssvr: vr24?.ssvr ?? null,
+      primary2026DemBallots: p26?.dem ?? null,
+      primary2026RepBallots: p26?.rep ?? null,
+      primary2026DemEdge: p26 ? p26.dem - p26.rep : null,
     });
   }
 
