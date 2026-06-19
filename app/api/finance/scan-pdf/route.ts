@@ -40,24 +40,19 @@ export async function POST(req: NextRequest): Promise<NextResponse<ScanResult>> 
 
   const b64 = Buffer.from(pdfBuf).toString("base64");
 
-  // Send to Claude
-  const anthropic = await import("@anthropic-ai/sdk");
-  const client = new anthropic.default({ apiKey });
+  const Anthropic = (await import("@anthropic-ai/sdk")).default;
+  const client = new Anthropic({ apiKey });
 
-  const message = await client.messages.create({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 1024,
-    messages: [
-      {
-        role: "user",
-        content: [
-          {
-            type: "document",
-            source: { type: "base64", media_type: "application/pdf", data: b64 },
-          } as Parameters<typeof client.messages.create>[0]["messages"][0]["content"][0],
-          {
-            type: "text",
-            text: `Extract campaign finance data from this Texas C/OH filing. Return ONLY valid JSON with this shape:
+  // The document block type is supported by the API but may not yet be in SDK types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const content: any[] = [
+    {
+      type: "document",
+      source: { type: "base64", media_type: "application/pdf", data: b64 },
+    },
+    {
+      type: "text",
+      text: `Extract campaign finance data from this Texas C/OH filing. Return ONLY valid JSON with this shape:
 {
   "filer": "<candidate name>",
   "period": "<reporting period, e.g. Jan 1 – Jun 30 2024>",
@@ -68,10 +63,13 @@ export async function POST(req: NextRequest): Promise<NextResponse<ScanResult>> 
   "topExpenses": [{"payee":"...","amount":0,"purpose":"..."}]
 }
 Include up to 10 top contributors and 10 top expenses by amount. Numbers must be plain numbers, no $ or commas. If a field is not found, use null.`,
-          },
-        ],
-      },
-    ],
+    },
+  ];
+
+  const message = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 1024,
+    messages: [{ role: "user", content }],
   });
 
   const raw = message.content[0]?.type === "text" ? message.content[0].text : "";
