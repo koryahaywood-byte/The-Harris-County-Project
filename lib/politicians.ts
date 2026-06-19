@@ -212,7 +212,7 @@ export const POLITICIANS: Politician[] = [
   {
     slug: "hubert-vo",
     name: "Hubert Vo",
-    office: "Texas State Representative",
+    office: "Texas State Representative (term ends Jan 2027 — lost May 2026 D runoff to Darlene Breaux)",
     district: "HD-149",
     chamber: "House",
     party: "D",

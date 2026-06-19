@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { PDFDocument } from "pdf-lib";
+import Anthropic from "@anthropic-ai/sdk";
 
 // Allow up to 5 minutes — Vercel cron uses this route, which needs time for 17 sequential scrapes
 export const maxDuration = 300;
@@ -177,105 +178,80 @@ async function downloadPdf(rowIndex: number, tokens: FormTokens): Promise<Uint8A
   return new Uint8Array(await res.arrayBuffer());
 }
 
-// Step 4: Extract page 2 and parse financial fields from plain text
-async function extractFinancials(pdfBytes: Uint8Array): Promise<{
+// Step 4a: Extract summary pages (first 4) to keep token cost low
+async function extractSummaryPages(pdfBytes: Uint8Array): Promise<Uint8Array> {
+  const srcDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+  const total  = srcDoc.getPageCount();
+  const indices = Array.from({ length: Math.min(total, 4) }, (_, i) => i);
+  const outDoc = await PDFDocument.create();
+  const copied = await outDoc.copyPages(srcDoc, indices);
+  copied.forEach(p => outDoc.addPage(p));
+  return outDoc.save();
+}
+
+// Step 4b: Send pages to Claude and extract financial fields
+async function extractFinancials(pdfBytes: Uint8Array, candidateName: string): Promise<{
   cash: number; raised: number; spent: number; loans: number; asOf: string;
 }> {
-  // pdf-lib for page extraction — but we need text, so use a different approach:
-  // Grab only page 2 (index 1) bytes via pdf-lib, then parse text inline
-  const srcDoc  = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
-  const outDoc  = await PDFDocument.create();
-  const [page2] = await outDoc.copyPages(srcDoc, [1]);
-  outDoc.addPage(page2);
-  const page2Bytes = await outDoc.save();
+  const summaryBytes = await extractSummaryPages(pdfBytes);
+  const base64 = Buffer.from(summaryBytes).toString("base64");
 
-  // Extract text from page 2 using a pure-JS PDF text extractor
-  // pdf-lib doesn't extract text — use the raw content stream approach
-  // Instead, parse the original full PDF for page 2 text via content streams
-  const textMap = extractTextFromPage(pdfBytes, 1);
+  const client = new Anthropic();
+  const message = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 512,
+    messages: [{
+      role: "user",
+      content: [
+        {
+          type: "document",
+          source: { type: "base64", media_type: "application/pdf", data: base64 },
+        } as never,
+        {
+          type: "text",
+          text: `This is a Houston City campaign finance report (Texas C/OH form) for ${candidateName}. Find the COVER SHEET SUPPORT & TOTALS page. Extract these exact dollar amounts and return ONLY valid JSON with no markdown:
+{
+  "cash_on_hand_end": <number>,
+  "total_receipts": <number>,
+  "total_expenditures": <number>,
+  "loans_outstanding": <number>,
+  "period_end_date": "<MM/DD/YYYY string>"
+}
+Look for: field 2 = TOTAL POLITICAL CONTRIBUTIONS (total_receipts), field 4 = TOTAL POLITICAL EXPENDITURES, field 5 = TOTAL POLITICAL CONTRIBUTIONS MAINTAINED AS OF THE LAST DAY OF REPORTING PERIOD (cash_on_hand_end), field 6 = TOTAL PRINCIPAL AMOUNT OF ALL OUTSTANDING LOANS.
+Use 0 for any field not found. Do not include $ or commas in numbers.`,
+        },
+      ],
+    }],
+  });
 
-  const parseDollar = (s: string) => {
-    const m = s.match(/\$[\d,]+\.?\d*/);
-    return m ? parseFloat(m[0].replace(/[$,]/g, "")) : 0;
-  };
+  const text = message.content[0].type === "text" ? message.content[0].text : "{}";
+  const clean = text.replace(/```[a-z]*\n?/g, "").trim();
+  const parsed = JSON.parse(clean);
 
-  const lines = textMap.split("\n");
-  let cash = 0, raised = 0, spent = 0, loans = 0;
+  const toNum = (v: unknown) => typeof v === "number" ? v : parseFloat(String(v ?? "0").replace(/[,$]/g, "")) || 0;
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    // Field 2: TOTAL POLITICAL CONTRIBUTIONS
-    if (line.includes("TOTAL POLITICAL CONTRIBUTIONS") && !line.includes("MAINTAINED") && !line.includes("PLEDGES")) {
-      const next = lines.slice(i + 1, i + 4).join(" ");
-      raised = parseDollar(line + " " + next);
-    }
-    // Field 4: TOTAL POLITICAL EXPENDITURES
-    if (line.includes("TOTAL POLITICAL EXPENDITURES")) {
-      const next = lines.slice(i + 1, i + 3).join(" ");
-      spent = parseDollar(line + " " + next);
-    }
-    // Field 5: cash on hand
-    if (line.includes("TOTAL POLITICAL CONTRIBUTIONS MAINTAINED") || line.includes("CONTRIBUTION BALANCE") || line.includes("LAST DAY")) {
-      const next = lines.slice(i + 1, i + 5).join(" ");
-      const val = parseDollar(next);
-      if (val > 0) cash = val;
-    }
-    // Field 6: loans
-    if (line.includes("TOTAL PRINCIPAL AMOUNT") || line.includes("OUTSTANDING LOANS")) {
-      const next = lines.slice(i + 1, i + 4).join(" ");
-      const val = parseDollar(next);
-      loans = val;
-    }
-  }
-
-  // Determine period end from page text
-  const periodMatch = textMap.match(/(\d{1,2}\/\d{1,2}\/\d{4})/g);
-  const lastDate = periodMatch?.[periodMatch.length - 1] ?? "";
+  const dateStr: string = parsed.period_end_date ?? "";
   let asOf = "Unknown";
-  if (lastDate) {
-    const [m, , y] = lastDate.split("/");
+  if (dateStr) {
+    const [m, , y] = dateStr.split("/");
     const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     asOf = `${months[parseInt(m) - 1]} ${y}`;
   }
 
-  void page2Bytes; // suppress unused warning
-  return { cash, raised, spent, loans, asOf };
-}
-
-// Minimal raw PDF text extraction for a single page
-function extractTextFromPage(pdfBytes: Uint8Array, pageIndex: number): string {
-  // Find page content stream by looking for text operators in the raw bytes
-  const raw = Buffer.from(pdfBytes).toString("latin1");
-
-  // Find BT...ET blocks (Begin Text / End Text in PDF)
-  const btEtRegex = /BT([\s\S]*?)ET/g;
-  const textParts: string[] = [];
-
-  // Find page objects to identify which content belongs to our page
-  // Simplified: extract all text from the whole document, filter by page marker
-  // For a cover-sheet style PDF, page 2 content appears after "2 of" marker
-  for (const m of raw.matchAll(btEtRegex)) {
-    const block = m[1];
-    // Extract strings from Tj and TJ operators
-    const strRegex = /\(([^)]*)\)\s*Tj|\[([^\]]*)\]\s*TJ/g;
-    for (const sm of block.matchAll(strRegex)) {
-      const str = sm[1] ?? sm[2] ?? "";
-      // Clean PDF string encoding
-      const cleaned = str
-        .replace(/\\n/g, "\n")
-        .replace(/\\r/g, " ")
-        .replace(/\\t/g, " ")
-        .replace(/\\\\/g, "\\")
-        .replace(/\\([0-7]{3})/g, (_, oct) => String.fromCharCode(parseInt(oct, 8)));
-      if (cleaned.trim()) textParts.push(cleaned.trim());
-    }
-  }
-
-  return textParts.join("\n");
+  return {
+    cash:   toNum(parsed.cash_on_hand_end),
+    raised: toNum(parsed.total_receipts),
+    spent:  toNum(parsed.total_expenditures),
+    loans:  toNum(parsed.loans_outstanding),
+    asOf,
+  };
 }
 
 export async function GET() {
   const fetchedAt = new Date().toISOString();
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return NextResponse.json({ error: "ANTHROPIC_API_KEY not set", results: [], fetchedAt }, { status: 500 });
+  }
   const results: COHCandidate[] = [];
   const seen = new Set<string>();
 
@@ -291,7 +267,7 @@ export async function GET() {
     const row = await searchAndGetRows(cand.last, cand.first, tokens);
     if (!row) throw new Error("No filings found");
     const pdfBytes = await downloadPdf(row.rowIndex, tokens);
-    const fin = await extractFinancials(pdfBytes);
+    const fin = await extractFinancials(pdfBytes, cand.name);
     return {
       name: cand.name, office: cand.office, level: "houston", party: cand.party,
       cash: fin.cash, raised: fin.raised, spent: fin.spent, loans: fin.loans,

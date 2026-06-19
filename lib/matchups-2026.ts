@@ -194,38 +194,155 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     ],
   },
 
-  // Commissioner Precincts — all incumbents, no 2026 challengers on file yet
+  // Commissioner Precincts
   "PCT-1": {
     office: "Commissioner Precinct 1",
     status: "partial",
     sides: [
-      { name: "Rodney Ellis", party: "D", incumbent: true, note: "Incumbent — next election 2026" },
+      { name: "Rodney Ellis", party: "D", incumbent: true, note: "Incumbent — no R challenger filed" },
     ],
-    detail: "Rodney Ellis has held PCT 1 since 2016. No Republican challenger filed as of June 2026.",
+    detail: "Rodney Ellis has held PCT 1 since 2016. No Republican challenger filed by the June 2026 deadline.",
   },
   "PCT-2": {
     office: "Commissioner Precinct 2",
-    status: "partial",
+    status: "set",
     sides: [
-      { name: "Adrian Garcia", party: "D", incumbent: true, note: "Incumbent — next election 2026" },
+      { name: "Adrian Garcia",  party: "D", incumbent: true,  note: "Incumbent" },
+      { name: "Richard Vega",   party: "R", incumbent: false, note: "R general candidate" },
     ],
-    detail: "Adrian Garcia has held PCT 2 since 2016. No Republican challenger filed as of June 2026.",
+    detail: "Contested general election. Garcia has held PCT 2 since 2016.",
   },
   "PCT-3": {
     office: "Commissioner Precinct 3",
     status: "partial",
     sides: [
-      { name: "Tom Ramsey", party: "R", incumbent: true, note: "Incumbent — next election 2026" },
+      { name: "Tom Ramsey", party: "R", incumbent: true, note: "Incumbent — no D challenger filed" },
     ],
-    detail: "Tom Ramsey has held PCT 3 since 2021. No Democratic challenger on file as of June 2026.",
+    detail: "Tom Ramsey has held PCT 3 since 2021. No Democratic challenger filed by the June 2026 deadline.",
   },
   "PCT-4": {
     office: "Commissioner Precinct 4",
     status: "partial",
     sides: [
-      { name: "Lesley Briones", party: "D", incumbent: true, note: "Incumbent — next election 2026" },
+      { name: "Lesley Briones", party: "D", incumbent: true, note: "Incumbent — no R challenger filed" },
     ],
-    detail: "Lesley Briones has held PCT 4 since 2023. No Republican challenger filed as of June 2026.",
+    detail: "Lesley Briones has held PCT 4 since 2023. No Republican challenger filed by the June 2026 deadline.",
+  },
+
+  // Countywide offices — law enforcement & admin
+  "HC-Sheriff": {
+    office: "Harris County Sheriff",
+    status: "partial",
+    sides: [
+      { name: "Ed Gonzalez", party: "D", incumbent: true, note: "Incumbent — won March primary" },
+    ],
+    detail: "Ed Gonzalez has held the Sheriff's office since 2017. No Republican general opponent confirmed as of June 2026.",
+  },
+  "HC-DA": {
+    office: "District Attorney",
+    status: "partial",
+    sides: [
+      { name: "Sean Teare", party: "D", incumbent: true, note: "Incumbent — won March primary" },
+    ],
+    detail: "Sean Teare has served as DA since 2022. No Republican general opponent confirmed as of June 2026.",
+  },
+  "HC-County-Attorney": {
+    office: "County Attorney",
+    status: "partial",
+    sides: [
+      { name: "Abbie Kamin", party: "D", incumbent: false, note: "D nominee — open seat" },
+    ],
+    detail: "Open seat race for County Attorney. Abbie Kamin won the Democratic primary.",
+  },
+  "HC-District-Clerk": {
+    office: "District Clerk",
+    status: "partial",
+    sides: [
+      { name: "Marilyn Burgess", party: "D", incumbent: true, note: "Incumbent" },
+    ],
+  },
+  "HC-County-Clerk": {
+    office: "County Clerk",
+    status: "partial",
+    sides: [
+      { name: "Teneshia Hudspeth", party: "D", incumbent: true, note: "Incumbent" },
+    ],
+  },
+  "HC-Tax-Assessor": {
+    office: "Tax Assessor-Collector",
+    status: "partial",
+    sides: [
+      { name: "Annette Ramirez", party: "D", incumbent: true, note: "Incumbent" },
+    ],
+  },
+
+  // Constables — all 8 precincts
+  "CONSTABLE-1": {
+    office: "Constable Precinct 1",
+    status: "partial",
+    sides: [{ name: "Alan Rosen",       party: "D", incumbent: true, note: "Incumbent" }],
+    detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
+  },
+  "CONSTABLE-2": {
+    office: "Constable Precinct 2",
+    status: "partial",
+    sides: [{ name: "Jerry Garcia",     party: "D", incumbent: true, note: "Incumbent" }],
+    detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
+  },
+  "CONSTABLE-3": {
+    office: "Constable Precinct 3",
+    status: "partial",
+    sides: [{ name: "Sherman Eagleton", party: "D", incumbent: true, note: "Incumbent" }],
+    detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
+  },
+  "CONSTABLE-4": {
+    office: "Constable Precinct 4",
+    status: "partial",
+    sides: [{ name: "Mark Herman",      party: "R", incumbent: true, note: "Incumbent" }],
+    detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
+  },
+  "CONSTABLE-5": {
+    office: "Constable Precinct 5",
+    status: "partial",
+    sides: [{ name: "Terry Allbritton", party: "R", incumbent: true, note: "Incumbent" }],
+    detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
+  },
+  "CONSTABLE-6": {
+    office: "Constable Precinct 6",
+    status: "partial",
+    sides: [{ name: "Silvia Trevino",   party: "D", incumbent: true, note: "Incumbent" }],
+    detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
+  },
+  "CONSTABLE-7": {
+    office: "Constable Precinct 7",
+    status: "partial",
+    sides: [{ name: "James Phillips",   party: "D", incumbent: true, note: "Incumbent" }],
+    detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
+  },
+  "CONSTABLE-8": {
+    office: "Constable Precinct 8",
+    status: "partial",
+    sides: [{ name: "Phil Sandlin",     party: "R", incumbent: true, note: "Incumbent" }],
+    detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
+  },
+
+  // JP races with full matchups (others are partial — D only, R nominee TBD)
+  "JP-5-PL2": {
+    office: "Justice of the Peace PCT 5 PL 2",
+    status: "set",
+    sides: [
+      { name: "Lisa Jefferson", party: "D", incumbent: false, note: "Won March primary" },
+      { name: "Mark Fury",      party: "R", incumbent: false, note: "Won March primary over incumbent Bob Wolfe" },
+    ],
+    detail: "Open competitive race — incumbent Bob Wolfe (R) lost his primary to Mark Fury.",
+  },
+  "JP-7-PL2": {
+    office: "Justice of the Peace PCT 7 PL 2",
+    status: "partial",
+    sides: [
+      { name: "Melanie Miles", party: "D", incumbent: false, note: "Won May runoff over incumbent Sharon Burney" },
+    ],
+    detail: "Melanie Miles beat incumbent Sharon Burney in the Democratic runoff. R nominee TBD.",
   },
 };
 
