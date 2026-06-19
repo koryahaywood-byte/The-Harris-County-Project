@@ -52,7 +52,10 @@ function influenceScore(pol: Politician): number {
   if (pol.chamber === "Senate")             return 80;
   if (off.includes("commissioner"))        return 76;
   if (pol.chamber === "House")              return 72;
+  if (off.includes("sheriff") || off.includes("district attorney")) return 74;
+  if (off.includes("county attorney") || off.includes("tax assessor") || off.includes("clerk")) return 68;
   if (pol.chamber === "City")               return 65;
+  if (pol.chamber === "County")             return 64;
   if (pol.chamber === "HISD")               return 58;
   return 60;
 }

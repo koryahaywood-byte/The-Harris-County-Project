@@ -45,6 +45,15 @@ const TEC_CANDIDATES = [
   { tecName: "Bord, Stefanie",        name: "Stefanie Bord",       office: "State Rep HD-126 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Stanart, Stan",         name: "Stan Stanart",        office: "State Rep HD-126 (R nominee)", level: "state" as const, party: "R" as const, incumbent: false },
   { tecName: "Childs, Staci",         name: "Staci Childs",        office: "State Rep HD-131 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
+  // County elected officials — file with TEC
+  { tecName: "Hidalgo, Lina",         name: "Lina Hidalgo",        office: "Harris County Judge",         level: "state" as const, party: "D" as const, incumbent: true },
+  { tecName: "Gonzalez, Ed",          name: "Ed Gonzalez",         office: "Sheriff",                     level: "state" as const, party: "D" as const, incumbent: true },
+  { tecName: "Teare, Sean",           name: "Sean Teare",          office: "District Attorney",           level: "state" as const, party: "D" as const, incumbent: true },
+  { tecName: "Menefee, Christian",    name: "Christian Menefee",   office: "County Attorney",             level: "state" as const, party: "D" as const, incumbent: true },
+  { tecName: "Ramirez, Annette",      name: "Annette Ramirez",     office: "Tax Assessor-Collector",      level: "state" as const, party: "D" as const, incumbent: true },
+  { tecName: "Burgess, Marilyn",      name: "Marilyn Burgess",     office: "District Clerk",              level: "state" as const, party: "D" as const, incumbent: true },
+  { tecName: "Hudspeth, Teneshia",    name: "Teneshia Hudspeth",   office: "County Clerk",                level: "state" as const, party: "D" as const, incumbent: true },
+  { tecName: "Wyatt, Carla",          name: "Carla Wyatt",         office: "County Treasurer",            level: "state" as const, party: "D" as const, incumbent: true },
   // Commissioners Court — file with TEC
   { tecName: "Ellis, Rodney",         name: "Rodney Ellis",        office: "Commissioner PCT 1",          level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Garcia, Adrian",        name: "Adrian Garcia",       office: "Commissioner PCT 2",          level: "state" as const, party: "D" as const, incumbent: true },
