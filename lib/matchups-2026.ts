@@ -297,9 +297,9 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-r",
     sides: [
-      { name: "Josh Flynn", party: "R", incumbent: true, note: "Seeking reelection" },
+      { name: "Charles Cunningham", party: "R", incumbent: true, note: "Seeking reelection" },
     ],
-    detail: "Josh Flynn has held HD-127 (Kingwood / Atascocita / NE Harris County) since 2023, succeeding Dan Huberty. Solidly Republican suburban district. D nominee TBD.",
+    detail: "Charles Cunningham has held HD-127 (Kingwood / Atascocita / NE Harris County) since 2023, succeeding Dan Huberty. Solidly Republican suburban district. D nominee TBD.",
   },
   "HD-128": {
     office: "State Representative, District 128",

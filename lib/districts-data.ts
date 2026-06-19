@@ -70,6 +70,15 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
       { name: "Joan Huffman", years: "2009–present", party: "R" },
     ],
   },
+  "SD-18": {
+    description: "Brenham, Bay City, Victoria, Wharton — rural corridor west and south of Harris County",
+    seatHistory: [
+      { name: "Buster Brown", years: "1979–1992", party: "R" },
+      { name: "David Sibley", years: "1993–2002", party: "R" },
+      { name: "Glenn Hegar", years: "2003–2014", party: "R" },
+      { name: "Lois Kolkhorst", years: "2015–present", party: "R" },
+    ],
+  },
 
   // ── TX State House ───────────────────────────────────────────────────────
   "HD-126": {

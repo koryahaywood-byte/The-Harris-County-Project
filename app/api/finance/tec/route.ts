@@ -34,7 +34,7 @@ const TEC_CANDIDATES = [
   { tecName: "Hinojosa, Gina",        name: "Gina Hinojosa",       office: "Governor (D nominee)",        level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Patrick, Dan",          name: "Dan Patrick",         office: "Lt. Governor",                level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "Hegar, Glenn",          name: "Glenn Hegar",         office: "Comptroller",                 level: "state" as const, party: "R" as const, incumbent: true },
-  { tecName: "Flynn, Josh",           name: "Josh Flynn",          office: "State Rep HD-127",             level: "state" as const, party: "R" as const, incumbent: true },
+  { tecName: "Cunningham, Charles",   name: "Charles Cunningham",  office: "State Rep HD-127",             level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "Cain, Briscoe",        name: "Briscoe Cain",        office: "State Rep HD-128",             level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "DeAyala, Mano",        name: "Mano DeAyala",        office: "State Rep HD-133",             level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "Swanson, Valoree",     name: "Valoree Swanson",     office: "State Rep HD-150",             level: "state" as const, party: "R" as const, incumbent: true },

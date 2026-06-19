@@ -59,7 +59,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Armando Walle",         office: "State Rep HD-140",               level: "state",    party: "D", cash: 267898,    asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Armando Walle") },
   { name: "Mary Ann Perez",        office: "State Rep HD-144",               level: "state",    party: "D", cash: 211703,    asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Mary Ann Perez") },
   { name: "Molly Cook",            office: "State Senator SD-15",            level: "state",    party: "D", cash: 155853,    asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Molly Cook") },
-  { name: "Josh Flynn",            office: "State Rep HD-127",               level: "state",    party: "R", cash: 0,          asOf: "pending",  incumbent: true,  filingUrl: TEC("Josh Flynn") },
+  { name: "Charles Cunningham",    office: "State Rep HD-127",               level: "state",    party: "R", cash: 0,          asOf: "pending",  incumbent: true,  filingUrl: TEC("Charles Cunningham") },
   { name: "Briscoe Cain",         office: "State Rep HD-128 (ran for CD-9)", level: "state",   party: "R", cash: 0,          asOf: "pending",  incumbent: true,  filingUrl: TEC("Briscoe Cain") },
   { name: "Mano DeAyala",         office: "State Rep HD-133",               level: "state",    party: "R", cash: 0,          asOf: "pending",  incumbent: true,  filingUrl: TEC("Mano DeAyala") },
   { name: "Valoree Swanson",      office: "State Rep HD-150",               level: "state",    party: "R", cash: 0,          asOf: "pending",  incumbent: true,  filingUrl: TEC("Valoree Swanson") },

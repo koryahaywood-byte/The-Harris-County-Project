@@ -343,8 +343,8 @@ export const POLITICIANS: Politician[] = [
     legiscanName: "Hull",
   },
   {
-    slug: "josh-flynn",
-    name: "Josh Flynn",
+    slug: "charles-cunningham",
+    name: "Charles Cunningham",
     office: "Texas State Representative",
     district: "HD-127",
     chamber: "House",
@@ -352,7 +352,7 @@ export const POLITICIANS: Politician[] = [
     salary: 7200,
     photo: "https://house.texas.gov/images/members/4150.jpg",
     website: "https://house.texas.gov/members/member-page/?district=127",
-    legiscanName: "Flynn",
+    legiscanName: "Cunningham",
   },
   {
     slug: "briscoe-cain",
