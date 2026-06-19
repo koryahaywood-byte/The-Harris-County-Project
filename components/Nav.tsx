@@ -23,6 +23,8 @@ export default function Nav() {
     "/tools/congressional-bills",
     "/tools/districts",
     "/tools/city-hall",
+    "/tools/pac-tracker",
+    "/tools/ballot-2026",
   ];
   const isLive = LIVE_TOOLS.some((t) => pathname.startsWith(t));
 

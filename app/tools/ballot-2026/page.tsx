@@ -4,8 +4,9 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { MATCHUPS_2026, type RaceLean } from "@/lib/matchups-2026";
 import { FINANCE_DATA_MERGED, fmt, type CandidateFinance } from "@/lib/campaign-finance";
+import FieldNotes from "@/components/FieldNotes";
 
-type RaceGroup = "top" | "congress" | "statelegis" | "countywide" | "local";
+type RaceGroup = "statewide" | "top" | "congress" | "statelegis" | "countywide" | "local";
 
 const LEAN_META: Record<RaceLean, { label: string; color: string; bg: string }> = {
   "safe-d":        { label: "Safe D",        color: "#1d4ed8", bg: "#dbeafe" },
@@ -33,6 +34,7 @@ interface RaceRow {
 }
 
 function toDistrictLink(key: string): string {
+  if (key.startsWith("TX-")) return "/tools/districts?type=countywide";
   if (key === "US-Senate") return "/tools/districts?type=countywide";
   if (key === "HC-Countywide") return "/tools/districts?type=countywide";
   if (key.startsWith("CD-")) return `/tools/districts?type=cd&district=${key.replace("CD-", "")}`;
@@ -44,6 +46,7 @@ function toDistrictLink(key: string): string {
 }
 
 function toGroup(key: string): { group: RaceGroup; groupLabel: string } {
+  if (key.startsWith("TX-")) return { group: "statewide", groupLabel: "Statewide (Texas)" };
   if (key === "US-Senate" || key === "HC-Countywide") return { group: "top", groupLabel: "Top of Ticket" };
   if (key.startsWith("CD-")) return { group: "congress", groupLabel: "Congress" };
   if (key.startsWith("SD-") || key.startsWith("HD-")) return { group: "statelegis", groupLabel: "State Legislature" };
@@ -52,7 +55,7 @@ function toGroup(key: string): { group: RaceGroup; groupLabel: string } {
   return { group: "local", groupLabel: "Local / JP / Constable" };
 }
 
-const GROUP_ORDER: RaceGroup[] = ["top", "congress", "statelegis", "countywide", "local"];
+const GROUP_ORDER: RaceGroup[] = ["statewide", "top", "congress", "statelegis", "countywide", "local"];
 
 function financeFor(name: string | null): CandidateFinance | null {
   if (!name) return null;
@@ -137,7 +140,7 @@ export default function Ballot2026() {
     if (filterGroup !== "all") visible = visible.filter(r => r.group === filterGroup);
     if (onlyContested) visible = visible.filter(r => r.dSide && r.rSide);
     if (onlyCompetitive) visible = visible.filter(r => r.lean && COMPETITIVE_LEANS.includes(r.lean));
-    const out: Record<RaceGroup, RaceRow[]> = { top: [], congress: [], statelegis: [], countywide: [], local: [] };
+    const out: Record<RaceGroup, RaceRow[]> = { statewide: [], top: [], congress: [], statelegis: [], countywide: [], local: [] };
     for (const r of visible) out[r.group].push(r);
     return out;
   }, [rows, filterGroup, onlyContested]);
@@ -161,6 +164,7 @@ export default function Ballot2026() {
       <div className="flex flex-wrap gap-2 mb-6 items-center">
         {([
           ["all", "All Races"],
+          ["statewide", "Statewide TX"],
           ["top", "Top of Ticket"],
           ["congress", "Congress"],
           ["statelegis", "Legislature"],
@@ -297,6 +301,9 @@ export default function Ballot2026() {
                         {r.detail}
                       </div>
                     )}
+                    <div className="px-4 pb-2 bg-gray-50 border-t border-gray-100">
+                      <FieldNotes target={`race:${r.key}`} />
+                    </div>
                   </div>
                 );
               })}

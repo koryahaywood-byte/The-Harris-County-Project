@@ -27,6 +27,42 @@ export interface Matchup {
 }
 
 export const MATCHUPS_2026: Record<string, Matchup> = {
+  // ── Statewide Texas races ──────────────────────────────────────────────────
+  "TX-Governor": {
+    office: "Texas Governor",
+    status: "partial",
+    lean: "safe-r",
+    sides: [
+      { name: "Greg Abbott", party: "R", incumbent: true, note: "Seeking 3rd term" },
+    ],
+    detail: "Abbott is the Republican incumbent. Democratic nominee pending confirmation from Harris County primary data.",
+  },
+  "TX-LtGov": {
+    office: "Lt. Governor of Texas",
+    status: "partial",
+    lean: "safe-r",
+    sides: [
+      { name: "Dan Patrick", party: "R", incumbent: true, note: "Seeking 3rd term" },
+    ],
+    detail: "Dan Patrick is the Republican incumbent. Democratic nominee pending.",
+  },
+  "TX-AG": {
+    office: "Texas Attorney General",
+    status: "partial",
+    lean: "safe-r",
+    sides: [],
+    detail: "Open seat — Ken Paxton vacated to run for U.S. Senate. Both party nominees pending runoff confirmation.",
+  },
+  "TX-Comptroller": {
+    office: "Texas Comptroller",
+    status: "partial",
+    lean: "safe-r",
+    sides: [
+      { name: "Glenn Hegar", party: "R", incumbent: true, note: "Seeking 3rd term" },
+    ],
+    detail: "Glenn Hegar is the Republican incumbent. Democratic nominee pending.",
+  },
+  // ── Top of Ticket ──────────────────────────────────────────────────────────
   "US-Senate": {
     office: "U.S. Senate",
     status: "set",
