@@ -290,6 +290,132 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "A'Yonna Kellum", party: "D", incumbent: false, note: "Won March primary" },
     ],
   },
+  "HD-129": {
+    office: "State Representative, District 129",
+    status: "partial",
+    lean: "safe-r",
+    sides: [
+      { name: "Dennis Paul", party: "R", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Dennis Paul has held HD-129 (Clear Lake, Bay Area) since 2017. D nominee TBD.",
+  },
+  "HD-130": {
+    office: "State Representative, District 130",
+    status: "partial",
+    lean: "safe-r",
+    sides: [
+      { name: "Tom Oliverson", party: "R", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Tom Oliverson has held HD-130 (Katy/CypressNW) since 2017. D nominee TBD.",
+  },
+  "HD-132": {
+    office: "State Representative, District 132",
+    status: "partial",
+    lean: "lean-r",
+    sides: [
+      { name: "Mike Schofield", party: "R", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Mike Schofield holds HD-132 (NW Harris County / Cypress). The district is competitive at the suburban margins. D nominee TBD.",
+  },
+  "HD-134": {
+    office: "State Representative, District 134",
+    status: "partial",
+    lean: "lean-d",
+    sides: [
+      { name: "Ann Johnson", party: "D", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Ann Johnson flipped HD-134 (Meyerland / Southampton / West U) from R to D in 2020 and has won each cycle. She serves on Judiciary & Civil Jurisprudence and is a former ADA. R nominee TBD.",
+  },
+  "HD-135": {
+    office: "State Representative, District 135",
+    status: "partial",
+    lean: "toss-up",
+    sides: [
+      { name: "Jon Rosenthal", party: "D", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Jon Rosenthal has held HD-135 (Spring Branch / Town & Country) since 2019 after a narrow flip. One of the most competitive suburban seats in Harris County. R nominee TBD.",
+  },
+  "HD-137": {
+    office: "State Representative, District 137",
+    status: "partial",
+    lean: "safe-d",
+    sides: [
+      { name: "Gene Wu", party: "D", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Gene Wu (HD-137, Bellaire/Westbury area) has served since 2013. D+ district with diverse demographics — Asian American, Latino, and Black communities. R nominee TBD.",
+  },
+  "HD-138": {
+    office: "State Representative, District 138",
+    status: "partial",
+    lean: "lean-r",
+    sides: [
+      { name: "Lacey Hull", party: "R", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Lacey Hull (HD-138, Spring Branch / Memorial) has held the seat since 2020 after a narrow win. R nominee TBD.",
+  },
+  "HD-140": {
+    office: "State Representative, District 140",
+    status: "partial",
+    lean: "safe-d",
+    sides: [
+      { name: "Armando Walle", party: "D", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Armando Walle (HD-140, North Houston / Northside) has served since 2009. Heavily Latino district — safe D. R nominee TBD.",
+  },
+  "HD-141": {
+    office: "State Representative, District 141",
+    status: "partial",
+    lean: "safe-d",
+    sides: [
+      { name: "Senfronia Thompson", party: "D", incumbent: true, note: "Dean of the Texas House — longest serving" },
+    ],
+    detail: "Senfronia Thompson (HD-141, Sunnyside / Third Ward) has served continuously since 1973 — the longest-serving member of the Texas House. Heavily Democratic majority-Black district. R nominee TBD.",
+  },
+  "HD-143": {
+    office: "State Representative, District 143",
+    status: "partial",
+    lean: "safe-d",
+    sides: [
+      { name: "Ana Hernandez", party: "D", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Ana Hernandez (HD-143, East End / Galena Park) has served since 2006. Majority-Latino district along the Ship Channel. R nominee TBD.",
+  },
+  "HD-145": {
+    office: "State Representative, District 145",
+    status: "partial",
+    lean: "safe-d",
+    sides: [
+      { name: "Christina Morales", party: "D", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Christina Morales (HD-145, Gulfton / Sharpstown / SW Houston) has served since 2018. Majority-Latino district with the largest SSVR in Harris County. R nominee TBD.",
+  },
+  "HD-146": {
+    office: "State Representative, District 146",
+    status: "partial",
+    lean: "safe-d",
+    sides: [
+      { name: "Lauren Ashley Simmons", party: "D", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Lauren Ashley Simmons (HD-146, Riverside / South Main / Greenway Plaza) has served since 2021. Safe Democratic district. R nominee TBD.",
+  },
+  "HD-147": {
+    office: "State Representative, District 147",
+    status: "partial",
+    lean: "safe-d",
+    sides: [
+      { name: "Jolanda Jones", party: "D", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Jolanda Jones (HD-147, Montrose / Rice Military / University) has served since 2023. Urban core of Houston — one of the most heavily Democratic districts. R nominee TBD.",
+  },
+  "HD-148": {
+    office: "State Representative, District 148",
+    status: "partial",
+    lean: "safe-d",
+    sides: [
+      { name: "Penny Morales Shaw", party: "D", incumbent: true, note: "Seeking reelection" },
+    ],
+    detail: "Penny Morales Shaw (HD-148, Midtown / Heights / Near NW) has served since 2019. Gentrifying urban district trending D. R nominee TBD.",
+  },
   "JP-2": {
     office: "Justice of the Peace, Precinct 2",
     status: "partial",
