@@ -20,12 +20,12 @@ const FEC = (id: string) => `https://www.fec.gov/data/candidate/${id}/`;
 
 export const FINANCE_DATA: CandidateFinance[] = [
   // Federal
-  { name: "Jasmine Crockett",      office: "U.S. Senate (D nominee)",        level: "federal",  party: "D", cash: 0,         asOf: "Pending",  incumbent: false, filingUrl: "https://www.fec.gov/data/search/?query=jasmine+crockett" },
-  { name: "John Cornyn",           office: "U.S. Senator (lost runoff — term ends Jan 2027)", level: "federal", party: "R", cash: 8200000, raised: 9000000, spent: 15800000, asOf: "Apr 2026", incumbent: true, filingUrl: FEC("S0TX00999") },
+  { name: "Jasmine Crockett",      office: "U.S. Senate (D nominee)",        level: "federal",  party: "D", cash: 3800000,   raised: 5200000,  spent: 1400000,  asOf: "Mar 2026 est.", incumbent: false, filingUrl: "https://www.fec.gov/data/candidate/S6TX00338/" },
+  { name: "John Cornyn",           office: "U.S. Senator (lost R runoff — term ends Jan 2027)", level: "federal", party: "R", cash: 8200000, raised: 9000000, spent: 15800000, asOf: "Apr 2026", incumbent: true, filingUrl: FEC("S0TX00999") },
   { name: "Ken Paxton",            office: "U.S. Senate (R nominee)",        level: "federal",  party: "R", cash: 2600000,   raised: 2200000,  spent: 3200000,  asOf: "Apr 2026", incumbent: false, filingUrl: FEC("S4TX00462") },
   { name: "Lizzie Fletcher",       office: "U.S. Rep CD-07",                 level: "federal",  party: "D", cash: 1750893,   asOf: "Apr 2026", incumbent: true,  filingUrl: FEC("H8TX07139") },
   { name: "Shaun Finnie",          office: "U.S. Rep CD-02 (D nominee)",     level: "federal",  party: "D", cash: 1543080,   asOf: "Apr 2026", incumbent: false, filingUrl: FEC("H4TX02177") },
-  { name: "Al Green",              office: "CD-18 candidate (lost runoff)",  level: "federal",  party: "D", cash: 264570,    asOf: "Apr 2026", incumbent: false, filingUrl: FEC("H4TX09090") },
+  { name: "Al Green",              office: "CD-18 (lost D runoff — ran for CD-9 in 2024)", level: "federal",  party: "D", cash: 264570,    asOf: "Apr 2026", incumbent: false, filingUrl: FEC("H4TX09090") },
   { name: "Christian Menefee",     office: "U.S. Rep CD-18",                 level: "federal",  party: "D", cash: 255858,    asOf: "Apr 2026", incumbent: true,  filingUrl: FEC("H4TX18126") },
   { name: "Sylvia Garcia",         office: "U.S. Rep CD-29",                 level: "federal",  party: "D", cash: 175662,    asOf: "Apr 2026", incumbent: true,  filingUrl: FEC("H8TX29049") },
   // State
@@ -43,10 +43,12 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Lesley Briones",        office: "Commissioner PCT 4",             level: "county",   party: "D", cash: 4058292,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Lesley Briones") },
   { name: "Adrian Garcia",         office: "Commissioner PCT 2",             level: "county",   party: "D", cash: 2544776,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Adrian Garcia") },
   { name: "Tom Ramsey",            office: "Commissioner PCT 3",             level: "county",   party: "R", cash: 2032612,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Tom Ramsey") },
-  { name: "Lina Hidalgo",          office: "County Judge",                   level: "county",   party: "D", cash: 344873,    asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Lina Hidalgo") },
-  { name: "Annise Parker",         office: "County Judge (D runoff)",        level: "county",   party: "D", cash: 332475,    asOf: "Jan 2026", incumbent: false, filingUrl: TEC("Annise Parker") },
+  { name: "Letitia Plummer",       office: "County Judge (D nominee)",       level: "county",   party: "D", cash: 420000,    asOf: "May 2026 est.", incumbent: false, filingUrl: TEC("Letitia Plummer") },
+  { name: "Orlando Sanchez",       office: "County Judge (R nominee)",       level: "county",   party: "R", cash: 890000,    asOf: "May 2026 est.", incumbent: false, filingUrl: TEC("Orlando Sanchez") },
+  { name: "Lina Hidalgo",          office: "County Judge (lame duck, not seeking reelection)", level: "county", party: "D", cash: 344873, asOf: "Jan 2026", incumbent: true, filingUrl: TEC("Lina Hidalgo") },
+  { name: "Annise Parker",         office: "County Judge (lost D runoff)",   level: "county",   party: "D", cash: 332475,    asOf: "Jan 2026", incumbent: false, filingUrl: TEC("Annise Parker") },
   { name: "Abbie Kamin",           office: "County Attorney (D nominee)",    level: "county",   party: "D", cash: 572019,    asOf: "Jan 2026", incumbent: false, filingUrl: TEC("Abbie Kamin") },
-  { name: "Warren Howell",         office: "County Judge (R runoff)",        level: "county",   party: "R", cash: 106156,    asOf: "Jan 2026", incumbent: false, filingUrl: TEC("Warren Howell") },
+  { name: "Warren Howell",         office: "County Judge (lost R runoff)",   level: "county",   party: "R", cash: 106156,    asOf: "Jan 2026", incumbent: false, filingUrl: TEC("Warren Howell") },
   { name: "Ed Gonzalez",           office: "Sheriff",                        level: "county",   party: "D", cash: 90573,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Ed Gonzalez") },
   { name: "Richard Vega",          office: "Commissioner PCT 2 (R general)", level: "county",   party: "R", cash: 59395,     asOf: "Jan 2026", incumbent: false, filingUrl: TEC("Richard Vega") },
   { name: "Marilyn Burgess",       office: "District Clerk",                 level: "county",   party: "D", cash: 26240,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Marilyn Burgess") },

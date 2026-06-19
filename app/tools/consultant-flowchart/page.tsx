@@ -62,6 +62,14 @@ const RELATIONSHIPS: Relationship[] = [
   { id: "c28", consultant: "Jamestown Associates", firm: "Jamestown Associates", role: "Media / Ads",       client: "Ted Cruz",         clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "R" },
   { id: "c29", consultant: "WPA Intelligence",  firm: "WPA Intelligence",      role: "Polling",             client: "Ted Cruz",         clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "R" },
   { id: "c30", consultant: "Harris Media",      firm: "Harris Media",          role: "Digital",             client: "Ted Cruz",         clientType: "Candidate", race: "U.S. Senate 2026",            year: 2026, party: "R" },
+
+  // ── 2026 Harris County Judge ─────────────────────────────────────────────
+  { id: "c31", consultant: "Mustafa Tameez",    firm: "Outreach Strategists",  role: "General Consultant",  client: "Letitia Plummer",  clientType: "Candidate", race: "Harris County Judge 2026",    year: 2026, party: "D" },
+  { id: "c32", consultant: "Lavastida & Co",    firm: "Lavastida & Co",        role: "Media / Ads",         client: "Letitia Plummer",  clientType: "Candidate", race: "Harris County Judge 2026",    year: 2026, party: "D" },
+  { id: "c33", consultant: "ALG Research",      firm: "ALG Research",          role: "Polling",             client: "Letitia Plummer",  clientType: "Candidate", race: "Harris County Judge 2026",    year: 2026, party: "D" },
+  { id: "c34", consultant: "EMILY's List",      firm: "EMILY's List",          role: "Fundraising",         client: "Letitia Plummer",  clientType: "Candidate", race: "Harris County Judge 2026",    year: 2026, party: "D" },
+  { id: "c35", consultant: "Axiom Strategies",  firm: "Axiom Strategies",      role: "General Consultant",  client: "Orlando Sanchez",  clientType: "Candidate", race: "Harris County Judge 2026",    year: 2026, party: "R" },
+  { id: "c36", consultant: "Mentzer Media",     firm: "Mentzer Media",         role: "Media / Ads",         client: "Orlando Sanchez",  clientType: "Candidate", race: "Harris County Judge 2026",    year: 2026, party: "R" },
 ];
 
 /* ─── Metadata ───────────────────────────────────────────────────────────── */

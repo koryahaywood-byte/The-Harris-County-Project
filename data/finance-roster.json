@@ -5,7 +5,8 @@
       "searchName": "Hidalgo, Lina",
       "name": "Lina Hidalgo",
       "office": "County Judge",
-      "party": "D"
+      "party": "D",
+      "note": "Lame duck \u2014 did not seek reelection. Open seat Nov 2026."
     },
     {
       "searchName": "Ellis, Rodney",
@@ -344,6 +345,20 @@
   ],
   "_tecNote": "State legislators AND state district court judges file with the TEC. The tec list below feeds the existing /api/finance/tec route at merge time. District judges should be added here once their TEC filer IDs are confirmed via --discover-tec (searches TEC by office).",
   "tec": [
+    {
+      "tecName": "Plummer, Letitia",
+      "name": "Letitia Plummer",
+      "office": "County Judge (D nominee 2026)",
+      "party": "D",
+      "note": "Won D runoff 57,893-55,395 over Annise Parker. Nov 2026 general."
+    },
+    {
+      "tecName": "Sanchez, Orlando",
+      "name": "Orlando Sanchez",
+      "office": "County Judge (R nominee 2026)",
+      "party": "R",
+      "note": "Won R runoff 85,304-49,367 over Warren Howell. Nov 2026 general."
+    },
     {
       "tecName": "Alvarado, Carol",
       "name": "Carol Alvarado",

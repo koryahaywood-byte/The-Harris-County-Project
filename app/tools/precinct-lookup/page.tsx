@@ -65,6 +65,103 @@ function getResults(history: PrecinctHistory, cycle: string, prec: string) {
   return results.length ? results : null;
 }
 
+// ── Field Intel — GOTV opportunity classification ─────────────────────────
+type FieldClass = "surge" | "persuasion" | "hold" | "strongR" | "unknown";
+
+interface FieldIntel {
+  classification: FieldClass;
+  label: string;
+  color: string;
+  bg: string;
+  summary: string;
+  action: string;
+  turnoutDelta: number | null; // votes 2024 vs 2020, positive = growing
+  avgDPct: number | null;
+}
+
+function classifyPrecinct(trend: { year: number; dPct: number }[], cycleData: { year: number; results: { total: number }[] | null }[]): FieldIntel {
+  const unknown: FieldIntel = { classification: "unknown", label: "Insufficient data", color: "#9ca3af", bg: "#f9fafb", summary: "Not enough cycles to classify.", action: "Gather more data.", turnoutDelta: null, avgDPct: null };
+  if (trend.length < 2) return unknown;
+
+  const sorted = [...trend].sort((a, b) => a.year - b.year);
+  const avgDPct = sorted.reduce((s, t) => s + t.dPct, 0) / sorted.length;
+  const recent = sorted[sorted.length - 1];
+  const oldest = sorted[0];
+
+  // Turnout delta: compare 2024 vs 2020 totals (first race in each cycle)
+  const general2024 = cycleData.find(c => c.year === 2024)?.results?.[0]?.total ?? null;
+  const general2020 = cycleData.find(c => c.year === 2020)?.results?.[0]?.total ?? null;
+  const turnoutDelta = general2024 != null && general2020 != null ? general2024 - general2020 : null;
+
+  const rDPct = recent.dPct;
+
+  if (rDPct >= 0.65) {
+    const isSleeping = turnoutDelta !== null && turnoutDelta < -50;
+    return {
+      classification: "surge", label: "GOTV Surge Target", color: "#1d4ed8", bg: "#dbeafe",
+      avgDPct, turnoutDelta,
+      summary: `Reliably Democratic (avg ${Math.round(avgDPct * 100)}% D). ${isSleeping ? `Turnout dropped ${Math.abs(turnoutDelta!)} votes from 2020→2024 — sleeping Democratic voters.` : "High-yield for turnout investment."}`,
+      action: isSleeping ? "Prioritize door-knocks and mail here — turnout drop means untapped votes." : "High-efficiency canvass target — every voter contact yields near-certain D votes.",
+    };
+  }
+  if (rDPct >= 0.55) {
+    return {
+      classification: "hold", label: "Hold & Grow", color: "#059669", bg: "#dcfce7",
+      avgDPct, turnoutDelta,
+      summary: `Lean Democratic (avg ${Math.round(avgDPct * 100)}% D). Needs defense and modest turnout lift.`,
+      action: "Mobilize base with targeted mail. Don't over-invest — move excess resources to surge precincts.",
+    };
+  }
+  if (rDPct >= 0.44) {
+    const isMovingD = recent.dPct > oldest.dPct + 0.03;
+    return {
+      classification: "persuasion", label: isMovingD ? "Trending D — Persuasion" : "Battleground — Persuasion", color: "#d97706", bg: "#fef3c7",
+      avgDPct, turnoutDelta,
+      summary: `Competitive battleground (avg ${Math.round(avgDPct * 100)}% D). ${isMovingD ? "Trending blue — swing voters are moving." : "True coin-flip territory."}`,
+      action: "Air cover + persuasion mail. Door-knock undecided voters. This is the margin-of-victory precinct.",
+    };
+  }
+  return {
+    classification: "strongR", label: "Republican Stronghold", color: "#dc2626", bg: "#fee2e2",
+    avgDPct, turnoutDelta,
+    summary: `Consistently Republican (avg ${Math.round(avgDPct * 100)}% D). Low ROI for D investment.`,
+    action: "Low priority. Allocate canvass resources elsewhere. Monitor for unexpected demographic shifts.",
+  };
+}
+
+function FieldIntelCard({ intel }: { intel: FieldIntel }) {
+  if (intel.classification === "unknown") return null;
+  return (
+    <div className="rounded-2xl p-5" style={{ background: intel.bg, border: `1.5px solid ${intel.color}30` }}>
+      <div className="flex items-start justify-between gap-4 mb-3">
+        <div>
+          <p className="text-[9px] font-black uppercase tracking-[0.22em] mb-1" style={{ color: intel.color }}>
+            Field Intel · Nov 2026 Targeting
+          </p>
+          <p className="text-sm font-black" style={{ color: intel.color }}>{intel.label}</p>
+        </div>
+        {intel.turnoutDelta !== null && (
+          <div className="text-right flex-shrink-0">
+            <p className="text-[9px] font-bold uppercase tracking-[0.12em] mb-0.5" style={{ color: intel.color }}>
+              Turnout '20→'24
+            </p>
+            <p className="text-base font-black" style={{ color: intel.turnoutDelta >= 0 ? "#059669" : "#dc2626" }}>
+              {intel.turnoutDelta >= 0 ? "+" : ""}{intel.turnoutDelta.toLocaleString()}
+            </p>
+          </div>
+        )}
+      </div>
+      <p className="text-xs mb-3 leading-relaxed" style={{ color: "#374151" }}>{intel.summary}</p>
+      <div className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.6)" }}>
+        <p className="text-[10px] font-black uppercase tracking-[0.14em] mb-1" style={{ color: intel.color }}>
+          Recommended Action
+        </p>
+        <p className="text-xs leading-relaxed" style={{ color: "#374151" }}>{intel.action}</p>
+      </div>
+    </div>
+  );
+}
+
 // Simple partisan bar
 function PartisanBar({ pct, size = "md" }: { pct: number; size?: "sm" | "md" | "lg" }) {
   const h = size === "lg" ? 12 : size === "md" ? 8 : 5;
@@ -117,6 +214,12 @@ export default function PrecinctLookup() {
 
   // Check if precinct exists in any cycle
   const precExists = cycleData && cycleData.length > 0;
+
+  // Field intel
+  const fieldIntel = useMemo(() => {
+    if (!cycleData || !trend.length) return null;
+    return classifyPrecinct(trend, cycleData);
+  }, [trend, cycleData]);
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -257,6 +360,9 @@ export default function PrecinctLookup() {
                 </div>
               </div>
             )}
+
+            {/* Field Intel card */}
+            {fieldIntel && <FieldIntelCard intel={fieldIntel} />}
 
             {/* Per-cycle results */}
             <div className="flex flex-col gap-4">

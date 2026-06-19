@@ -77,8 +77,20 @@ const ENDORSEMENTS: Endorsement[] = [
   { id: "e39", endorser: "Club for Growth",          endorserType: "Civic Org",       candidate: "Ted Cruz",         race: "U.S. Senate 2026",          year: 2026 },
 
   // ── 2026 Harris County Judge — Republican primary ────────────────────────
-  { id: "e40", endorser: "Texas Republican Party",   endorserType: "Party Org",       candidate: "Greg Plummer",     race: "Harris County Judge 2026",  year: 2026, notes: "Won May 2026 GOP runoff" },
-  { id: "e41", endorser: "Harris County Republicans", endorserType: "Party Org",      candidate: "Greg Plummer",     race: "Harris County Judge 2026",  year: 2026 },
+  { id: "e40", endorser: "Texas Republican Party",   endorserType: "Party Org",       candidate: "Orlando Sanchez",  race: "Harris County Judge 2026",  year: 2026, notes: "Won May 2026 GOP runoff over Warren Howell 85,304–49,367" },
+  { id: "e41", endorser: "Harris County Republicans", endorserType: "Party Org",      candidate: "Orlando Sanchez",  race: "Harris County Judge 2026",  year: 2026 },
+
+  // ── 2026 Harris County Judge — Democratic nominee ────────────────────────
+  { id: "e42", endorser: "AFL-CIO Texas",            endorserType: "Union",           candidate: "Letitia Plummer",  race: "Harris County Judge 2026",  year: 2026 },
+  { id: "e43", endorser: "Texas AFT",                endorserType: "Union",           candidate: "Letitia Plummer",  race: "Harris County Judge 2026",  year: 2026 },
+  { id: "e44", endorser: "SEIU Texas",               endorserType: "Union",           candidate: "Letitia Plummer",  race: "Harris County Judge 2026",  year: 2026 },
+  { id: "e45", endorser: "Emily's List",             endorserType: "Civic Org",       candidate: "Letitia Plummer",  race: "Harris County Judge 2026",  year: 2026 },
+  { id: "e46", endorser: "Harris County Democrats",  endorserType: "Party Org",       candidate: "Letitia Plummer",  race: "Harris County Judge 2026",  year: 2026 },
+  { id: "e47", endorser: "Texas Democratic Party",   endorserType: "Party Org",       candidate: "Letitia Plummer",  race: "Harris County Judge 2026",  year: 2026 },
+  { id: "e48", endorser: "Houston Chronicle",        endorserType: "Newspaper",       candidate: "Letitia Plummer",  race: "Harris County Judge 2026",  year: 2026 },
+  { id: "e49", endorser: "Planned Parenthood Action",endorserType: "Civic Org",       candidate: "Letitia Plummer",  race: "Harris County Judge 2026",  year: 2026 },
+  { id: "e50", endorser: "Sylvia Garcia",            endorserType: "Elected Official",candidate: "Letitia Plummer",  race: "Harris County Judge 2026",  year: 2026 },
+  { id: "e51", endorser: "Lizzie Fletcher",          endorserType: "Elected Official",candidate: "Letitia Plummer",  race: "Harris County Judge 2026",  year: 2026 },
 ];
 
 /* ─── Metadata ───────────────────────────────────────────────────────────── */

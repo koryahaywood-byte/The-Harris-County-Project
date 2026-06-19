@@ -33,18 +33,37 @@ interface PrecintEVData {
 
 /* ── Demo races ───────────────────────────────────────────────────────────── */
 const RACES: Race[] = [
+  // Marquee statewide
+  { id: "us-sen", label: "U.S. Senate", category: "Federal",
+    candidates: [{ name: "Jasmine Crockett", party: "D" }, { name: "Ken Paxton", party: "R" }] },
+  // Marquee county
   { id: "county-judge", label: "Harris County Judge", category: "County",
-    candidates: [{ name: "Lina Hidalgo", party: "D" }, { name: "Alexandra del Moral Mealer", party: "R" }] },
-  { id: "us-sen", label: "U.S. Senator", category: "Federal",
-    candidates: [{ name: "Jasmine Crockett", party: "D" }, { name: "Ted Cruz", party: "R" }] },
-  { id: "hd-148", label: "State Rep HD-148", category: "State",
-    candidates: [{ name: "Penny Morales Shaw", party: "D" }] },
-  { id: "hd-134", label: "State Rep HD-134", category: "State",
-    candidates: [{ name: "Ann Johnson", party: "D" }, { name: "Opponent TBD", party: "R" }] },
+    candidates: [{ name: "Letitia Plummer", party: "D" }, { name: "Orlando Sanchez", party: "R" }] },
+  // Congressional
+  { id: "cd-07", label: "U.S. Rep CD-07", category: "Federal",
+    candidates: [{ name: "Lizzie Fletcher", party: "D" }, { name: "Alexander Hale", party: "R" }] },
+  { id: "cd-18", label: "U.S. Rep CD-18", category: "Federal",
+    candidates: [{ name: "Christian Menefee", party: "D" }, { name: "Ronald D. Whitfield", party: "R" }] },
+  // State Senate
   { id: "sd-15", label: "State Senator SD-15", category: "State",
     candidates: [{ name: "Molly Cook", party: "D" }] },
-  { id: "cc-d", label: "City Council District D", category: "City",
-    candidates: [{ name: "Carolyn Evans-Shabazz", party: "D" }] },
+  // State House — contested
+  { id: "hd-126", label: "State Rep HD-126", category: "State",
+    candidates: [{ name: "Stefanie Bord", party: "D" }, { name: "Stan Stanart", party: "R" }] },
+  { id: "hd-134", label: "State Rep HD-134", category: "State",
+    candidates: [{ name: "Ann Johnson", party: "D" }] },
+  { id: "hd-138", label: "State Rep HD-138", category: "State",
+    candidates: [{ name: "Lacey Hull", party: "R" }] },
+  { id: "hd-148", label: "State Rep HD-148", category: "State",
+    candidates: [{ name: "Penny Morales Shaw", party: "D" }] },
+  // County commissioners
+  { id: "pct-1", label: "Commissioner PCT 1", category: "County",
+    candidates: [{ name: "Rodney Ellis", party: "D" }] },
+  { id: "pct-2", label: "Commissioner PCT 2", category: "County",
+    candidates: [{ name: "Adrian Garcia", party: "D" }, { name: "Richard Vega", party: "R" }] },
+  // JP contested
+  { id: "jp-5", label: "Justice of the Peace PCT 5 PL 2", category: "County",
+    candidates: [{ name: "Lisa Jefferson", party: "D" }, { name: "Mark Fury", party: "R" }] },
 ];
 
 const CATEGORIES = ["All", "Federal", "State", "County", "City"];

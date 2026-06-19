@@ -5,12 +5,18 @@ import ThreadsFeed from "@/components/ThreadsFeed";
 
 /* ─── Data ───────────────────────────────────────────────────────────────────── */
 const COMMISSIONERS = [
-  { name: "Lina Hidalgo",    title: "County Judge",       district: "At-Large", party: "D", slug: "lina-hidalgo",    photo: "/politicians/lina-hidalgo.jpg" },
+  { name: "Lina Hidalgo",    title: "County Judge (lame duck — open seat Nov. 2026)", district: "At-Large", party: "D", slug: "lina-hidalgo",    photo: "/politicians/lina-hidalgo.jpg" },
   { name: "Rodney Ellis",    title: "Commissioner",        district: "Pct 1",    party: "D", slug: "rodney-ellis",    photo: "/politicians/rodney-ellis.jpg" },
   { name: "Adrian Garcia",   title: "Commissioner",        district: "Pct 2",    party: "D", slug: "adrian-garcia",   photo: "/politicians/adrian-garcia.jpg" },
   { name: "Tom Ramsey",      title: "Commissioner",        district: "Pct 3",    party: "R", slug: "tom-ramsey",      photo: "/politicians/tom-ramsey.jpg" },
   { name: "Lesley Briones",  title: "Commissioner",        district: "Pct 4",    party: "D", slug: "lesley-briones",  photo: "/politicians/lesley-briones.webp" },
 ];
+
+// November 2026 marquee race: Letitia Plummer (D) vs. Orlando Sanchez (R) for County Judge
+const COUNTY_JUDGE_RACE_2026 = {
+  d: { name: "Letitia Plummer", note: "Won D runoff 57,893–55,395 over Annise Parker" },
+  r: { name: "Orlando Sanchez", note: "Won R runoff 85,304–49,367 over Warren Howell" },
+};
 
 const TRACKS = [
   { label: "Commissioners Court",  desc: "Full court meets biweekly — Tuesdays at 10am. Votes on budget, contracts, flood control, and county policy.", color: "#1a3a5c" },
@@ -105,6 +111,18 @@ export default function HarrisCountyBeatPage() {
         {tab === "overview" && (
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
             <div>
+              {/* 2026 County Judge race banner */}
+              <div className="rounded-2xl mb-6 p-4 flex gap-4 items-start" style={{ background: "rgba(37,99,168,0.06)", border: "1px solid rgba(37,99,168,0.15)" }}>
+                <div className="flex-shrink-0 w-2 h-2 mt-1.5 rounded-full bg-[var(--accent)]" />
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "var(--accent)" }}>Open Seat · November 4, 2026</p>
+                  <p className="text-xs font-semibold text-[var(--fg)] mb-0.5">Harris County Judge</p>
+                  <p className="text-[11px] text-[var(--muted)]">
+                    <span className="text-blue-700 font-bold">Letitia Plummer</span> (D) vs. <span className="text-red-700 font-bold">Orlando Sanchez</span> (R) — Lina Hidalgo did not seek reelection.
+                  </p>
+                </div>
+              </div>
+
               {/* Commissioners */}
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--muted)] mb-4">The Court</p>
               <div className="flex flex-col gap-3 mb-10">
