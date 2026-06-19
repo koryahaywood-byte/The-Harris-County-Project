@@ -10,7 +10,7 @@ import type { TECCandidate } from "@/app/api/finance/tec/route";
 
 type Candidate = CandidateFinance;
 
-type Tab   = "story" | "leaderboard" | "trail" | "scanner";
+type Tab   = "story" | "leaderboard" | "trail" | "scanner" | "portal";
 type Level = "all" | "federal" | "state" | "houston" | "county";
 type CountyGroup = "all" | "commissioners" | "jp" | "courts" | "law" | "admin";
 
@@ -190,6 +190,270 @@ function FinanceScanner() {
   );
 }
 
+/* ── Portal Search ───────────────────────────────────────────────────────── */
+type PortalChoice = "harris-county" | "houston" | "both";
+type SearchState  = "idle" | "loading" | "done" | "no_results" | "error";
+
+interface PortalFiling { date: string; label: string; url: string; portal: string; }
+
+function PortalSearch() {
+  const [name,    setName]    = useState("");
+  const [portal,  setPortal]  = useState<PortalChoice>("both");
+  const [state,   setState]   = useState<SearchState>("idle");
+  const [filings, setFilings] = useState<PortalFiling[]>([]);
+  const [errMsg,  setErrMsg]  = useState("");
+
+  // Inline scan state for a selected filing
+  const [scanUrl,    setScanUrl]    = useState<string | null>(null);
+  const [scanState,  setScanState]  = useState<ScanState>("idle");
+  const [scanResult, setScanResult] = useState<ScanResult | null>(null);
+
+  async function search(e: React.FormEvent) {
+    e.preventDefault();
+    if (!name.trim()) return;
+    setState("loading");
+    setFilings([]);
+    setScanUrl(null);
+    setScanResult(null);
+    try {
+      const res  = await fetch("/api/finance/portal-search", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ name: name.trim(), portal }),
+      });
+      const data = await res.json();
+      if (data.status === "error") { setState("error"); setErrMsg(data.error ?? "Unknown error"); return; }
+      if (data.status === "no_results") { setState("no_results"); return; }
+      setFilings(data.filings ?? []);
+      setState("done");
+    } catch (err) {
+      setState("error");
+      setErrMsg(String(err));
+    }
+  }
+
+  async function scanFiling(url: string) {
+    setScanUrl(url);
+    setScanState("loading");
+    setScanResult(null);
+    try {
+      const res  = await fetch("/api/finance/scan-pdf", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ url }),
+      });
+      const data = await res.json();
+      if (data.status === "no_key") { setScanState("no_key"); return; }
+      if (data.status === "error")  { setScanState("error");  setScanResult({ error: data.error }); return; }
+      setScanState("done");
+      setScanResult(data);
+    } catch (err) {
+      setScanState("error");
+      setScanResult({ error: String(err) });
+    }
+  }
+
+  const PORTAL_LABELS: Record<PortalChoice, string> = {
+    "harris-county": "Harris County",
+    "houston":       "City of Houston",
+    "both":          "Both portals",
+  };
+
+  return (
+    <div className="max-w-3xl mx-auto py-8">
+      <div className="mb-6">
+        <h2 className="text-xl font-bold mb-1" style={{ color: "var(--accent)", fontFamily: "var(--font-playfair), serif" }}>
+          Portal Search
+        </h2>
+        <p className="text-sm" style={{ color: "var(--muted)" }}>
+          Search the Harris County or Houston COH campaign finance portals by name — no TEC number needed. Finds filings for any candidate, incumbent or challenger.
+        </p>
+      </div>
+
+      {/* Search form */}
+      <form onSubmit={search} className="space-y-3 mb-6">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            placeholder="Last, First  — e.g. Ellis, Rodney  or  Letitia Plummer"
+            className="flex-1 px-4 py-2.5 rounded-full text-sm bg-white ring-1 ring-[var(--border)] focus:ring-[var(--accent)] focus:outline-none"
+            required
+          />
+          <button type="submit" disabled={state === "loading"}
+            className="px-5 py-2.5 rounded-full text-sm font-bold text-white transition-all disabled:opacity-50"
+            style={{ background: "var(--accent)" }}>
+            {state === "loading" ? "Searching…" : "Search"}
+          </button>
+        </div>
+        {/* Portal selector */}
+        <div className="flex gap-2">
+          {(["both", "harris-county", "houston"] as PortalChoice[]).map(p => (
+            <button key={p} type="button" onClick={() => setPortal(p)}
+              className="px-3 py-1 rounded-full text-xs font-semibold border transition-all"
+              style={{
+                background:   portal === p ? "var(--accent)" : "#fff",
+                color:        portal === p ? "#fff" : "var(--muted)",
+                borderColor:  portal === p ? "var(--accent)" : "var(--border)",
+              }}>
+              {PORTAL_LABELS[p]}
+            </button>
+          ))}
+        </div>
+        <p className="text-[11px]" style={{ color: "var(--muted)" }}>
+          Harris County portal: county officials, JPs, constables. Houston COH portal: mayor, city council, controller.
+        </p>
+      </form>
+
+      {/* States */}
+      {state === "loading" && (
+        <div className="flex items-center gap-3 py-10 justify-center">
+          <div className="w-5 h-5 rounded-full border-2 animate-spin" style={{ borderColor: "var(--accent)", borderTopColor: "transparent" }} />
+          <p className="text-sm" style={{ color: "var(--muted)" }}>Searching portal…</p>
+        </div>
+      )}
+
+      {state === "no_results" && (
+        <div className="rounded-2xl p-8 text-center" style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)" }}>
+          <p className="font-bold mb-1" style={{ color: "var(--accent)" }}>No filings found</p>
+          <p className="text-sm" style={{ color: "var(--muted)" }}>
+            Try a different spelling, or use "Last, First" format for Harris County searches.
+          </p>
+        </div>
+      )}
+
+      {state === "error" && (
+        <div className="rounded-2xl p-6" style={{ background: "#fff7f7", border: "1px solid #fca5a5" }}>
+          <p className="font-bold text-red-700 mb-1">Portal search failed</p>
+          <p className="text-sm text-red-600">{errMsg}</p>
+        </div>
+      )}
+
+      {/* Filing list */}
+      {state === "done" && filings.length > 0 && (
+        <div className="space-y-4">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: "var(--muted)" }}>
+            {filings.length} filing{filings.length !== 1 ? "s" : ""} found
+          </p>
+          <div className="rounded-2xl overflow-hidden ring-1 ring-[var(--border)]" style={{ background: "#fff" }}>
+            {filings.map((f, i) => (
+              <div key={i} className="flex items-center gap-4 px-5 py-3.5 border-b border-black/5 last:border-0">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold truncate" style={{ color: "var(--foreground)" }}>{f.label}</p>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="text-[10px]" style={{ color: "var(--muted)" }}>{f.date}</span>
+                    <span className="text-[9px] px-1.5 py-0.5 rounded-full font-semibold"
+                      style={{ background: f.portal === "houston" ? "#ede9fe" : "#dbeafe", color: f.portal === "houston" ? "#6d28d9" : "#1d4ed8" }}>
+                      {f.portal === "houston" ? "Houston COH" : "Harris County"}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <a href={f.url} target="_blank" rel="noopener noreferrer"
+                    className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-all hover:opacity-80"
+                    style={{ borderColor: "var(--border)", color: "var(--muted)" }}>
+                    Open PDF
+                  </a>
+                  {f.url !== "https://cohweb.houstontx.gov/CampaignFinanceWeb/CFRwebsiteSimpleSearchResult.aspx" && (
+                    <button onClick={() => scanFiling(f.url)}
+                      disabled={scanState === "loading" && scanUrl === f.url}
+                      className="px-3 py-1.5 rounded-full text-xs font-bold text-white transition-all disabled:opacity-50"
+                      style={{ background: "var(--accent)" }}>
+                      {scanState === "loading" && scanUrl === f.url ? "Scanning…" : "Scan with Claude"}
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Inline scan result */}
+          {scanUrl && (
+            <div className="mt-4">
+              {scanState === "loading" && (
+                <div className="flex items-center gap-3 py-8 justify-center rounded-2xl" style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)" }}>
+                  <div className="w-5 h-5 rounded-full border-2 animate-spin" style={{ borderColor: "var(--accent)", borderTopColor: "transparent" }} />
+                  <p className="text-sm" style={{ color: "var(--muted)" }}>Reading the filing with Claude…</p>
+                </div>
+              )}
+              {scanState === "no_key" && (
+                <div className="rounded-2xl p-6 text-center" style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)" }}>
+                  <p className="font-bold mb-1" style={{ color: "var(--accent)" }}>ANTHROPIC_API_KEY not set</p>
+                  <p className="text-sm" style={{ color: "var(--muted)" }}>Add the key in Vercel environment variables to enable Claude PDF extraction.</p>
+                </div>
+              )}
+              {scanState === "error" && (
+                <div className="rounded-2xl p-6" style={{ background: "#fff7f7", border: "1px solid #fca5a5" }}>
+                  <p className="font-bold text-red-700 mb-1">Scan error</p>
+                  <p className="text-sm text-red-600">{scanResult?.error ?? "Unknown error"}</p>
+                </div>
+              )}
+              {scanState === "done" && scanResult && (
+                <div className="space-y-4">
+                  <div className="rounded-2xl p-6 ring-1 ring-[var(--border)]" style={{ background: "#fff" }}>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-1" style={{ color: "var(--muted)" }}>Extracted</p>
+                    <h3 className="text-lg font-bold mb-0.5" style={{ color: "var(--accent)", fontFamily: "var(--font-playfair), serif" }}>
+                      {scanResult.filer ?? "Unknown filer"}
+                    </h3>
+                    {scanResult.period && <p className="text-xs mb-4" style={{ color: "var(--muted)" }}>{scanResult.period}</p>}
+                    <div className="grid grid-cols-3 gap-3">
+                      {[
+                        { label: "Raised",        val: scanResult.raised },
+                        { label: "Spent",         val: scanResult.spent  },
+                        { label: "Cash on Hand",  val: scanResult.cash   },
+                      ].map(({ label, val }) => (
+                        <div key={label} className="rounded-xl p-3" style={{ background: "rgba(37,99,168,0.06)" }}>
+                          <p className="text-[9px] font-bold uppercase tracking-[0.15em] mb-1" style={{ color: "var(--muted)" }}>{label}</p>
+                          <p className="text-lg font-bold" style={{ color: "var(--accent)", fontFamily: "var(--font-playfair), serif" }}>
+                            {fmt$(val)}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {(scanResult.topContributors?.length ?? 0) > 0 && (
+                    <div className="rounded-2xl p-6 ring-1 ring-[var(--border)]" style={{ background: "#fff" }}>
+                      <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-4" style={{ color: "var(--muted)" }}>Top Contributors</p>
+                      <div className="space-y-2">
+                        {scanResult.topContributors!.map((c, idx) => (
+                          <div key={idx} className="flex items-center justify-between gap-4 py-1.5 border-b border-black/5 last:border-0">
+                            <div>
+                              <p className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>{c.name}</p>
+                              {c.city && <p className="text-[11px]" style={{ color: "var(--muted)" }}>{c.city}</p>}
+                            </div>
+                            <p className="text-sm font-bold flex-shrink-0" style={{ color: "var(--accent)" }}>{fmt$(c.amount)}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {(scanResult.topExpenses?.length ?? 0) > 0 && (
+                    <div className="rounded-2xl p-6 ring-1 ring-[var(--border)]" style={{ background: "#fff" }}>
+                      <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-4" style={{ color: "var(--muted)" }}>Top Expenditures</p>
+                      <div className="space-y-2">
+                        {scanResult.topExpenses!.map((e, idx) => (
+                          <div key={idx} className="flex items-center justify-between gap-4 py-1.5 border-b border-black/5 last:border-0">
+                            <div>
+                              <p className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>{e.payee}</p>
+                              {e.purpose && <p className="text-[11px]" style={{ color: "var(--muted)" }}>{e.purpose}</p>}
+                            </div>
+                            <p className="text-sm font-bold flex-shrink-0" style={{ color: "#b45309" }}>{fmt$(e.amount)}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function WhereIsTheDough() {
   const [tab, setTab]     = useState<Tab>("story");
   const [level, setLevel] = useState<Level>("all");
@@ -204,7 +468,7 @@ export default function WhereIsTheDough() {
   // Hydrate filters from the URL once, then mirror them back so shared links restore the view
   useEffect(() => {
     const p = readUrlParams(["tab", "level", "group", "party", "q"]);
-    if (p.tab === "story" || p.tab === "leaderboard" || p.tab === "trail" || p.tab === "scanner") setTab(p.tab as Tab);
+    if (p.tab === "story" || p.tab === "leaderboard" || p.tab === "trail" || p.tab === "scanner" || p.tab === "portal") setTab(p.tab as Tab);
     if (p.level && p.level in LEVEL_LABELS) setLevel(p.level as Level);
     if (p.group && p.group in COUNTY_GROUPS) setCountyGroup(p.group as CountyGroup);
     if (p.party === "D" || p.party === "R") setParty(p.party);
@@ -337,12 +601,12 @@ export default function WhereIsTheDough() {
       {/* ── Tab bar ───────────────────────────────────────────────────── */}
       <div className="sticky top-0 z-20 bg-[var(--background)]/90 backdrop-blur border-b border-[var(--border)] px-6 py-3">
         <div className="max-w-6xl mx-auto flex flex-wrap items-center gap-3">
-          {(["story","leaderboard","trail","scanner"] as Tab[]).map(t => (
+          {(["story","leaderboard","trail","portal","scanner"] as Tab[]).map(t => (
             <button key={t} onClick={() => setTab(t)}
               className={`text-xs font-bold uppercase tracking-[0.12em] px-4 py-2 rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                 tab === t ? "bg-[var(--accent)] text-white" : "bg-white ring-1 ring-[var(--border)] text-[var(--muted)] hover:ring-[var(--accent-light)]"
               }`}>
-              {t === "story" ? "The Story" : t === "trail" ? "Money Trail" : t === "scanner" ? "File Scanner" : "Leaderboard"}
+              {t === "story" ? "The Story" : t === "trail" ? "Money Trail" : t === "scanner" ? "File Scanner" : t === "portal" ? "Portal Search" : "Leaderboard"}
             </button>
           ))}
 
@@ -498,6 +762,7 @@ export default function WhereIsTheDough() {
 
         {/* ── FILE SCANNER ──────────────────────────────────────────── */}
         {tab === "scanner" && <FinanceScanner />}
+        {tab === "portal"  && <PortalSearch />}
 
         {/* ── LEADERBOARD ───────────────────────────────────────────── */}
         {tab === "leaderboard" && (
