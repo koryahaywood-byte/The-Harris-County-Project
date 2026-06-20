@@ -26,6 +26,7 @@ function partyColor(p: string) {
 function OfficialCard({ rep }: { rep: RepEntry }) {
   const accent = partyColor(rep.party);
   const initials = rep.name.split(" ").map(w => w[0]).slice(0, 2).join("");
+  const isLinked = !!(rep.slug || rep.url);
   const inner = (
     <div className="hcp-card card-lift p-4 flex items-center gap-3.5 h-full">
       <div className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
@@ -43,10 +44,16 @@ function OfficialCard({ rep }: { rep: RepEntry }) {
         <p className="text-xs text-[#6b7280] truncate">{rep.office} · {rep.district}</p>
         {rep.note && <p className="text-[10px] text-amber-600 mt-0.5">{rep.note}</p>}
       </div>
-      {rep.slug && <span className="text-[#9ca3af] text-xs flex-shrink-0">→</span>}
+      {isLinked && (
+        <span className="text-[10px] font-bold flex-shrink-0" style={{ color: rep.slug ? "#2563a8" : "#9ca3af" }}>
+          {rep.slug ? "Profile →" : "↗"}
+        </span>
+      )}
     </div>
   );
-  return rep.slug ? <Link href={`/politicians/${rep.slug}`} className="block h-full">{inner}</Link> : inner;
+  if (rep.slug) return <Link href={`/politicians/${rep.slug}`} className="block h-full">{inner}</Link>;
+  if (rep.url) return <a href={rep.url} target="_blank" rel="noopener noreferrer" className="block h-full">{inner}</a>;
+  return inner;
 }
 
 export default function MyOfficialsPage() {
@@ -169,9 +176,9 @@ export default function MyOfficialsPage() {
 
             <p className="text-[11px] text-[#9ca3af] leading-relaxed mt-2">
               Congressional districts shown use the 2025 enacted map (PLANC2333); current members were
-              elected under prior lines and serve through January 2027. Precinct assignment via centroid
-              match against Harris County Clerk shapes — addresses on a precinct boundary may differ from
-              your voter registration card.
+              elected under prior lines and serve through January 2027. Commissioner precinct assigned
+              via direct point-in-polygon against Harris County GIS (June 2026 redistricted boundaries).
+              Profile links (blue) go to the politician&apos;s page on this site. External links (↗) go to their official government website.
             </p>
           </>
         )}

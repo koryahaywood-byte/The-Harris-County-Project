@@ -11,27 +11,28 @@ export interface RepEntry {
   party: "D" | "R" | "NP";
   level: "Congress" | "Texas Legislature" | "Harris County" | "Justice Court" | "City of Houston";
   slug?: string;        // present when a /politicians/[slug] profile exists
+  url?: string;         // external official website (used when no internal slug)
   note?: string;
 }
 
 // Current U.S. House officeholders for Harris-area districts (June 2026).
 // District lines shown are the 2025 enacted plan (PLANC2333); members were
 // elected under prior lines — flagged in the UI note.
-const CONGRESS: Record<string, { name: string; party: "D" | "R"; note?: string }> = {
-  "2":  { name: "Dan Crenshaw",      party: "R" },
-  "7":  { name: "Lizzie Fletcher",   party: "D" },
-  "8":  { name: "Morgan Luttrell",   party: "R" },
-  "9":  { name: "Al Green",          party: "D", note: "Retiring — lost CD-18 runoff; term ends Jan 2027" },
-  "18": { name: "Christian Menefee", party: "D", note: "D nominee 2026 — currently serving as Harris County Attorney; seat vacant since SJL's death (2024)" },
-  "22": { name: "Troy Nehls",        party: "R" },
-  "29": { name: "Sylvia Garcia",     party: "D" },
-  "36": { name: "Brian Babin",       party: "R" },
-  "38": { name: "Wesley Hunt",       party: "R", note: "Leaving — ran for Senate; term ends Jan 2027" },
+const CONGRESS: Record<string, { name: string; party: "D" | "R"; url?: string; note?: string }> = {
+  "2":  { name: "Dan Crenshaw",      party: "R", url: "https://crenshaw.house.gov" },
+  "7":  { name: "Lizzie Fletcher",   party: "D", url: "https://fletcher.house.gov" },
+  "8":  { name: "Morgan Luttrell",   party: "R", url: "https://luttrell.house.gov" },
+  "9":  { name: "Al Green",          party: "D", url: "https://algreen.house.gov", note: "Retiring — lost CD-18 runoff; term ends Jan 2027" },
+  "18": { name: "Christian Menefee", party: "D", note: "D nominee 2026 — currently Harris County Attorney; seat vacant since SJL's death (2024)" },
+  "22": { name: "Troy Nehls",        party: "R", url: "https://nehls.house.gov" },
+  "29": { name: "Sylvia Garcia",     party: "D", url: "https://sylviagarcia.house.gov" },
+  "36": { name: "Brian Babin",       party: "R", url: "https://babin.house.gov" },
+  "38": { name: "Wesley Hunt",       party: "R", url: "https://wesleyhunt.house.gov", note: "Leaving — ran for Senate; term ends Jan 2027" },
 };
 
 const US_SENATORS: RepEntry[] = [
-  { name: "John Cornyn", office: "U.S. Senator", district: "Texas", party: "R", level: "Congress", note: "Lost runoff — term ends Jan 2027" },
-  { name: "Ted Cruz",    office: "U.S. Senator", district: "Texas", party: "R", level: "Congress" },
+  { name: "John Cornyn", office: "U.S. Senator", district: "Texas", party: "R", level: "Congress", url: "https://www.cornyn.senate.gov", note: "Lost runoff — term ends Jan 2027" },
+  { name: "Ted Cruz",    office: "U.S. Senator", district: "Texas", party: "R", level: "Congress", url: "https://www.cruz.senate.gov" },
 ];
 
 // Justice Court bench per JP precinct (two places each) + constable.
@@ -61,7 +62,7 @@ export function findRepresentatives(cw: CrosswalkEntry): RepEntry[] {
   reps.push(...US_SENATORS);
   if (cw.cd && CONGRESS[cw.cd]) {
     const m = CONGRESS[cw.cd];
-    reps.push({ name: m.name, office: "U.S. Representative", district: `CD-${cw.cd}`, party: m.party, level: "Congress", note: m.note });
+    reps.push({ name: m.name, office: "U.S. Representative", district: `CD-${cw.cd}`, party: m.party, level: "Congress", url: m.url, note: m.note });
   }
 
   // ── Texas Legislature ──

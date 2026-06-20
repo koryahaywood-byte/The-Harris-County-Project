@@ -160,7 +160,8 @@ for (const url of jpUrls) {
 if (!jpDone) console.log("JP precinct boundaries: NO SERVICE RESPONDED — jp omitted from crosswalk");
 
 /* Commissioner Precincts — Harris County ArcGIS (PCT_NO field) */
-const commUrl = "https://services.arcgis.com/su8ic9KbA7PYVxPS/arcgis/rest/services/Harris_County_Commissioner_Precincts/FeatureServer/0/query?where=1%3D1&outFields=PCT_NO&f=geojson&outSR=4326&geometryPrecision=4";
+// Use Commissioner_Precinct (updated June 2026) not Harris_County_Commissioner_Precincts (last edited Jan 2021, pre-redistricting)
+const commUrl = "https://services.arcgis.com/su8ic9KbA7PYVxPS/arcgis/rest/services/Commissioner_Precinct/FeatureServer/0/query?where=1%3D1&outFields=PCT_NO&f=geojson&outSR=4326&geometryPrecision=5";
 const commData = await tryFetchJson(commUrl);
 if (commData?.features?.length) {
   console.log(`Commissioner precincts: ${commData.features.length} polygons`);
