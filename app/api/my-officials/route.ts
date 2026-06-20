@@ -1,8 +1,9 @@
 // Address → every official who represents it.
 // 1. Census geocoder (free, no key) → lat/lng
 // 2. Point-in-polygon against harris-precincts.geojson → voting precinct
-// 3. Precinct crosswalk → CD/SD/HD/JP/Commissioner/Council
-// 4. findRepresentatives() → grouped officials list
+// 3. Direct PIP against harris-commissioner-precincts.geojson → commissioner pct (overrides crosswalk)
+// 4. Precinct crosswalk → CD/SD/HD/JP/Council
+// 5. findRepresentatives() → grouped officials list
 
 import { NextResponse } from "next/server";
 import { readFileSync } from "fs";
@@ -13,18 +14,27 @@ import { findRepresentatives, type CrosswalkEntry } from "@/lib/representatives"
 export const dynamic = "force-dynamic";
 
 type Ring = [number, number][];
-interface PrecinctFeature {
-  properties: { PREC: string };
+interface GeoFeature {
+  properties: Record<string, string | number>;
   geometry: { type: "Polygon" | "MultiPolygon"; coordinates: Ring[] | Ring[][] };
 }
 
-let GEO_CACHE: PrecinctFeature[] | null = null;
-function loadPrecincts(): PrecinctFeature[] {
+let GEO_CACHE: GeoFeature[] | null = null;
+function loadPrecincts(): GeoFeature[] {
   if (!GEO_CACHE) {
     const raw = readFileSync(join(process.cwd(), "public/data/harris-precincts.geojson"), "utf8");
     GEO_CACHE = JSON.parse(raw).features;
   }
   return GEO_CACHE!;
+}
+
+let COMM_CACHE: GeoFeature[] | null = null;
+function loadCommPrecincts(): GeoFeature[] {
+  if (!COMM_CACHE) {
+    const raw = readFileSync(join(process.cwd(), "public/data/harris-commissioner-precincts.geojson"), "utf8");
+    COMM_CACHE = JSON.parse(raw).features;
+  }
+  return COMM_CACHE!;
 }
 
 function pointInRing(x: number, y: number, ring: Ring): boolean {
@@ -36,7 +46,7 @@ function pointInRing(x: number, y: number, ring: Ring): boolean {
   return inside;
 }
 
-function pointInFeature(x: number, y: number, f: PrecinctFeature): boolean {
+function pointInFeature(x: number, y: number, f: GeoFeature): boolean {
   if (f.geometry.type === "Polygon") {
     const rings = f.geometry.coordinates as Ring[];
     if (!pointInRing(x, y, rings[0])) return false;
@@ -86,10 +96,15 @@ export async function GET(req: Request) {
       { status: 404 }
     );
   }
-  const precinct = feature.properties.PREC;
+  const precinct = String(feature.properties.PREC);
 
-  // 3 + 4. Crosswalk → officials
-  const cw = (crosswalkRaw as { precincts: Record<string, CrosswalkEntry> }).precincts[precinct] ?? {};
+  // 3. Direct PIP for commissioner precinct — overrides crosswalk centroid which fails at boundaries
+  const commFeature = loadCommPrecincts().find(f => pointInFeature(lng, lat, f));
+  const commPct = commFeature ? String(commFeature.properties.PCT_NO) : undefined;
+
+  // 4. Crosswalk → all other districts; override pct with direct PIP result
+  const cwBase = (crosswalkRaw as { precincts: Record<string, CrosswalkEntry> }).precincts[precinct] ?? {};
+  const cw: CrosswalkEntry = commPct ? { ...cwBase, pct: commPct } : cwBase;
   const reps = findRepresentatives(cw);
 
   return NextResponse.json({ matched, precinct, districts: cw, officials: reps });

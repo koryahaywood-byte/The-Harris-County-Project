@@ -159,6 +159,25 @@ for (const url of jpUrls) {
 }
 if (!jpDone) console.log("JP precinct boundaries: NO SERVICE RESPONDED — jp omitted from crosswalk");
 
+/* Commissioner Precincts — Harris County ArcGIS (PCT_NO field) */
+const commUrl = "https://services.arcgis.com/su8ic9KbA7PYVxPS/arcgis/rest/services/Harris_County_Commissioner_Precincts/FeatureServer/0/query?where=1%3D1&outFields=PCT_NO&f=geojson&outSR=4326&geometryPrecision=4";
+const commData = await tryFetchJson(commUrl);
+if (commData?.features?.length) {
+  console.log(`Commissioner precincts: ${commData.features.length} polygons`);
+  let n = 0;
+  for (const { prec, pt } of centroids) {
+    for (const f of commData.features) {
+      if (f.geometry && pointInGeom(pt, f.geometry)) {
+        crosswalk[prec].pct = String(parseInt(f.properties.PCT_NO, 10));
+        n++; break;
+      }
+    }
+  }
+  console.log(`  assigned ${n}/${centroids.length}`);
+} else {
+  console.log("Commissioner precinct boundaries: NO SERVICE RESPONDED — pct omitted from crosswalk");
+}
+
 /* Houston City Council districts — COH GIS (best-effort) */
 const ccUrls = [
   "https://services.arcgis.com/NummVBqZSIJKUeVR/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&outSR=4326&geometryPrecision=4",
