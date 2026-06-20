@@ -405,7 +405,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
       { name: "Anne Clutterbuck", years: "2008–2012", party: "R" },
       { name: "Ellen Cohen", years: "2013–2019", party: "D" },
       { name: "Abbie Kamin", years: "2020–2023", party: "D" },
-      { name: "Joe Panzarella", years: "2024–present", party: "R" },
+      { name: "Joe Panzarella", years: "2024–present", party: "D" },
     ],
   },
   "COH-District D": {
