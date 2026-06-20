@@ -274,7 +274,7 @@
       "first": "Joe",
       "name": "Joe Panzarella",
       "office": "City Council District C",
-      "party": "R"
+      "party": "D"
     },
     {
       "last": "Evans-Shabazz",
@@ -321,8 +321,8 @@
     {
       "last": "Pollard",
       "first": "Edward",
-      "name": "Edward Pollard",
-      "office": "City Council At-Large 2",
+      "name": "Ed Pollard",
+      "office": "City Council District J",
       "party": "D"
     },
     {
@@ -337,6 +337,13 @@
       "first": "Julian",
       "name": "Julian Ramirez",
       "office": "City Council At-Large 1",
+      "party": "R"
+    },
+    {
+      "last": "Davis",
+      "first": "Willie",
+      "name": "Willie Davis",
+      "office": "City Council At-Large 2",
       "party": "R"
     },
     {

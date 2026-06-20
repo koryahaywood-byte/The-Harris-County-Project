@@ -77,13 +77,13 @@ The May 2026 runoff results were already embedded in Heat Check but the rest of 
 5. **Chip rows wrap on mobile rather than horizontally scroll.** A swipeable row was tried; DOM measurements vs rendered output disagreed under the preview's emulation, and wrapping is deterministic and accessible. No route overflows.
 6. **Design research done from knowledge, not live browsing** of Texas Tribune/Marshall Project/CityLab (the patterns applied — restrained type scale, one accent, tabular numerals, provenance lines, skeleton loading, micro-motion only — are their house idioms). Live side-by-side comparison wasn't worth the time cost.
 7. **Freshness uses file mtimes** with an explicit caveat (git clones reset mtimes). True content-based staleness would need per-source "asOf" parsing — overkill for v1.
-8. **Crockett added to money tool with $0/Pending** — her Senate committee finance isn't in any local data; FEC live route may fill it once her committee ID is added to the roster.
+8. **Crockett's Senate committee** added to money tool; she lost the D runoff to James Talarico. Talarico's FEC committee ID (S6TX00462) is in campaign-finance.ts; live data pending committee activation.
 
 ## 4. Still Outstanding — with reasons
 1. **Census API key** (you): keyless access is fully shut off (verified again this session — HTTP "Missing Key" page). Without it: no age breakdowns, no ACS profile data for the Districts population layer. CVAP race data is in (bulk file needs no key). Get one at api.census.gov/data/key_signup.html → `.env.local` + Vercel as `CENSUS_API_KEY`.
 2. **Harris County voter file with vote history** (you): the only source for age ranges of actual voters, turnout across the last 3 elections, and primary-vs-general participation. harrisvotes.com → Voter Registrar → Voter Registration Data Request. Format: CSV with precinct, birth year, gender, per-election vote history. The "Who Actually Votes Here" panel states these gaps in-product.
 3. **FEC live route returns $0 for federal candidates** — still undiagnosed (likely missing/invalid FEC API key or dead committee IDs). Static fallbacks carry the page. Needs a session with the route's request/response.
-4. **Jasmine Crockett's Senate committee ID + finance** — shows "Pending" in the money tool until her FEC committee is added to `data/finance-roster.json`.
+4. **James Talarico's Senate committee finance** — Talarico is the D nominee (beat Crockett in runoff). His FEC committee (S6TX00462) is in campaign-finance.ts but shows $0 until the committee activates with the FEC. Crockett's entry now correctly labeled "lost D runoff".
 5. **County court judges** — 24 portal filings found but filer names unparseable; needs the discovery-parser fix or a manual roster.
 6. **Top-5 pending county officials** (Hidalgo, Ellis, Garcia, Gonzalez, Teare) — scanned PDFs exceed extraction limits; manual entry is the fast path.
 7. **Per-URL OG tags** (filter state reflected in the unfurl image) — needs server-wrapper refactor per tool (decision #4).

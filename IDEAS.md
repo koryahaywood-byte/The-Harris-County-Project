@@ -58,7 +58,7 @@ Last updated: June 11, 2026
 - **May runoff precinct CSV** — Heat Check runoff view uses derived data; real canvass pending
 - **County court judges** — 24 portal filings, filer names unparseable; needs parser fix or manual roster
 - **Top-5 county officials' scanned PDFs** — exceed extraction limits; manual entry is fast path
-- **Jasmine Crockett FEC committee ID** — shows Pending until added to finance-roster.json
+- **James Talarico FEC committee** (S6TX00462, D Senate nominee) — shows $0 until committee activates; Crockett lost D runoff and is now labeled accordingly
 - **R-side nominees** for CD-8/22/36 marked "presumed"; missing for CD-29, SD-11, several HD/JP — needs TX SOS statewide canvass
 - **2020-cycle precinct results** — Harris renumbered precincts in 2021 redistricting; needs old→new crosswalk before 2020 can join the trend series
 
