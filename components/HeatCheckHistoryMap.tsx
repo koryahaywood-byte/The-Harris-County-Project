@@ -330,7 +330,7 @@ export default function HeatCheckHistoryMap() {
       <div className="flex items-end gap-0 px-5 pt-5 pb-0 border-b border-black/8"
         style={{ background: "rgba(255,255,255,0.7)", backdropFilter: "blur(12px)" }}>
         <div className="pb-3 mr-auto">
-          <h1 className="text-sm font-black uppercase tracking-[0.22em]" style={{ color: "var(--accent)" }}>
+          <h1 style={{ fontFamily: "var(--font-dancing), cursive", fontSize: "1.6rem", lineHeight: 1, color: "var(--accent)" }}>
             Heat Check
           </h1>
           <p className="text-[10px]" style={{ color: "#9ca3af" }}>
@@ -343,22 +343,17 @@ export default function HeatCheckHistoryMap() {
       <div className="flex flex-wrap items-center gap-3 px-5 py-3 border-b border-black/8 bg-white/60"
         style={{ backdropFilter: "blur(8px)" }}>
 
-        {/* Jurisdiction toggle */}
-        <div className="flex rounded-lg overflow-hidden border border-black/10">
-          {([
-            { key: "county" as Jurisdiction, label: "Harris Co." },
-            { key: "houston" as Jurisdiction, label: "City of Houston" },
-          ]).map(j => (
-            <button key={j.key} onClick={() => setJurisdiction(j.key)}
-              className="px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.12em] transition-colors"
-              style={{
-                background: jurisdiction === j.key ? "#1a3a5c" : "#fff",
-                color: jurisdiction === j.key ? "#fbbf24" : "#6b7280",
-                borderRight: "1px solid rgba(0,0,0,0.08)",
-              }}>
-              {j.label}
-            </button>
-          ))}
+        {/* Jurisdiction selector */}
+        <div className="flex items-center gap-1.5">
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>Area</span>
+          <select
+            value={jurisdiction}
+            onChange={e => setJurisdiction(e.target.value as Jurisdiction)}
+            className="rounded-lg border border-black/10 px-2.5 py-1.5 text-[11px] font-semibold bg-white"
+            style={{ color: "#374151" }}>
+            <option value="county">Harris County</option>
+            <option value="houston">City of Houston</option>
+          </select>
         </div>
 
         {/* View mode toggle */}
