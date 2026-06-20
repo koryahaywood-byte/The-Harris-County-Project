@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -173,7 +173,7 @@ function PartisanBar({ pct, size = "md" }: { pct: number; size?: "sm" | "md" | "
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
-export default function PrecinctLookup() {
+function PrecinctLookupInner() {
   const [history, setHistory] = useState<PrecinctHistory | null>(null);
   const params = useSearchParams();
   const [input, setInput] = useState(() => params.get("p") ?? "");
@@ -457,5 +457,13 @@ export default function PrecinctLookup() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function PrecinctLookup() {
+  return (
+    <Suspense>
+      <PrecinctLookupInner />
+    </Suspense>
   );
 }

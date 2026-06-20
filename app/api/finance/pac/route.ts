@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export const revalidate = 3600 * 6; // 6h cache
+export const revalidate = 21600; // 6h cache
 
 const FEC_KEY = process.env.FEC_API_KEY ?? "DEMO_KEY";
 const CYCLE = 2026;
