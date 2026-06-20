@@ -106,10 +106,10 @@ const SWING_LEGEND = [
 ];
 
 const CYCLES = [
+  { key: "2026P", label: "2026 Primary" },
   { key: "2024G", label: "2024 General" },
   { key: "2022G", label: "2022 General" },
   { key: "2020G", label: "2020 General" },
-  { key: "2026P", label: "2026 Primary" },
 ];
 
 type SortCol = "prec" | "d" | "r" | "total" | "pct" | "margin" | "swing";
@@ -126,7 +126,8 @@ export default function HeatCheckHistoryMap() {
   const [geojson, setGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
 
   // Selectors
-  const [cycle, setCycle] = useState("2024G");
+  const [cycle, setCycle] = useState("2026P");
+  const [showIframe, setShowIframe] = useState(false);
   const [race, setRace] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("partisan");
   const [compareCycle, setCompareCycle] = useState("2020G");
@@ -292,6 +293,19 @@ export default function HeatCheckHistoryMap() {
   return (
     <div style={{ fontFamily: "var(--font-outfit,sans-serif)" }}>
 
+      {/* Page header */}
+      <div className="flex items-end gap-0 px-5 pt-5 pb-0 border-b border-black/8"
+        style={{ background: "rgba(255,255,255,0.7)", backdropFilter: "blur(12px)" }}>
+        <div className="pb-3 mr-auto">
+          <h1 className="text-sm font-black uppercase tracking-[0.22em]" style={{ color: "var(--accent)" }}>
+            Heat Check
+          </h1>
+          <p className="text-[10px]" style={{ color: "#9ca3af" }}>
+            Harris County precinct-level election results · 2020 – 2026
+          </p>
+        </div>
+      </div>
+
       {/* Controls row 1 */}
       <div className="flex flex-wrap items-center gap-3 px-5 py-3 border-b border-black/8 bg-white/60"
         style={{ backdropFilter: "blur(8px)" }}>
@@ -311,51 +325,53 @@ export default function HeatCheckHistoryMap() {
           ))}
         </div>
 
-        {/* Cycle selector */}
+        {/* Cycle dropdown */}
         <div className="flex items-center gap-1.5">
           <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>
             {viewMode === "swing" ? "To" : "Election"}
           </span>
-          <div className="flex rounded-lg overflow-hidden border border-black/10">
-            {CYCLES.map(c => (
-              <button key={c.key} onClick={() => setCycle(c.key)}
-                className="px-3 py-1.5 text-[11px] font-semibold transition-colors"
-                style={{
-                  background: cycle === c.key ? "#1a3a5c" : "#fff",
-                  color: cycle === c.key ? "#fff" : "#374151",
-                  borderRight: "1px solid rgba(0,0,0,0.08)",
-                }}>
-                {c.label}
-              </button>
-            ))}
-          </div>
+          <select
+            value={cycle}
+            onChange={e => { setCycle(e.target.value); setShowIframe(false); }}
+            className="rounded-lg border border-black/10 px-2.5 py-1.5 text-[11px] font-semibold bg-white"
+            style={{ color: "#374151" }}>
+            {CYCLES.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
+          </select>
         </div>
 
-        {/* Race selector */}
+        {/* Race dropdown */}
         {availableRaces.length > 1 && (
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>Race</span>
-            <div className="flex rounded-lg overflow-hidden border border-black/10">
-              {availableRaces.map(r => (
-                <button key={r.key} onClick={() => setRace(r.key)}
-                  className="px-3 py-1.5 text-[11px] font-semibold transition-colors"
-                  style={{
-                    background: race === r.key ? "#2563a8" : "#fff",
-                    color: race === r.key ? "#fff" : "#374151",
-                    borderRight: "1px solid rgba(0,0,0,0.08)",
-                  }}>
-                  {r.label}
-                </button>
-              ))}
-            </div>
+            <select
+              value={race ?? ""}
+              onChange={e => setRace(e.target.value || null)}
+              className="rounded-lg border border-black/10 px-2.5 py-1.5 text-[11px] font-semibold bg-white"
+              style={{ color: "#374151" }}>
+              {availableRaces.map(r => <option key={r.key} value={r.key}>{r.label}</option>)}
+            </select>
           </div>
         )}
 
+        {/* 2026 race detail toggle */}
+        {cycle === "2026P" && (
+          <button
+            onClick={() => setShowIframe(v => !v)}
+            className="px-3 py-1.5 rounded-lg text-[11px] font-bold border transition-colors"
+            style={{
+              background: showIframe ? "#2563a8" : "#fff",
+              color: showIframe ? "#fff" : "#2563a8",
+              borderColor: "#2563a8",
+            }}>
+            {showIframe ? "← Partisan Map" : "Race Breakdown →"}
+          </button>
+        )}
+
         {/* Partisan summary chips */}
-        {viewMode === "partisan" && precincts.length > 0 && (
+        {viewMode === "partisan" && precincts.length > 0 && !showIframe && (
           <div className="flex items-center gap-2 ml-auto">
             <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ background: "#dbeafe", color: "#1d4ed8" }}>
-              {demPrecincts.toLocaleString()} D
+              {demPrecincts.toLocaleString()} D precincts
             </span>
             <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ background: "#fee2e2", color: "#dc2626" }}>
               {(precincts.length - demPrecincts).toLocaleString()} R
@@ -368,40 +384,29 @@ export default function HeatCheckHistoryMap() {
       </div>
 
       {/* Controls row 2 — swing compare */}
-      {viewMode === "swing" && (
+      {viewMode === "swing" && !showIframe && (
         <div className="flex flex-wrap items-center gap-3 px-5 py-2.5 border-b border-black/8"
           style={{ background: "rgba(254,243,199,0.5)" }}>
           <span className="text-[10px] font-black uppercase tracking-[0.18em]" style={{ color: "#92400e" }}>From</span>
-          <div className="flex rounded-lg overflow-hidden border border-amber-200">
-            {CYCLES.filter(c => c.key !== cycle).map(c => (
-              <button key={c.key} onClick={() => setCompareCycle(c.key)}
-                className="px-3 py-1.5 text-[11px] font-semibold transition-colors"
-                style={{
-                  background: compareCycle === c.key ? "#92400e" : "#fff",
-                  color: compareCycle === c.key ? "#fff" : "#374151",
-                  borderRight: "1px solid rgba(0,0,0,0.08)",
-                }}>
-                {c.label}
-              </button>
-            ))}
-          </div>
+
+          <select
+            value={compareCycle}
+            onChange={e => setCompareCycle(e.target.value)}
+            className="rounded-lg border border-amber-200 px-2.5 py-1.5 text-[11px] font-semibold bg-white"
+            style={{ color: "#374151" }}>
+            {CYCLES.filter(c => c.key !== cycle).map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
+          </select>
 
           {compareAvailableRaces.length > 1 && (
             <>
               <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#92400e" }}>Race</span>
-              <div className="flex rounded-lg overflow-hidden border border-amber-200">
-                {compareAvailableRaces.map(r => (
-                  <button key={r.key} onClick={() => setCompareRace(r.key)}
-                    className="px-3 py-1.5 text-[11px] font-semibold transition-colors"
-                    style={{
-                      background: compareRace === r.key ? "#92400e" : "#fff",
-                      color: compareRace === r.key ? "#fff" : "#374151",
-                      borderRight: "1px solid rgba(0,0,0,0.08)",
-                    }}>
-                    {r.label}
-                  </button>
-                ))}
-              </div>
+              <select
+                value={compareRace ?? ""}
+                onChange={e => setCompareRace(e.target.value || null)}
+                className="rounded-lg border border-amber-200 px-2.5 py-1.5 text-[11px] font-semibold bg-white"
+                style={{ color: "#374151" }}>
+                {compareAvailableRaces.map(r => <option key={r.key} value={r.key}>{r.label}</option>)}
+              </select>
             </>
           )}
 
@@ -422,8 +427,19 @@ export default function HeatCheckHistoryMap() {
         </div>
       )}
 
-      {/* Map */}
-      <div className="relative" style={{ height: 520 }}>
+      {/* 2026 race-by-race iframe panel */}
+      {showIframe && (
+        <iframe
+          src="/heat-check.html"
+          className="w-full border-0"
+          style={{ height: "calc(100dvh - 41px - 112px)" }}
+          title="Heat Check — Harris County 2026 Primary Race Detail"
+          allowFullScreen
+        />
+      )}
+
+      {/* Map + table + footer — hidden when iframe is shown */}
+      {!showIframe && (<><div className="relative" style={{ height: 520 }}>
         <div ref={mapRef} style={{ height: "100%", width: "100%" }} />
 
         {/* Hover tooltip */}
@@ -579,9 +595,12 @@ export default function HeatCheckHistoryMap() {
 
       <p className="px-5 py-2 text-[10px] border-t border-black/8" style={{ color: "#9ca3af" }}>
         {viewMode === "swing"
-          ? `Swing = ${curCycleLabel} D% minus ${cmpCycleLabel} D% (top two-party share). Source: Harris County Clerk.`
-          : `Source: Harris County Clerk · ${curCycleLabel} · Two-party share (D vs R only)`}
+          ? `Swing = ${curCycleLabel} D% minus ${cmpCycleLabel} D% (top two-party share). Source: Texas Legislative Council TED API + Harris County Clerk.`
+          : cycle === "2026P"
+            ? `Source: Harris County Clerk · 2026 Primary · D primary vs R primary ballot counts by precinct`
+            : `Source: Texas Legislative Council TED API · ${curCycleLabel} · Two-party share (D vs R)`}
       </p>
+      </>)}
     </div>
   );
 }
