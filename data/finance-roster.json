@@ -644,9 +644,9 @@
     {
       "id": "S6TX00338",
       "name": "Jasmine Crockett",
-      "office": "U.S. Senate (D nominee)",
+      "office": "U.S. Senate (lost D runoff to Talarico)",
       "party": "D",
-      "note": "Won March 2026 D primary. General Nov 2026 vs. Paxton."
+      "note": "Won March 2026 D primary but lost the May runoff to James Talarico."
     },
     {
       "id": "S4TX00462",
@@ -658,8 +658,9 @@
     {
       "id": "S6TX00462",
       "name": "James Talarico",
-      "office": "U.S. Senate (lost D primary)",
-      "party": "D"
+      "office": "U.S. Senate (D nominee)",
+      "party": "D",
+      "note": "Won May 2026 D runoff over Crockett. General Nov 2026 vs. Paxton."
     },
     {
       "id": "S2TX00106",
