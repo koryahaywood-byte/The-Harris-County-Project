@@ -24,15 +24,15 @@ type EndorserType =
 /* ─── Data ───────────────────────────────────────────────────────────────── */
 const ENDORSEMENTS: Endorsement[] = [
   // ── 2026 TX US Senate ────────────────────────────────────────────────────
-  { id: "e1",  endorser: "AFL-CIO Texas",           endorserType: "Union",            candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026 },
-  { id: "e2",  endorser: "Texas AFT",               endorserType: "Union",            candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026 },
-  { id: "e3",  endorser: "SEIU Texas",              endorserType: "Union",            candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026 },
-  { id: "e4",  endorser: "Houston Chronicle",       endorserType: "Newspaper",        candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026 },
-  { id: "e5",  endorser: "Sylvia Garcia",           endorserType: "Elected Official", candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026 },
-  { id: "e6",  endorser: "Al Green",                endorserType: "Elected Official", candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026 },
-  { id: "e7",  endorser: "Sheila Jackson Lee Estate", endorserType: "Elected Official", candidate: "Jasmine Crockett", race: "U.S. Senate 2026",        year: 2026, notes: "Family endorsement" },
-  { id: "e8",  endorser: "James Talarico",          endorserType: "Elected Official", candidate: "James Talarico",   race: "U.S. Senate 2026",          year: 2026, notes: "Self (candidate)" },
-  { id: "e9",  endorser: "Harris County Democrats", endorserType: "Party Org",        candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026 },
+  { id: "e1",  endorser: "AFL-CIO Texas",           endorserType: "Union",            candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",          year: 2026 },
+  { id: "e2",  endorser: "Texas AFT",               endorserType: "Union",            candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",          year: 2026 },
+  { id: "e3",  endorser: "SEIU Texas",              endorserType: "Union",            candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",          year: 2026 },
+  { id: "e4",  endorser: "Houston Chronicle",       endorserType: "Newspaper",        candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",          year: 2026 },
+  { id: "e5",  endorser: "Sylvia Garcia",           endorserType: "Elected Official", candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",          year: 2026 },
+  { id: "e6",  endorser: "Al Green",                endorserType: "Elected Official", candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",          year: 2026 },
+  { id: "e7",  endorser: "Sheila Jackson Lee Estate", endorserType: "Elected Official", candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",        year: 2026, notes: "Family endorsement" },
+  { id: "e8",  endorser: "James Talarico",          endorserType: "Elected Official", candidate: "James Talarico",   race: "U.S. Senate 2026 (D Primary)", year: 2026, notes: "Self (candidate)" },
+  { id: "e9",  endorser: "Harris County Democrats", endorserType: "Party Org",        candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)", year: 2026 },
 
   // ── 2024 Harris County Judge ─────────────────────────────────────────────
   { id: "e10", endorser: "Houston Chronicle",       endorserType: "Newspaper",        candidate: "Lina Hidalgo",     race: "Harris County Judge 2024",  year: 2024 },
@@ -64,11 +64,11 @@ const ENDORSEMENTS: Endorsement[] = [
   { id: "e30", endorser: "SEIU Texas",              endorserType: "Union",            candidate: "Lina Hidalgo",     race: "Harris County Judge 2022",  year: 2022 },
 
   // ── 2026 TX US Senate — additional endorsers ─────────────────────────────
-  { id: "e31", endorser: "Texas Democratic Party",   endorserType: "Party Org",       candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026 },
-  { id: "e32", endorser: "Texas NAACP",              endorserType: "Civic Org",       candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026 },
-  { id: "e33", endorser: "Planned Parenthood Action", endorserType: "Civic Org",      candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026 },
-  { id: "e34", endorser: "CWA Texas",                endorserType: "Union",           candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026, notes: "Communications Workers of America" },
-  { id: "e35", endorser: "Lizzie Fletcher",          endorserType: "Elected Official", candidate: "Jasmine Crockett", race: "U.S. Senate 2026",          year: 2026 },
+  { id: "e31", endorser: "Texas Democratic Party",   endorserType: "Party Org",       candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",          year: 2026 },
+  { id: "e32", endorser: "Texas NAACP",              endorserType: "Civic Org",       candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",          year: 2026 },
+  { id: "e33", endorser: "Planned Parenthood Action", endorserType: "Civic Org",      candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",          year: 2026 },
+  { id: "e34", endorser: "CWA Texas",                endorserType: "Union",           candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",          year: 2026, notes: "Communications Workers of America" },
+  { id: "e35", endorser: "Lizzie Fletcher",          endorserType: "Elected Official", candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",          year: 2026 },
 
   // ── 2026 TX US Senate — Ken Paxton (R nominee) ──────────────────────────
   { id: "e36", endorser: "Donald Trump",             endorserType: "Elected Official", candidate: "Ken Paxton",       race: "U.S. Senate 2026",          year: 2026, notes: "Trump backed Paxton over Cornyn in the R primary" },
