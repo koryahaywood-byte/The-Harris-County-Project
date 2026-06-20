@@ -853,6 +853,7 @@ export default function PoliticianProfile() {
   const [liveFinance, setLiveFinance] = useState<any | null>(null);
   const [financeLoading, setFinanceLoading] = useState(false);
   const [financeError, setFinanceError] = useState<string | null>(null);
+  const [financeHistory, setFinanceHistory] = useState<{ period: string; cash: number; raised: number; spent: number; loans: number; asOf: string }[]>([]);
 
   // Fire finance fetch on mount (needed for OVR + badges in hero)
   useEffect(() => {
@@ -868,6 +869,11 @@ export default function PoliticianProfile() {
       })
       .catch((e) => setFinanceError(e.message))
       .finally(() => setFinanceLoading(false));
+    // Also fetch history snapshots
+    fetch(`/api/finance/history?name=${encodeURIComponent(pol.name)}`)
+      .then((r) => r.json())
+      .then((d) => setFinanceHistory(d.history ?? []))
+      .catch(() => {/* history optional */});
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pol]);
 
@@ -1415,11 +1421,79 @@ export default function PoliticianProfile() {
                     </div>
                   )}
 
+                  {/* Finance history trend table */}
+                  {financeHistory.length > 1 && (
+                    <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[5px]">
+                      <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-5">
+                        <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "#9ca3af" }}>
+                          Finance History · {financeHistory.length} periods
+                        </p>
+                        {/* Simple bar chart: cash on hand over time */}
+                        {(() => {
+                          const maxCash = Math.max(...financeHistory.map(h => h.cash), 1);
+                          return (
+                            <div className="space-y-2 mb-4">
+                              {financeHistory.map(h => (
+                                <div key={h.period}>
+                                  <div className="flex items-center justify-between mb-0.5">
+                                    <span className="text-[10px] font-bold text-[var(--muted)]">{h.period}</span>
+                                    <span className="text-[10px] font-bold" style={{ color: partyColor }}>
+                                      {h.cash >= 1000000
+                                        ? `$${(h.cash / 1000000).toFixed(1)}M`
+                                        : h.cash >= 1000
+                                        ? `$${(h.cash / 1000).toFixed(0)}K`
+                                        : `$${h.cash}`}
+                                    </span>
+                                  </div>
+                                  <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
+                                    <div
+                                      className="h-full rounded-full transition-all duration-500"
+                                      style={{ width: `${Math.round((h.cash / maxCash) * 100)}%`, background: partyColor }}
+                                    />
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          );
+                        })()}
+                        {/* Period table */}
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-[10px]">
+                            <thead>
+                              <tr className="text-[var(--muted)] uppercase tracking-wider">
+                                <th className="text-left pb-2 font-semibold">Period</th>
+                                <th className="text-right pb-2 font-semibold">Cash</th>
+                                <th className="text-right pb-2 font-semibold">Raised</th>
+                                <th className="text-right pb-2 font-semibold">Spent</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {[...financeHistory].reverse().map(h => (
+                                <tr key={h.period} className="border-t border-black/5">
+                                  <td className="py-1.5 font-bold text-[var(--foreground)]">{h.period}</td>
+                                  <td className="py-1.5 text-right font-bold" style={{ color: partyColor }}>
+                                    {h.cash >= 1000000 ? `$${(h.cash / 1000000).toFixed(2)}M` : h.cash >= 1000 ? `$${(h.cash / 1000).toFixed(1)}K` : `$${h.cash}`}
+                                  </td>
+                                  <td className="py-1.5 text-right text-[var(--muted)]">
+                                    {h.raised > 0 ? (h.raised >= 1000000 ? `$${(h.raised / 1000000).toFixed(2)}M` : h.raised >= 1000 ? `$${(h.raised / 1000).toFixed(1)}K` : `$${h.raised}`) : "—"}
+                                  </td>
+                                  <td className="py-1.5 text-right text-[var(--muted)]">
+                                    {h.spent > 0 ? (h.spent >= 1000000 ? `$${(h.spent / 1000000).toFixed(2)}M` : h.spent >= 1000 ? `$${(h.spent / 1000).toFixed(1)}K` : `$${h.spent}`) : "—"}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="text-center pt-1 flex flex-col sm:flex-row items-center justify-center gap-3">
                     {finance.filingUrl && (
                       <a href={finance.filingUrl} target="_blank" rel="noopener noreferrer"
                         className="text-xs font-semibold text-[var(--accent)] hover:underline">
-                        View {finance.level === "federal" ? "FEC" : "TEC"} filing →
+                        View {finance.level === "federal" ? "FEC" : finance.level === "houston" ? "COH" : finance.level === "county" ? "Harris County" : "TEC"} filing →
                       </a>
                     )}
                     <Link href="/tools/where-is-the-dough"
