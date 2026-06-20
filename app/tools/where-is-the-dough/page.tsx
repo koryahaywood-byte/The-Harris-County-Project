@@ -500,8 +500,7 @@ export default function WhereIsTheDough() {
 
   // Base is the pipeline-merged static data. Layer FEC + TEC live on top (both are
   // clean JSON APIs with no PDF scraping — fast and reliable).
-  const BASE = FINANCE_DATA_MERGED.filter((d) => d.name !== "Ed Pollard");
-  const DATA: Candidate[] = BASE.map(d => {
+  const DATA: Candidate[] = FINANCE_DATA_MERGED.map(d => {
     if (d.level === "federal") {
       const live = fecData.find(l => l.name === d.name);
       if (!live || !(live.cash > 0)) return d;
