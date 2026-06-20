@@ -110,7 +110,11 @@ const CYCLES = [
   { key: "2024G", label: "2024 General" },
   { key: "2022G", label: "2022 General" },
   { key: "2020G", label: "2020 General" },
+  { key: "2018G", label: "2018 General" },
+  { key: "2016G", label: "2016 General" },
 ];
+
+type Jurisdiction = "county" | "houston";
 
 type SortCol = "prec" | "d" | "r" | "total" | "pct" | "margin" | "swing";
 type SortDir = "asc" | "desc";
@@ -124,8 +128,10 @@ export default function HeatCheckHistoryMap() {
 
   const [history, setHistory] = useState<PrecinctHistory | null>(null);
   const [geojson, setGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [houstonPrecs, setHoustonPrecs] = useState<Set<string> | null>(null);
 
   // Selectors
+  const [jurisdiction, setJurisdiction] = useState<Jurisdiction>("county");
   const [cycle, setCycle] = useState("2026P");
   const [showIframe, setShowIframe] = useState(false);
   const [race, setRace] = useState<string | null>(null);
@@ -147,7 +153,12 @@ export default function HeatCheckHistoryMap() {
     Promise.all([
       fetch("/data/precinct-history.json").then(r => r.json()),
       fetch("/data/harris-precincts.geojson").then(r => r.json()),
-    ]).then(([h, g]) => { setHistory(h); setGeojson(g); }).catch(console.error);
+      fetch("/data/houston-precincts.json").then(r => r.json()),
+    ]).then(([h, g, hp]) => {
+      setHistory(h);
+      setGeojson(g);
+      setHoustonPrecs(new Set<string>(hp));
+    }).catch(console.error);
   }, []);
 
   // Auto-select race when cycle changes
@@ -166,8 +177,24 @@ export default function HeatCheckHistoryMap() {
   }, [compareCycle, race, history]);
 
   // ── Computed lookups ───────────────────────────────────────────────────────
-  const lookup = useMemo(() => computeLookup(history, cycle, race), [history, cycle, race]);
-  const baseLookup = useMemo(() => computeLookup(history, compareCycle, compareRace), [history, compareCycle, compareRace]);
+  const filterPrec = useCallback((raw: string) => {
+    if (jurisdiction !== "houston" || !houstonPrecs) return true;
+    const norm = normPrec(raw);
+    return houstonPrecs.has(raw) || houstonPrecs.has(norm) || houstonPrecs.has(norm.padStart(4, "0"));
+  }, [jurisdiction, houstonPrecs]);
+
+  const rawLookup = useMemo(() => computeLookup(history, cycle, race), [history, cycle, race]);
+  const rawBaseLookup = useMemo(() => computeLookup(history, compareCycle, compareRace), [history, compareCycle, compareRace]);
+
+  const lookup = useMemo(() => {
+    if (jurisdiction !== "houston" || !houstonPrecs) return rawLookup;
+    return Object.fromEntries(Object.entries(rawLookup).filter(([p]) => filterPrec(p)));
+  }, [rawLookup, jurisdiction, houstonPrecs, filterPrec]);
+
+  const baseLookup = useMemo(() => {
+    if (jurisdiction !== "houston" || !houstonPrecs) return rawBaseLookup;
+    return Object.fromEntries(Object.entries(rawBaseLookup).filter(([p]) => filterPrec(p)));
+  }, [rawBaseLookup, jurisdiction, houstonPrecs, filterPrec]);
 
   const swingMap = useMemo<Record<string, number | null>>(() => {
     const result: Record<string, number | null> = {};
@@ -201,6 +228,10 @@ export default function HeatCheckHistoryMap() {
       const layer = L.geoJSON(geojson as GeoJSON.FeatureCollection, {
         style: (feature) => {
           const raw = (feature as GeoFeature).properties.PREC || "";
+          const inJurisdiction = jurisdiction !== "houston" || filterPrec(raw);
+          if (!inJurisdiction) {
+            return { fillColor: "#e5e7eb", fillOpacity: 0.12, color: "#d1d5db", weight: 0.3, opacity: 0.3 };
+          }
           if (viewMode === "swing") {
             const swing = lookupPrec(swingMap, raw);
             return {
@@ -220,6 +251,8 @@ export default function HeatCheckHistoryMap() {
         onEachFeature: (feature, lyr) => {
           const raw = (feature as GeoFeature).properties.PREC || "";
           lyr.on("mouseover", () => {
+            const inJurisdiction = jurisdiction !== "houston" || filterPrec(raw);
+            if (!inJurisdiction) return;
             (lyr as L.Path).setStyle({ weight: 2, color: "#fbbf24", opacity: 1 });
             const norm = normPrec(raw).padStart(4, "0");
             setHovered({
@@ -235,7 +268,7 @@ export default function HeatCheckHistoryMap() {
 
       geoLayerRef.current = layer;
     });
-  }, [geojson, lookup, baseLookup, swingMap, viewMode]); // eslint-disable-line
+  }, [geojson, lookup, baseLookup, swingMap, viewMode, jurisdiction, filterPrec]); // eslint-disable-line
 
   // ── Derived display values ─────────────────────────────────────────────────
   const cycleData = history?.cycles[cycle];
@@ -255,8 +288,8 @@ export default function HeatCheckHistoryMap() {
   const rSwingCount = useMemo(() => swings.filter(s => s < -0.02).length, [swings]);
   const avgSwing = useMemo(() => swings.length ? swings.reduce((a, b) => a + b, 0) / swings.length : 0, [swings]);
 
-  const curCycleLabel = CYCLES.find(c => c.key === cycle)?.label || cycle;
-  const cmpCycleLabel = CYCLES.find(c => c.key === compareCycle)?.label || compareCycle;
+  const curCycleLabel = CYCLES.find(c => c.key === cycle)?.label ?? cycle;
+  const cmpCycleLabel = CYCLES.find(c => c.key === compareCycle)?.label ?? compareCycle;
   const dName = precincts[0]?.dName?.split(" ").pop()?.toUpperCase() || "DEM";
   const rName = precincts[0]?.rName?.split(" ").pop()?.toUpperCase() || "REP";
 
@@ -301,7 +334,7 @@ export default function HeatCheckHistoryMap() {
             Heat Check
           </h1>
           <p className="text-[10px]" style={{ color: "#9ca3af" }}>
-            Harris County precinct-level election results · 2020 – 2026
+            {jurisdiction === "houston" ? "City of Houston precincts" : "Harris County"} · precinct-level election results · 2016 – 2026
           </p>
         </div>
       </div>
@@ -309,6 +342,24 @@ export default function HeatCheckHistoryMap() {
       {/* Controls row 1 */}
       <div className="flex flex-wrap items-center gap-3 px-5 py-3 border-b border-black/8 bg-white/60"
         style={{ backdropFilter: "blur(8px)" }}>
+
+        {/* Jurisdiction toggle */}
+        <div className="flex rounded-lg overflow-hidden border border-black/10">
+          {([
+            { key: "county" as Jurisdiction, label: "Harris Co." },
+            { key: "houston" as Jurisdiction, label: "City of Houston" },
+          ]).map(j => (
+            <button key={j.key} onClick={() => setJurisdiction(j.key)}
+              className="px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.12em] transition-colors"
+              style={{
+                background: jurisdiction === j.key ? "#1a3a5c" : "#fff",
+                color: jurisdiction === j.key ? "#fbbf24" : "#6b7280",
+                borderRight: "1px solid rgba(0,0,0,0.08)",
+              }}>
+              {j.label}
+            </button>
+          ))}
+        </div>
 
         {/* View mode toggle */}
         <div className="flex rounded-lg overflow-hidden border border-black/10">
@@ -595,10 +646,15 @@ export default function HeatCheckHistoryMap() {
 
       <p className="px-5 py-2 text-[10px] border-t border-black/8" style={{ color: "#9ca3af" }}>
         {viewMode === "swing"
-          ? `Swing = ${curCycleLabel} D% minus ${cmpCycleLabel} D% (top two-party share). Source: Texas Legislative Council TED API + Harris County Clerk.`
+          ? `Swing = ${curCycleLabel} D% minus ${cmpCycleLabel} D% (two-party share). Source: TLC TED API (2020–2024) · MEDSL (2018) · VEST/Harvard (2016) · HC Clerk (2026 primary).`
           : cycle === "2026P"
-            ? `Source: Harris County Clerk · 2026 Primary · D primary vs R primary ballot counts by precinct`
-            : `Source: Texas Legislative Council TED API · ${curCycleLabel} · Two-party share (D vs R)`}
+            ? `Source: Harris County Clerk · 2026 Primary · D primary vs R primary ballot counts by precinct.`
+            : cycle === "2016G"
+              ? `Source: VEST / Harvard Dataverse (doi:10.7910/DVN/NH5S2I) · ${curCycleLabel} · Two-party share (D vs R).`
+              : cycle === "2018G"
+                ? `Source: MIT Election Data + Science Lab (MEDSL) · ${curCycleLabel} · Two-party share (D vs R).`
+                : `Source: Texas Legislative Council TED API · ${curCycleLabel} · Two-party share (D vs R).`}
+        {jurisdiction === "houston" ? " City of Houston boundary: U.S. Census TIGER 2020." : ""}
       </p>
       </>)}
     </div>
