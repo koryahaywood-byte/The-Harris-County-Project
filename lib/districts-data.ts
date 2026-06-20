@@ -464,7 +464,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     description: "Westpark, Gulfton, Braeswood — highly diverse Southwest",
     seatHistory: [
       { name: "Mike Laster", years: "2010–2020", party: "D" },
-      { name: "Edward Pollard", years: "2020–present", party: "D" },
+      { name: "Ed Pollard", years: "2020–present", party: "D" },
     ],
   },
   "COH-District K": {

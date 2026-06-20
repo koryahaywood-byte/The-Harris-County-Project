@@ -232,8 +232,8 @@ export default function PACTracker() {
           {[
             { name: "DCCC (Democratic Congressional Campaign Committee)", side: "D", focus: "Competitive House races — TX-07, TX-38" },
             { name: "NRCC (National Republican Congressional Committee)", side: "R", focus: "Defending House seats — TX-02, TX-08, TX-22, TX-36" },
-            { name: "DSCC (Democratic Senatorial Campaign Committee)", side: "D", focus: "TX Senate race — Crockett vs Paxton" },
-            { name: "NRSC (National Republican Senatorial Committee)", side: "R", focus: "TX Senate race — defending Cornyn's seat" },
+            { name: "DSCC (Democratic Senatorial Campaign Committee)", side: "D", focus: "TX Senate race — Talarico vs Paxton" },
+            { name: "NRSC (National Republican Senatorial Committee)", side: "R", focus: "TX Senate race — Paxton vs Talarico" },
             { name: "Club for Growth Action", side: "R", focus: "Primary spending, conservative challengers" },
             { name: "Senate Majority PAC", side: "D", focus: "Super PAC — Dem Senate majority play" },
             { name: "Congressional Leadership Fund", side: "R", focus: "Super PAC — House majority defense" },

@@ -236,7 +236,7 @@ const FEDERAL_FEEDS = [
 // November 2026 Harris County ballot — lean ratings sync'd with matchups-2026.ts
 const NOVEMBER_2026_BALLOT: BallotRace[] = [
   { office: "Harris County Judge",     incumbent: "Plummer (D) vs Sanchez (R) — open", party: "D", competitive: "Lean D",  href: "/tools/ballot-2026" },
-  { office: "U.S. Senate (TX)",        incumbent: "Crockett (D) vs Paxton (R)",         party: "D", competitive: "Lean D",  href: "/tools/ballot-2026" },
+  { office: "U.S. Senate (TX)",        incumbent: "Talarico (D) vs Paxton (R)",         party: "D", competitive: "Lean D",  href: "/tools/ballot-2026" },
   { office: "U.S. House TX-07",        incumbent: "Fletcher (D) vs Hale (R)",           party: "D", competitive: "Toss-up", href: "/tools/ballot-2026" },
   { office: "U.S. House TX-09",        incumbent: "Open — Gutierrez (D) vs Mealer (R)", party: "D", competitive: "Toss-up", href: "/tools/ballot-2026" },
   { office: "U.S. House TX-38",        incumbent: "McDonough (D) vs Bonck (R) — open",  party: "R", competitive: "Lean R",  href: "/tools/ballot-2026" },

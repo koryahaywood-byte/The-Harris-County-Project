@@ -10,22 +10,22 @@ const COH_RESULTS = "https://cohweb.houstontx.gov/CampaignFinanceWeb/CFRwebsiteS
 
 const COH_CANDIDATES = [
   { last: "Whitmire",      first: "John",      name: "John Whitmire",        office: "Mayor",                     party: "D" as const, incumbent: true  },
-  { last: "Pollard",       first: "Edward",    name: "Edward Pollard",       office: "City Council At-Large 2",   party: "D" as const, incumbent: true  },
+  { last: "Pollard",       first: "Edward",    name: "Ed Pollard",           office: "City Council District J",   party: "D" as const, incumbent: true  },
   { last: "Hollins",       first: "Chris",     name: "Chris Hollins",        office: "City Controller",           party: "D" as const, incumbent: true  },
   { last: "Castex-Tatum",  first: "Martha",    name: "Martha Castex-Tatum",  office: "City Council District K",   party: "D" as const, incumbent: true  },
   { last: "Thomas",        first: "Tiffany",   name: "Tiffany Thomas",       office: "City Council District F",   party: "D" as const, incumbent: true  },
   { last: "Castillo",      first: "Mario",     name: "Mario Castillo",       office: "City Council District H",   party: "D" as const, incumbent: true  },
   { last: "Ramirez",       first: "Julian",    name: "Julian Ramirez",       office: "City Council At-Large 1",   party: "R" as const, incumbent: true  },
+  { last: "Davis",         first: "Willie",    name: "Willie Davis",         office: "City Council At-Large 2",   party: "R" as const, incumbent: true  },
   { last: "Carter",        first: "Twila",     name: "Twila Carter",         office: "City Council At-Large 3",   party: "R" as const, incumbent: true  },
   { last: "Salinas",       first: "Alejandra", name: "Alejandra Salinas",    office: "City Council At-Large 4",   party: "D" as const, incumbent: true  },
   { last: "Alcorn",        first: "Sallie",    name: "Sallie Alcorn",        office: "City Council At-Large 5",   party: "D" as const, incumbent: true  },
   { last: "Jackson",       first: "Tarsha",    name: "Tarsha Jackson",       office: "City Council District B",   party: "D" as const, incumbent: true  },
   { last: "Evans-Shabazz", first: "Carolyn",   name: "Carolyn Evans-Shabazz",office: "City Council District D",   party: "D" as const, incumbent: true  },
   { last: "Flickinger",    first: "Fred",      name: "Fred Flickinger",      office: "City Council District E",   party: "R" as const, incumbent: true  },
-  { last: "Panzarella",    first: "Joe",       name: "Joe Panzarella",       office: "City Council District C",   party: "R" as const, incumbent: true  },
+  { last: "Panzarella",    first: "Joe",       name: "Joe Panzarella",       office: "City Council District C",   party: "D" as const, incumbent: true  },
   { last: "Huffman",       first: "Mary Nan",  name: "Mary Nan Huffman",     office: "City Council District G",   party: "R" as const, incumbent: true  },
   { last: "Martinez",      first: "Joaquin",   name: "Joaquin Martinez",     office: "City Council District I",   party: "D" as const, incumbent: true  },
-  { last: "Pollard",       first: "Edward",    name: "Edward Pollard",       office: "City Council At-Large 2",   party: "D" as const, incumbent: true  },
   { last: "Peck",          first: "Amy",       name: "Amy Peck",             office: "City Council District A",   party: "R" as const, incumbent: true  },
 ];
 

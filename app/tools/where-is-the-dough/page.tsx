@@ -500,7 +500,7 @@ export default function WhereIsTheDough() {
 
   // Base is the pipeline-merged static data. Layer FEC + TEC live on top (both are
   // clean JSON APIs with no PDF scraping — fast and reliable).
-  const BASE = FINANCE_DATA_MERGED.filter((d) => d.name !== "Edward Pollard");
+  const BASE = FINANCE_DATA_MERGED.filter((d) => d.name !== "Ed Pollard");
   const DATA: Candidate[] = BASE.map(d => {
     if (d.level === "federal") {
       const live = fecData.find(l => l.name === d.name);
@@ -680,7 +680,7 @@ export default function WhereIsTheDough() {
                 stat: cornyn ? fmt(cornyn.spent ?? 0) : "—",
                 statLabel: "Cornyn · spent, and lost",
                 headline: "Cornyn spent $15.8M defending his seat — and lost the runoff anyway.",
-                body: `Four-term Senator John Cornyn burned ${cornyn ? fmt(cornyn.spent ?? 0) : "—"} and still lost the Republican nomination to Ken Paxton in May. November is now an open brawl: Jasmine Crockett (D) vs Ken Paxton (R) — the first Texas Senate race in 24 years without an incumbent on the ballot.`,
+                body: `Four-term Senator John Cornyn burned ${cornyn ? fmt(cornyn.spent ?? 0) : "—"} and still lost the Republican nomination to Ken Paxton in May. November is now an open brawl: James Talarico (D) vs Ken Paxton (R) — the first Texas Senate race in 24 years without an incumbent on the ballot.`,
               },
               {
                 eyebrow: "City Hall",
