@@ -108,10 +108,19 @@ const SWING_LEGEND = [
 const CYCLES = [
   { key: "2026P", label: "2026 Primary" },
   { key: "2024G", label: "2024 General" },
+  { key: "2024P", label: "2024 Primary" },
   { key: "2022G", label: "2022 General" },
+  { key: "2022P", label: "2022 Primary" },
   { key: "2020G", label: "2020 General" },
+  { key: "2020P", label: "2020 Primary" },
   { key: "2018G", label: "2018 General" },
+  { key: "2018P", label: "2018 Primary" },
   { key: "2016G", label: "2016 General" },
+  { key: "2016P", label: "2016 Primary" },
+  { key: "2014G", label: "2014 General" },
+  { key: "2014P", label: "2014 Primary" },
+  { key: "2012G", label: "2012 General" },
+  { key: "2012P", label: "2012 Primary" },
 ];
 
 type Jurisdiction = "county" | "houston";
@@ -334,7 +343,7 @@ export default function HeatCheckHistoryMap() {
             Heat Check
           </h1>
           <p className="text-[10px]" style={{ color: "#9ca3af" }}>
-            {jurisdiction === "houston" ? "City of Houston precincts" : "Harris County"} · precinct-level election results · 2016 – 2026
+            {jurisdiction === "houston" ? "City of Houston precincts" : "Harris County"} · precinct-level election results · 2012 – 2026
           </p>
         </div>
       </div>
@@ -641,14 +650,16 @@ export default function HeatCheckHistoryMap() {
 
       <p className="px-5 py-2 text-[10px] border-t border-black/8" style={{ color: "#9ca3af" }}>
         {viewMode === "swing"
-          ? `Swing = ${curCycleLabel} D% minus ${cmpCycleLabel} D% (two-party share). Source: TLC TED API (2020–2024) · MEDSL (2018) · VEST/Harvard (2016) · HC Clerk (2026 primary).`
+          ? `Swing = ${curCycleLabel} D% minus ${cmpCycleLabel} D% (two-party share). Source: TLC TED API (2012–2024) · MEDSL (2018G) · VEST/Harvard (2016G) · HC Clerk (2026 primary).`
           : cycle === "2026P"
             ? `Source: Harris County Clerk · 2026 Primary · D primary vs R primary ballot counts by precinct.`
             : cycle === "2016G"
               ? `Source: VEST / Harvard Dataverse (doi:10.7910/DVN/NH5S2I) · ${curCycleLabel} · Two-party share (D vs R).`
               : cycle === "2018G"
                 ? `Source: MIT Election Data + Science Lab (MEDSL) · ${curCycleLabel} · Two-party share (D vs R).`
-                : `Source: Texas Legislative Council TED API · ${curCycleLabel} · Two-party share (D vs R).`}
+                : cycle.endsWith("P")
+                  ? `Source: Texas Legislative Council TED API · ${curCycleLabel} · D primary vs R primary ballot counts by precinct.`
+                  : `Source: Texas Legislative Council TED API · ${curCycleLabel} · Two-party share (D vs R).`}
         {jurisdiction === "houston" ? " City of Houston boundary: U.S. Census TIGER 2020." : ""}
       </p>
       </>)}
