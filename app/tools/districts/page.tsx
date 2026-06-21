@@ -356,18 +356,29 @@ function WinNumber({ dKey }: { dKey: string }) {
         </div>
 
         {/* 2026 primary edge signal */}
-        {(data.primary2026DemBallots + data.primary2026RepBallots) > 0 && (
-          <div className="pt-3 border-t border-gray-100">
-            <p className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: "#9ca3af" }}>March 2026 Primary Edge</p>
-            <p className="text-[11px] font-semibold" style={{ color: primEdgePos ? "#2563a8" : "#dc2626" }}>
-              {primEdgePos ? "+" : ""}{fmt(data.primary2026DemEdge)} Dem ballot edge
-            </p>
-            <div className="flex justify-between text-[10px] mt-0.5" style={{ color: "#9ca3af" }}>
-              <span>D {fmt(data.primary2026DemBallots)}</span>
-              <span>R {fmt(data.primary2026RepBallots)}</span>
+        {(data.primary2026DemBallots + data.primary2026RepBallots) > 0 && (() => {
+          const tot = data.primary2026DemBallots + data.primary2026RepBallots;
+          const dPct = Math.round(data.primary2026DemBallots / tot * 100);
+          return (
+            <div className="pt-3 border-t border-gray-100">
+              <p className="text-[9px] font-bold uppercase tracking-wider mb-1.5" style={{ color: "#9ca3af" }}>March 2026 Primary Ballot Split</p>
+              {/* D/R stacked bar */}
+              <div className="h-3 rounded-full overflow-hidden flex mb-1" style={{ background: "#e5e7eb" }}>
+                <div style={{ width: `${dPct}%`, background: "#2563a8" }} className="rounded-l-full" />
+                <div style={{ width: `${100 - dPct}%`, background: "#dc2626" }} className="rounded-r-full" />
+              </div>
+              <div className="flex justify-between text-[9px] font-semibold tabular-nums">
+                <span style={{ color: "#2563a8" }}>D {dPct}% · {fmt(data.primary2026DemBallots)}</span>
+                <span style={{ color: "#dc2626" }}>R {100 - dPct}% · {fmt(data.primary2026RepBallots)}</span>
+              </div>
+              {Math.abs(data.primary2026DemEdge) > 0 && (
+                <p className="text-[9px] mt-1" style={{ color: primEdgePos ? "#2563a8" : "#dc2626" }}>
+                  {primEdgePos ? "+" : ""}{fmt(Math.abs(data.primary2026DemEdge))} {primEdgePos ? "Dem" : "Rep"} ballot advantage
+                </p>
+              )}
             </div>
-          </div>
-        )}
+          );
+        })()}
       </div>
     </div>
   );
@@ -410,6 +421,12 @@ function VoterProfile({ type, district, agg, cvap }: {
   const demPct = agg.total ? Math.round((agg.dem / agg.total) * 100) : 0;
   const turnoutRate = entry?.total ? Math.round((agg.total / entry.total) * 1000) / 10 : null;
 
+  // Find majority group for the callout headline
+  const topGroup = entry ? RACE_LABELS.reduce<{ label: string; pct: number; color: string } | null>((top, [k, label, color]) => {
+    const pct = entry.total ? Math.round(((entry[k] ?? 0) / entry.total) * 100) : 0;
+    return (!top || pct > top.pct) ? { label, pct, color } : top;
+  }, null) : null;
+
   return (
     <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] mt-4">
       <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-5">
@@ -417,67 +434,60 @@ function VoterProfile({ type, district, agg, cvap }: {
           Who Actually Votes Here
         </p>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div>
-            <p className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: "#9ca3af" }}>Party of 2026 primary voters</p>
-            <p className="text-lg font-bold" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>
-              {demPct}% D · {100 - demPct}% R
-            </p>
-            <div className="h-2 rounded-full overflow-hidden mt-1.5" style={{ background: "#fecaca" }}>
-              <div className="h-full" style={{ width: `${demPct}%`, background: "#2563a8" }} />
-            </div>
-            <p className="text-[9px] mt-1" style={{ color: "#9ca3af" }}>{agg.total.toLocaleString()} ballots cast</p>
-          </div>
-
-          <div>
-            <p className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: "#9ca3af" }}>Primary turnout rate</p>
-            {turnoutRate !== null ? (
-              <>
-                <p className="text-lg font-bold" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>{turnoutRate}%</p>
-                <p className="text-[9px] mt-1 leading-relaxed" style={{ color: "#9ca3af" }}>
-                  of {entry!.total.toLocaleString()} citizens of voting age (Census CVAP 2019–23)
-                </p>
-              </>
-            ) : (
-              <p className="text-[11px] italic mt-1" style={{ color: "#9ca3af" }}>
-                CVAP published for Congressional, State Senate &amp; House districts only
+        {/* Race/ethnicity — lead section */}
+        {entry ? (
+          <div className="mb-5">
+            {topGroup && (
+              <p className="text-[13px] font-bold mb-3 leading-snug" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>
+                <span style={{ color: topGroup.color }}>{topGroup.pct}% {topGroup.label}</span>
+                {" "}<span style={{ color: "#9ca3af", fontWeight: 400, fontSize: "11px" }}>citizen voting-age population</span>
               </p>
             )}
-          </div>
-
-          <div className="col-span-2">
-            <p className="text-[9px] font-bold uppercase tracking-wider mb-1.5" style={{ color: "#9ca3af" }}>
-              Citizen voting-age population by race/ethnicity
-            </p>
-            {entry ? (
-              <div className="flex flex-col gap-1.5">
-                {RACE_LABELS.map(([k, label, color]) => {
-                  const v = entry[k] ?? 0;
-                  const pct = entry.total ? Math.round((v / entry.total) * 100) : 0;
-                  return (
-                    <div key={k} className="flex items-center gap-2">
-                      <span className="text-[10px] w-24 shrink-0" style={{ color: "#6b7280" }}>{label}</span>
-                      <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: "#f3f4f6" }}>
-                        <div className="h-full rounded-full" style={{ width: `${pct}%`, background: color }} />
-                      </div>
-                      <span className="text-[10px] font-bold w-8 text-right" style={{ color: "#1a3a5c" }}>{pct}%</span>
+            <div className="flex flex-col gap-2">
+              {RACE_LABELS.map(([k, label, color]) => {
+                const v = entry[k] ?? 0;
+                const pct = entry.total ? Math.round((v / entry.total) * 100) : 0;
+                return (
+                  <div key={k} className="flex items-center gap-2">
+                    <span className="text-[11px] w-28 shrink-0 font-medium" style={{ color: "#374151" }}>{label}</span>
+                    <div className="flex-1 h-3 rounded-full overflow-hidden" style={{ background: "#f3f4f6" }}>
+                      <div className="h-full rounded-full" style={{ width: `${pct}%`, background: color }} />
                     </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <p className="text-[11px] italic" style={{ color: "#9ca3af" }}>
-                Not published at this district level — Census releases CVAP for Congressional, State Senate and State House geographies.
+                    <span className="text-[11px] font-bold w-9 text-right" style={{ color }}>{pct}%</span>
+                    <span className="text-[9px] w-16 text-right tabular-nums" style={{ color: "#9ca3af" }}>{v.toLocaleString()}</span>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="text-[9px] mt-2" style={{ color: "#b0b8c4" }}>Census CVAP 2019–23 · {entry.total.toLocaleString()} citizens of voting age total</p>
+          </div>
+        ) : (
+          <p className="text-[11px] italic mb-4" style={{ color: "#9ca3af" }}>
+            CVAP demographics available for CD, SD, and HD districts only.
+          </p>
+        )}
+
+        <div className="pt-4 border-t" style={{ borderColor: "#f3f4f6" }}>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: "#9ca3af" }}>2026 Primary</p>
+              <p className="text-base font-bold" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>
+                {demPct}% D · {100 - demPct}% R
               </p>
+              <div className="h-2 rounded-full overflow-hidden mt-1.5" style={{ background: "#fecaca" }}>
+                <div className="h-full" style={{ width: `${demPct}%`, background: "#2563a8" }} />
+              </div>
+              <p className="text-[9px] mt-1" style={{ color: "#9ca3af" }}>{agg.total.toLocaleString()} ballots</p>
+            </div>
+            {turnoutRate !== null && (
+              <div>
+                <p className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: "#9ca3af" }}>Primary turnout</p>
+                <p className="text-base font-bold" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>{turnoutRate}%</p>
+                <p className="text-[9px] mt-1" style={{ color: "#9ca3af" }}>of eligible citizens voted</p>
+              </div>
             )}
           </div>
         </div>
-
-        <p className="text-[10px] leading-relaxed mt-4 pt-3" style={{ color: "#9ca3af", borderTop: "1px solid #f3f4f6" }}>
-          Age ranges, turnout across the last 3 elections, and primary-vs-general participation require the Harris County
-          voter file with vote history (harrisvotes.com → Voter Registration Data Request). Racial composition above is the
-          citizen voting-age population — the closest public proxy for the electorate; per-voter race is not in public data.
-        </p>
       </div>
     </div>
   );
@@ -849,12 +859,10 @@ export default function DistrictsPage() {
               </div>
             )}
 
-            {/* Data sources & needs */}
+            {/* Data sources note */}
             <div className="rounded-xl px-4 py-3 text-[10px] leading-relaxed" style={{ background: "rgba(26,58,92,0.05)", color: "#6b7280" }}>
-              <strong style={{ color: "#1a3a5c" }}>Data status:</strong> Turnout layer is real (March 2026 primary, Harris County Clerk).
-              District assignment is real (TIGER + county GIS boundaries). Two layers still need inputs:
-              <span className="block mt-1">① <strong>Population &amp; CVAP demographics</strong> — free Census API key (api.census.gov/data/key_signup.html).</span>
-              <span className="block">② <strong>Turnout by race/age/gender</strong> — Harris County voter registration + voter history file from the Tax Office/Elections (harrisvotes.com → Voter Registration Data Request; CSV with precinct, demographics, and per-election vote history).</span>
+              Racial composition is Census CVAP 2019–23 (CD/SD/HD only). Turnout is March 2026 primary, Harris County Clerk.
+              Turnout by race/age/gender requires the Harris County voter file (harrisvotes.com → Voter Registration Data Request).
             </div>
 
             {/* See also */}

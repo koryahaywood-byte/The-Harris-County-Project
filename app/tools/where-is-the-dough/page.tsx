@@ -595,6 +595,22 @@ export default function WhereIsTheDough() {
               </div>
             ))}
           </div>
+          {/* D vs R cash ratio bar */}
+          {totalPool > 0 && (() => {
+            const dPct = Math.round(demTotal / totalPool * 100);
+            return (
+              <div className="mt-4 max-w-sm">
+                <div className="h-2 rounded-full overflow-hidden flex">
+                  <div style={{ width: `${dPct}%`, background: "#93c5fd" }} />
+                  <div style={{ width: `${100 - dPct}%`, background: "#fca5a5" }} />
+                </div>
+                <div className="flex justify-between text-[9px] font-semibold mt-1 text-white/50">
+                  <span>Dems {dPct}% of total cash</span>
+                  <span>Reps {100 - dPct}%</span>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </div>
 
