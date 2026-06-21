@@ -112,7 +112,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Teneshia Hudspeth",     office: "County Clerk",                   level: "county",   party: "D", cash: 17147,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Teneshia Hudspeth") },
   { name: "Sean Teare",            office: "District Attorney",              level: "county",   party: "D", cash: 14291,     asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Sean Teare") },
   { name: "Annette Ramirez",       office: "Tax Assessor-Collector",         level: "county",   party: "D", cash: 5775,      asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Annette Ramirez") },
-  { name: "Carla Wyatt",           office: "County Treasurer",               level: "county",   party: "D", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: TEC("Carla Wyatt") },
+  { name: "Carla Wyatt",           office: "County Treasurer",               level: "county",   party: "D", cash: 2128,      asOf: "Jul 2025", incumbent: true,  filingUrl: TEC("Carla Wyatt") },
   // Constables — file at ethics.harrisvotes.com
   { name: "Alan Rosen",            office: "Constable PCT 1",                level: "county",   party: "D", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
   { name: "Jerry Garcia",          office: "Constable PCT 2",                level: "county",   party: "D", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
