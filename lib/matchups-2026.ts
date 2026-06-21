@@ -525,21 +525,23 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HC-County-Attorney": {
     office: "County Attorney",
-    status: "partial",
+    status: "set",
     lean: "likely-d",
     sides: [
-      { name: "Abbie Kamin", party: "D", incumbent: false, gender: "F", note: "D nominee — open seat" },
+      { name: "Abbie Kamin",              party: "D", incumbent: false, gender: "F", note: "Won D primary over Audrie Lawton-Evans; open seat" },
+      { name: "Jacqueline Lucci Smith",   party: "R", incumbent: false, gender: "F", note: "Narrowly lost to Menefee in 2024; won R primary unopposed" },
     ],
-    detail: "Open seat race for County Attorney. Abbie Kamin won the Democratic primary.",
+    detail: "Open seat — Christian Menefee vacated to run for CD-18 (won). Abbie Kamin, a former Houston City Council member, won the Democratic primary. Jacqueline Lucci Smith, who narrowly lost to Menefee in 2024, is the R nominee. All-women matchup.",
   },
   "HC-District-Clerk": {
     office: "District Clerk",
-    status: "partial",
+    status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Marilyn Burgess", party: "D", incumbent: true, gender: "F", note: "Incumbent" },
+      { name: "Jose Maldonado",  party: "D", incumbent: false, gender: "M", note: "Won May D primary runoff over Darrell William Jordan" },
+      { name: "Chris Daniel",    party: "R", incumbent: false, gender: "M", note: "Won R primary" },
     ],
-    detail: "Marilyn Burgess has served as District Clerk since 2010. R opponent status TBD — safe D district regardless.",
+    detail: "Open seat — Marilyn Burgess announced she would not seek reelection after commissioners denied her raise request. Jose Maldonado won the May Democratic runoff. Chris Daniel is the R nominee.",
   },
   "HC-County-Clerk": {
     office: "County Clerk",

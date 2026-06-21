@@ -120,4 +120,6 @@ export const WOMEN_IN_POLITICS = new Set([
   "Darlene Breaux",
   "Liz Ramos",
   "Desiree Klaus",
+  "Jacqueline Lucci Smith",
+  "Alexandria Butler",
 ]);
