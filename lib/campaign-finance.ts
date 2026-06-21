@@ -27,7 +27,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Lizzie Fletcher",       office: "U.S. Rep CD-07",                 level: "federal",  party: "D", cash: 1750893,   asOf: "Apr 2026", incumbent: true,  filingUrl: FEC("H8TX07139") },
   { name: "Shaun Finnie",          office: "U.S. Rep CD-02 (D nominee)",     level: "federal",  party: "D", cash: 1543080,   asOf: "Apr 2026", incumbent: false, filingUrl: FEC("H4TX02177") },
   { name: "Al Green",              office: "U.S. Rep CD-9 (ran for CD-18 in 2026 D runoff; lost to Menefee)", level: "federal",  party: "D", cash: 264570,    asOf: "Apr 2026", incumbent: true,  filingUrl: FEC("H4TX09090") },
-  { name: "Christian Menefee",     office: "U.S. Rep CD-18 (D nominee 2026)", level: "federal",  party: "D", cash: 255858,    asOf: "Apr 2026", incumbent: false, filingUrl: FEC("H4TX18126") },
+  { name: "Christian Menefee",     office: "U.S. Rep CD-18",                 level: "federal",  party: "D", cash: 255858,    asOf: "Apr 2026", incumbent: true,  filingUrl: FEC("H6TX18232") },
   { name: "Sylvia Garcia",         office: "U.S. Rep CD-29",                 level: "federal",  party: "D", cash: 175662,    asOf: "Apr 2026", incumbent: true,  filingUrl: FEC("H8TX29049") },
   // State
   { name: "Greg Abbott",           office: "Governor",                        level: "state",    party: "R", cash: 105700000, raised: 22700000, asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Greg Abbott") },
@@ -79,8 +79,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Bo French",             office: "Texas Railroad Commissioner (R nominee)", level: "state", party: "R", cash: 0,  asOf: "pending",  incumbent: false, filingUrl: TEC("Bo French") },
   // Federal 2026 nominees not yet in FEC system
   { name: "Dan Crenshaw",          office: "U.S. Rep CD-02 (lost R primary to Steve Toth, Mar 2026)", level: "federal", party: "R", cash: 843500, asOf: "Q4 2025", incumbent: true, filingUrl: FEC("H8TX02224") },
-  { name: "Steve Toth",            office: "U.S. Rep CD-02 (R nominee)",     level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: false },
-  { name: "Shaun Finnie",          office: "U.S. Rep CD-02 (D nominee)",     level: "federal",  party: "D", cash: 0,         asOf: "pending",  incumbent: false },
+  { name: "Steve Toth",            office: "U.S. Rep CD-02 (R nominee)",     level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: false, filingUrl: FEC("H6TX08175") },
   { name: "Morgan Luttrell",      office: "U.S. Rep CD-08 (not seeking reelection — open seat 2026)", level: "federal", party: "R", cash: 397000, asOf: "Q1 2026", incumbent: true, filingUrl: FEC("H2TX08226") },
   { name: "Jessica Steinmann",    office: "U.S. Rep CD-08 (R nominee)",     level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: false },
   { name: "Laura Jones",          office: "U.S. Rep CD-08 (D nominee)",     level: "federal",  party: "D", cash: 0,         asOf: "pending",  incumbent: false },
@@ -90,11 +89,12 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Brian Babin",          office: "U.S. Rep CD-36",                 level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: FEC("H4TX36110") },
   { name: "Rhonda Hart",          office: "U.S. Rep CD-36 (D nominee)",     level: "federal",  party: "D", cash: 0,         asOf: "pending",  incumbent: false },
   { name: "Ronald Dwayne Whitfield",office: "U.S. Rep CD-18 (R nominee)",  level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: false },
-  { name: "Alexander Hale",        office: "U.S. Rep CD-07 (R nominee)",     level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: false },
+  { name: "Alexander Hale",        office: "U.S. Rep CD-07 (R nominee)",     level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: false, filingUrl: FEC("H6TX07151") },
   { name: "Leticia Gutierrez",     office: "U.S. Rep CD-09 (D nominee)",     level: "federal",  party: "D", cash: 2484,  raised: 5999,  spent: 3515,  asOf: "Apr 2026", incumbent: false },
   { name: "Alex Mealer",           office: "U.S. Rep CD-09 (R nominee)",     level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: false },
   { name: "Melissa McDonough",     office: "U.S. Rep CD-38 (D nominee)",     level: "federal",  party: "D", cash: 37302, raised: 47897, spent: 33294, asOf: "Apr 2026", incumbent: false },
-  { name: "Jon Bonck",             office: "U.S. Rep CD-38 (R nominee)",     level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: false },
+  { name: "Jon Bonck",             office: "U.S. Rep CD-38 (R nominee)",     level: "federal",  party: "R", cash: 846000,    asOf: "Q1 2026",  incumbent: false, filingUrl: FEC("C00904151") },
+  { name: "Martha Fierro",         office: "U.S. Rep CD-29 (R nominee)",     level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: false },
   // County
   { name: "Rodney Ellis",          office: "Commissioner PCT 1",             level: "county",   party: "D", cash: 7783681,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Rodney Ellis") },
   { name: "Lesley Briones",        office: "Commissioner PCT 4",             level: "county",   party: "D", cash: 4058292,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Lesley Briones") },
