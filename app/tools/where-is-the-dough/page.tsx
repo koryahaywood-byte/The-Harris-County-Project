@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { FINANCE_DATA_MERGED, fmt, type CandidateFinance } from "@/lib/campaign-finance";
 import ShareButton from "@/components/ShareButton";
 import { MoneyTrailView } from "@/components/MoneyTrail";
@@ -912,11 +913,11 @@ export default function WhereIsTheDough() {
               { href: "/my-officials",       label: "Who represents me →" },
               { href: "/tools/ballot-2026",  label: "2026 ballot →" },
             ].map(l => (
-              <a key={l.href} href={l.href}
+              <Link key={l.href} href={l.href}
                 className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#1a3a5c] hover:text-white hover:border-[#1a3a5c]"
                 style={{ color: "#374151", borderColor: "#e5e7eb", background: "#fff" }}>
                 {l.label}
-              </a>
+              </Link>
             ))}
           </div>
         </div>
