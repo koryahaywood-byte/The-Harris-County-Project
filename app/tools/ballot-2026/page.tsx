@@ -310,7 +310,8 @@ export default function Ballot2026() {
 
   const stats = useMemo(() => {
     const contested = rows.filter(r => r.dSide && r.rSide).length;
-    const tossups = rows.filter(r => r.lean && COMPETITIVE_LEANS.includes(r.lean)).length;
+    const tossups = rows.filter(r => r.lean === "toss-up").length;
+    const competitive = rows.filter(r => r.lean && COMPETITIVE_LEANS.includes(r.lean)).length;
     let dMoney = 0, rMoney = 0;
     const womenSeen = new Set<string>();
     for (const r of rows) {
@@ -318,7 +319,7 @@ export default function Ballot2026() {
       if (r.rSide) { rMoney += financeFor(r.rSide.name)?.cash ?? 0; if (r.rSide.gender === "F") womenSeen.add(r.rSide.name); }
     }
     const moneyTotal = dMoney + rMoney;
-    return { contested, tossups, womenCount: womenSeen.size, dMoney, rMoney, dMoneyPct: moneyTotal ? Math.round(dMoney / moneyTotal * 100) : 50 };
+    return { contested, tossups, competitive, womenCount: womenSeen.size, dMoney, rMoney, dMoneyPct: moneyTotal ? Math.round(dMoney / moneyTotal * 100) : 50 };
   }, [rows]);
 
   return (
@@ -335,7 +336,7 @@ export default function Ballot2026() {
             The 2026 Ballot
           </h1>
           <p className="text-white/50 text-sm mb-6">
-            {stats.contested} contested races · {stats.tossups} toss-ups · {stats.womenCount} women candidates · Harris County, Texas
+            {stats.contested} full matchups · {stats.tossups} toss-ups · {stats.competitive} competitive · {stats.womenCount} women candidates · Harris County
           </p>
 
           {/* Money summary */}
