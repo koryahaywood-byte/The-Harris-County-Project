@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { MATCHUPS_2026, type RaceLean } from "@/lib/matchups-2026";
 import { FINANCE_DATA_MERGED, fmt, type CandidateFinance } from "@/lib/campaign-finance";
+import type { CvapData } from "@/app/tools/districts/page";
 
 type RaceGroup = "statewide" | "top" | "congress" | "statelegis" | "countywide" | "local";
 
@@ -248,14 +249,38 @@ function MoneyBar({ dName, rName }: { dName: string | null; rName: string | null
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────────
+const RACE_COLORS: Record<string, string> = {
+  black: "#7c3aed", hispanic: "#ea580c", white: "#2563a8", asian: "#0891b2",
+};
+
+function cvapTop(cvap: CvapData | null, key: string): { label: string; pct: number; color: string } | null {
+  if (!cvap) return null;
+  const [prefix, num] = [key.split("-")[0].toLowerCase(), key.split("-").slice(1).join("-")];
+  const bucket = prefix === "hd" ? cvap.cvap.hd : prefix === "sd" ? cvap.cvap.sd : prefix === "cd" ? cvap.cvap.cd : null;
+  const entry = bucket?.[num];
+  if (!entry?.total) return null;
+  const groups = [
+    { k: "black", label: "Black" }, { k: "hispanic", label: "Hispanic" },
+    { k: "white", label: "White" }, { k: "asian", label: "Asian" },
+  ] as const;
+  let top: { label: string; pct: number; color: string } | null = null;
+  for (const { k, label } of groups) {
+    const pct = Math.round(((entry[k] ?? 0) / entry.total) * 100);
+    if (!top || pct > top.pct) top = { label, pct, color: RACE_COLORS[k] };
+  }
+  return top;
+}
+
 export default function Ballot2026() {
   const [districtRaces, setDistrictRaces] = useState<DistrictRaces | null>(null);
+  const [cvap, setCvap] = useState<CvapData | null>(null);
   const [filterGroup, setFilterGroup] = useState<RaceGroup | "all">("all");
   const [onlyCompetitive, setOnlyCompetitive] = useState(false);
   const [onlyContested, setOnlyContested] = useState(false);
 
   useEffect(() => {
     fetch("/data/district-races.json").then(r => r.json()).then(setDistrictRaces).catch(() => {});
+    fetch("/data/cvap-districts.json").then(r => r.json()).then(setCvap).catch(() => {});
   }, []);
 
   const resultsMap = useMemo(() => districtRaces ? buildResultsMap(districtRaces) : {}, [districtRaces]);
@@ -427,6 +452,19 @@ export default function Ballot2026() {
 
                         {/* Money bar — only when both sides have data */}
                         {hasMoneyBar && <MoneyBar dName={r.dSide?.name ?? null} rName={r.rSide?.name ?? null} />}
+
+                        {/* District demographics snapshot */}
+                        {(() => {
+                          const top = cvapTop(cvap, r.key);
+                          if (!top) return null;
+                          return (
+                            <div className="px-4 py-1.5 border-t flex items-center gap-1.5" style={{ borderColor: "#f3f4f6", background: "#fafafa" }}>
+                              <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "#9ca3af" }}>CVAP</span>
+                              <span className="text-[9px] font-semibold" style={{ color: top.color }}>{top.pct}% {top.label}</span>
+                              <span className="text-[9px]" style={{ color: "#d1d5db" }}>citizen voting-age pop.</span>
+                            </div>
+                          );
+                        })()}
 
                         {/* Context */}
                         {r.detail && (

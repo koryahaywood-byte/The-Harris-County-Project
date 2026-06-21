@@ -524,6 +524,9 @@ export default function HeatCheckHistoryMap() {
                     {d.sd && <Link href={`/tools/districts?type=sd&district=${d.sd}`}
                       className="text-[9px] font-bold px-1.5 py-0.5 rounded-md hover:opacity-80"
                       style={{ background: "rgba(122,174,232,0.12)", color: "#7aaee8" }}>SD {d.sd} →</Link>}
+                    {d.cd && <Link href={`/tools/districts?type=cd&district=${d.cd}`}
+                      className="text-[9px] font-bold px-1.5 py-0.5 rounded-md hover:opacity-80"
+                      style={{ background: "rgba(122,174,232,0.08)", color: "#7aaee8" }}>CD {d.cd} →</Link>}
                   </div>
                 );
               })()}
