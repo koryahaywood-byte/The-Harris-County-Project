@@ -16,6 +16,7 @@ export const WOMEN_IN_POLITICS = new Set([
   "Lois Kolkhorst",
   // Texas House
   "Senfronia Thompson",
+  "Valoree Swanson",
   "Ann Johnson",
   "Ana Hernandez",
   "Mary Ann Perez",

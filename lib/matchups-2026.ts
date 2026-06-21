@@ -192,12 +192,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "SD-15": {
     office: "State Senator, District 15",
-    status: "partial",
+    status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Molly Cook", party: "D", incumbent: true, gender: "F", note: "Won 2024 special election; seeking first full term" },
+      { name: "Molly Cook",       party: "D", incumbent: true,  gender: "F", note: "Won 2024 special election; seeking first full 4-year term" },
+      { name: "Joseph L. Trahan", party: "R", incumbent: false, gender: "M", note: "Lost to Cook in 2024; running again" },
     ],
-    detail: "Molly Cook won the 2024 special election to replace John Whitmire (who became Houston Mayor). SD-15 seat is on the 2026 ballot; Cook must win a full 4-year term. Heights, Montrose, Galleria corridor — heavily Democratic.",
+    detail: "Molly Cook won the 2024 special election replacing John Whitmire (now Houston Mayor). SD-15 must be won by Cook again in 2026 for a full 4-year term. Joseph Trahan, who lost to Cook 55-42 in 2024, is the R challenger. Heights, Montrose, Galleria, Midtown — safe Democratic territory.",
   },
   "SD-4": {
     office: "State Senator, District 4",
@@ -291,10 +292,10 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "safe-r",
     sides: [
-      { name: "A'Yonna Kellum", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
-      { name: "Mark Dorazio",   party: "R", incumbent: true,  gender: "M", note: "Seeking reelection" },
+      { name: "A'Yonna Kellum",   party: "D", incumbent: false, gender: "F", note: "Won March primary" },
+      { name: "Valoree Swanson",  party: "R", incumbent: true,  gender: "F", note: "Incumbent seeking reelection; held seat since 2017" },
     ],
-    detail: "Mark Dorazio has held HD-150 (Katy / Cinco Ranch / far west Harris County) since 2023, succeeding Valoree Swanson. Safe Republican district. A'Yonna Kellum won the D primary.",
+    detail: "Valoree Swanson (R) has represented HD-150 (Katy / Cinco Ranch / far west Harris County) since 2017. Safe Republican territory. A'Yonna Kellum won the D primary.",
   },
   "HD-127": {
     office: "State Representative, District 127",
