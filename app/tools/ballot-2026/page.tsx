@@ -260,7 +260,7 @@ export default function Ballot2026() {
     const { group, groupLabel } = toGroup(key);
     const dSide = m.sides.find(s => s.party === "D") ?? null;
     const rSide = m.sides.find(s => s.party === "R") ?? null;
-    return { key, group, groupLabel, office: m.office, status: m.status, lean: m.lean, dSide, rSide, districtLink: toDistrictLink(key) };
+    return { key, group, groupLabel, office: m.office, status: m.status, lean: m.lean, dSide, rSide, districtLink: toDistrictLink(key), detail: m.detail ?? null };
   }), []);
 
   const COMPETITIVE_LEANS: RaceLean[] = ["toss-up", "lean-d", "lean-r"];
@@ -406,6 +406,13 @@ export default function Ballot2026() {
 
                         {/* Money bar — only when both sides have data */}
                         {hasMoneyBar && <MoneyBar dName={r.dSide?.name ?? null} rName={r.rSide?.name ?? null} />}
+
+                        {/* Context */}
+                        {r.detail && (
+                          <div className="px-4 py-2 border-t text-[10px] leading-relaxed" style={{ borderColor: "#f3f4f6", color: "#6b7280", background: "#fafafa" }}>
+                            {r.detail}
+                          </div>
+                        )}
 
                       </div>
                     </div>
