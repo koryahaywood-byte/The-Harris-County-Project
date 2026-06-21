@@ -661,6 +661,157 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     ],
     detail: "Open seat — Commissioner Jim Wright lost the Republican primary runoff to Bo French. Jon Rosenthal (4-term HD-135 state rep) is the first credible Democratic challenger for a Railroad Commission seat in years. A Democrat hasn't held a RRC seat since 1994. The RRC regulates oil, gas, and pipeline safety in Texas.",
   },
+
+  // Harris County Criminal Courts at Law (countywide misdemeanor courts — all 15 on 2026 ballot)
+  "CCL-1": {
+    office: "County Criminal Court at Law No. 1",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Alex Salgado",  party: "D", incumbent: true,  gender: "M", note: "Seeking reelection" },
+      { name: "Erin Swanson",  party: "R", incumbent: false, gender: "F", note: "R nominee" },
+    ],
+    detail: "Salgado has held CCL #1 since 2019. All 15 Harris County Criminal Courts at Law are countywide races — making them bellwethers for county-level partisan lean. Democrats swept all these seats in 2018 and have held most since.",
+  },
+  "CCL-2": {
+    office: "County Criminal Court at Law No. 2",
+    status: "set",
+    lean: "lean-d",
+    sides: [
+      { name: "Matthew Ruben Perez", party: "D", incumbent: false, gender: "M", note: "Won March primary; open seat" },
+      { name: "Matt Alford",         party: "R", incumbent: false, gender: "M", note: "R nominee" },
+    ],
+    detail: "Open seat — Judge Paula Goodhart is not seeking reelection. Both nominees are newcomers to the bench in this D-leaning countywide race.",
+  },
+  "CCL-3": {
+    office: "County Criminal Court at Law No. 3",
+    status: "partial",
+    lean: "toss-up",
+    sides: [
+      { name: "Leslie R. Johnson", party: "R", incumbent: true, gender: "F", note: "Seeking reelection" },
+    ],
+    detail: "Leslie Johnson holds CCL #3 as a Republican — one of the few R-held criminal court seats in Harris County. D nominee decided in March primary (Carlos Aguayo vs. Anna Eady). A competitive race in a D-leaning county.",
+  },
+  "CCL-4": {
+    office: "County Criminal Court at Law No. 4",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Shannon Baldwin",        party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
+      { name: "Rebecca Phillips Aceto", party: "R", incumbent: false, gender: "F", note: "R nominee" },
+    ],
+    detail: "Shannon Baldwin has held CCL #4 since the 2018 blue wave. An all-women matchup.",
+  },
+  "CCL-5": {
+    office: "County Criminal Court at Law No. 5",
+    status: "set",
+    lean: "lean-d",
+    sides: [
+      { name: "David Fleischer", party: "D", incumbent: true,  gender: "M", note: "Seeking reelection" },
+      { name: "Stella Stevens",  party: "R", incumbent: false, gender: "F", note: "Former Montgomery County prosecutor; defense attorney" },
+    ],
+    detail: "Fleischer holds CCL #5 (misdemeanor DWI, assault, theft cases). The court operates under a federal consent decree governing bail practices since 2019. Considered one of the more competitive CCL matchups given the R challenger's prosecutorial background.",
+  },
+  "CCL-6": {
+    office: "County Criminal Court at Law No. 6",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Kelley Andrews", party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
+      { name: "Josh Normand",   party: "R", incumbent: false, gender: "M", note: "R nominee" },
+    ],
+    detail: "Kelley Andrews has held CCL #6 since 2019.",
+  },
+  "CCL-7": {
+    office: "County Criminal Court at Law No. 7",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Andrew Wright",    party: "D", incumbent: true,  gender: "M", note: "Won March primary over two challengers" },
+      { name: "Thomas Brodrick",  party: "R", incumbent: false, gender: "M", note: "Harris County DA prosecutor" },
+    ],
+    detail: "Wright survived a competitive D primary against Jorge Garcia Diaz and Rustin Foroutan. Thomas Brodrick (goes by Adam) is an assistant Harris County DA running as the R nominee.",
+  },
+  "CCL-8": {
+    office: "County Criminal Court at Law No. 8",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Erika Ramirez",  party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
+      { name: "Victor Flores",  party: "R", incumbent: false, gender: "M", note: "R nominee" },
+    ],
+    detail: "Erika Ramirez has held CCL #8 since 2019.",
+  },
+  "CCL-9": {
+    office: "County Criminal Court at Law No. 9",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Toria J. Finch", party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
+      { name: "Xavier Alfaro",  party: "R", incumbent: false, gender: "M", note: "R nominee" },
+    ],
+    detail: "Toria Finch has held CCL #9 since 2019.",
+  },
+  "CCL-10": {
+    office: "County Criminal Court at Law No. 10",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Juanita Jackson", party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
+      { name: "Bao Hoang",       party: "R", incumbent: false, gender: "M", note: "R nominee" },
+    ],
+    detail: "Juanita Jackson has held CCL #10 since 2019.",
+  },
+  "CCL-11": {
+    office: "County Criminal Court at Law No. 11",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Sedrick T. Walker II", party: "D", incumbent: true,  gender: "M", note: "Seeking reelection" },
+      { name: "Liz Buss",            party: "R", incumbent: false, gender: "F", note: "R nominee" },
+    ],
+    detail: "Sedrick Walker has held CCL #11 since 2019.",
+  },
+  "CCL-12": {
+    office: "County Criminal Court at Law No. 12",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Ashley Mayes Guice", party: "D", incumbent: true,  gender: "F", note: "Appointed June 2025 after Genesis Draper left to lead HC Public Defenders' Office" },
+      { name: "Anna Emmons",        party: "R", incumbent: false, gender: "F", note: "R nominee" },
+    ],
+    detail: "Ashley Mayes Guice was appointed by the Commissioners Court in June 2025 when Genesis Draper left the bench to lead the Harris County Public Defenders' Office. An all-women matchup.",
+  },
+  "CCL-13": {
+    office: "County Criminal Court at Law No. 13",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Raul Rodriguez", party: "D", incumbent: true,  gender: "M", note: "Seeking reelection" },
+      { name: "Amber Cox",      party: "R", incumbent: false, gender: "F", note: "R nominee" },
+    ],
+    detail: "Raul Rodriguez has held CCL #13 since 2019.",
+  },
+  "CCL-14": {
+    office: "County Criminal Court at Law No. 14",
+    status: "set",
+    lean: "toss-up",
+    sides: [
+      { name: "Yahaira Quezada",  party: "D", incumbent: false, gender: "F", note: "Won March D primary with 54.6% over James Hu" },
+      { name: "Jessica N. Padilla", party: "R", incumbent: true,  gender: "F", note: "Republican incumbent seeking reelection" },
+    ],
+    detail: "One of the most interesting judicial matchups of 2026 — a D challenger faces a R incumbent judge in a county-level race where Democrats have structural advantage. Padilla assumed office Jan 1, 2023; Quezada defeated James Hu in the D primary with 55% of the vote. All-women matchup.",
+  },
+  "CCL-15": {
+    office: "County Criminal Court at Law No. 15",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Tonya Jones",       party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
+      { name: "Stephen St. Martin", party: "R", incumbent: false, gender: "M", note: "R nominee" },
+    ],
+    detail: "Tonya Jones has held CCL #15 since 2019.",
+  },
 };
 
 export function getMatchup(districtKey: string): Matchup | null {

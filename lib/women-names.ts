@@ -73,4 +73,23 @@ export const WOMEN_IN_POLITICS = new Set([
   "Wanda E. Adams",
   "Sharon M. Burney",
   "Holly Williamson",
+  // Criminal Courts at Law judges
+  "Shannon Baldwin",
+  "Kelley Andrews",
+  "Erika Ramirez",
+  "Toria J. Finch",
+  "Juanita Jackson",
+  "Ashley Mayes Guice",
+  "Tonya Jones",
+  "Leslie R. Johnson",
+  "Linda Garcia",
+  // CCL 2026 R nominees (women)
+  "Erin Swanson",
+  "Rebecca Phillips Aceto",
+  "Stella Stevens",
+  "Liz Buss",
+  "Anna Emmons",
+  "Amber Cox",
+  "Yahaira Quezada",
+  "Jessica N. Padilla",
 ]);
