@@ -601,7 +601,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Jon Rosenthal", party: "D", incumbent: false, gender: "M", note: "Former State Rep HD-135; won March primary" },
       { name: "Bo French",     party: "R", incumbent: false, gender: "M", note: "Won May runoff over incumbent Jim Wright" },
     ],
-    detail: "Open seat — Commissioner Jim Wright lost the Republican primary runoff to Bo French. Jon Rosenthal (4-term HD-135 state rep) is the first credible Democratic challenger for a Railroad Commission seat in years. A Democrat hasn't held a RRC seat since 1994. The RRC regulates oil, gas, and pipeline safety in Texas.",
+    detail: "Commissioner Jim Wright lost the May runoff to Bo French, who was backed by oil billionaires Tim Dunn and Farris Wilks — they funneled ~$1M through the Texas Freedom Fund PAC. Jon Rosenthal (4-term HD-135 rep, oilfield engineer) is the first credible Democratic challenger for a Railroad Commission seat since 1994. The RRC regulates Texas oil, gas, and pipeline safety.",
   },
 
   // Harris County Probate Courts (all 4 on 2026 ballot)

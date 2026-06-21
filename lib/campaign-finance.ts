@@ -56,7 +56,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Mike Schofield",        office: "State Rep HD-132",               level: "state",    party: "R", cash: 0,          asOf: "pending",  incumbent: true,  filingUrl: TEC("Mike Schofield") },
   { name: "Penny Morales Shaw",    office: "State Rep HD-148",               level: "state",    party: "D", cash: 4187,   raised: 17974, spent: 13787, asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Penny Morales Shaw") },
   { name: "Gina Hinojosa",         office: "Governor (D nominee)",            level: "state",    party: "D", cash: 617635,  asOf: "Feb 2026", incumbent: false, filingUrl: TEC("Gina Hinojosa") },
-  { name: "Ann Johnson",           office: "State Rep HD-134",               level: "state",    party: "D", cash: 527021,    asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Ann Johnson") },
+  { name: "Ann Johnson",           office: "State Rep HD-134",               level: "state",    party: "D", cash: 531826,    asOf: "Oct 2025", incumbent: true,  filingUrl: TEC("Ann Johnson") },
   { name: "Ana Hernandez",         office: "State Rep HD-143",               level: "state",    party: "D", cash: 448309,    asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Ana Hernandez") },
   { name: "Armando Walle",         office: "State Rep HD-140",               level: "state",    party: "D", cash: 267898,    asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Armando Walle") },
   { name: "Mary Ann Perez",        office: "State Rep HD-144",               level: "state",    party: "D", cash: 211703,    asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Mary Ann Perez") },
@@ -76,7 +76,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Liz Ramos",             office: "State Rep HD-135 (R nominee)",   level: "state",    party: "R", cash: 0,         asOf: "pending",  incumbent: false, filingUrl: TEC("Liz Ramos") },
   { name: "Desiree Klaus",         office: "State Rep HD-128 (D nominee)",   level: "state",    party: "D", cash: 0,         asOf: "pending",  incumbent: false, filingUrl: TEC("Desiree Klaus") },
   { name: "Tom Butler",            office: "State Rep HD-128 (R nominee)",   level: "state",    party: "R", cash: 0,         asOf: "pending",  incumbent: false, filingUrl: TEC("Tom Butler") },
-  { name: "Bo French",             office: "Texas Railroad Commissioner (R nominee)", level: "state", party: "R", cash: 0,  asOf: "pending",  incumbent: false, filingUrl: TEC("Bo French") },
+  { name: "Bo French",             office: "Texas Railroad Commissioner (R nominee)", level: "state", party: "R", cash: 79000, raised: 1400000, asOf: "May 2026", incumbent: false, filingUrl: TEC("Bo French") },
   // Federal 2026 nominees not yet in FEC system
   { name: "Dan Crenshaw",          office: "U.S. Rep CD-02 (lost R primary to Steve Toth, Mar 2026)", level: "federal", party: "R", cash: 843500, asOf: "Q4 2025", incumbent: true, filingUrl: FEC("H8TX02224") },
   { name: "Steve Toth",            office: "U.S. Rep CD-02 (R nominee)",     level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: false, filingUrl: FEC("H6TX08175") },
