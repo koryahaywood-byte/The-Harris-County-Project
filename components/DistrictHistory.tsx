@@ -203,55 +203,74 @@ function FieldPositionModule({ h, precincts }: { h: PrecinctHistory; precincts: 
   );
 }
 
-/* ── 4. Surname-origin performance (research-grade) ─────────────────────── */
+/* ── 4. Surname-origin performance ───────────────────────────────────────── */
 function SurnameModule({ h, precincts }: { h: PrecinctHistory; precincts: Set<string> | null }) {
   const buckets = useMemo(() => surnameAnalysis(h, precincts), [h, precincts]);
   if (buckets.length < 2) return null;
-  const maxAbs = Math.max(...buckets.map(b => Math.abs(b.differential)), 0.04);
+
+  const maxAbs = Math.max(...buckets.map(b => Math.abs(b.differential)), 0.02);
+  const biggest = buckets.reduce((a, b) => Math.abs(b.differential) > Math.abs(a.differential) ? b : a, buckets[0]);
+  const pp = (Math.abs(biggest.differential) * 100).toFixed(1);
+  const isPos = biggest.differential >= 0;
 
   return (
     <div>
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: MUTED }}>
-        Surname-origin performance · 2024 same-ballot pairing
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-2" style={{ color: MUTED }}>
+        Does a Spanish surname help Republicans in Latino neighborhoods?
       </p>
-      <p className="text-xs leading-relaxed mb-3" style={{ color: "#374151" }}>
-        Two Republicans on the same 2024 ballot: <strong>Cruz</strong> (Spanish-origin surname,
-        U.S. Senate) and <strong>Trump</strong> (European-origin surname, President). Comparing
-        their two-party shares precinct-by-precinct holds party constant — the gap is the
-        candidate-and-surname effect, charted against each precinct's official Spanish-surname
-        voter registration (SSVR).
-      </p>
-      <div className="space-y-2">
-        {buckets.map(b => (
-          <div key={b.label} className="grid grid-cols-[110px_1fr_64px] items-center gap-2">
-            <p className="text-[10px] font-bold" style={{ color: NAVY }}>{b.label}<br />
-              <span className="font-normal" style={{ color: MUTED }}>{b.precincts} precincts</span></p>
-            <div className="relative h-[14px] rounded-full overflow-hidden" style={{ background: "#00000008" }}>
-              <div className="absolute top-0 bottom-0 w-px" style={{ left: "50%", background: "#00000030" }} />
-              <div className="absolute top-[2px] bottom-[2px] rounded-full"
-                style={{
-                  left: b.differential >= 0 ? "50%" : `${50 - (Math.abs(b.differential) / maxAbs) * 48}%`,
-                  width: `${(Math.abs(b.differential) / maxAbs) * 48}%`,
-                  background: b.differential >= 0 ? R_RED : D_BLUE, opacity: 0.85,
-                }} />
-            </div>
-            <p className="tnum text-xs font-bold text-right" style={{ color: b.differential >= 0 ? R_RED : D_BLUE }}>
-              {b.differential >= 0 ? "+" : "−"}{(Math.abs(b.differential) * 100).toFixed(1)}pp
-            </p>
-          </div>
-        ))}
-      </div>
-      <div className="mt-3 rounded-xl px-3.5 py-2.5" style={{ background: "#1a3a5c0a", border: "1px solid #1a3a5c1a" }}>
-        <p className="text-[10px] leading-relaxed" style={{ color: "#374151" }}>
-          <strong>Read this carefully:</strong> surname origin is one variable in a multivariate
-          environment that also includes incumbency, party, spending, turnout operation, candidate
-          record, and the national environment — none of which are controlled here beyond the
-          same-ballot pairing. This is descriptive correlation on official data (TLC returns,
-          SOS Spanish-surname registration), not predictive identity scoring, and it describes
-          candidates' surnames, never voters. Positive values mean the Spanish-origin-surname
-          Republican ran ahead of his European-origin-surname running mate in that bucket.
+
+      {/* Plain-English callout */}
+      <div className="rounded-xl px-3.5 py-2.5 mb-4 flex gap-3" style={{ background: "#1a3a5c0a", border: "1px solid #1a3a5c1a" }}>
+        <span className="text-xl shrink-0" style={{ lineHeight: 1.4 }}>🔎</span>
+        <p className="text-[11px] leading-relaxed" style={{ color: "#374151" }}>
+          In 2024, Ted Cruz and Donald Trump both appeared on the same ballot as Republicans.
+          Since they ran in different races, we can compare their precinct-level results directly.
+          Any gap is a <em>candidate</em> effect — not a party effect.
+          In the most Latino-heavy precincts ({biggest.label}),{" "}
+          <strong>Cruz {isPos ? "ran ahead of" : "ran behind"} Trump by {pp} points</strong> —
+          suggesting {isPos ? "a Spanish surname gives a small lift in those areas" : "other factors outweigh the surname effect in those areas"}.
         </p>
       </div>
+
+      {/* Bars — Cruz gap vs Trump per SSVR bucket */}
+      <div className="space-y-4">
+        {buckets.map(b => {
+          const barPct = (Math.abs(b.differential) / maxAbs) * 46;
+          const pos = b.differential >= 0;
+          const ppVal = (Math.abs(b.differential) * 100).toFixed(1);
+          return (
+            <div key={b.label}>
+              <div className="flex justify-between items-baseline mb-1.5">
+                <span className="text-[11px] font-semibold" style={{ color: NAVY }}>
+                  {b.label} <span className="font-normal text-[10px]" style={{ color: MUTED }}>({b.precincts} precincts)</span>
+                </span>
+                <span className="text-[11px] font-bold tnum" style={{ color: pos ? R_RED : D_BLUE }}>
+                  Cruz {pos ? "+" : "−"}{ppVal}pp vs Trump
+                </span>
+              </div>
+              <div className="relative h-[8px] rounded-full overflow-hidden" style={{ background: "#e5e7eb" }}>
+                <div className="absolute top-0 bottom-0 w-[2px]" style={{ left: "50%", background: "#9ca3af", transform: "translateX(-50%)" }} />
+                <div className="absolute inset-y-0 rounded-full"
+                  style={{
+                    left: pos ? "50%" : `${50 - barPct}%`,
+                    width: `${barPct}%`,
+                    background: pos ? R_RED : D_BLUE,
+                    opacity: 0.75,
+                  }} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex justify-between text-[9px] mt-1 px-[2px]" style={{ color: MUTED }}>
+        <span>← Cruz underperformed Trump</span>
+        <span>Cruz outperformed Trump →</span>
+      </div>
+
+      <p className="text-[9px] mt-3 leading-relaxed" style={{ color: MUTED }}>
+        Data: 2024 TX SOS returns · SOS Spanish-surname voter registration. Party held constant by pairing on the same ballot.
+        Describes candidate surname effects only — not individual voter ethnicity.
+      </p>
     </div>
   );
 }

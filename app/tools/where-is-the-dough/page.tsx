@@ -851,14 +851,7 @@ export default function WhereIsTheDough() {
                 </div>
 
                 {filtered.length === 0 ? (
-                  countyGroup === "courts" ? (
-                    <p className="p-10 text-center text-[var(--muted)] text-sm">
-                      County court judges (Criminal Courts at Law, Civil Courts at Law, Probate) are being added —
-                      their filings exist in the county portal and the roster is being verified. Justices of the Peace are under their own filter.
-                    </p>
-                  ) : (
-                    <p className="p-10 text-center text-[var(--muted)] text-sm">No results found.</p>
-                  )
+                  <p className="p-10 text-center text-[var(--muted)] text-sm">No results found.</p>
                 ) : filtered.map((c, i) => {
                   const isD = c.party === "D";
                   const pct = Math.min((c.cash / maxCash) * 100, 100);
