@@ -13,6 +13,7 @@ import crosswalkRaw from "@/lib/precinct-crosswalk.json";
 import ShareButton from "@/components/ShareButton";
 import DistrictHistory from "@/components/DistrictHistory";
 import TerrainReport from "@/components/TerrainReport";
+import DistrictHeatMap from "@/components/DistrictHeatMap";
 import { useUrlState, readUrlParams } from "@/lib/useUrlState";
 import type { MapLayer, PrecinctTurnout, ResultsUpload, PrecinctFeature } from "./DistrictsMap";
 
@@ -702,6 +703,13 @@ export default function DistrictsPage() {
             <div className="mt-4">
               <DistrictHistory field={districtField} value={district} />
             </div>
+
+            {/* Partisan heatmap — Heat Check filtered to this district */}
+            <DistrictHeatMap
+              districtField={districtField}
+              districtValue={district}
+              districtLabel={headerLabel(type, district)}
+            />
 
             {/* Terrain Report — turnout signals */}
             <div className="mt-4">
