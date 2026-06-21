@@ -29,7 +29,7 @@ function parseCsv(text) {
 
 // Returns { precinct: { dem, rep } } by summing all D/R candidate columns.
 async function fetchPrimary(dElection, rElection, office) {
-  const pattern = /^[A-Za-z']+(?:D|R)_\d\d[PR]_/;
+  const pattern = /^[A-Za-z' ]+(?:D|R)_\d\d[PR]_/;
   const result = {};
 
   for (const [election, party] of [[dElection, "D"], [rElection, "R"]]) {
