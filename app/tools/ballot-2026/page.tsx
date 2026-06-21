@@ -388,8 +388,21 @@ export default function Ballot2026() {
 
                         {/* Office header */}
                         <div className="flex items-center justify-between px-4 py-2 border-b" style={{ borderColor: "#f3f4f6" }}>
-                          <span className="text-[11px] font-bold" style={{ color: "#1a3a5c" }}>{r.office}</span>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className="text-[11px] font-bold truncate" style={{ color: "#1a3a5c" }}>{r.office}</span>
+                            {r.lean && (() => {
+                              const pos = LEAN_LANE[r.lean] ?? 50;
+                              const isDem = pos < 45; const isRep = pos > 55; const isToss = !isDem && !isRep;
+                              const bg = isDem ? "#dbeafe" : isRep ? "#fee2e2" : "#f3e8ff";
+                              const fg = isDem ? "#1d4ed8" : isRep ? "#b91c1c" : "#6d28d9";
+                              return (
+                                <span className="text-[9px] font-bold px-2 py-0.5 rounded-full shrink-0" style={{ background: bg, color: fg }}>
+                                  {LEAN_LABEL[r.lean]}
+                                </span>
+                              );
+                            })()}
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
                             {r.status === "runoff-pending" && (
                               <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "#dbeafe", color: "#1d4ed8" }}>Runoff pending</span>
                             )}
