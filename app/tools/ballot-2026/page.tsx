@@ -256,18 +256,26 @@ const RACE_COLORS: Record<string, string> = {
   black: "#7c3aed", hispanic: "#ea580c", white: "#2563a8", asian: "#0891b2",
 };
 
-function cvapTop(cvap: CvapData | null, key: string): { label: string; pct: number; color: string } | null {
+const CVAP_SEGS = [
+  { k: "hispanic" as const, label: "Hispanic" },
+  { k: "black"    as const, label: "Black" },
+  { k: "white"    as const, label: "White" },
+  { k: "asian"    as const, label: "Asian" },
+] as const;
+
+function getCvapEntry(cvap: CvapData | null, key: string) {
   if (!cvap) return null;
-  const [prefix, num] = [key.split("-")[0].toLowerCase(), key.split("-").slice(1).join("-")];
+  const prefix = key.split("-")[0].toLowerCase();
+  const num = key.split("-").slice(1).join("-");
   const bucket = prefix === "hd" ? cvap.cvap.hd : prefix === "sd" ? cvap.cvap.sd : prefix === "cd" ? cvap.cvap.cd : null;
-  const entry = bucket?.[num];
+  return bucket?.[num] ?? null;
+}
+
+function cvapTop(cvap: CvapData | null, key: string): { label: string; pct: number; color: string } | null {
+  const entry = getCvapEntry(cvap, key);
   if (!entry?.total) return null;
-  const groups = [
-    { k: "black", label: "Black" }, { k: "hispanic", label: "Hispanic" },
-    { k: "white", label: "White" }, { k: "asian", label: "Asian" },
-  ] as const;
   let top: { label: string; pct: number; color: string } | null = null;
-  for (const { k, label } of groups) {
+  for (const { k, label } of CVAP_SEGS) {
     const pct = Math.round(((entry[k] ?? 0) / entry.total) * 100);
     if (!top || pct > top.pct) top = { label, pct, color: RACE_COLORS[k] };
   }
@@ -467,13 +475,27 @@ export default function Ballot2026() {
 
                         {/* District demographics snapshot */}
                         {(() => {
-                          const top = cvapTop(cvap, r.key);
-                          if (!top) return null;
+                          const entry = getCvapEntry(cvap, r.key);
+                          if (!entry?.total) return null;
+                          const segs = CVAP_SEGS.map(s => ({ ...s, pct: Math.round(((entry[s.k] ?? 0) / entry.total) * 100) })).filter(s => s.pct > 0);
+                          const top = segs.reduce((a, b) => a.pct >= b.pct ? a : b, segs[0]);
                           return (
-                            <div className="px-4 py-1.5 border-t flex items-center gap-1.5" style={{ borderColor: "#f3f4f6", background: "#fafafa" }}>
-                              <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "#9ca3af" }}>CVAP</span>
-                              <span className="text-[9px] font-semibold" style={{ color: top.color }}>{top.pct}% {top.label}</span>
-                              <span className="text-[9px]" style={{ color: "#d1d5db" }}>citizen voting-age pop.</span>
+                            <div className="px-4 py-2 border-t" style={{ borderColor: "#f3f4f6", background: "#fafafa" }}>
+                              <div className="flex items-center gap-2 mb-1.5">
+                                <span className="text-[9px] font-bold uppercase tracking-wider shrink-0" style={{ color: "#9ca3af" }}>CVAP</span>
+                                <span className="text-[9px] font-semibold" style={{ color: RACE_COLORS[top.k] }}>{top.pct}% {top.label}</span>
+                                <span className="flex-1" />
+                                {segs.filter(s => s !== top).map(s => (
+                                  <span key={s.k} className="text-[9px]" style={{ color: "#6b7280" }}>
+                                    <span className="font-semibold" style={{ color: RACE_COLORS[s.k] }}>{s.pct}%</span> {s.label}
+                                  </span>
+                                ))}
+                              </div>
+                              <div className="flex h-1.5 rounded-full overflow-hidden gap-px">
+                                {segs.map(s => (
+                                  <div key={s.k} title={`${s.label} ${s.pct}%`} style={{ width: `${s.pct}%`, background: RACE_COLORS[s.k] }} />
+                                ))}
+                              </div>
                             </div>
                           );
                         })()}
