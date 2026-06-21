@@ -136,7 +136,7 @@ function toGroup(key: string): { group: RaceGroup; groupLabel: string } {
   if (key.startsWith("CD-")) return { group: "congress", groupLabel: "U.S. Congress" };
   if (key.startsWith("SD-") || key.startsWith("HD-")) return { group: "statelegis", groupLabel: "State Legislature" };
   if (key.startsWith("PCT-") || key.startsWith("HC-")) return { group: "countywide", groupLabel: "Harris County" };
-  if (key.startsWith("CCL-") || key.startsWith("Probate-")) return { group: "courts", groupLabel: "Harris County Courts" };
+  if (key.startsWith("CCL-") || key.startsWith("Probate-") || key.startsWith("DC-")) return { group: "courts", groupLabel: "Harris County Courts" };
   return { group: "local", groupLabel: "JP & Local" };
 }
 

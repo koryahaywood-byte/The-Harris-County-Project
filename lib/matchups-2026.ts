@@ -852,6 +852,178 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     ],
     detail: "Tonya Jones has held CCL #15 since 2019.",
   },
+
+  // ── Harris County Criminal District Courts (Felony, Countywide) ────────────
+  "DC-180th": {
+    office: "180th District Court",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Stephanie Morales", party: "D", incumbent: false, gender: "F", note: "D nominee; incumbent DaSean Jones not seeking reelection" },
+      { name: "Tami Pierce",       party: "R", incumbent: false, gender: "F", note: "R nominee" },
+    ],
+    detail: "Open seat — incumbent DaSean Jones did not seek reelection. All-women matchup in a county that has trended decisively D since 2018.",
+  },
+  "DC-182nd": {
+    office: "182nd District Court",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Danilo Lacayo", party: "D", incumbent: true,  gender: "M", note: "Seeking reelection" },
+      { name: "Brent Haynes",  party: "R", incumbent: false, gender: "M", note: "R nominee" },
+    ],
+    detail: "Danilo Lacayo holds the 182nd as a Democratic incumbent seeking reelection.",
+  },
+  "DC-183rd": {
+    office: "183rd District Court",
+    status: "set",
+    lean: "lean-d",
+    sides: [
+      { name: "Julia Maldonado", party: "D", incumbent: false, gender: "F", note: "D nominee; won March primary" },
+      { name: "Lance Long",      party: "R", incumbent: true,  gender: "M", note: "Republican incumbent" },
+    ],
+    detail: "Lance Long holds the 183rd as one of the few Republican-held criminal district courts in Harris County. D challenger Julia Maldonado faces an uphill path but the county's D lean gives her structural advantage.",
+  },
+  "DC-184th": {
+    office: "184th District Court",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Katherine Thomas", party: "D", incumbent: false, gender: "F", note: "D nominee; incumbent Anastasio not seeking reelection" },
+      { name: "Heather Hudson",   party: "R", incumbent: false, gender: "F", note: "R nominee" },
+    ],
+    detail: "Open seat — incumbent Abigail Anastasio did not seek reelection. All-women matchup.",
+  },
+  "DC-185th": {
+    office: "185th District Court",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Andrea Beall",  party: "D", incumbent: false, gender: "F", note: "D nominee; incumbent Jason Luong not seeking reelection" },
+      { name: "Mark Goldberg", party: "R", incumbent: false, gender: "M", note: "R nominee" },
+    ],
+    detail: "185th District Court. Incumbent Jason Luong (D) did not seek reelection; Andrea Beall won the Democratic primary.",
+  },
+  "DC-208th": {
+    office: "208th District Court",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Beverly Armstrong", party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
+      { name: "Stephen Driver",    party: "R", incumbent: false, gender: "M", note: "R nominee" },
+    ],
+    detail: "Beverly Armstrong holds the 208th as a Democratic incumbent seeking reelection.",
+  },
+  "DC-209th": {
+    office: "209th District Court",
+    status: "partial",
+    lean: "likely-d",
+    sides: [
+      { name: "Robert Johnson", party: "D", incumbent: false, gender: "M", note: "Won D primary over Ysidra Kyles and Brian Warren" },
+      { name: "Tony Coveny",    party: "R", incumbent: false, gender: "M", note: "R nominee" },
+    ],
+    detail: "209th District Court. D primary had three candidates — Robert Johnson, Ysidra Kyles, and Brian Warren — with Johnson prevailing.",
+  },
+  "DC-228th": {
+    office: "228th District Court",
+    status: "set",
+    lean: "lean-d",
+    sides: [
+      { name: "Alyson Almaguer", party: "D", incumbent: false, gender: "F", note: "Harris County ADA, Felony District Court Chief" },
+      { name: "Caroline Dozier", party: "R", incumbent: true,  gender: "F", note: "Appointed by Gov. Abbott after Judge Frank Aguilar died" },
+    ],
+    detail: "R incumbent Caroline Dozier was appointed by Gov. Abbott after Judge Frank Aguilar died in office. D challenger Alyson Almaguer is a Felony District Court Chief at the HC DA's office. All-women matchup — competitive given the name recognition that comes with an Abbott appointment.",
+  },
+  "DC-230th": {
+    office: "230th District Court",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Chris Morton", party: "D", incumbent: true,  gender: "M", note: "Seeking reelection" },
+      { name: "Megan Long",   party: "R", incumbent: false, gender: "F", note: "Harris County ADA, Felony District Court Chief" },
+    ],
+    detail: "Chris Morton holds the 230th as a Democratic incumbent. R challenger Megan Long is a Felony District Court Chief at the HC DA's office — a formidable opponent.",
+  },
+  "DC-232nd": {
+    office: "232nd District Court",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Josh Hill",       party: "D", incumbent: true,  gender: "M", note: "Defeated Fort Bend prosecutor Roderick Rodgers in D primary" },
+      { name: "Chuck Silverman", party: "R", incumbent: false, gender: "M", note: "R nominee" },
+    ],
+    detail: "Josh Hill holds the 232nd as a Democratic incumbent; he survived a primary challenge from Fort Bend County prosecutor Roderick Rodgers.",
+  },
+  "DC-248th": {
+    office: "248th District Court",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Hilary Unger",   party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
+      { name: "David Overhuls", party: "R", incumbent: false, gender: "M", note: "R nominee" },
+    ],
+    detail: "Hilary Unger holds the 248th as a Democratic incumbent seeking reelection.",
+  },
+  "DC-262nd": {
+    office: "262nd District Court",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Lori Chambers Gray", party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
+      { name: "Nathan Moss",        party: "R", incumbent: false, gender: "M", note: "Harris County ADA, Homicide Bureau Division Chief" },
+    ],
+    detail: "Lori Chambers Gray holds the 262nd as a Democratic incumbent. R challenger Nathan Moss is a Division Chief in the HC DA's Homicide Bureau.",
+  },
+  "DC-263rd": {
+    office: "263rd District Court",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Melissa Morris", party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
+      { name: "Jason Campo",    party: "R", incumbent: false, gender: "M", note: "Harris County ADA, Homicide Bureau Felony Chief" },
+    ],
+    detail: "Melissa Morris holds the 263rd as a Democratic incumbent. R challenger Jason Campo is a Felony Chief in the HC DA's Homicide Bureau — among the most high-profile judicial matchups on the Harris County ballot.",
+  },
+  "DC-482nd": {
+    office: "482nd District Court",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Veronica Nelson", party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
+      { name: "Bryan Honeycutt", party: "R", incumbent: false, gender: "M", note: "Harris County ADA, Felony District Court Chief" },
+    ],
+    detail: "Veronica Nelson holds the 482nd as a Democratic incumbent seeking reelection. R challenger Bryan Honeycutt is a Felony District Court Chief at the HC DA's office.",
+  },
+  "DC-495th": {
+    office: "495th District Court",
+    status: "set",
+    lean: "lean-d",
+    sides: [
+      { name: "Tiffany Hill",   party: "D", incumbent: false, gender: "F", note: "Criminal defense attorney; former Associate Judge" },
+      { name: "Lori DeAngelo", party: "R", incumbent: true,  gender: "F", note: "Appointed by Gov. Abbott to newly-created court" },
+    ],
+    detail: "R incumbent Lori DeAngelo was appointed by Gov. Abbott when this court was newly created. D challenger Tiffany Hill is a criminal defense attorney and former Associate Judge. All-women matchup — competitive given the Abbott appointment factor.",
+  },
+  "DC-496th": {
+    office: "496th District Court",
+    status: "partial",
+    lean: "likely-d",
+    sides: [
+      { name: "Michael Abner", party: "D", incumbent: false, gender: "M", note: "Harris County ADA, Felony Court Chief; won D primary over Ramona Franklin" },
+      { name: "Dan Simons",    party: "R", incumbent: false, gender: "M", note: "R nominee" },
+    ],
+    detail: "Newly created court. D primary featured Michael Abner (HC ADA, Felony Court Chief) vs. Ramona Franklin (former 338th District Court judge, defeated in her own 2024 primary). Abner won the primary.",
+  },
+  "DC-497th": {
+    office: "497th District Court",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Breanna Schwartz", party: "D", incumbent: false, gender: "F", note: "D nominee" },
+      { name: "Peyton Peebles",   party: "R", incumbent: false, gender: "M", note: "R nominee" },
+    ],
+    detail: "Newly created court — open seat with no incumbent. Schwartz is the D nominee in a county race with a strong D structural lean.",
+  },
 };
 
 export function getMatchup(districtKey: string): Matchup | null {
