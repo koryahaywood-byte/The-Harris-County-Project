@@ -133,12 +133,12 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "CD-9": {
     office: "U.S. Representative, District 9",
     status: "set",
-    lean: "toss-up",
+    lean: "lean-r",
     sides: [
-      { name: "Leticia Gutierrez", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
-      { name: "Alex Mealer",       party: "R", incumbent: false, gender: "M", note: "Won May runoff over Briscoe Cain" },
+      { name: "Leticia Gutierrez", party: "D", incumbent: false, gender: "F", note: "Community organizer with Air Alliance Houston; won March D primary" },
+      { name: "Alex Mealer",       party: "R", incumbent: false, gender: "F", note: "West Point grad, Army EOD officer; lost 2022 County Judge race to Hidalgo by 0.9 pts; won May runoff over Briscoe Cain" },
     ],
-    detail: "Open seat — Al Green (D) vacated to run in CD-18 and lost the runoff. Leticia Gutierrez (D) won the March primary; Alex Mealer (R) won a May runoff over Briscoe Cain. CD-9 is 55% Hispanic CVAP — the most competitive majority-Latino congressional seat in Harris County. Mealer lost the 2022 County Judge race to Lina Hidalgo by 0.9 points.",
+    detail: "Open seat — Al Green (D) vacated to run in CD-18 and lost. The district was redrawn by Republicans after the 2024 cycle to favor the GOP, adding deep-red Liberty County and drawing out many D-leaning voters. The new map makes this lean-R despite its majority-Hispanic CVAP. All-women general election matchup.",
   },
   "CD-22": {
     office: "U.S. Representative, District 22",
