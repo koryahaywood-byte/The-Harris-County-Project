@@ -406,9 +406,14 @@ export default function DistrictHeatMap({ districtField, districtValue, district
             {cycle === "2016G" && !isDistrict ? " / VEST" : ""}
             {cycle === "2026P" ? " / HC Clerk" : ""}
           </p>
-          {districtField && ["hd","sd","cd","pct"].includes(districtField) && parseInt(cycle) < 2022 && (
+          {districtField === "cd" && (
+            <p className="text-[9px]" style={{ color: "#d97706" }}>
+              ⚠ CD boundaries changed under the 2025 PLANC2333 redistricting. Precinct assignments on this map use the 2022 plan — 2026 results will reflect the new lines.
+            </p>
+          )}
+          {districtField && ["hd","sd","pct"].includes(districtField) && parseInt(cycle) < 2022 && (
             <p className="text-[9px]" style={{ color: "#b0b8c4" }}>
-              Boundaries reflect current (post-2022) district lines. State house, senate, congressional, and commissioner districts were redistricted after the 2020 Census.
+              Boundaries reflect current (post-2022) district lines. State house, senate, and commissioner districts were redistricted after the 2020 Census.
             </p>
           )}
         </div>

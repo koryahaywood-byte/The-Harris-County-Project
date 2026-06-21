@@ -280,6 +280,7 @@ export default function Ballot2026() {
   const [filterGroup, setFilterGroup] = useState<RaceGroup | "all">("all");
   const [onlyCompetitive, setOnlyCompetitive] = useState(false);
   const [onlyContested, setOnlyContested] = useState(false);
+  const [onlyWomen, setOnlyWomen] = useState(false);
 
   useEffect(() => {
     fetch("/data/district-races.json").then(r => r.json()).then(setDistrictRaces).catch(() => {});
@@ -303,10 +304,11 @@ export default function Ballot2026() {
     if (filterGroup !== "all") visible = visible.filter(r => r.group === filterGroup);
     if (onlyContested) visible = visible.filter(r => r.dSide && r.rSide);
     if (onlyCompetitive) visible = visible.filter(r => r.lean && COMPETITIVE_LEANS.includes(r.lean));
+    if (onlyWomen) visible = visible.filter(r => r.dSide?.gender === "F" || r.rSide?.gender === "F");
     const out: Record<RaceGroup, typeof rows> = { statewide: [], top: [], congress: [], statelegis: [], countywide: [], local: [] };
     for (const r of visible) out[r.group].push(r);
     return out;
-  }, [rows, filterGroup, onlyContested, onlyCompetitive]);
+  }, [rows, filterGroup, onlyContested, onlyCompetitive, onlyWomen]);
 
   const stats = useMemo(() => {
     const contested = rows.filter(r => r.dSide && r.rSide).length;
@@ -392,6 +394,11 @@ export default function Ballot2026() {
               style={onlyContested ? { background: "#059669", color: "#fff", borderColor: "#059669" } : { background: "#fff", color: "#374151", borderColor: "#e5e7eb" }}>
               Full matchups
             </button>
+            <button onClick={() => setOnlyWomen(c => !c)}
+              className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-all"
+              style={onlyWomen ? { background: "#9d174d", color: "#fff", borderColor: "#9d174d" } : { background: "#fff", color: "#374151", borderColor: "#e5e7eb" }}>
+              Women candidates
+            </button>
           </div>
         </div>
 
@@ -444,12 +451,12 @@ export default function Ballot2026() {
 
                         {/* Candidates row */}
                         <div className="flex items-stretch">
-                          <CandidateCol side={r.dSide as { name: string; party: "D"|"R"; note?: string } | null} align="left" />
+                          <CandidateCol side={r.dSide as { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null} align="left" />
                           {/* Center competitiveness */}
                           <div className="w-28 shrink-0 border-l border-r flex flex-col justify-center" style={{ borderColor: "#f3f4f6" }}>
                             <LeanMeter lean={r.lean} />
                           </div>
-                          <CandidateCol side={r.rSide as { name: string; party: "D"|"R"; note?: string } | null} align="right" />
+                          <CandidateCol side={r.rSide as { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null} align="right" />
                         </div>
 
                         {/* Last election result bar */}

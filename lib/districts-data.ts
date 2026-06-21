@@ -48,12 +48,12 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "CD-18": {
-    description: "Houston urban core — Third Ward, Midtown, Montrose, Heights, Near Northside. Seat vacant since SJL's death July 2024. Safe Democratic.",
+    description: "Houston urban core — Third Ward, Midtown, Montrose, Heights, Near Northside. Sheila Jackson Lee held this seat for 29 years until her death in July 2024. Erica Lee Carter (SJL's daughter) won the Nov 2024 special election for the 118th Congress remainder. Christian Menefee won the 2026 D primary runoff and is the Democratic nominee for the 119th Congress. Safe Democratic.",
     seatHistory: [
       { name: "Craig Washington", years: "1989–1995", party: "D" },
       { name: "Sheila Jackson Lee", years: "1995–2024", party: "D" },
-      { name: "Vacant", years: "2024–2027", party: "D" },
-      { name: "TBD (2026 General — Menefee D nominee)", years: "2027–present", party: "D" },
+      { name: "Erica Lee Carter", years: "2024–2025", party: "D" },
+      { name: "Christian Menefee", years: "2027–present", party: "D" },
     ],
   },
   "CD-22": {
