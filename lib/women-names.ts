@@ -110,4 +110,5 @@ export const WOMEN_IN_POLITICS = new Set([
   "Tiffany Hill",
   "Lori DeAngelo",
   "Breanna Schwartz",
+  "Allison Mathis",
 ]);

@@ -710,12 +710,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "CCL-3": {
     office: "County Criminal Court at Law No. 3",
-    status: "partial",
-    lean: "toss-up",
+    status: "set",
+    lean: "lean-d",
     sides: [
-      { name: "Leslie R. Johnson", party: "R", incumbent: true, gender: "F", note: "Seeking reelection" },
+      { name: "Allison Mathis",    party: "D", incumbent: false, gender: "F", note: "Criminal defense attorney; won March primary" },
+      { name: "Leslie R. Johnson", party: "R", incumbent: true,  gender: "F", note: "Seeking reelection" },
     ],
-    detail: "Leslie Johnson holds CCL #3 as a Republican — one of the few R-held criminal court seats in Harris County. D nominee decided in March primary (Carlos Aguayo vs. Anna Eady). A competitive race in a D-leaning county.",
+    detail: "Leslie Johnson holds CCL #3 as a Republican — one of the few R-held misdemeanor court seats in Harris County. D challenger Allison Mathis is a criminal defense attorney. All-women matchup in a county with a structural D lean.",
   },
   "CCL-4": {
     office: "County Criminal Court at Law No. 4",
