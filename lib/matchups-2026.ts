@@ -308,12 +308,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HD-129": {
     office: "State Representative, District 129",
-    status: "partial",
+    status: "set",
     lean: "safe-r",
     sides: [
-      { name: "Dennis Paul", party: "R", incumbent: true, gender: "M", note: "Seeking reelection" },
+      { name: "Albert Wittliff", party: "D", incumbent: false, gender: "M", note: "D nominee; uncontested in D primary" },
+      { name: "Scott Bowen",     party: "R", incumbent: false, gender: "M", note: "Won R primary with 71.6% over Bob Mitchell" },
     ],
-    detail: "Dennis Paul has held HD-129 (Clear Lake, Bay Area) since 2017. D nominee TBD.",
+    detail: "Open seat — Dennis Paul vacated to run for SD-11. Scott Bowen won the R primary decisively (71.6%). Albert Wittliff is the D nominee. Clear Lake / Bay Area — solidly Republican.",
   },
   "HD-133": {
     office: "State Representative, District 133",
