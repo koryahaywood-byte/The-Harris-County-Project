@@ -253,11 +253,18 @@ export default function DistrictHeatMap({ districtField, districtValue, district
         <div ref={mapRef} style={{ height: 380, width: "100%" }} />
 
         {/* Footer */}
-        <p className="px-4 py-2 text-[9px] border-t border-black/8" style={{ color: "#9ca3af" }}>
-          {cycleLabel} · {cycle.endsWith("P") ? "D/R primary ballots" : "D vs R two-party share"} · Source: TLC TED API
-          {cycle === "2016G" ? " / VEST" : cycle === "2018G" ? " / MEDSL" : ""}
-          {cycle === "2026P" ? " / HC Clerk" : ""}
-        </p>
+        <div className="px-4 py-2 border-t border-black/8 space-y-0.5">
+          <p className="text-[9px]" style={{ color: "#9ca3af" }}>
+            {cycleLabel} · {cycle.endsWith("P") ? "D/R primary ballots" : "D vs R two-party share"} · Source: TLC TED API
+            {cycle === "2016G" ? " / VEST" : ""}
+            {cycle === "2026P" ? " / HC Clerk" : ""}
+          </p>
+          {districtField && ["hd","sd","cd","pct"].includes(districtField) && parseInt(cycle) < 2022 && (
+            <p className="text-[9px]" style={{ color: "#b0b8c4" }}>
+              Boundaries reflect current (post-2022) district lines. State house, senate, congressional, and commissioner districts were redistricted after the 2020 Census.
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
