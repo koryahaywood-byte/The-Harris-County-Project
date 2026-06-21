@@ -238,7 +238,7 @@ export default function DistrictHeatMap({ districtField, districtValue, district
 
       // Fit to district bounds if a district is selected
       if (districtPrecs && districtPrecs.size > 0) {
-        const districtFeatures = (geojson.features as Array<{ properties: { PREC: string }; geometry: object }>)
+        const districtFeatures = (geojson.features as unknown as Array<{ properties: { PREC: string }; geometry: object }>)
           .filter(f => inDistrict(f.properties.PREC));
         if (districtFeatures.length > 0) {
           const districtGeo = L.geoJSON({ type: "FeatureCollection", features: districtFeatures } as GeoJSON.GeoJsonObject);
