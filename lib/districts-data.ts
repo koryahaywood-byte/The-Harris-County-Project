@@ -160,7 +160,6 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     seatHistory: [
       { name: "Patricia Harless", years: "2007–2018", party: "R" },
       { name: "Sam Harless", years: "2019–2026", party: "R" },
-      { name: "TBD (2026 General)", years: "2027–present", party: "R" },
     ],
   },
   "HD-127": {
@@ -171,11 +170,10 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "HD-128": {
-    description: "Pasadena, Deer Park, La Porte — Southeast industrial. Open seat 2026: Briscoe Cain ran for CD-9 instead of reelection.",
+    description: "Pasadena, Deer Park, La Porte — Southeast industrial. Open seat 2026: Tom Butler (R) vs. Desiree Klaus (D). Briscoe Cain vacated to run for CD-9 (lost runoff).",
     seatHistory: [
       { name: "John Davis", years: "2003–2016", party: "R" },
       { name: "Briscoe Cain", years: "2017–2026", party: "R" },
-      { name: "TBD (2026 General)", years: "2027–present", party: "R" },
     ],
   },
   "HD-129": {
