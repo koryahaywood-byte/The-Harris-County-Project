@@ -187,6 +187,9 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
                         {s.party === "D" ? "Dem" : "Rep"}
                       </span>
                       {s.incumbent && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(52,211,153,0.15)", color: "#34d399" }}>Inc</span>}
+                      {"gender" in s && s.gender === "F" && (
+                        <span className="text-[9px] font-bold px-1 py-0.5 rounded leading-none" style={{ background: "#fce7f3", color: "#9d174d" }}>W</span>
+                      )}
                     </div>
                   </div>
                 </div>
