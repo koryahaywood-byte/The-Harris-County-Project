@@ -134,7 +134,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Leticia Gutierrez", party: "D", incumbent: false, note: "Won March primary" },
       { name: "Alex Mealer",       party: "R", incumbent: false, note: "Won May runoff over Briscoe Cain" },
     ],
-    detail: "Open-seat race: incumbent Al Green ran in CD-18 instead (and lost that runoff). Mealer ran a close County Judge race in 2022.",
+    detail: "Open seat — Al Green (D) vacated to run in CD-18 and lost the runoff. Leticia Gutierrez (D) won the March primary; Alex Mealer (R) won a May runoff over Briscoe Cain. CD-9 is 55% Hispanic CVAP — the most competitive majority-Latino congressional seat in Harris County. Mealer lost the 2022 County Judge race to Lina Hidalgo by 0.9 points.",
   },
   "CD-22": {
     office: "U.S. Representative, District 22",
