@@ -294,13 +294,37 @@ function WinNumber({ dKey }: { dKey: string }) {
           Win Number — 2026 Outlook
         </p>
 
-        {/* Target to win */}
-        <div className="flex items-baseline gap-2 mb-4">
+        {/* Target to win + progress bar */}
+        <div className="flex items-baseline gap-2 mb-2">
           <span className="text-3xl font-black tabular-nums leading-none" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>
             {fmt(data.targetDVotes)}
           </span>
-          <span className="text-[11px]" style={{ color: "#9ca3af" }}>D votes needed</span>
+          <span className="text-[11px]" style={{ color: "#9ca3af" }}>D votes needed to win</span>
         </div>
+
+        {/* Progress bar: 2022 baseline vs. target */}
+        {data.dVotes2022 > 0 && (
+          <div className="mb-3">
+            <div className="flex justify-between text-[9px] mb-1">
+              <span style={{ color: "#2563a8" }} className="font-semibold">2022 base: {fmt(data.dVotes2022)}</span>
+              <span style={{ color: "#9ca3af" }}>
+                {Math.round(Math.min(data.dVotes2022 / data.targetDVotes * 100, 100))}% of win number
+              </span>
+            </div>
+            <div className="h-2.5 rounded-full overflow-hidden" style={{ background: "#e5e7eb" }}>
+              <div className="h-full rounded-full transition-all duration-700"
+                style={{
+                  width: `${Math.min(data.dVotes2022 / data.targetDVotes * 100, 100)}%`,
+                  background: data.dVotes2022 >= data.targetDVotes ? "#16a34a" : "#2563a8",
+                }} />
+            </div>
+            {data.dVotes2022 < data.targetDVotes && (
+              <p className="text-[9px] mt-0.5" style={{ color: "#9ca3af" }}>
+                Need {fmt(data.targetDVotes - data.dVotes2022)} more than 2022 off-year
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Gap status bar */}
         <div className={`rounded-lg px-3 py-2 mb-4 flex items-center gap-2`}
