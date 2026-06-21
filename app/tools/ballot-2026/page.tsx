@@ -370,9 +370,12 @@ export default function Ballot2026() {
           if (!section.length) return null;
           return (
             <div key={grp} className="mb-10">
-              <h2 className="text-[10px] font-bold uppercase tracking-[0.22em] mb-4" style={{ color: "#9ca3af" }}>
-                {section[0].groupLabel}
-              </h2>
+              <div className="flex items-baseline gap-2 mb-4">
+                <h2 className="text-[10px] font-bold uppercase tracking-[0.22em]" style={{ color: "#9ca3af" }}>
+                  {section[0].groupLabel}
+                </h2>
+                <span className="text-[10px]" style={{ color: "#d1d5db" }}>{section.length} race{section.length !== 1 ? "s" : ""}</span>
+              </div>
               <div className="space-y-3">
                 {section.map(r => {
                   const result = resultsMap[r.key];
