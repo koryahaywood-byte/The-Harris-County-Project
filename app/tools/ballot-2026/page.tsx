@@ -147,7 +147,7 @@ function financeFor(name: string | null): CandidateFinance | null {
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
-function CandidateCol({ side, align }: { side: { name: string; party: "D"|"R"; note?: string } | null; align: "left"|"right" }) {
+function CandidateCol({ side, align }: { side: { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null; align: "left"|"right" }) {
   if (!side) {
     return (
       <div className={`flex-1 px-4 py-3 ${align === "right" ? "text-right" : ""}`}
@@ -169,6 +169,9 @@ function CandidateCol({ side, align }: { side: { name: string; party: "D"|"R"; n
           <span className="text-[10px] font-black px-1.5 py-0.5 rounded text-white leading-none" style={{ background: accent }}>D</span>
         )}
         <span className="font-bold text-[14px] leading-tight" style={{ color: "#111827" }}>{side.name}</span>
+        {side.gender === "F" && (
+          <span className="text-[9px] font-bold px-1 py-0.5 rounded leading-none" style={{ background: "#fce7f3", color: "#9d174d" }}>W</span>
+        )}
         {align === "right" && (
           <span className="text-[10px] font-black px-1.5 py-0.5 rounded text-white leading-none" style={{ background: accent }}>R</span>
         )}
@@ -309,12 +312,13 @@ export default function Ballot2026() {
     const contested = rows.filter(r => r.dSide && r.rSide).length;
     const tossups = rows.filter(r => r.lean && COMPETITIVE_LEANS.includes(r.lean)).length;
     let dMoney = 0, rMoney = 0;
+    const womenSeen = new Set<string>();
     for (const r of rows) {
-      if (r.dSide) dMoney += financeFor(r.dSide.name)?.cash ?? 0;
-      if (r.rSide) rMoney += financeFor(r.rSide.name)?.cash ?? 0;
+      if (r.dSide) { dMoney += financeFor(r.dSide.name)?.cash ?? 0; if (r.dSide.gender === "F") womenSeen.add(r.dSide.name); }
+      if (r.rSide) { rMoney += financeFor(r.rSide.name)?.cash ?? 0; if (r.rSide.gender === "F") womenSeen.add(r.rSide.name); }
     }
     const moneyTotal = dMoney + rMoney;
-    return { contested, tossups, dMoney, rMoney, dMoneyPct: moneyTotal ? Math.round(dMoney / moneyTotal * 100) : 50 };
+    return { contested, tossups, womenCount: womenSeen.size, dMoney, rMoney, dMoneyPct: moneyTotal ? Math.round(dMoney / moneyTotal * 100) : 50 };
   }, [rows]);
 
   return (
@@ -331,7 +335,7 @@ export default function Ballot2026() {
             The 2026 Ballot
           </h1>
           <p className="text-white/50 text-sm mb-6">
-            {stats.contested} contested races · {stats.tossups} toss-ups · Harris County, Texas
+            {stats.contested} contested races · {stats.tossups} toss-ups · {stats.womenCount} women candidates · Harris County, Texas
           </p>
 
           {/* Money summary */}

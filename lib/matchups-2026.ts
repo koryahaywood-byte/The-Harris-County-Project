@@ -10,6 +10,7 @@ export interface MatchupSide {
   party: "D" | "R";
   incumbent: boolean;
   note?: string;
+  gender?: "F" | "M";
 }
 
 export type RaceLean =
@@ -33,8 +34,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "safe-r",
     sides: [
-      { name: "Gina Hinojosa", party: "D", incumbent: false, note: "Former State Rep HD-49 (Austin); won D primary" },
-      { name: "Greg Abbott",   party: "R", incumbent: true,  note: "Seeking 3rd term" },
+      { name: "Gina Hinojosa", party: "D", incumbent: false, gender: "F", note: "Former State Rep HD-49 (Austin); won D primary" },
+      { name: "Greg Abbott",   party: "R", incumbent: true,  gender: "M", note: "Seeking 3rd term" },
     ],
     detail: "Statewide race. Abbott has dominated Texas since 2014. Hinojosa is a former state representative from Austin who won the Democratic nomination.",
   },
@@ -43,7 +44,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-r",
     sides: [
-      { name: "Dan Patrick", party: "R", incumbent: true, note: "Seeking 3rd term" },
+      { name: "Dan Patrick", party: "R", incumbent: true, gender: "M", note: "Seeking 3rd term" },
     ],
     detail: "Dan Patrick is the Republican incumbent. Democratic nominee pending.",
   },
@@ -52,7 +53,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-r",
     sides: [
-      { name: "Mayes Middleton", party: "R", incumbent: false, note: "Won R primary; former State Senator SD-11" },
+      { name: "Mayes Middleton", party: "R", incumbent: false, gender: "M", note: "Won R primary; former State Senator SD-11" },
     ],
     detail: "Open seat — Paxton vacated to run for U.S. Senate. Middleton (former SD-11 senator) won the Republican nomination. Democratic nominee pending.",
   },
@@ -61,7 +62,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-r",
     sides: [
-      { name: "Glenn Hegar", party: "R", incumbent: true, note: "Seeking 3rd term" },
+      { name: "Glenn Hegar", party: "R", incumbent: true, gender: "M", note: "Seeking 3rd term" },
     ],
     detail: "Glenn Hegar is the Republican incumbent. Democratic nominee pending.",
   },
@@ -71,8 +72,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "lean-d",
     sides: [
-      { name: "James Talarico", party: "D", incumbent: false, note: "Won May runoff over Jasmine Crockett" },
-      { name: "Ken Paxton",     party: "R", incumbent: false, note: "Won May runoff over John Cornyn" },
+      { name: "James Talarico", party: "D", incumbent: false, gender: "M", note: "Won May runoff over Jasmine Crockett" },
+      { name: "Ken Paxton",     party: "R", incumbent: false, gender: "M", note: "Won May runoff over John Cornyn" },
     ],
     detail: "Paxton beat Cornyn in the May runoff. Talarico beat Crockett in the Democratic runoff. Former state rep HD-52 (Austin area).",
   },
@@ -81,8 +82,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "lean-d",
     sides: [
-      { name: "Letitia Plummer",  party: "D", incumbent: false, note: "Won May runoff over Annise Parker" },
-      { name: "Orlando Sanchez",  party: "R", incumbent: false, note: "Won May runoff over Warren Howell" },
+      { name: "Letitia Plummer",  party: "D", incumbent: false, gender: "F", note: "Won May runoff over Annise Parker" },
+      { name: "Orlando Sanchez",  party: "R", incumbent: false, gender: "M", note: "Won May runoff over Warren Howell" },
     ],
     detail: "Open seat — Lina Hidalgo did not seek reelection. Plummer beat Parker 57,893–55,395 in the Democratic runoff; Sanchez beat Howell 85,304–49,367 in the Republican runoff.",
   },
@@ -91,8 +92,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Christian Menefee",       party: "D", incumbent: false, note: "Won May runoff over Al Green; currently serving as Harris County Attorney" },
-      { name: "Ronald Dwayne Whitfield", party: "R", incumbent: false, note: "Won March primary" },
+      { name: "Christian Menefee",       party: "D", incumbent: false, gender: "M", note: "Won May runoff over Al Green; currently serving as Harris County Attorney" },
+      { name: "Ronald Dwayne Whitfield", party: "R", incumbent: false, gender: "M", note: "Won March primary" },
     ],
     detail: "Menefee beat Al Green 26,546–10,771 in the Democratic runoff. Heavily Democratic seat.",
   },
@@ -101,8 +102,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "safe-r",
     sides: [
-      { name: "Shaun Finnie",  party: "D", incumbent: false, note: "D nominee" },
-      { name: "Dan Crenshaw",  party: "R", incumbent: true },
+      { name: "Shaun Finnie",  party: "D", incumbent: false, gender: "M", note: "D nominee" },
+      { name: "Dan Crenshaw",  party: "R", incumbent: true,  gender: "M" },
     ],
     detail: "Dan Crenshaw (R) has held CD-2 (NW Harris County into Montgomery Co.) since 2019. A former Navy SEAL and nationally prominent voice for the GOP, Crenshaw faces nominal D opposition in a safe-R district.",
   },
@@ -111,8 +112,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "toss-up",
     sides: [
-      { name: "Lizzie Fletcher", party: "D", incumbent: true },
-      { name: "Alexander Hale",  party: "R", incumbent: false, note: "Won May runoff" },
+      { name: "Lizzie Fletcher", party: "D", incumbent: true,  gender: "F" },
+      { name: "Alexander Hale",  party: "R", incumbent: false, gender: "M", note: "Won May runoff" },
     ],
     detail: "CD-7 (West Houston — Bellaire, River Oaks, Memorial, Katy) is the most competitive congressional seat in Harris County. Fletcher flipped it D in 2018 and has held on every cycle; Hale won the R runoff and is backed by national Republican money.",
   },
@@ -121,8 +122,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-r",
     sides: [
-      { name: "Laura Jones",     party: "D", incumbent: false, note: "Won March primary" },
-      { name: "Morgan Luttrell", party: "R", incumbent: true, note: "Presumed nominee — no Harris-side R primary on ballot" },
+      { name: "Laura Jones",     party: "D", incumbent: false, gender: "F", note: "Won March primary" },
+      { name: "Morgan Luttrell", party: "R", incumbent: true,  gender: "M", note: "Presumed nominee — no Harris-side R primary on ballot" },
     ],
     detail: "CD-8 covers NE Harris County (Kingwood, Lake Houston, Atascocita) into Montgomery and east Texas. Morgan Luttrell (R) has held the seat since 2023; safe Republican territory.",
   },
@@ -131,8 +132,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "toss-up",
     sides: [
-      { name: "Leticia Gutierrez", party: "D", incumbent: false, note: "Won March primary" },
-      { name: "Alex Mealer",       party: "R", incumbent: false, note: "Won May runoff over Briscoe Cain" },
+      { name: "Leticia Gutierrez", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
+      { name: "Alex Mealer",       party: "R", incumbent: false, gender: "M", note: "Won May runoff over Briscoe Cain" },
     ],
     detail: "Open seat — Al Green (D) vacated to run in CD-18 and lost the runoff. Leticia Gutierrez (D) won the March primary; Alex Mealer (R) won a May runoff over Briscoe Cain. CD-9 is 55% Hispanic CVAP — the most competitive majority-Latino congressional seat in Harris County. Mealer lost the 2022 County Judge race to Lina Hidalgo by 0.9 points.",
   },
@@ -141,8 +142,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-r",
     sides: [
-      { name: "Marquette Greene-Scott", party: "D", incumbent: false, note: "Won March primary" },
-      { name: "Troy Nehls",             party: "R", incumbent: true, note: "Presumed nominee — primary outside Harris data" },
+      { name: "Marquette Greene-Scott", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
+      { name: "Troy Nehls",             party: "R", incumbent: true,  gender: "M", note: "Presumed nominee — primary outside Harris data" },
     ],
     detail: "CD-22 covers south Harris County (Pearland, Friendswood, Manvel, Missouri City) into Fort Bend and Brazoria counties. Troy Nehls (R) has held the seat since 2021; safe Republican district.",
   },
@@ -151,7 +152,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Sylvia Garcia", party: "D", incumbent: true, note: "Won March primary" },
+      { name: "Sylvia Garcia", party: "D", incumbent: true, gender: "F", note: "Won March primary" },
     ],
     detail: "CD-29 covers northeast Houston (Galena Park, Jacinto City, Cloverleaf) and runs toward Pasadena. Sylvia Garcia (D) has held the seat since 2019; majority-Latino district. No Republican general opponent confirmed.",
   },
@@ -160,8 +161,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-r",
     sides: [
-      { name: "Rhonda Hart",  party: "D", incumbent: false, note: "Won March primary" },
-      { name: "Brian Babin",  party: "R", incumbent: true, note: "Presumed nominee — primary outside Harris data" },
+      { name: "Rhonda Hart",  party: "D", incumbent: false, gender: "F", note: "Won March primary" },
+      { name: "Brian Babin",  party: "R", incumbent: true,  gender: "M", note: "Presumed nominee — primary outside Harris data" },
     ],
     detail: "CD-36 covers far southeast Harris County (Baytown, La Marque, Deer Park) into Chambers, Hardin, Jefferson, and Orange counties. Brian Babin (R) has held the seat since 2015; safe Republican district.",
   },
@@ -170,8 +171,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "lean-r",
     sides: [
-      { name: "Melissa McDonough", party: "D", incumbent: false, note: "Won March primary" },
-      { name: "Jon Bonck",         party: "R", incumbent: false, note: "Won May runoff" },
+      { name: "Melissa McDonough", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
+      { name: "Jon Bonck",         party: "R", incumbent: false, gender: "M", note: "Won May runoff" },
     ],
     detail: "Open seat — incumbent Wesley Hunt ran for U.S. Senate and lost the Republican primary.",
   },
@@ -180,7 +181,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "likely-r",
     sides: [
-      { name: "Shannon Dicely", party: "D", incumbent: false, note: "Won March primary" },
+      { name: "Shannon Dicely", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
     ],
     detail: "Incumbent Mayes Middleton won the Republican nomination for Attorney General; Republican nominee for this seat not in Harris primary data.",
   },
@@ -189,7 +190,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Molly Cook", party: "D", incumbent: true, note: "Won 2024 special election; seeking first full term" },
+      { name: "Molly Cook", party: "D", incumbent: true, gender: "F", note: "Won 2024 special election; seeking first full term" },
     ],
     detail: "Molly Cook won the 2024 special election to replace John Whitmire (who became Houston Mayor). SD-15 seat is on the 2026 ballot; Cook must win a full 4-year term. Heights, Montrose, Galleria corridor — heavily Democratic.",
   },
@@ -198,7 +199,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-r",
     sides: [
-      { name: "Brandon Creighton", party: "R", incumbent: true, note: "Seeking 3rd full term" },
+      { name: "Brandon Creighton", party: "R", incumbent: true, gender: "M", note: "Seeking 3rd full term" },
     ],
     detail: "Brandon Creighton is the Republican incumbent in a district that spans NW Harris County through Montgomery and Galveston counties. D nominee TBD.",
   },
@@ -207,7 +208,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Carol Alvarado", party: "D", incumbent: true, note: "Seeking reelection" },
+      { name: "Carol Alvarado", party: "D", incumbent: true, gender: "F", note: "Seeking reelection" },
     ],
     detail: "Carol Alvarado has held SD-6 since 2018. The district covers Houston's Heights, EaDo, Near Northside, and East End — one of Harris County's most Democratic state senate seats. R nominee TBD.",
   },
@@ -216,7 +217,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Borris Miles", party: "D", incumbent: true, note: "Seeking reelection" },
+      { name: "Borris Miles", party: "D", incumbent: true, gender: "M", note: "Seeking reelection" },
     ],
     detail: "Borris Miles has served SD-13 since 2006. The district covers Third Ward, Sunnyside, Hiram Clarke, Missouri City — a majority-Black district that is among the most heavily Democratic in Texas. R nominee TBD.",
   },
@@ -225,7 +226,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-r",
     sides: [
-      { name: "Joan Huffman", party: "R", incumbent: true, note: "Seeking reelection" },
+      { name: "Joan Huffman", party: "R", incumbent: true, gender: "F", note: "Seeking reelection" },
     ],
     detail: "Joan Huffman is a senior Republican senator who chairs the Senate Redistricting Committee. SD-17 covers SW Houston suburbs (Bellaire, Pearland, Sugar Land) — reliably Republican. D nominee TBD.",
   },
@@ -234,7 +235,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-r",
     sides: [
-      { name: "Lois Kolkhorst", party: "R", incumbent: true, note: "Seeking reelection" },
+      { name: "Lois Kolkhorst", party: "R", incumbent: true, gender: "F", note: "Seeking reelection" },
     ],
     detail: "Lois Kolkhorst's SD-18 touches only the far northwestern corner of Harris County (Cypress/Katy area). D nominee TBD.",
   },
@@ -243,8 +244,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "lean-r",
     sides: [
-      { name: "Stefanie Bord", party: "D", incumbent: false, note: "Won March primary" },
-      { name: "Stan Stanart",  party: "R", incumbent: false, note: "Won May runoff" },
+      { name: "Stefanie Bord", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
+      { name: "Stan Stanart",  party: "R", incumbent: false, gender: "M", note: "Won May runoff" },
     ],
     detail: "Open seat — incumbent Sam Harless (R) did not seek reelection. District covers NW Houston (FM 1960, Willowbrook, Copperfield). R-leaning suburb but Stanart is a controversial figure (former Harris County Tax Assessor); Bord could overperform in an anti-MAGA environment.",
   },
@@ -253,7 +254,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Staci Childs", party: "D", incumbent: false, note: "Won May runoff over Lawrence Allen Jr." },
+      { name: "Staci Childs", party: "D", incumbent: false, gender: "F", note: "Won May runoff over Lawrence Allen Jr." },
     ],
     detail: "Open seat — Alma Allen (D) retired after holding HD-131 since 2003. Childs won the Democratic runoff; district covers SW Houston (Fondren/Southwest area) and is overwhelmingly Democratic. No Republican filed.",
   },
@@ -262,7 +263,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Charlene Ward Johnson", party: "D", incumbent: true, note: "Won March primary" },
+      { name: "Charlene Ward Johnson", party: "D", incumbent: true, gender: "F", note: "Won March primary" },
     ],
     detail: "Charlene Ward Johnson (HD-139, Fifth Ward / Trinity Gardens) has served since 2017. Heavily Democratic majority-Black district. R nominee TBD.",
   },
@@ -271,7 +272,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Harold Dutton Jr.", party: "D", incumbent: true, note: "Won March primary outright" },
+      { name: "Harold Dutton Jr.", party: "D", incumbent: true, gender: "M", note: "Won March primary outright" },
     ],
     detail: "Harold Dutton Jr. (HD-142, Kashmere Gardens / Trinity Gardens / NE Houston) has served since 1985 — one of the longest-serving members of the Texas House. Heavily Democratic majority-Black district. R nominee TBD.",
   },
@@ -280,7 +281,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "lean-d",
     sides: [
-      { name: "Mary Ann Perez", party: "D", incumbent: true, note: "Won March primary" },
+      { name: "Mary Ann Perez", party: "D", incumbent: true, gender: "F", note: "Won March primary" },
     ],
     detail: "Mary Ann Perez (HD-144, Galena Park / Pasadena / east Harris County) has served since 2017. Majority-Latino district on the Ship Channel's east side — lean-D but historically competitive. R nominee TBD.",
   },
@@ -289,7 +290,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "lean-d",
     sides: [
-      { name: "Darlene Breaux", party: "D", incumbent: false, note: "Won May runoff over incumbent Hubert Vo" },
+      { name: "Darlene Breaux", party: "D", incumbent: false, gender: "F", note: "Won May runoff over incumbent Hubert Vo" },
     ],
     detail: "Incumbent Hubert Vo lost the Democratic runoff 1,623–1,053. He holds the seat until January 2027.",
   },
@@ -298,8 +299,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "safe-r",
     sides: [
-      { name: "A'Yonna Kellum", party: "D", incumbent: false, note: "Won March primary" },
-      { name: "Mark Dorazio",   party: "R", incumbent: true,  note: "Seeking reelection" },
+      { name: "A'Yonna Kellum", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
+      { name: "Mark Dorazio",   party: "R", incumbent: true,  gender: "M", note: "Seeking reelection" },
     ],
     detail: "Mark Dorazio has held HD-150 (Katy / Cinco Ranch / far west Harris County) since 2023, succeeding Valoree Swanson. Safe Republican district. A'Yonna Kellum won the D primary.",
   },
@@ -308,7 +309,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-r",
     sides: [
-      { name: "Charles Cunningham", party: "R", incumbent: true, note: "Seeking reelection" },
+      { name: "Charles Cunningham", party: "R", incumbent: true, gender: "M", note: "Seeking reelection" },
     ],
     detail: "Charles Cunningham has held HD-127 (Kingwood / Atascocita / NE Harris County) since 2023, succeeding Dan Huberty. Solidly Republican suburban district. D nominee TBD.",
   },
@@ -324,7 +325,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-r",
     sides: [
-      { name: "Dennis Paul", party: "R", incumbent: true, note: "Seeking reelection" },
+      { name: "Dennis Paul", party: "R", incumbent: true, gender: "M", note: "Seeking reelection" },
     ],
     detail: "Dennis Paul has held HD-129 (Clear Lake, Bay Area) since 2017. D nominee TBD.",
   },
@@ -333,7 +334,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-r",
     sides: [
-      { name: "Mano DeAyala", party: "R", incumbent: true, note: "Seeking reelection" },
+      { name: "Mano DeAyala", party: "R", incumbent: true, gender: "M", note: "Seeking reelection" },
     ],
     detail: "Mano DeAyala has held HD-133 (Memorial / Briargrove / West Houston) since 2021. Suburban west Houston — reliably Republican. D nominee TBD.",
   },
@@ -342,7 +343,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-r",
     sides: [
-      { name: "Tom Oliverson", party: "R", incumbent: true, note: "Seeking reelection" },
+      { name: "Tom Oliverson", party: "R", incumbent: true, gender: "M", note: "Seeking reelection" },
     ],
     detail: "Tom Oliverson has held HD-130 (Katy/CypressNW) since 2017. D nominee TBD.",
   },
@@ -351,7 +352,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "lean-r",
     sides: [
-      { name: "Mike Schofield", party: "R", incumbent: true, note: "Seeking reelection" },
+      { name: "Mike Schofield", party: "R", incumbent: true, gender: "M", note: "Seeking reelection" },
     ],
     detail: "Mike Schofield holds HD-132 (NW Harris County / Cypress). The district is competitive at the suburban margins. D nominee TBD.",
   },
@@ -360,7 +361,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "lean-d",
     sides: [
-      { name: "Ann Johnson", party: "D", incumbent: true, note: "Seeking reelection" },
+      { name: "Ann Johnson", party: "D", incumbent: true, gender: "F", note: "Seeking reelection" },
     ],
     detail: "Ann Johnson flipped HD-134 (Meyerland / Southampton / West U) from R to D in 2020 and has won each cycle. She serves on Judiciary & Civil Jurisprudence and is a former ADA. R nominee TBD.",
   },
@@ -369,7 +370,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "toss-up",
     sides: [
-      { name: "Jon Rosenthal", party: "D", incumbent: true, note: "Seeking reelection" },
+      { name: "Jon Rosenthal", party: "D", incumbent: true, gender: "M", note: "Seeking reelection" },
     ],
     detail: "Jon Rosenthal has held HD-135 (Spring Branch / Town & Country) since 2019 after a narrow flip. One of the most competitive suburban seats in Harris County. R nominee TBD.",
   },
@@ -378,7 +379,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Gene Wu", party: "D", incumbent: true, note: "Seeking reelection" },
+      { name: "Gene Wu", party: "D", incumbent: true, gender: "M", note: "Seeking reelection" },
     ],
     detail: "Gene Wu (HD-137, Bellaire/Westbury area) has served since 2013. D+ district with diverse demographics — Asian American, Latino, and Black communities. R nominee TBD.",
   },
@@ -387,7 +388,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "lean-r",
     sides: [
-      { name: "Lacey Hull", party: "R", incumbent: true, note: "Seeking reelection" },
+      { name: "Lacey Hull", party: "R", incumbent: true, gender: "F", note: "Seeking reelection" },
     ],
     detail: "Lacey Hull (HD-138, Spring Branch / Memorial) has held the seat since 2020 after a narrow win. R nominee TBD.",
   },
@@ -396,7 +397,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Armando Walle", party: "D", incumbent: true, note: "Seeking reelection" },
+      { name: "Armando Walle", party: "D", incumbent: true, gender: "M", note: "Seeking reelection" },
     ],
     detail: "Armando Walle (HD-140, North Houston / Northside) has served since 2009. Heavily Latino district — safe D. R nominee TBD.",
   },
@@ -405,7 +406,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Senfronia Thompson", party: "D", incumbent: true, note: "Dean of the Texas House — longest serving" },
+      { name: "Senfronia Thompson", party: "D", incumbent: true, gender: "F", note: "Dean of the Texas House — longest serving" },
     ],
     detail: "Senfronia Thompson (HD-141, Sunnyside / Third Ward) has served continuously since 1973 — the longest-serving member of the Texas House. Heavily Democratic majority-Black district. R nominee TBD.",
   },
@@ -414,7 +415,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Ana Hernandez", party: "D", incumbent: true, note: "Seeking reelection" },
+      { name: "Ana Hernandez", party: "D", incumbent: true, gender: "F", note: "Seeking reelection" },
     ],
     detail: "Ana Hernandez (HD-143, East End / Galena Park) has served since 2006. Majority-Latino district along the Ship Channel. R nominee TBD.",
   },
@@ -423,7 +424,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Christina Morales", party: "D", incumbent: true, note: "Seeking reelection" },
+      { name: "Christina Morales", party: "D", incumbent: true, gender: "F", note: "Seeking reelection" },
     ],
     detail: "Christina Morales (HD-145, Gulfton / Sharpstown / SW Houston) has served since 2018. Majority-Latino district with the largest SSVR in Harris County. R nominee TBD.",
   },
@@ -432,7 +433,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Lauren Ashley Simmons", party: "D", incumbent: true, note: "Seeking reelection" },
+      { name: "Lauren Ashley Simmons", party: "D", incumbent: true, gender: "F", note: "Seeking reelection" },
     ],
     detail: "Lauren Ashley Simmons (HD-146, Riverside / South Main / Greenway Plaza) has served since 2021. Safe Democratic district. R nominee TBD.",
   },
@@ -441,7 +442,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Jolanda Jones", party: "D", incumbent: true, note: "Seeking reelection" },
+      { name: "Jolanda Jones", party: "D", incumbent: true, gender: "F", note: "Seeking reelection" },
     ],
     detail: "Jolanda Jones (HD-147, Montrose / Rice Military / University) has served since 2023. Urban core of Houston — one of the most heavily Democratic districts. R nominee TBD.",
   },
@@ -450,7 +451,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Penny Morales Shaw", party: "D", incumbent: true, note: "Seeking reelection" },
+      { name: "Penny Morales Shaw", party: "D", incumbent: true, gender: "F", note: "Seeking reelection" },
     ],
     detail: "Penny Morales Shaw (HD-148, Midtown / Heights / Near NW) has served since 2019. Gentrifying urban district trending D. R nominee TBD.",
   },
@@ -459,7 +460,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "lean-d",
     sides: [
-      { name: "Dolores Lozano", party: "D", incumbent: true, note: "Won March primary" },
+      { name: "Dolores Lozano", party: "D", incumbent: true, gender: "F", note: "Won March primary" },
     ],
     detail: "Dolores Lozano (incumbent Place 2, JP Precinct 2) won the Democratic primary. R nominee TBD.",
   },
@@ -470,7 +471,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "uncontested-d",
     sides: [
-      { name: "Rodney Ellis", party: "D", incumbent: true, note: "Incumbent — no R challenger filed" },
+      { name: "Rodney Ellis", party: "D", incumbent: true, gender: "M", note: "Incumbent — no R challenger filed" },
     ],
     detail: "Rodney Ellis has held PCT 1 since 2016. No Republican challenger filed by the June 2026 deadline.",
   },
@@ -479,8 +480,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "likely-d",
     sides: [
-      { name: "Adrian Garcia",  party: "D", incumbent: true,  note: "Incumbent" },
-      { name: "Richard Vega",   party: "R", incumbent: false, note: "R general candidate" },
+      { name: "Adrian Garcia",  party: "D", incumbent: true,  gender: "M", note: "Incumbent" },
+      { name: "Richard Vega",   party: "R", incumbent: false, gender: "M", note: "R general candidate" },
     ],
     detail: "Contested general election. Garcia has held PCT 2 since 2016.",
   },
@@ -489,7 +490,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "uncontested-r",
     sides: [
-      { name: "Tom Ramsey", party: "R", incumbent: true, note: "Incumbent — no D challenger filed" },
+      { name: "Tom Ramsey", party: "R", incumbent: true, gender: "M", note: "Incumbent — no D challenger filed" },
     ],
     detail: "Tom Ramsey has held PCT 3 since 2021. No Democratic challenger filed by the June 2026 deadline.",
   },
@@ -498,7 +499,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "uncontested-d",
     sides: [
-      { name: "Lesley Briones", party: "D", incumbent: true, note: "Incumbent — no R challenger filed" },
+      { name: "Lesley Briones", party: "D", incumbent: true, gender: "F", note: "Incumbent — no R challenger filed" },
     ],
     detail: "Lesley Briones has held PCT 4 since 2023. No Republican challenger filed by the June 2026 deadline.",
   },
@@ -509,7 +510,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "uncontested-d",
     sides: [
-      { name: "Ed Gonzalez", party: "D", incumbent: true, note: "Incumbent — no R opponent filed" },
+      { name: "Ed Gonzalez", party: "D", incumbent: true, gender: "M", note: "Incumbent — no R opponent filed" },
     ],
     detail: "Ed Gonzalez has held the Sheriff's office since 2017. No Republican filed for the general election — running uncontested.",
   },
@@ -518,7 +519,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "uncontested-d",
     sides: [
-      { name: "Sean Teare", party: "D", incumbent: true, note: "Incumbent — no R opponent filed" },
+      { name: "Sean Teare", party: "D", incumbent: true, gender: "M", note: "Incumbent — no R opponent filed" },
     ],
     detail: "Sean Teare has served as DA since 2022. No Republican filed for the general election — running uncontested.",
   },
@@ -527,7 +528,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "likely-d",
     sides: [
-      { name: "Abbie Kamin", party: "D", incumbent: false, note: "D nominee — open seat" },
+      { name: "Abbie Kamin", party: "D", incumbent: false, gender: "F", note: "D nominee — open seat" },
     ],
     detail: "Open seat race for County Attorney. Abbie Kamin won the Democratic primary.",
   },
@@ -536,7 +537,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Marilyn Burgess", party: "D", incumbent: true, note: "Incumbent" },
+      { name: "Marilyn Burgess", party: "D", incumbent: true, gender: "F", note: "Incumbent" },
     ],
     detail: "Marilyn Burgess has served as District Clerk since 2010. R opponent status TBD — safe D district regardless.",
   },
@@ -545,7 +546,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Teneshia Hudspeth", party: "D", incumbent: true, note: "Incumbent" },
+      { name: "Teneshia Hudspeth", party: "D", incumbent: true, gender: "F", note: "Incumbent" },
     ],
     detail: "Teneshia Hudspeth has served as County Clerk since 2018. R opponent status TBD — safe D district regardless.",
   },
@@ -554,7 +555,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Annette Ramirez", party: "D", incumbent: true, note: "Incumbent" },
+      { name: "Annette Ramirez", party: "D", incumbent: true, gender: "F", note: "Incumbent" },
     ],
     detail: "Annette Ramirez has served as Tax Assessor-Collector since 2023. R opponent status TBD — safe D district regardless.",
   },
@@ -563,7 +564,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "safe-d",
     sides: [
-      { name: "Carla Wyatt", party: "D", incumbent: true, note: "Incumbent" },
+      { name: "Carla Wyatt", party: "D", incumbent: true, gender: "F", note: "Incumbent" },
     ],
     detail: "Carla Wyatt has served as County Treasurer since 2019. R opponent status TBD — countywide office in safe D territory.",
   },
@@ -573,56 +574,56 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     office: "Constable Precinct 1",
     status: "partial",
     lean: "safe-d",
-    sides: [{ name: "Alan Rosen",       party: "D", incumbent: true, note: "Incumbent" }],
+    sides: [{ name: "Alan Rosen",       party: "D", incumbent: true, gender: "M", note: "Incumbent" }],
     detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
   },
   "CONSTABLE-2": {
     office: "Constable Precinct 2",
     status: "partial",
     lean: "safe-d",
-    sides: [{ name: "Jerry Garcia",     party: "D", incumbent: true, note: "Incumbent" }],
+    sides: [{ name: "Jerry Garcia",     party: "D", incumbent: true, gender: "M", note: "Incumbent" }],
     detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
   },
   "CONSTABLE-3": {
     office: "Constable Precinct 3",
     status: "partial",
     lean: "safe-d",
-    sides: [{ name: "Sherman Eagleton", party: "D", incumbent: true, note: "Incumbent" }],
+    sides: [{ name: "Sherman Eagleton", party: "D", incumbent: true, gender: "M", note: "Incumbent" }],
     detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
   },
   "CONSTABLE-4": {
     office: "Constable Precinct 4",
     status: "partial",
     lean: "safe-r",
-    sides: [{ name: "Mark Herman",      party: "R", incumbent: true, note: "Incumbent" }],
+    sides: [{ name: "Mark Herman",      party: "R", incumbent: true, gender: "M", note: "Incumbent" }],
     detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
   },
   "CONSTABLE-5": {
     office: "Constable Precinct 5",
     status: "partial",
     lean: "safe-r",
-    sides: [{ name: "Terry Allbritton", party: "R", incumbent: true, note: "Incumbent" }],
+    sides: [{ name: "Terry Allbritton", party: "R", incumbent: true, gender: "M", note: "Incumbent" }],
     detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
   },
   "CONSTABLE-6": {
     office: "Constable Precinct 6",
     status: "partial",
     lean: "safe-d",
-    sides: [{ name: "Silvia Trevino",   party: "D", incumbent: true, note: "Incumbent" }],
+    sides: [{ name: "Silvia Trevino",   party: "D", incumbent: true, gender: "F", note: "Incumbent" }],
     detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
   },
   "CONSTABLE-7": {
     office: "Constable Precinct 7",
     status: "partial",
     lean: "safe-d",
-    sides: [{ name: "James Phillips",   party: "D", incumbent: true, note: "Incumbent" }],
+    sides: [{ name: "James Phillips",   party: "D", incumbent: true, gender: "M", note: "Incumbent" }],
     detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
   },
   "CONSTABLE-8": {
     office: "Constable Precinct 8",
     status: "partial",
     lean: "safe-r",
-    sides: [{ name: "Phil Sandlin",     party: "R", incumbent: true, note: "Incumbent" }],
+    sides: [{ name: "Phil Sandlin",     party: "R", incumbent: true, gender: "M", note: "Incumbent" }],
     detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
   },
 
@@ -632,8 +633,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "toss-up",
     sides: [
-      { name: "Lisa Jefferson", party: "D", incumbent: false, note: "Won March primary" },
-      { name: "Mark Fury",      party: "R", incumbent: false, note: "Won March primary over incumbent Bob Wolfe" },
+      { name: "Lisa Jefferson", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
+      { name: "Mark Fury",      party: "R", incumbent: false, gender: "M", note: "Won March primary over incumbent Bob Wolfe" },
     ],
     detail: "Open competitive race — incumbent Bob Wolfe (R) lost his primary to Mark Fury.",
   },
@@ -642,7 +643,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "partial",
     lean: "likely-d",
     sides: [
-      { name: "Melanie Miles", party: "D", incumbent: false, note: "Won May runoff over incumbent Sharon Burney" },
+      { name: "Melanie Miles", party: "D", incumbent: false, gender: "F", note: "Won May runoff over incumbent Sharon Burney" },
     ],
     detail: "Melanie Miles beat incumbent Sharon Burney in the Democratic runoff. R nominee TBD.",
   },
