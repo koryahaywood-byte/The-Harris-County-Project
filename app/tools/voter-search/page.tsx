@@ -360,7 +360,7 @@ export default function VoterSearch() {
               Voter roll not yet loaded
             </h2>
             <p className="text-sm mb-4" style={{ color: "#6b7280", maxWidth: 420, margin: "0 auto" }}>
-              This tool is ready and waiting for Harris County voter registration data. Once the voter roll is imported, you can search all 2.4M registered voters and see their complete election history.
+              Harris County voter registration data hasn&apos;t been imported. Once loaded, search all 2.4M registered voters by name, address, or precinct and see their complete election participation history.
             </p>
             <div className="rounded-xl p-4 text-left max-w-sm mx-auto mt-4"
               style={{ background: "rgba(37,99,168,0.04)", border: "1px solid rgba(37,99,168,0.12)" }}>

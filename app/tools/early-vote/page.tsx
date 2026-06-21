@@ -239,7 +239,7 @@ export default function EarlyVotePage() {
 
             {/* Data source note */}
             <div className="mt-4 rounded-xl px-4 py-3 text-[10px] leading-relaxed" style={{ background: "rgba(26,58,92,0.05)", color: "#6b7280" }}>
-              <strong style={{ color: "#1a3a5c" }}>Live data hookup:</strong> During active elections, Harris County Clerk publishes daily early vote participation files at harrisvotes.com. The voter file (TEAM system, TX Sec. of State) provides party primary history. Precinct-level cross-reference powers the Dem vs. Rep universe gauge. This tool is built and ready to connect when an election is underway.
+              <strong style={{ color: "#1a3a5c" }}>Data source:</strong> During active elections, Harris County Clerk publishes daily early vote participation files at harrisvotes.com. The voter file (TEAM system, TX Sec. of State) provides party primary history. Precinct-level cross-reference powers the Dem vs. Rep universe gauge.
             </div>
           </div>
 
