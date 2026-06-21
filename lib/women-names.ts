@@ -111,4 +111,13 @@ export const WOMEN_IN_POLITICS = new Set([
   "Lori DeAngelo",
   "Breanna Schwartz",
   "Allison Mathis",
+  // HD candidates confirmed this session
+  "Michelle Williams",
+  "Sara McGee",
+  "Helen Zhou",
+  "Laura Garcia DeLeon",
+  "Julie Hunt",
+  "Darlene Breaux",
+  "Liz Ramos",
+  "Desiree Klaus",
 ]);
