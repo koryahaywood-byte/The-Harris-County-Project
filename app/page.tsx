@@ -3,7 +3,6 @@ import ScrollReveal from "@/components/ScrollReveal";
 import DashboardWidget from "@/components/DashboardWidget";
 import ToolboxOpener from "@/components/ToolboxOpener";
 import Hero3D from "@/components/Hero3D";
-import TerrainReport from "@/components/TerrainReport";
 
 /* ── Tool catalogue ─────────────────────────────────────────────────────── */
 interface Tool {
@@ -169,45 +168,56 @@ const ROWS: { section: string; tools: Tool[] }[] = [
   },
 ];
 
-/* ── Featured flagship tools ─────────────────────────────────────────────── */
-const FEATURED = [
+/* ── Start Here — the 4 tools to master first ───────────────────────────── */
+const START_HERE = [
   {
     href:        "/tools/heat-check",
     name:        "Heat Check",
     eyebrow:     "Elections",
     headline:    "See how every\nprecinct voted.",
-    description: "1,011 precincts. Democratic and Republican primaries. Zoom into your block and see exactly how your neighborhood voted — and who turned out.",
-    proof:       ["1,011 precincts mapped", "Dem & Rep primaries", "2026 runoff data"],
+    description: "1,011 precincts. Every election cycle back to 2012 — primaries, runoffs, and generals. Zoom into any neighborhood and see exactly how it voted.",
+    proof:       ["1,011 precincts mapped", "2012 – 2026 · all cycles", "Precinct-level detail"],
     photo:       U("1596422846543-75c6fc197f07"),
     gradient:    "linear-gradient(135deg,#7f1d1d 0%,#991b1b 60%,#dc2626 100%)",
-    size:        "large",
+    hero:        true,
   },
   {
     href:        "/tools/where-is-the-dough",
     name:        "Where the Money Resides",
     eyebrow:     "Money",
-    headline:    "Follow the money\nbehind every official.",
-    description: "Live FEC, TEC, and county filings for every Harris County elected official. See who's funding your representative — and how much.",
-    proof:       ["All elected officials tracked", "FEC + TEC + County live", "Updated each filing cycle"],
+    headline:    "Follow the money.",
+    description: "Live FEC, TEC, and county filings for every Harris County elected official.",
+    proof:       ["All elected officials", "FEC + TEC live"],
     photo:       U("1611974789855-9c2a0a7236a3"),
     gradient:    "linear-gradient(135deg,#78350f 0%,#b45309 60%,#d97706 100%)",
-    size:        "small",
+    hero:        false,
   },
   {
-    href:        "/tools/city-hall",
-    name:        "City Hall Beat",
-    eyebrow:     "The Beat",
-    headline:    "What actually happened\nat Tuesday's meeting.",
-    description: "Every Houston City Council meeting AI-summarized from Emily Takes Notes — major votes, who spoke, and which politicians were in the room.",
-    proof:       ["Every Tuesday meeting", "AI-structured timeline", "Cross-referenced to politician profiles"],
-    photo:       U("1565517613760-aa17a7a34bd7"),
-    gradient:    "linear-gradient(135deg,#0f766e 0%,#0d9488 60%,#0891b2 100%)",
-    size:        "small",
+    href:        "/tools/districts",
+    name:        "Districts",
+    eyebrow:     "Elections",
+    headline:    "Your district,\nin full.",
+    description: "Demographics, vote history, 2026 matchup, win number, and actual race results for every seat.",
+    proof:       ["Every seat covered", "Actual race results"],
+    photo:       U("1569091791842-7cfb64e04797"),
+    gradient:    "linear-gradient(135deg,#0f2540 0%,#1a3a5c 100%)",
+    hero:        false,
+  },
+  {
+    href:        "/my-officials",
+    name:        "Who Represents Me?",
+    eyebrow:     "Officials",
+    headline:    "Enter your\naddress.",
+    description: "Every official who answers to you — JP to Congress — with contact info, money raised, and record.",
+    proof:       ["JP to Congress", "Real contact info"],
+    photo:       U("1449157291145-7efd050a4d0e"),
+    gradient:    "linear-gradient(135deg,#92400e 0%,#d97706 100%)",
+    hero:        false,
   },
 ] as const;
 
 function FeaturedSection() {
-  const [large, ...small] = FEATURED;
+  const [hero, ...three] = START_HERE;
   return (
     <section id="start-here" className="py-16 md:py-24 px-6" style={{ background: "#f5f3ef" }}>
       <div className="max-w-6xl mx-auto">
@@ -216,80 +226,75 @@ function FeaturedSection() {
           <span className="block w-8 h-px bg-[var(--accent)]/25" />
           <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--accent)]/50">Start Here</span>
           <span className="flex-1 h-px bg-[var(--border)]" />
+          <span className="text-[11px]" style={{ color: "#9ca3af" }}>4 tools to know cold</span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-5">
+        <div className="flex flex-col gap-5">
 
-          {/* Large featured card */}
-          <Link href={large.href} className="group relative rounded-[2rem] overflow-hidden cursor-pointer block"
-            style={{ minHeight: 420 }}>
-            {/* Photo */}
-            <img src={large.photo} alt="" loading="lazy"
+          {/* Hero — Heat Check */}
+          <Link href={hero.href} className="group relative rounded-[2rem] overflow-hidden cursor-pointer block"
+            style={{ minHeight: 380 }}>
+            <img src={hero.photo} alt="" loading="lazy"
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105"
               style={{ opacity: 0.5 }} />
-            {/* Gradient overlay */}
-            <div className="absolute inset-0" style={{ background: large.gradient, opacity: 0.75 }} />
+            <div className="absolute inset-0" style={{ background: hero.gradient, opacity: 0.78 }} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-            {/* Content */}
-            <div className="relative z-10 flex flex-col justify-end h-full p-8 md:p-10" style={{ minHeight: 420 }}>
-              <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/50 mb-3">{large.eyebrow}</span>
+            <div className="relative z-10 flex flex-col justify-end h-full p-8 md:p-10" style={{ minHeight: 380 }}>
+              <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/50 mb-3">{hero.eyebrow}</span>
               <h2 className="text-4xl md:text-5xl font-bold text-white leading-[1.08] mb-4 whitespace-pre-line"
                 style={{ fontFamily: "var(--font-playfair), serif" }}>
-                {large.headline}
+                {hero.headline}
               </h2>
-              <p className="text-white/70 text-sm leading-relaxed max-w-md mb-6">{large.description}</p>
-
-              {/* Proof points */}
+              <p className="text-white/70 text-sm leading-relaxed max-w-xl mb-6">{hero.description}</p>
               <div className="flex flex-wrap gap-2 mb-6">
-                {large.proof.map(p => (
+                {hero.proof.map(p => (
                   <span key={p} className="text-[10px] font-bold px-3 py-1 rounded-full"
                     style={{ background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.85)", border: "1px solid rgba(255,255,255,0.18)" }}>
                     {p}
                   </span>
                 ))}
               </div>
-
               <span className="inline-flex items-center gap-2 text-sm font-bold text-white group-hover:gap-3 transition-all duration-300">
-                Open {large.name}
+                Open Heat Check
                 <span className="inline-flex w-8 h-8 rounded-full bg-white/15 items-center justify-center group-hover:bg-white/25 transition-colors">→</span>
               </span>
             </div>
           </Link>
 
-          {/* Two smaller cards stacked */}
-          <div className="flex flex-col gap-5">
-            {small.map(tool => (
+          {/* Three equal cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            {three.map(tool => (
               <Link key={tool.href} href={tool.href}
-                className="group relative rounded-[2rem] overflow-hidden cursor-pointer flex-1 block"
-                style={{ minHeight: 195 }}>
+                className="group relative rounded-[2rem] overflow-hidden cursor-pointer block"
+                style={{ minHeight: 230 }}>
                 <img src={tool.photo} alt="" loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105"
                   style={{ opacity: 0.5 }} />
-                <div className="absolute inset-0" style={{ background: tool.gradient, opacity: 0.75 }} />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
-
-                <div className="relative z-10 flex flex-col justify-end h-full p-6" style={{ minHeight: 195 }}>
+                <div className="absolute inset-0" style={{ background: tool.gradient, opacity: 0.78 }} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="relative z-10 flex flex-col justify-end h-full p-6" style={{ minHeight: 230 }}>
                   <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/50 mb-2">{tool.eyebrow}</span>
-                  <h3 className="text-2xl font-bold text-white leading-tight mb-2 whitespace-pre-line"
+                  <h3 className="text-2xl font-bold text-white leading-[1.1] mb-3 whitespace-pre-line"
                     style={{ fontFamily: "var(--font-playfair), serif" }}>
                     {tool.headline}
                   </h3>
+                  <p className="text-white/60 text-[11px] leading-relaxed mb-3 line-clamp-2">{tool.description}</p>
                   <div className="flex items-center justify-between">
                     <div className="flex flex-wrap gap-1.5">
-                      {tool.proof.slice(0, 2).map(p => (
+                      {tool.proof.map(p => (
                         <span key={p} className="text-[9px] font-bold px-2 py-0.5 rounded-full"
                           style={{ background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.8)", border: "1px solid rgba(255,255,255,0.15)" }}>
                           {p}
                         </span>
                       ))}
                     </div>
-                    <span className="text-white/60 text-xs font-bold group-hover:text-white group-hover:translate-x-1 transition-all duration-300">→</span>
+                    <span className="text-white/50 text-sm font-bold group-hover:text-white group-hover:translate-x-1 transition-all duration-300">→</span>
                   </div>
                 </div>
               </Link>
             ))}
           </div>
+
         </div>
       </div>
     </section>
@@ -465,13 +470,6 @@ export default function Home() {
 
       {/* ── DASHBOARD WIDGET ─────────────────────────────────────── */}
       <DashboardWidget />
-
-      {/* ── THE TERRAIN REPORT — automated signals feed ──────────── */}
-      <section className="px-6 pb-4" style={{ background: "#f5f3ef" }}>
-        <div className="max-w-6xl mx-auto pt-14">
-          <TerrainReport />
-        </div>
-      </section>
 
       {/* ── FEATURED FLAGSHIP TOOLS ──────────────────────────────── */}
       <FeaturedSection />
