@@ -178,12 +178,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "SD-11": {
     office: "State Senator, District 11",
-    status: "partial",
+    status: "set",
     lean: "likely-r",
     sides: [
       { name: "Shannon Dicely", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
+      { name: "Dennis Paul",    party: "R", incumbent: false, gender: "M", note: "Won R primary; incumbent Mayes Middleton ran for AG" },
     ],
-    detail: "Incumbent Mayes Middleton won the Republican nomination for Attorney General; Republican nominee for this seat not in Harris primary data.",
+    detail: "Open seat — incumbent Mayes Middleton vacated to run for Attorney General. Dennis Paul won the R primary. Shannon Dicely is the D nominee. District covers Clear Lake, Friendswood, Pearland — Republican-leaning suburb SE of Houston.",
   },
   "SD-15": {
     office: "State Senator, District 15",
@@ -196,39 +197,21 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "SD-4": {
     office: "State Senator, District 4",
-    status: "partial",
+    status: "set",
     lean: "safe-r",
     sides: [
-      { name: "Brandon Creighton", party: "R", incumbent: true, gender: "M", note: "Seeking 3rd full term" },
+      { name: "Brett Ligon", party: "R", incumbent: true,  gender: "M", note: "Won May 2026 special election after Creighton resigned to become TX Tech Chancellor" },
     ],
-    detail: "Brandon Creighton is the Republican incumbent in a district that spans NW Harris County through Montgomery and Galveston counties. D nominee TBD.",
-  },
-  "SD-6": {
-    office: "State Senator, District 6",
-    status: "partial",
-    lean: "safe-d",
-    sides: [
-      { name: "Carol Alvarado", party: "D", incumbent: true, gender: "F", note: "Seeking reelection" },
-    ],
-    detail: "Carol Alvarado has held SD-6 since 2018. The district covers Houston's Heights, EaDo, Near Northside, and East End — one of Harris County's most Democratic state senate seats. R nominee TBD.",
+    detail: "Brandon Creighton resigned in early 2026 to become Chancellor of the Texas Tech University System. Brett Ligon, former Montgomery County DA, won the May 2, 2026 special election and holds the seat as incumbent for the November general.",
   },
   "SD-13": {
     office: "State Senator, District 13",
-    status: "partial",
-    lean: "safe-d",
+    status: "set",
+    lean: "uncontested-d",
     sides: [
-      { name: "Borris Miles", party: "D", incumbent: true, gender: "M", note: "Seeking reelection" },
+      { name: "Borris Miles", party: "D", incumbent: true, gender: "M", note: "Running unopposed — no R nominee emerged from primary" },
     ],
-    detail: "Borris Miles has served SD-13 since 2006. The district covers Third Ward, Sunnyside, Hiram Clarke, Missouri City — a majority-Black district that is among the most heavily Democratic in Texas. R nominee TBD.",
-  },
-  "SD-17": {
-    office: "State Senator, District 17",
-    status: "partial",
-    lean: "safe-r",
-    sides: [
-      { name: "Joan Huffman", party: "R", incumbent: true, gender: "F", note: "Seeking reelection" },
-    ],
-    detail: "Joan Huffman is a senior Republican senator who chairs the Senate Redistricting Committee. SD-17 covers SW Houston suburbs (Bellaire, Pearland, Sugar Land) — reliably Republican. D nominee TBD.",
+    detail: "Borris Miles has served SD-13 since 2006. The district covers Third Ward, Sunnyside, Hiram Clarke, Missouri City — a majority-Black district that is among the most heavily Democratic in Texas. No Republican filed, so Miles runs unopposed.",
   },
   "SD-18": {
     office: "State Senator, District 18",
