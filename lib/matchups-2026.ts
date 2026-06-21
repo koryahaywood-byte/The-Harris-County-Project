@@ -152,12 +152,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "CD-29": {
     office: "U.S. Representative, District 29",
-    status: "partial",
+    status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Sylvia Garcia", party: "D", incumbent: true, gender: "F", note: "Won March primary" },
+      { name: "Sylvia Garcia",   party: "D", incumbent: true,  gender: "F", note: "Won March primary; held seat since 2019" },
+      { name: "Martha Fierro",   party: "R", incumbent: false, gender: "F", note: "Won R primary; previously lost SD-6 (2024) and HD-145 (2020)" },
     ],
-    detail: "CD-29 covers northeast Houston (Galena Park, Jacinto City, Cloverleaf) and runs toward Pasadena. Sylvia Garcia (D) has held the seat since 2019; majority-Latino district. No Republican general opponent confirmed.",
+    detail: "CD-29 covers northeast Houston (Galena Park, Jacinto City, Cloverleaf) and runs toward Pasadena. Sylvia Garcia (D) has held the seat since 2019; majority-Latino district. R challenger Martha Fierro has run statewide previously but this is a safe-D seat.",
   },
   "CD-36": {
     office: "U.S. Representative, District 36",
@@ -478,12 +479,12 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   // Commissioner Precincts
   "PCT-1": {
     office: "Commissioner Precinct 1",
-    status: "partial",
+    status: "set",
     lean: "uncontested-d",
     sides: [
       { name: "Rodney Ellis", party: "D", incumbent: true, gender: "M", note: "Incumbent — no R challenger filed" },
     ],
-    detail: "Rodney Ellis has held PCT 1 since 2016. No Republican challenger filed by the June 2026 deadline.",
+    detail: "Rodney Ellis has held PCT 1 since 2016. No Republican challenger filed by the filing deadline.",
   },
   "PCT-2": {
     office: "Commissioner Precinct 2",
@@ -584,12 +585,12 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "JP-7-PL2": {
     office: "Justice of the Peace PCT 7 PL 2",
-    status: "partial",
-    lean: "likely-d",
+    status: "set",
+    lean: "uncontested-d",
     sides: [
-      { name: "Melanie Miles", party: "D", incumbent: false, gender: "F", note: "Won May runoff over incumbent Sharon Burney" },
+      { name: "Melanie Miles", party: "D", incumbent: false, gender: "F", note: "Won May runoff over incumbent Sharon Burney; R primary canceled — no R nominee" },
     ],
-    detail: "Melanie Miles beat incumbent Sharon Burney in the Democratic runoff. R nominee TBD.",
+    detail: "Melanie Miles beat incumbent Sharon Burney in the Democratic primary runoff. No Republican filed for the general election — Miles runs uncontested.",
   },
   "TX-RailroadCommission": {
     office: "Texas Railroad Commissioner",
@@ -859,7 +860,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "DC-209th": {
     office: "209th District Court",
-    status: "partial",
+    status: "set",
     lean: "likely-d",
     sides: [
       { name: "Robert Johnson", party: "D", incumbent: false, gender: "M", note: "Won D primary over Ysidra Kyles and Brian Warren" },
@@ -949,7 +950,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "DC-496th": {
     office: "496th District Court",
-    status: "partial",
+    status: "set",
     lean: "likely-d",
     sides: [
       { name: "Michael Abner", party: "D", incumbent: false, gender: "M", note: "Harris County ADA, Felony Court Chief; won D primary over Ramona Franklin" },
