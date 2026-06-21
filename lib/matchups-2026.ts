@@ -292,10 +292,10 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "safe-r",
     sides: [
-      { name: "A'Yonna Kellum",   party: "D", incumbent: false, gender: "F", note: "Won March primary" },
-      { name: "Valoree Swanson",  party: "R", incumbent: true,  gender: "F", note: "Incumbent seeking reelection; held seat since 2017" },
+      { name: "A'Yonna Kellum",  party: "D", incumbent: false, gender: "F", note: "Won March primary" },
+      { name: "Mark Dorazio",    party: "R", incumbent: true,  gender: "M", note: "Incumbent seeking reelection; held seat since 2023" },
     ],
-    detail: "Valoree Swanson (R) has represented HD-150 (Katy / Cinco Ranch / far west Harris County) since 2017. Safe Republican territory. A'Yonna Kellum won the D primary.",
+    detail: "Mark Dorazio (R) has held HD-150 (Katy / Cinco Ranch / far west Harris County) since 2023. Safe Republican territory. A'Yonna Kellum won the D primary.",
   },
   "HD-127": {
     office: "State Representative, District 127",

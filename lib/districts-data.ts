@@ -15,11 +15,12 @@ export interface DistrictInfo {
 export const DISTRICT_INFO: Record<string, DistrictInfo> = {
   // ── Congressional Districts ───────────────────────────────────────────────
   "CD-2": {
-    description: "NW Harris County into Montgomery County — The Woodlands, Spring, Cypress, Katy. Safe Republican.",
+    description: "NW Harris County into Montgomery County — The Woodlands, Spring, Cypress, Katy. Safe Republican. Dan Crenshaw lost the March 2026 R primary to Steve Toth.",
     seatHistory: [
       { name: "Jack Fields", years: "1981–1997", party: "R" },
       { name: "Ted Poe", years: "2005–2019", party: "R" },
-      { name: "Dan Crenshaw", years: "2019–present", party: "R" },
+      { name: "Dan Crenshaw", years: "2019–2026", party: "R" },
+      { name: "Steve Toth (R nominee)", years: "2027–present", party: "R" },
     ],
   },
   "CD-7": {
