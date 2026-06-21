@@ -158,6 +158,25 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Melanie Miles",         office: "Justice of the Peace PCT 7 PL 2 (D nominee)",    level: "county", party: "D", cash: 0, asOf: "pending", incumbent: false, filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
   { name: "Holly Williamson",      office: "Justice of the Peace PCT 8 PL 1", level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
   { name: "Louie Ditta",           office: "Justice of the Peace PCT 8 PL 2", level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+
+  // Harris County Criminal Courts at Law judges — file at ethics.harrisvotes.com
+  { name: "Alex Salgado",          office: "Criminal Court at Law No. 1",      level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Paula Goodhart",        office: "Criminal Court at Law No. 2 (not seeking reelection)", level: "county", party: "D", cash: 0, asOf: "pending", incumbent: true, filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Matthew Ruben Perez",   office: "Criminal Court at Law No. 2 (D nominee)", level: "county", party: "D", cash: 0, asOf: "pending", incumbent: false, filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Leslie R. Johnson",     office: "Criminal Court at Law No. 3",      level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Shannon Baldwin",       office: "Criminal Court at Law No. 4",      level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "David Fleischer",       office: "Criminal Court at Law No. 5",      level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Kelley Andrews",        office: "Criminal Court at Law No. 6",      level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Andrew Wright",         office: "Criminal Court at Law No. 7",      level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Erika Ramirez",         office: "Criminal Court at Law No. 8",      level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Toria J. Finch",        office: "Criminal Court at Law No. 9",      level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Juanita Jackson",       office: "Criminal Court at Law No. 10",     level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Sedrick T. Walker II",  office: "Criminal Court at Law No. 11",     level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Ashley Mayes Guice",    office: "Criminal Court at Law No. 12",     level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Raul Rodriguez",        office: "Criminal Court at Law No. 13",     level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Jessica N. Padilla",    office: "Criminal Court at Law No. 14",     level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Yahaira Quezada",       office: "Criminal Court at Law No. 14 (D nominee)", level: "county", party: "D", cash: 0, asOf: "pending", incumbent: false, filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Tonya Jones",           office: "Criminal Court at Law No. 15",     level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
 ];
 
 // Merge pipeline-generated data (from `npm run finance-publish`) over the static
