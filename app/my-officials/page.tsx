@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { LEVEL_ORDER, type RepEntry } from "@/lib/representatives";
+import { getFinanceByName } from "@/lib/campaign-finance";
 
 interface LookupResult {
   matched: string;
@@ -23,13 +24,21 @@ function partyColor(p: string) {
   return p === "D" ? "#2563a8" : p === "R" ? "#dc2626" : "#6b7280";
 }
 
-function OfficialCard({ rep }: { rep: RepEntry }) {
+function districtLink(dist: string): string | null {
+  const m = dist.match(/^(CD|SD|HD|PCT|JP Precinct|Precinct)-?(\d+)/i);
+  if (!m) return null;
+  const type = m[1].toUpperCase().replace("PCT", "pct").replace("JP PRECINCT", "jp").replace("PRECINCT", "pct").replace("CD", "cd").replace("SD", "sd").replace("HD", "hd");
+  return `/tools/districts?type=${type}&district=${m[2]}`;
+}
+
+function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupResult["districts"] }) {
   const accent = partyColor(rep.party);
   const initials = rep.name.split(" ").map(w => w[0]).slice(0, 2).join("");
-  const isLinked = !!(rep.slug || rep.url);
+  const finance = getFinanceByName(rep.name);
+  const distLink = districtLink(rep.district);
   const inner = (
-    <div className="hcp-card card-lift p-4 flex items-center gap-3.5 h-full">
-      <div className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+    <div className="hcp-card card-lift p-4 flex items-start gap-3.5 h-full">
+      <div className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5"
         style={{ background: `${accent}1a`, color: accent, border: `1.5px solid ${accent}40` }}>
         {initials}
       </div>
@@ -43,12 +52,26 @@ function OfficialCard({ rep }: { rep: RepEntry }) {
         </div>
         <p className="text-xs text-[#6b7280] truncate">{rep.office} · {rep.district}</p>
         {rep.note && <p className="text-[10px] text-amber-600 mt-0.5">{rep.note}</p>}
+        <div className="flex gap-3 mt-2 flex-wrap">
+          {(rep.slug || rep.url) && (
+            <span className="text-[10px] font-bold" style={{ color: rep.slug ? "#2563a8" : "#9ca3af" }}>
+              {rep.slug ? "Profile →" : "Official site ↗"}
+            </span>
+          )}
+          {distLink && (
+            <Link href={distLink} onClick={e => e.stopPropagation()}
+              className="text-[10px] font-bold hover:underline" style={{ color: "#059669" }}>
+              District map →
+            </Link>
+          )}
+          {finance && (
+            <Link href="/tools/where-is-the-dough" onClick={e => e.stopPropagation()}
+              className="text-[10px] font-bold hover:underline" style={{ color: "#7c3aed" }}>
+              Finance →
+            </Link>
+          )}
+        </div>
       </div>
-      {isLinked && (
-        <span className="text-[10px] font-bold flex-shrink-0" style={{ color: rep.slug ? "#2563a8" : "#9ca3af" }}>
-          {rep.slug ? "Profile →" : "↗"}
-        </span>
-      )}
     </div>
   );
   if (rep.slug) return <Link href={`/politicians/${rep.slug}`} className="block h-full">{inner}</Link>;
@@ -147,19 +170,48 @@ export default function MyOfficialsPage() {
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#9ca3af] mb-1.5">Matched Address</p>
               <p className="text-sm font-bold" style={{ color: "#1a3a5c" }}>{result.matched}</p>
               <div className="chip-row mt-3">
-                <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/[0.05] text-[#6b7280]">Voting Precinct {result.precinct}</span>
-                {result.districts.cd && <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/[0.05] text-[#6b7280]">CD-{result.districts.cd}</span>}
-                {result.districts.sd && <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/[0.05] text-[#6b7280]">SD-{result.districts.sd}</span>}
-                {result.districts.hd && <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/[0.05] text-[#6b7280]">HD-{result.districts.hd}</span>}
-                {result.districts.pct && <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/[0.05] text-[#6b7280]">Commissioner PCT {result.districts.pct}</span>}
-                {result.districts.jp && <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/[0.05] text-[#6b7280]">JP {result.districts.jp}</span>}
-                {result.districts.council && <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/[0.05] text-[#6b7280]">Council {result.districts.council}</span>}
+                <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/[0.05] text-[#6b7280]">Precinct {result.precinct}</span>
+                {result.districts.cd && (
+                  <Link href={`/tools/districts?type=cd&district=${result.districts.cd}`}
+                    className="text-[10px] font-bold px-2.5 py-1 rounded-full transition-colors hover:bg-blue-50"
+                    style={{ background: "rgba(37,99,168,0.08)", color: "#2563a8" }}>
+                    CD-{result.districts.cd} →
+                  </Link>
+                )}
+                {result.districts.sd && (
+                  <Link href={`/tools/districts?type=sd&district=${result.districts.sd}`}
+                    className="text-[10px] font-bold px-2.5 py-1 rounded-full transition-colors hover:bg-blue-50"
+                    style={{ background: "rgba(37,99,168,0.08)", color: "#2563a8" }}>
+                    SD-{result.districts.sd} →
+                  </Link>
+                )}
+                {result.districts.hd && (
+                  <Link href={`/tools/districts?type=hd&district=${result.districts.hd}`}
+                    className="text-[10px] font-bold px-2.5 py-1 rounded-full transition-colors hover:bg-blue-50"
+                    style={{ background: "rgba(37,99,168,0.08)", color: "#2563a8" }}>
+                    HD-{result.districts.hd} →
+                  </Link>
+                )}
+                {result.districts.pct && (
+                  <Link href={`/tools/districts?type=pct&district=${result.districts.pct}`}
+                    className="text-[10px] font-bold px-2.5 py-1 rounded-full transition-colors hover:bg-blue-50"
+                    style={{ background: "rgba(37,99,168,0.08)", color: "#2563a8" }}>
+                    Commissioner PCT {result.districts.pct} →
+                  </Link>
+                )}
+                {result.districts.jp && (
+                  <Link href={`/tools/districts?type=jp&district=${result.districts.jp}`}
+                    className="text-[10px] font-bold px-2.5 py-1 rounded-full transition-colors hover:bg-blue-50"
+                    style={{ background: "rgba(37,99,168,0.08)", color: "#2563a8" }}>
+                    JP {result.districts.jp} →
+                  </Link>
+                )}
+                {result.districts.council && (
+                  <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/[0.05] text-[#6b7280]">
+                    Council {result.districts.council}
+                  </span>
+                )}
               </div>
-              <p className="text-[11px] text-[#9ca3af] mt-3 leading-relaxed">
-                <Link href={`/tools/districts?district=${result.districts.cd ?? ""}`} className="underline">
-                  See your districts on the map →
-                </Link>
-              </p>
             </div>
 
             {grouped.map(({ level, reps }) => (
@@ -169,7 +221,7 @@ export default function MyOfficialsPage() {
                   <p className="text-[11px] text-[#9ca3af]">{LEVEL_DESC[level]}</p>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-3">
-                  {reps.map((rep, i) => <OfficialCard key={`${rep.name}-${i}`} rep={rep} />)}
+                  {reps.map((rep, i) => <OfficialCard key={`${rep.name}-${i}`} rep={rep} districts={result.districts} />)}
                 </div>
               </div>
             ))}
@@ -182,6 +234,25 @@ export default function MyOfficialsPage() {
             </p>
           </>
         )}
+
+        {/* See also */}
+        <div className="mt-10 pt-6 border-t border-black/8">
+          <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "#9ca3af" }}>Go deeper</p>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { href: "/tools/districts",            label: "District vote history →" },
+              { href: "/tools/where-is-the-dough",   label: "Campaign finance →" },
+              { href: "/tools/heat-check",            label: "Precinct heat map →" },
+              { href: "/tools/ballot-2026",           label: "2026 ballot →" },
+            ].map(l => (
+              <Link key={l.href} href={l.href}
+                className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#1a3a5c] hover:text-white hover:border-[#1a3a5c]"
+                style={{ color: "#374151", borderColor: "#e5e7eb", background: "#fff" }}>
+                {l.label}
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
