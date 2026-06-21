@@ -8,6 +8,7 @@ export const WOMEN_IN_POLITICS = new Set([
   "Lizzie Fletcher",
   "Sylvia Garcia",
   "Alex Mealer",
+  "Jessica Steinmann",
   // Texas Senate
   "Carol Alvarado",
   "Joan Huffman",

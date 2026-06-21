@@ -122,13 +122,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "CD-8": {
     office: "U.S. Representative, District 8",
-    status: "partial",
+    status: "set",
     lean: "safe-r",
     sides: [
-      { name: "Laura Jones",     party: "D", incumbent: false, gender: "F", note: "Won March primary" },
-      { name: "Morgan Luttrell", party: "R", incumbent: true,  gender: "M", note: "Presumed nominee — no Harris-side R primary on ballot" },
+      { name: "Laura Jones",        party: "D", incumbent: false, gender: "F", note: "Won March D primary" },
+      { name: "Jessica Steinmann",  party: "R", incumbent: false, gender: "F", note: "Former DOJ official (America First Policy Institute); won March R primary with 70% over Brett Jensen and 4 others; endorsed by Cruz, Luttrell, Dan Patrick" },
     ],
-    detail: "CD-8 covers NE Harris County (Kingwood, Lake Houston, Atascocita) into Montgomery and east Texas. Morgan Luttrell (R) has held the seat since 2023; safe Republican territory.",
+    detail: "Open seat — Morgan Luttrell (R) announced Sept 2025 he would not seek re-election. CD-8 covers NE Harris County (Kingwood, Lake Houston, Atascocita) into Montgomery and east Texas. Safe Republican territory. All-women general election matchup.",
   },
   "CD-9": {
     office: "U.S. Representative, District 9",
