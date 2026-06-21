@@ -223,14 +223,21 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
 
         <KalshiStrip dKey={dKey} />
 
-        {matchup?.detail && (
-          <p className="text-[11px] leading-relaxed mt-4 pt-3" style={{ color: "rgba(255,255,255,0.4)", borderTop: "1px solid rgba(255,255,255,0.08)" }}>{matchup.detail}</p>
-        )}
-        {!matchup && (
-          <p className="text-[11px] leading-relaxed mt-4 pt-3" style={{ color: "rgba(255,255,255,0.35)", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-            Challenger filings for this seat have not been confirmed yet. As nominees are set, this card will show the head-to-head with each side&rsquo;s war chest.
-          </p>
-        )}
+        {/* Link to full finance page */}
+        <div className="mt-4 pt-3 flex items-center justify-between" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+          {matchup?.detail ? (
+            <p className="text-[11px] leading-relaxed" style={{ color: "rgba(255,255,255,0.4)" }}>{matchup.detail}</p>
+          ) : !matchup ? (
+            <p className="text-[11px] leading-relaxed" style={{ color: "rgba(255,255,255,0.35)" }}>
+              Challenger filings for this seat have not been confirmed yet.
+            </p>
+          ) : <span />}
+          <Link href="/tools/where-is-the-dough"
+            className="ml-4 shrink-0 text-[10px] font-bold hover:opacity-80 transition-opacity"
+            style={{ color: "#4ade80" }}>
+            Full finance →
+          </Link>
+        </div>
       </div>
     </div>
   );
@@ -824,6 +831,25 @@ export default function DistrictsPage() {
               District assignment is real (TIGER + county GIS boundaries). Two layers still need inputs:
               <span className="block mt-1">① <strong>Population &amp; CVAP demographics</strong> — free Census API key (api.census.gov/data/key_signup.html).</span>
               <span className="block">② <strong>Turnout by race/age/gender</strong> — Harris County voter registration + voter history file from the Tax Office/Elections (harrisvotes.com → Voter Registration Data Request; CSV with precinct, demographics, and per-election vote history).</span>
+            </div>
+
+            {/* See also */}
+            <div className="pt-4 border-t border-black/8">
+              <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "#9ca3af" }}>Go deeper</p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { href: "/tools/heat-check",          label: "Precinct heat map →" },
+                  { href: "/tools/where-is-the-dough",  label: "Campaign finance →" },
+                  { href: "/my-officials",               label: "Who represents me →" },
+                  { href: "/tools/ballot-2026",          label: "2026 ballot →" },
+                ].map(l => (
+                  <Link key={l.href} href={l.href}
+                    className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#1a3a5c] hover:text-white hover:border-[#1a3a5c]"
+                    style={{ color: "#374151", borderColor: "#e5e7eb", background: "#fff" }}>
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </div>
