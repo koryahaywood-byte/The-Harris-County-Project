@@ -234,8 +234,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HD-131": {
     office: "State Representative, District 131",
-    status: "partial",
-    lean: "safe-d",
+    status: "set",
+    lean: "uncontested-d",
     sides: [
       { name: "Staci Childs", party: "D", incumbent: false, gender: "F", note: "Won May runoff over Lawrence Allen Jr." },
     ],
@@ -330,12 +330,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HD-130": {
     office: "State Representative, District 130",
-    status: "partial",
+    status: "set",
     lean: "safe-r",
     sides: [
-      { name: "Tom Oliverson", party: "R", incumbent: true, gender: "M", note: "Seeking reelection" },
+      { name: "Brett Robinson", party: "D", incumbent: false, gender: "M", note: "D nominee" },
+      { name: "Tom Oliverson",  party: "R", incumbent: true,  gender: "M", note: "Seeking reelection" },
     ],
-    detail: "Tom Oliverson has held HD-130 (Katy/CypressNW) since 2017. D nominee TBD.",
+    detail: "Tom Oliverson has held HD-130 (Katy/Cypress NW) since 2017. D challenger Brett Robinson.",
   },
   "HD-132": {
     office: "State Representative, District 132",
@@ -428,12 +429,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HD-146": {
     office: "State Representative, District 146",
-    status: "partial",
+    status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Lauren Ashley Simmons", party: "D", incumbent: true, gender: "F", note: "Seeking reelection" },
+      { name: "Lauren Ashley Simmons", party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
+      { name: "Alexandria Butler",     party: "R", incumbent: false, gender: "F", note: "R nominee" },
     ],
-    detail: "Lauren Ashley Simmons (HD-146, Riverside / South Main / Greenway Plaza) has served since 2021. Safe Democratic district. R nominee TBD.",
+    detail: "Lauren Ashley Simmons (HD-146, Riverside / South Main / Greenway Plaza) has served since 2021. Safe Democratic district. R challenger Alexandria Butler. All-women matchup.",
   },
   "HD-147": {
     office: "State Representative, District 147",
