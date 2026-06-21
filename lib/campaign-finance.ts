@@ -65,6 +65,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Briscoe Cain",         office: "State Rep HD-128 (ran for CD-9)", level: "state",   party: "R", cash: 28323,     asOf: "Feb 2026", incumbent: true,  filingUrl: TEC("Briscoe Cain") },
   { name: "Mano DeAyala",         office: "State Rep HD-133",               level: "state",    party: "R", cash: 316067,    asOf: "May 2026", incumbent: true,  filingUrl: TEC("Mano DeAyala") },
   { name: "Mark Dorazio",         office: "State Rep HD-150",               level: "state",    party: "R", cash: 404315, raised: 106299, spent: 24539, asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Mark Dorazio") },
+  { name: "Lois Kolkhorst",        office: "State Senator SD-18",            level: "state",    party: "R", cash: 3159564, raised: 102510, spent: 128026, asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Lois Kolkhorst") },
   { name: "Valoree Swanson",      office: "State Rep HD-150 (former, 2017–2022)", level: "state",  party: "R", cash: 76987, raised: 19488, spent: 22509, asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Valoree Swanson") },
   { name: "A'Yonna Kellum",       office: "State Rep HD-150 (D nominee)",   level: "state",    party: "D", cash: 1,     raised: 750,   spent: 750,      asOf: "Dec 2025", incumbent: false, filingUrl: TEC("A'Yonna Kellum") },
   { name: "Darlene Breaux",        office: "State Rep HD-149 (D nominee)",   level: "state",    party: "D", cash: 8007,  raised: 11445, spent: 12665,   asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Darlene Breaux") },
