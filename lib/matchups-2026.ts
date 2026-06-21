@@ -261,21 +261,23 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HD-144": {
     office: "State Representative, District 144",
-    status: "partial",
+    status: "set",
     lean: "lean-d",
     sides: [
-      { name: "Mary Ann Perez", party: "D", incumbent: true, gender: "F", note: "Won March primary" },
+      { name: "Mary Ann Perez", party: "D", incumbent: true,  gender: "F", note: "Won March primary (over Emmanuel Guerrero and Michael Montemayor)" },
+      { name: "David Flores",   party: "R", incumbent: false, gender: "M", note: "Won R primary" },
     ],
-    detail: "Mary Ann Perez (HD-144, Galena Park / Pasadena / east Harris County) has served since 2017. Majority-Latino district on the Ship Channel's east side — lean-D but historically competitive. R nominee TBD.",
+    detail: "Mary Ann Perez (HD-144, Galena Park / Pasadena / east Harris County) has served since 2017. Majority-Latino district on the Ship Channel's east side — lean-D but historically competitive. R challenger David Flores.",
   },
   "HD-149": {
     office: "State Representative, District 149",
-    status: "partial",
+    status: "set",
     lean: "lean-d",
     sides: [
-      { name: "Darlene Breaux", party: "D", incumbent: false, gender: "F", note: "Won May runoff over incumbent Hubert Vo" },
+      { name: "Darlene Breaux", party: "D", incumbent: false, gender: "F", note: "Won May runoff 1,623–1,053 over incumbent Hubert Vo" },
+      { name: "Dave Bennett",   party: "R", incumbent: false, gender: "M", note: "R nominee; engineer and small business owner" },
     ],
-    detail: "Incumbent Hubert Vo lost the Democratic runoff 1,623–1,053. He holds the seat until January 2027.",
+    detail: "Darlene Breaux defeated incumbent Hubert Vo in the May Democratic runoff (1,623–1,053). The Alief / Westheimer / FM 1464 corridor district is lean-D but historically competitive.",
   },
   "HD-150": {
     office: "State Representative, District 150",
@@ -289,12 +291,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HD-127": {
     office: "State Representative, District 127",
-    status: "partial",
+    status: "set",
     lean: "safe-r",
     sides: [
-      { name: "Charles Cunningham", party: "R", incumbent: true, gender: "M", note: "Seeking reelection" },
+      { name: "Michelle Williams",   party: "D", incumbent: false, gender: "F", note: "D nominee; won March primary" },
+      { name: "Charles Cunningham",  party: "R", incumbent: true,  gender: "M", note: "Seeking reelection" },
     ],
-    detail: "Charles Cunningham has held HD-127 (Kingwood / Atascocita / NE Harris County) since 2023, succeeding Dan Huberty. Solidly Republican suburban district. D nominee TBD.",
+    detail: "Charles Cunningham has held HD-127 (Kingwood / Atascocita / NE Harris County) since 2023. D challenger Michelle Williams faces a steep climb in this solidly Republican suburban district.",
   },
   "HD-128": {
     office: "State Representative, District 128",
@@ -318,12 +321,12 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HD-133": {
     office: "State Representative, District 133",
-    status: "partial",
-    lean: "safe-r",
+    status: "set",
+    lean: "uncontested-r",
     sides: [
-      { name: "Mano DeAyala", party: "R", incumbent: true, gender: "M", note: "Seeking reelection" },
+      { name: "Mano DeAyala", party: "R", incumbent: true, gender: "M", note: "Running unopposed — no D filed" },
     ],
-    detail: "Mano DeAyala has held HD-133 (Memorial / Briargrove / West Houston) since 2021. Suburban west Houston — reliably Republican. D nominee TBD.",
+    detail: "Mano DeAyala has held HD-133 (Memorial / Briargrove / West Houston) since 2021. No Democrat filed for 2026 — DeAyala runs unopposed.",
   },
   "HD-130": {
     office: "State Representative, District 130",
@@ -336,21 +339,23 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HD-132": {
     office: "State Representative, District 132",
-    status: "partial",
+    status: "set",
     lean: "lean-r",
     sides: [
-      { name: "Mike Schofield", party: "R", incumbent: true, gender: "M", note: "Seeking reelection" },
+      { name: "Sara McGee",     party: "D", incumbent: false, gender: "F", note: "Won March primary" },
+      { name: "Mike Schofield", party: "R", incumbent: true,  gender: "M", note: "Seeking reelection" },
     ],
-    detail: "Mike Schofield holds HD-132 (NW Harris County / Cypress). The district is competitive at the suburban margins. D nominee TBD.",
+    detail: "Mike Schofield holds HD-132 (NW Harris County / Cypress). The district is competitive at the suburban margins — D challenger Sara McGee is the nominee.",
   },
   "HD-134": {
     office: "State Representative, District 134",
-    status: "partial",
+    status: "set",
     lean: "lean-d",
     sides: [
-      { name: "Ann Johnson", party: "D", incumbent: true, gender: "F", note: "Seeking reelection" },
+      { name: "Ann Johnson", party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
+      { name: "Mike Michna", party: "R", incumbent: false, gender: "M", note: "Won R primary over Carolyn B. Bryant" },
     ],
-    detail: "Ann Johnson flipped HD-134 (Meyerland / Southampton / West U) from R to D in 2020 and has won each cycle. She serves on Judiciary & Civil Jurisprudence and is a former ADA. R nominee TBD.",
+    detail: "Ann Johnson flipped HD-134 (Meyerland / Southampton / West U) from R to D in 2020 and has won each cycle since. She serves on Judiciary & Civil Jurisprudence and is a former ADA. R challenger Mike Michna defeated Carolyn B. Bryant in the primary.",
   },
   "HD-135": {
     office: "State Representative, District 135",
@@ -364,48 +369,53 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HD-137": {
     office: "State Representative, District 137",
-    status: "partial",
+    status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Gene Wu", party: "D", incumbent: true, gender: "M", note: "Seeking reelection" },
+      { name: "Gene Wu",    party: "D", incumbent: true,  gender: "M", note: "Seeking reelection" },
+      { name: "Helen Zhou", party: "R", incumbent: false, gender: "F", note: "R nominee" },
     ],
-    detail: "Gene Wu (HD-137, Bellaire/Westbury area) has served since 2013. D+ district with diverse demographics — Asian American, Latino, and Black communities. R nominee TBD.",
+    detail: "Gene Wu (HD-137, Bellaire/Westbury area) has served since 2013. D+ district with diverse demographics — Asian American, Latino, and Black communities. R challenger Helen Zhou.",
   },
   "HD-138": {
     office: "State Representative, District 138",
-    status: "partial",
+    status: "set",
     lean: "lean-r",
     sides: [
-      { name: "Lacey Hull", party: "R", incumbent: true, gender: "F", note: "Seeking reelection" },
+      { name: "Tyler Smith", party: "D", incumbent: false, gender: "M", note: "Won March D primary" },
+      { name: "Lacey Hull",  party: "R", incumbent: true,  gender: "F", note: "Seeking reelection" },
     ],
-    detail: "Lacey Hull (HD-138, Spring Branch / Memorial) has held the seat since 2020 after a narrow win. R nominee TBD.",
+    detail: "Lacey Hull (HD-138, Spring Branch / Memorial) has held the seat since 2020 after a narrow win. D challenger Tyler Smith makes this one of the more competitive suburban matchups in Harris County.",
   },
   "HD-140": {
     office: "State Representative, District 140",
-    status: "partial",
+    status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Armando Walle", party: "D", incumbent: true, gender: "M", note: "Seeking reelection" },
+      { name: "Armando Walle",       party: "D", incumbent: true,  gender: "M", note: "Seeking reelection" },
+      { name: "Laura Garcia DeLeon", party: "R", incumbent: false, gender: "F", note: "R nominee" },
     ],
-    detail: "Armando Walle (HD-140, North Houston / Northside) has served since 2009. Heavily Latino district — safe D. R nominee TBD.",
+    detail: "Armando Walle (HD-140, North Houston / Northside) has served since 2009. Heavily Latino district — safe D despite R challenger Laura Garcia DeLeon.",
   },
   "HD-141": {
     office: "State Representative, District 141",
-    status: "partial",
+    status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Senfronia Thompson", party: "D", incumbent: true, gender: "F", note: "Dean of the Texas House — longest serving" },
+      { name: "Senfronia Thompson", party: "D", incumbent: true,  gender: "F", note: "Dean of the Texas House — longest serving member" },
+      { name: "Julie Hunt",         party: "R", incumbent: false, gender: "F", note: "R nominee" },
     ],
-    detail: "Senfronia Thompson (HD-141, Sunnyside / Third Ward) has served continuously since 1973 — the longest-serving member of the Texas House. Heavily Democratic majority-Black district. R nominee TBD.",
+    detail: "Senfronia Thompson (HD-141, Sunnyside / Third Ward) has served continuously since 1973 — the longest-serving member of the Texas House. Heavily Democratic majority-Black district. R challenger Julie Hunt. All-women matchup.",
   },
   "HD-143": {
     office: "State Representative, District 143",
-    status: "partial",
+    status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Ana Hernandez", party: "D", incumbent: true, gender: "F", note: "Seeking reelection" },
+      { name: "Ana Hernandez",  party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
+      { name: "Frank Salazar",  party: "R", incumbent: false, gender: "M", note: "R nominee" },
     ],
-    detail: "Ana Hernandez (HD-143, East End / Galena Park) has served since 2006. Majority-Latino district along the Ship Channel. R nominee TBD.",
+    detail: "Ana Hernandez (HD-143, East End / Galena Park) has served since 2006. Majority-Latino district along the Ship Channel — heavily Democratic.",
   },
   "HD-145": {
     office: "State Representative, District 145",
