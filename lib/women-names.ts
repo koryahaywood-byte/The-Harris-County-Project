@@ -130,4 +130,5 @@ export const WOMEN_IN_POLITICS = new Set([
   // Statewide D nominees
   "Vikki Goodwin",
   "Sarah Eckhardt",
+  "Erica Gillum",
 ]);

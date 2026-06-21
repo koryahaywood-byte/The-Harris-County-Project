@@ -218,12 +218,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "SD-18": {
     office: "State Senator, District 18",
-    status: "partial",
+    status: "set",
     lean: "safe-r",
     sides: [
-      { name: "Lois Kolkhorst", party: "R", incumbent: true, gender: "F", note: "Seeking reelection" },
+      { name: "Lois Kolkhorst",  party: "R", incumbent: true,  gender: "F", note: "Seeking reelection; ran unopposed in R primary" },
+      { name: "Erica Gillum",    party: "D", incumbent: false, gender: "F", note: "Won D primary unopposed" },
     ],
-    detail: "Lois Kolkhorst's SD-18 touches only the far northwestern corner of Harris County (Cypress/Katy area). D nominee TBD.",
+    detail: "Lois Kolkhorst's SD-18 touches only the far northwestern corner of Harris County (Cypress/Katy area). D challenger Erica Gillum. Safe Republican district. All-women matchup.",
   },
   "HD-126": {
     office: "State Representative, District 126",
@@ -494,23 +495,16 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     ],
     detail: "Contested general election. Garcia has held PCT 2 since 2016.",
   },
-  "PCT-3": {
-    office: "Commissioner Precinct 3",
-    status: "partial",
-    lean: "uncontested-r",
-    sides: [
-      { name: "Tom Ramsey", party: "R", incumbent: true, gender: "M", note: "Incumbent — no D challenger filed" },
-    ],
-    detail: "Tom Ramsey has held PCT 3 since 2021. No Democratic challenger filed by the June 2026 deadline.",
-  },
+  // PCT-3: Tom Ramsey won November 2024 — term through December 2028. NOT on 2026 ballot.
   "PCT-4": {
     office: "Commissioner Precinct 4",
-    status: "partial",
-    lean: "uncontested-d",
+    status: "set",
+    lean: "lean-d",
     sides: [
-      { name: "Lesley Briones", party: "D", incumbent: true, gender: "F", note: "Incumbent — no R challenger filed" },
+      { name: "Lesley Briones",  party: "D", incumbent: true,  gender: "F", note: "Incumbent; won PCT 4 in 2022 special" },
+      { name: "Steve Radack",    party: "R", incumbent: false, gender: "M", note: "Former Commissioner PCT 3 (2003–2021); won 2026 R primary" },
     ],
-    detail: "Lesley Briones has held PCT 4 since 2023. No Republican challenger filed by the June 2026 deadline.",
+    detail: "Lesley Briones (D) won the 2022 special election for PCT 4, which leans Democratic. Former PCT 3 Commissioner Steve Radack (R) won the Republican primary for this seat — a rematch of sorts as he previously served in a neighboring precinct.",
   },
 
   // Countywide offices — law enforcement & admin
