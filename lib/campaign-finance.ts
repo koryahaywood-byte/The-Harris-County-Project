@@ -71,6 +71,9 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Stefanie Bord",         office: "State Rep HD-126 (D nominee)",   level: "state",    party: "D", cash: 2273,  raised: 4750,  spent: 6577,    asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Stefanie Bord") },
   { name: "Stan Stanart",          office: "State Rep HD-126 (R nominee)",   level: "state",    party: "R", cash: 67084, raised: 31496, spent: 12229,   asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Stan Stanart") },
   { name: "Staci Childs",          office: "State Rep HD-131 (D nominee)",   level: "state",    party: "D", cash: 3926,  raised: 45692, spent: 34819,   asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Staci Childs") },
+  // 2026 state nominees and challengers
+  { name: "Scott Bowen",           office: "State Rep HD-129 (R nominee)",   level: "state",    party: "R", cash: 54346, raised: 92616, spent: 112658, asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Scott Bowen") },
+  { name: "Helen Zhou",            office: "State Rep HD-137 (R nominee)",   level: "state",    party: "R", cash: 22394, raised: 9046,  spent: 5717,   asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Helen Zhou") },
   // 2026 open seat nominees
   { name: "Odus Evbagharu",        office: "State Rep HD-135 (D nominee)",   level: "state",    party: "D", cash: 17330, raised: 70850, spent: 48651,   asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Odus Evbagharu") },
   { name: "Liz Ramos",             office: "State Rep HD-135 (R nominee)",   level: "state",    party: "R", cash: 11915, raised: 7223,  spent: 4512,    asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Liz Ramos") },
