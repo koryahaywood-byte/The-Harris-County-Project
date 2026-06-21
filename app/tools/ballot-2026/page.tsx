@@ -114,15 +114,19 @@ function buildResultsMap(dr: DistrictRaces): Record<string, LastResult> {
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-function toDistrictLink(key: string): string {
-  if (key === "US-Senate" || key.startsWith("TX-")) return "/tools/districts?type=countywide";
-  if (key === "HC-Countywide") return "/tools/districts?type=countywide";
-  if (key.startsWith("CD-")) return `/tools/districts?type=cd&district=${key.replace("CD-", "")}`;
-  if (key.startsWith("SD-")) return `/tools/districts?type=sd&district=${key.replace("SD-", "")}`;
-  if (key.startsWith("HD-")) return `/tools/districts?type=hd&district=${key.replace("HD-", "")}`;
-  if (key.startsWith("PCT-")) return `/tools/districts?type=pct&district=${key.replace("PCT-", "")}`;
-  if (key.startsWith("HC-JP") || key.startsWith("JP-")) return `/tools/districts?type=jp&district=${key.replace(/.*?(\d+).*/, "$1")}`;
-  return "/tools/districts";
+function toDistrictInfo(key: string): { href: string; label: string } {
+  if (key === "US-Senate" || key.startsWith("TX-")) return { href: "/tools/districts?type=countywide", label: "Harris County results →" };
+  if (key === "HC-Countywide") return { href: "/tools/districts?type=countywide", label: "County breakdown →" };
+  const n = key.replace(/^[A-Z]+-/, "");
+  if (key.startsWith("CD-")) return { href: `/tools/districts?type=cd&district=${n}`, label: `CD ${n} results →` };
+  if (key.startsWith("SD-")) return { href: `/tools/districts?type=sd&district=${n}`, label: `SD ${n} results →` };
+  if (key.startsWith("HD-")) return { href: `/tools/districts?type=hd&district=${n}`, label: `HD ${n} results →` };
+  if (key.startsWith("PCT-")) return { href: `/tools/districts?type=pct&district=${n}`, label: `Pct ${n} results →` };
+  if (key.startsWith("HC-JP") || key.startsWith("JP-")) {
+    const jp = key.replace(/.*?(\d+).*/, "$1");
+    return { href: `/tools/districts?type=jp&district=${jp}`, label: `JP ${jp} results →` };
+  }
+  return { href: "/tools/districts", label: "District results →" };
 }
 
 function toGroup(key: string): { group: RaceGroup; groupLabel: string } {
@@ -260,7 +264,8 @@ export default function Ballot2026() {
     const { group, groupLabel } = toGroup(key);
     const dSide = m.sides.find(s => s.party === "D") ?? null;
     const rSide = m.sides.find(s => s.party === "R") ?? null;
-    return { key, group, groupLabel, office: m.office, status: m.status, lean: m.lean, dSide, rSide, districtLink: toDistrictLink(key), detail: m.detail ?? null };
+    const di = toDistrictInfo(key);
+    return { key, group, groupLabel, office: m.office, status: m.status, lean: m.lean, dSide, rSide, districtHref: di.href, districtLabel: di.label, detail: m.detail ?? null };
   }), []);
 
   const COMPETITIVE_LEANS: RaceLean[] = ["toss-up", "lean-d", "lean-r"];
@@ -385,8 +390,8 @@ export default function Ballot2026() {
                             {r.status === "runoff-pending" && (
                               <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "#dbeafe", color: "#1d4ed8" }}>Runoff pending</span>
                             )}
-                            <Link href={r.districtLink} className="text-[9px] font-semibold hover:underline" style={{ color: "#9ca3af" }}>
-                              See district →
+                            <Link href={r.districtHref} className="text-[9px] font-semibold hover:underline" style={{ color: "#9ca3af" }}>
+                              {r.districtLabel}
                             </Link>
                           </div>
                         </div>
