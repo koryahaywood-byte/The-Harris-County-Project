@@ -232,11 +232,19 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
               Challenger filings for this seat have not been confirmed yet.
             </p>
           ) : <span />}
-          <Link href="/tools/where-is-the-dough"
-            className="ml-4 shrink-0 text-[10px] font-bold hover:opacity-80 transition-opacity"
-            style={{ color: "#4ade80" }}>
-            Full finance →
-          </Link>
+          {(() => {
+            const knownD = enriched.find(s => s.party === "D" && s.name !== "Challenger");
+            const href = knownD
+              ? `/tools/where-is-the-dough?tab=leaderboard&q=${encodeURIComponent(knownD.name)}`
+              : "/tools/where-is-the-dough";
+            return (
+              <Link href={href}
+                className="ml-4 shrink-0 text-[10px] font-bold hover:opacity-80 transition-opacity"
+                style={{ color: "#4ade80" }}>
+                Full finance →
+              </Link>
+            );
+          })()}
         </div>
       </div>
     </div>

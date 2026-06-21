@@ -114,7 +114,7 @@ function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupRes
             </Link>
           )}
           {finance && (
-            <Link href="/tools/where-is-the-dough" onClick={e => e.stopPropagation()}
+            <Link href={`/tools/where-is-the-dough?tab=leaderboard&q=${encodeURIComponent(rep.name)}`} onClick={e => e.stopPropagation()}
               className="text-[10px] font-bold hover:underline" style={{ color: "#7c3aed" }}>
               Finance →
             </Link>
