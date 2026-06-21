@@ -21,6 +21,17 @@ interface HistCycle {
 }
 interface PrecinctHistory { cycles: Record<string, HistCycle> }
 
+// district-races.json types
+interface DistRace { label: string; candidates: HistCandidate[]; votes: Record<string, number[]> }
+interface DistrictRaces {
+  hd: Record<string, Record<string, Record<string, DistRace>>>;
+  sd: Record<string, Record<string, Record<string, DistRace>>>;
+  cd: Record<string, Record<string, Record<string, DistRace>>>;
+  jp: Record<string, Record<string, Record<string, DistRace>>>;
+  pct: Record<string, Record<string, Record<string, DistRace>>>;
+  county: Record<string, Record<string, DistRace>>;
+}
+
 const CROSSWALK = (crosswalkRaw as { precincts: Record<string, Record<string, string>> }).precincts;
 
 const CYCLES = [
@@ -53,30 +64,16 @@ function partisanColor(pct: number): string {
 
 function normPrec(raw: string): string { return raw.replace(/^0+/, "") || "0"; }
 
-function computePrecinctData(
-  history: PrecinctHistory, cycle: string, race: string | null
+function computeFromRace(
+  raceData: HistRace
 ): Record<string, { pct: number | null; d: number; r: number; total: number }> {
-  const cd = history.cycles[cycle];
-  if (!cd) return {};
   const result: Record<string, { pct: number | null; d: number; r: number; total: number }> = {};
-
-  if (cd.primary) {
-    for (const [prec, v] of Object.entries(cd.primary)) {
-      const d = v.dem, r = v.rep, total = d + r;
-      result[prec] = { pct: total ? d / total : null, d, r, total };
-    }
-    return result;
-  }
-
-  if (cd.races && race && cd.races[race]) {
-    const r_ = cd.races[race];
-    const dIdx = r_.candidates.findIndex(c => c.party === "D");
-    const rIdx = r_.candidates.findIndex(c => c.party === "R");
-    if (dIdx === -1 || rIdx === -1) return {};
-    for (const [prec, votes] of Object.entries(r_.votes)) {
-      const d = votes[dIdx] ?? 0, r = votes[rIdx] ?? 0, total = d + r;
-      result[prec] = { pct: total ? d / total : null, d, r, total };
-    }
+  const dIdx = raceData.candidates.findIndex(c => c.party === "D");
+  const rIdx = raceData.candidates.findIndex(c => c.party === "R");
+  if (dIdx === -1 || rIdx === -1) return {};
+  for (const [prec, votes] of Object.entries(raceData.votes)) {
+    const d = votes[dIdx] ?? 0, r = votes[rIdx] ?? 0, total = d + r;
+    result[prec] = { pct: total ? d / total : null, d, r, total };
   }
   return result;
 }
@@ -87,22 +84,99 @@ export default function DistrictHeatMap({ districtField, districtValue, district
   const geoLayerRef = useRef<L.GeoJSON | null>(null);
 
   const [history, setHistory] = useState<PrecinctHistory | null>(null);
+  const [districtRaces, setDistrictRaces] = useState<DistrictRaces | null>(null);
   const [geojson, setGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
   const [cycle, setCycle] = useState("2024G");
-  const [race, setRace] = useState<string | null>(null);
+  // race key: "hist:president" | "dist:state_rep_134" | "county:harris_da"
+  const [raceKey, setRaceKey] = useState<string | null>(null);
 
   useEffect(() => {
     Promise.all([
       fetch("/data/precinct-history.json").then(r => r.json()),
       fetch("/data/harris-precincts.geojson").then(r => r.json()),
-    ]).then(([h, g]) => { setHistory(h); setGeojson(g); }).catch(console.error);
+      fetch("/data/district-races.json").then(r => r.json()),
+    ]).then(([h, g, dr]) => { setHistory(h); setGeojson(g); setDistrictRaces(dr); })
+      .catch(console.error);
   }, []);
 
+  // Build available race options for current cycle + district
+  const availableRaces = useMemo<Array<{ key: string; label: string }>>(() => {
+    const races: Array<{ key: string; label: string }> = [];
+
+    // 1. District-specific races (e.g., State Rep 134 in HD 134)
+    if (districtRaces && districtField && districtValue && districtField !== "council") {
+      const field = districtField as keyof Omit<DistrictRaces, "county">;
+      const distCycles = districtRaces[field]?.[districtValue];
+      if (distCycles?.[cycle]) {
+        for (const [slug, r] of Object.entries(distCycles[cycle])) {
+          races.push({ key: `dist:${slug}`, label: r.label });
+        }
+      }
+    }
+
+    // 2. County-wide races from precinct-history (president, governor, senate, etc.)
+    if (history) {
+      const cd = history.cycles[cycle];
+      if (cd?.races) {
+        for (const [k, r] of Object.entries(cd.races)) {
+          races.push({ key: `hist:${k}`, label: r.label });
+        }
+      }
+      if (cd?.primary) {
+        races.push({ key: "primary", label: "Primary Ballots" });
+      }
+    }
+
+    return races;
+  }, [districtRaces, history, cycle, districtField, districtValue]);
+
+  // Auto-select best race when cycle or district changes
   useEffect(() => {
-    if (!history) return;
-    const cd = history.cycles[cycle];
-    setRace(cd?.races ? Object.keys(cd.races)[0] : null);
-  }, [cycle, history]);
+    if (availableRaces.length === 0) return;
+    // Prefer district-specific race
+    const distRace = availableRaces.find(r => r.key.startsWith("dist:"));
+    setRaceKey(distRace?.key ?? availableRaces[0].key);
+  }, [cycle, districtField, districtValue, availableRaces.map(r => r.key).join(",")]); // eslint-disable-line
+
+  // Resolve the selected race's raw data
+  const resolvedRace = useMemo<HistRace | null>(() => {
+    if (!raceKey) return null;
+
+    if (raceKey === "primary") return null; // handled separately
+
+    if (raceKey.startsWith("dist:") && districtRaces && districtField && districtValue && districtField !== "council") {
+      const slug = raceKey.slice(5);
+      const field = districtField as keyof Omit<DistrictRaces, "county">;
+      return districtRaces[field]?.[districtValue]?.[cycle]?.[slug] ?? null;
+    }
+
+    if (raceKey.startsWith("county:") && districtRaces) {
+      const slug = raceKey.slice(7);
+      return districtRaces.county?.[slug]?.[cycle] ?? null;
+    }
+
+    if (raceKey.startsWith("hist:") && history) {
+      const key = raceKey.slice(5);
+      return history.cycles[cycle]?.races?.[key] ?? null;
+    }
+
+    return null;
+  }, [raceKey, cycle, history, districtRaces, districtField, districtValue]);
+
+  // Compute precinct data
+  const lookup = useMemo(() => {
+    if (raceKey === "primary" && history) {
+      const cd = history.cycles[cycle];
+      if (!cd?.primary) return {};
+      const result: Record<string, { pct: number | null; d: number; r: number; total: number }> = {};
+      for (const [prec, v] of Object.entries(cd.primary)) {
+        const d = v.dem, r = v.rep, total = d + r;
+        result[prec] = { pct: total ? d / total : null, d, r, total };
+      }
+      return result;
+    }
+    return resolvedRace ? computeFromRace(resolvedRace) : {};
+  }, [resolvedRace, raceKey, history, cycle]);
 
   // Precincts that belong to this district
   const districtPrecs = useMemo<Set<string> | null>(() => {
@@ -119,11 +193,6 @@ export default function DistrictHeatMap({ districtField, districtValue, district
     const n = normPrec(raw);
     return districtPrecs.has(raw) || districtPrecs.has(n) || districtPrecs.has(n.padStart(4, "0"));
   }
-
-  const lookup = useMemo(
-    () => history ? computePrecinctData(history, cycle, race) : {},
-    [history, cycle, race]
-  );
 
   function getPrec(raw: string) {
     const n = normPrec(raw);
@@ -180,11 +249,8 @@ export default function DistrictHeatMap({ districtField, districtValue, district
     });
   }, [geojson, lookup, districtPrecs]); // eslint-disable-line
 
-  const cd = history?.cycles[cycle];
-  const availableRaces = cd?.races ? Object.entries(cd.races).map(([k, v]) => ({ key: k, label: v.label })) : [];
-
   const districtData = useMemo(() => {
-    const entries = Object.entries(lookup).filter(([prec]) => inDistrict(prec) && lookup);
+    const entries = Object.entries(lookup).filter(([prec]) => inDistrict(prec));
     const valid = entries.filter(([, d]) => d.pct != null);
     const dPrecs = valid.filter(([, d]) => (d.pct ?? 0) > 0.5).length;
     const totalVotes = valid.reduce((s, [, d]) => s + d.total, 0);
@@ -198,6 +264,7 @@ export default function DistrictHeatMap({ districtField, districtValue, district
   }, [lookup, districtPrecs]); // eslint-disable-line
 
   const cycleLabel = CYCLES.find(c => c.key === cycle)?.label ?? cycle;
+  const isDistrict = raceKey?.startsWith("dist:");
 
   return (
     <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] mt-4">
@@ -225,8 +292,8 @@ export default function DistrictHeatMap({ districtField, districtValue, district
           {/* Race picker */}
           {availableRaces.length > 1 && (
             <select
-              value={race ?? ""}
-              onChange={e => setRace(e.target.value || null)}
+              value={raceKey ?? ""}
+              onChange={e => setRaceKey(e.target.value || null)}
               className="rounded-lg border border-black/10 px-2 py-1 text-[11px] font-semibold bg-white"
               style={{ color: "#374151" }}>
               {availableRaces.map(r => <option key={r.key} value={r.key}>{r.label}</option>)}
@@ -255,8 +322,10 @@ export default function DistrictHeatMap({ districtField, districtValue, district
         {/* Footer */}
         <div className="px-4 py-2 border-t border-black/8 space-y-0.5">
           <p className="text-[9px]" style={{ color: "#9ca3af" }}>
-            {cycleLabel} · {cycle.endsWith("P") ? "D/R primary ballots" : "D vs R two-party share"} · Source: TLC TED API
-            {cycle === "2016G" ? " / VEST" : ""}
+            {cycleLabel}
+            {isDistrict ? " · Actual race results" : cycle.endsWith("P") ? " · D/R primary ballots" : " · D vs R two-party share"}
+            {" · Source: TLC TED API"}
+            {cycle === "2016G" && !isDistrict ? " / VEST" : ""}
             {cycle === "2026P" ? " / HC Clerk" : ""}
           </p>
           {districtField && ["hd","sd","cd","pct"].includes(districtField) && parseInt(cycle) < 2022 && (
