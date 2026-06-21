@@ -788,11 +788,21 @@ export default function WhereIsTheDough() {
             {party === "all" && !search && (() => {
               const levelData = DATA.filter(d => level === "all" || d.level === level)
                 .filter(d => level !== "county" || countyGroup === "all" || countyGroupOf(d.office) === countyGroup);
-              // Group by office, find matched pairs
-              const byOffice = new Map<string, { d?: Candidate; r?: Candidate }>();
+              // Normalize office string so "State Rep HD-134" and "State Rep HD-134 (R nominee)" pair up
+              const normalizeOffice = (office: string) =>
+                office.toLowerCase()
+                  .replace(/\s*\((d|r)\s*(nominee|general|primary|candidate|incumbent|runoff|former[^)]*)\)/g, "")
+                  .replace(/\s*\(won[^)]*\)/g, "")
+                  .replace(/\s*\(not seeking[^)]*\)/g, "")
+                  .replace(/\s*\(lame duck[^)]*\)/g, "")
+                  .replace(/\s*\(lost[^)]*\)/g, "")
+                  .replace(/\s*\(ran for[^)]*\)/g, "")
+                  .trim();
+              // Group by normalized office, find matched pairs
+              const byOffice = new Map<string, { d?: Candidate; r?: Candidate; label: string }>();
               for (const c of levelData) {
-                const key = c.office.toLowerCase().trim();
-                const entry = byOffice.get(key) ?? {};
+                const key = normalizeOffice(c.office);
+                const entry = byOffice.get(key) ?? { label: key };
                 if (c.party === "D") entry.d = c;
                 if (c.party === "R") entry.r = c;
                 byOffice.set(key, entry);
@@ -809,9 +819,11 @@ export default function WhereIsTheDough() {
                         const d = p.d!, r = p.r!;
                         const total = d.cash + r.cash || 1;
                         const dPct = Math.round(d.cash / total * 100);
+                        const officeLabel = (d.office.includes("nominee") || d.office.includes("general"))
+                          ? r.office : d.office;
                         return (
                           <div key={i}>
-                            <p className="text-[10px] font-semibold mb-1 truncate" style={{ color: "#6b7280" }}>{d.office}</p>
+                            <p className="text-[10px] font-semibold mb-1 truncate" style={{ color: "#6b7280" }}>{officeLabel.replace(/\s*\([^)]*nominee[^)]*\)/gi, "").replace(/\s*\([^)]*general[^)]*\)/gi, "").trim()}</p>
                             <div className="flex items-center gap-2">
                               <span className="text-[10px] font-bold w-24 truncate" style={{ color: "#2563a8" }}>{d.name.split(" ").pop()}</span>
                               <div className="flex-1 h-2 rounded-full overflow-hidden flex" style={{ background: "#e5e7eb" }}>
