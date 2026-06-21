@@ -1,9 +1,58 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { LEVEL_ORDER, type RepEntry } from "@/lib/representatives";
 import { getFinanceByName } from "@/lib/campaign-finance";
+
+interface CvapEntry { total: number; black: number; hispanic: number; white: number; asian: number }
+interface CvapData { cvap: { cd: Record<string, CvapEntry>; sd: Record<string, CvapEntry>; hd: Record<string, CvapEntry> } }
+
+const RACE_SEGS: { key: keyof CvapEntry; label: string; color: string }[] = [
+  { key: "hispanic", label: "Hispanic", color: "#ea580c" },
+  { key: "black",    label: "Black",    color: "#7c3aed" },
+  { key: "white",    label: "White",    color: "#2563a8" },
+  { key: "asian",    label: "Asian",    color: "#0891b2" },
+];
+
+function CvapMini({ entry, label }: { entry: CvapEntry; label: string }) {
+  const top = RACE_SEGS.reduce<{ label: string; pct: number; color: string } | null>((best, s) => {
+    const pct = entry.total ? Math.round((entry[s.key] / entry.total) * 100) : 0;
+    return (!best || pct > best.pct) ? { label: s.label, pct, color: s.color } : best;
+  }, null);
+  return (
+    <div className="mt-3 pt-3 border-t border-black/8">
+      <p className="text-[9px] font-bold uppercase tracking-[0.18em] mb-2" style={{ color: "#9ca3af" }}>
+        {label} · citizen voting-age population
+      </p>
+      {top && (
+        <p className="text-[11px] font-semibold mb-2" style={{ color: top.color }}>
+          {top.pct}% {top.label}
+          <span className="font-normal" style={{ color: "#9ca3af" }}> · {entry.total.toLocaleString()} eligible voters</span>
+        </p>
+      )}
+      {/* Multi-segment bar */}
+      <div className="flex h-3 rounded-full overflow-hidden gap-px" style={{ background: "#f3f4f6" }}>
+        {RACE_SEGS.map(s => {
+          const pct = entry.total ? Math.round((entry[s.key] / entry.total) * 100) : 0;
+          return pct > 0 ? (
+            <div key={s.key} title={`${s.label} ${pct}%`} style={{ width: `${pct}%`, background: s.color }} />
+          ) : null;
+        })}
+      </div>
+      <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1.5">
+        {RACE_SEGS.map(s => {
+          const pct = entry.total ? Math.round((entry[s.key] / entry.total) * 100) : 0;
+          return pct > 0 ? (
+            <span key={s.key} className="text-[9px]" style={{ color: "#6b7280" }}>
+              <span className="font-bold" style={{ color: s.color }}>{pct}%</span> {s.label}
+            </span>
+          ) : null;
+        })}
+      </div>
+    </div>
+  );
+}
 
 interface LookupResult {
   matched: string;
@@ -84,6 +133,11 @@ export default function MyOfficialsPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<LookupResult | null>(null);
+  const [cvap, setCvap] = useState<CvapData | null>(null);
+
+  useEffect(() => {
+    fetch("/data/cvap-districts.json").then(r => r.json()).then(setCvap).catch(() => {});
+  }, []);
 
   async function lookup(e: React.FormEvent) {
     e.preventDefault();
@@ -212,9 +266,20 @@ export default function MyOfficialsPage() {
                   </span>
                 )}
               </div>
+              {/* CVAP demographic mini-bar for most-local available district */}
+              {cvap && (() => {
+                const hd = result.districts.hd;
+                const cd = result.districts.cd;
+                const sd = result.districts.sd;
+                if (hd && cvap.cvap.hd[hd]) return <CvapMini entry={cvap.cvap.hd[hd]} label={`HD ${hd}`} />;
+                if (cd && cvap.cvap.cd[cd]) return <CvapMini entry={cvap.cvap.cd[cd]} label={`CD ${cd}`} />;
+                if (sd && cvap.cvap.sd[sd]) return <CvapMini entry={cvap.cvap.sd[sd]} label={`SD ${sd}`} />;
+                return null;
+              })()}
             </div>
 
             {grouped.map(({ level, reps }) => (
+
               <div key={level} className="mb-8">
                 <div className="flex items-baseline gap-3 mb-3">
                   <h2 className="text-lg font-bold" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>{level}</h2>
