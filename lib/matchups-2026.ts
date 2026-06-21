@@ -315,10 +315,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HD-128": {
     office: "State Representative, District 128",
-    status: "partial",
+    status: "set",
     lean: "safe-r",
-    sides: [],
-    detail: "Open seat — incumbent Briscoe Cain ran for CD-9 instead (lost May runoff to Alex Mealer). R and D nominees for this deep-red Deer Park / La Porte / East Pasadena district TBD.",
+    sides: [
+      { name: "Desiree Klaus", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
+      { name: "Tom Butler",    party: "R", incumbent: false, gender: "M", note: "Won March primary" },
+    ],
+    detail: "Open seat — incumbent Briscoe Cain ran for CD-9 (lost May runoff to Alex Mealer). Deep-red Deer Park / La Porte / East Pasadena / Southeast Harris County district.",
   },
   "HD-129": {
     office: "State Representative, District 129",
@@ -367,12 +370,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HD-135": {
     office: "State Representative, District 135",
-    status: "partial",
-    lean: "toss-up",
+    status: "set",
+    lean: "safe-d",
     sides: [
-      { name: "Jon Rosenthal", party: "D", incumbent: true, gender: "M", note: "Seeking reelection" },
+      { name: "Odus Evbagharu", party: "D", incumbent: false, gender: "M", note: "Former Chair Harris County Democrats; Rosenthal's former chief of staff" },
+      { name: "Liz Ramos",      party: "R", incumbent: false, gender: "F", note: "Won March primary" },
     ],
-    detail: "Jon Rosenthal has held HD-135 (Spring Branch / Town & Country) since 2019 after a narrow flip. One of the most competitive suburban seats in Harris County. R nominee TBD.",
+    detail: "Open seat — Jon Rosenthal vacated to run for Texas Railroad Commissioner. Odus Evbagharu (D), former Chair of the Harris County Democratic Party and Rosenthal's chief of staff, won the March primary. First Black HCD chair. After 2021 redistricting, district (northwest Houston / Cypress / Jersey Village) is now considered safe Democratic.",
   },
   "HD-137": {
     office: "State Representative, District 137",
@@ -646,6 +650,16 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Melanie Miles", party: "D", incumbent: false, gender: "F", note: "Won May runoff over incumbent Sharon Burney" },
     ],
     detail: "Melanie Miles beat incumbent Sharon Burney in the Democratic runoff. R nominee TBD.",
+  },
+  "TX-RailroadCommission": {
+    office: "Texas Railroad Commissioner",
+    status: "set",
+    lean: "safe-r",
+    sides: [
+      { name: "Jon Rosenthal", party: "D", incumbent: false, gender: "M", note: "Former State Rep HD-135; won March primary" },
+      { name: "Bo French",     party: "R", incumbent: false, gender: "M", note: "Won May runoff over incumbent Jim Wright" },
+    ],
+    detail: "Open seat — Commissioner Jim Wright lost the Republican primary runoff to Bo French. Jon Rosenthal (4-term HD-135 state rep) is the first credible Democratic challenger for a Railroad Commission seat in years. A Democrat hasn't held a RRC seat since 1994. The RRC regulates oil, gas, and pipeline safety in Texas.",
   },
 };
 
