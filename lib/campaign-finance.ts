@@ -78,7 +78,9 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Tom Butler",            office: "State Rep HD-128 (R nominee)",   level: "state",    party: "R", cash: 0,         asOf: "pending",  incumbent: false, filingUrl: TEC("Tom Butler") },
   { name: "Bo French",             office: "Texas Railroad Commissioner (R nominee)", level: "state", party: "R", cash: 0,  asOf: "pending",  incumbent: false, filingUrl: TEC("Bo French") },
   // Federal 2026 nominees not yet in FEC system
-  { name: "Dan Crenshaw",          office: "U.S. Rep CD-02",                 level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: true,  filingUrl: FEC("H8TX02224") },
+  { name: "Dan Crenshaw",          office: "U.S. Rep CD-02 (lost R primary to Steve Toth, Mar 2026)", level: "federal", party: "R", cash: 843500, asOf: "Q4 2025", incumbent: true, filingUrl: FEC("H8TX02224") },
+  { name: "Steve Toth",            office: "U.S. Rep CD-02 (R nominee)",     level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: false },
+  { name: "Shaun Finnie",          office: "U.S. Rep CD-02 (D nominee)",     level: "federal",  party: "D", cash: 0,         asOf: "pending",  incumbent: false },
   { name: "Morgan Luttrell",      office: "U.S. Rep CD-08 (not seeking reelection — open seat 2026)", level: "federal", party: "R", cash: 397000, asOf: "Q1 2026", incumbent: true, filingUrl: FEC("H2TX08226") },
   { name: "Jessica Steinmann",    office: "U.S. Rep CD-08 (R nominee)",     level: "federal",  party: "R", cash: 0,         asOf: "pending",  incumbent: false },
   { name: "Laura Jones",          office: "U.S. Rep CD-08 (D nominee)",     level: "federal",  party: "D", cash: 0,         asOf: "pending",  incumbent: false },

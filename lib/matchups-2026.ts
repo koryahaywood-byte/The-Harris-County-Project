@@ -105,10 +105,10 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "safe-r",
     sides: [
-      { name: "Shaun Finnie",  party: "D", incumbent: false, gender: "M", note: "D nominee" },
-      { name: "Dan Crenshaw",  party: "R", incumbent: true,  gender: "M" },
+      { name: "Shaun Finnie",  party: "D", incumbent: false, gender: "M", note: "Won D primary unopposed; businessman/entrepreneur" },
+      { name: "Steve Toth",    party: "R", incumbent: false, gender: "M", note: "TX state rep; beat Crenshaw by 15 pts in March primary; Cruz-endorsed MAGA challenger" },
     ],
-    detail: "Dan Crenshaw (R) has held CD-2 (NW Harris County into Montgomery Co.) since 2019. A former Navy SEAL and nationally prominent voice for the GOP, Crenshaw faces nominal D opposition in a safe-R district.",
+    detail: "Open seat — Dan Crenshaw (R, inc) lost his primary to state Rep. Steve Toth, becoming the first incumbent House member defeated in the 2026 cycle. Toth beat Crenshaw by 15 points, fueled by a Ted Cruz endorsement and criticism that Crenshaw wasn't sufficiently pro-Trump. CD-2 covers NW Harris County into Montgomery Co. — safe Republican.",
   },
   "CD-7": {
     office: "U.S. Representative, District 7",
@@ -465,12 +465,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "JP-2-PL2": {
     office: "Justice of the Peace PCT 2 PL 2",
-    status: "partial",
+    status: "set",
     lean: "lean-d",
     sides: [
-      { name: "Dolores Lozano", party: "D", incumbent: true, gender: "F", note: "Won March primary" },
+      { name: "Dolores Lozano", party: "D", incumbent: true,  gender: "F", note: "First woman and minority elected to this seat (2022)" },
+      { name: "Jack Ezell",     party: "R", incumbent: false, gender: "M", note: "Won R primary" },
     ],
-    detail: "Dolores Lozano (incumbent Place 2, JP Precinct 2) won the Democratic primary. R nominee TBD.",
+    detail: "Dolores Lozano made history in 2022 as the first woman and minority elected Harris County JP PCT 2 PL 2. R challenger Jack Ezell.",
   },
 
   // Commissioner Precincts
