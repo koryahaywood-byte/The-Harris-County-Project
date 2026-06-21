@@ -14,6 +14,7 @@ import ShareButton from "@/components/ShareButton";
 import DistrictHistory from "@/components/DistrictHistory";
 import TerrainReport from "@/components/TerrainReport";
 import DistrictHeatMap from "@/components/DistrictHeatMap";
+import VoterDemographics from "@/components/VoterDemographics";
 import { useUrlState, readUrlParams } from "@/lib/useUrlState";
 import type { MapLayer, PrecinctTurnout, ResultsUpload, PrecinctFeature } from "./DistrictsMap";
 
@@ -698,6 +699,10 @@ export default function DistrictsPage() {
             {/* VS card */}
             <VsCard dKey={type === "countywide" ? "HC-Countywide" : dKey} office={polLabel} />
             <VoterProfile type={type} district={district} agg={agg} cvap={cvap} />
+            <VoterDemographics
+              districtField={districtField}
+              districtValue={district}
+            />
 
             {/* Historical depth layer — four cycles, combined view, surname module */}
             <div className="mt-4">

@@ -100,8 +100,11 @@ export default function DistrictHeatMap({ districtField, districtValue, district
   }, []);
 
   // Build available race options for current cycle + district
-  const availableRaces = useMemo<Array<{ key: string; label: string }>>(() => {
-    const races: Array<{ key: string; label: string }> = [];
+  // County slugs that are already covered by precinct-history (avoid dupe in dropdown)
+  const HIST_COVERED = new Set(["president", "u_s_senate", "governor"]);
+
+  const availableRaces = useMemo<Array<{ key: string; label: string; group: string }>>(() => {
+    const races: Array<{ key: string; label: string; group: string }> = [];
 
     // 1. District-specific races (e.g., State Rep 134 in HD 134)
     if (districtRaces && districtField && districtValue && districtField !== "council") {
@@ -109,26 +112,42 @@ export default function DistrictHeatMap({ districtField, districtValue, district
       const distCycles = districtRaces[field]?.[districtValue];
       if (distCycles?.[cycle]) {
         for (const [slug, r] of Object.entries(distCycles[cycle])) {
-          races.push({ key: `dist:${slug}`, label: r.label });
+          races.push({ key: `dist:${slug}`, label: r.label, group: "This District" });
         }
       }
     }
 
-    // 2. County-wide races from precinct-history (president, governor, senate, etc.)
+    // 2. County-wide statewide races from precinct-history
     if (history) {
       const cd = history.cycles[cycle];
       if (cd?.races) {
         for (const [k, r] of Object.entries(cd.races)) {
-          races.push({ key: `hist:${k}`, label: r.label });
+          races.push({ key: `hist:${k}`, label: r.label, group: "Statewide" });
         }
       }
       if (cd?.primary) {
-        races.push({ key: "primary", label: "Primary Ballots" });
+        races.push({ key: "primary", label: "Primary Ballots", group: "Statewide" });
+      }
+    }
+
+    // 3. County offices + courts from district-races.json
+    if (districtRaces && !cycle.endsWith("P")) {
+      const OFFICE_ORDER = ["harris_da","harris_sheriff","harris_co_attorney","harris_tax_a_c","rr_comm_1","sup_ct_pl2"];
+      for (const slug of OFFICE_ORDER) {
+        if (HIST_COVERED.has(slug)) continue;
+        const r = districtRaces.county?.[slug]?.[cycle];
+        if (r) races.push({ key: `county:${slug}`, label: r.label, group: "Harris Offices" });
+      }
+      // Courts (district judges, county criminal courts)
+      for (const [slug, cycles] of Object.entries(districtRaces.county ?? {})) {
+        if (HIST_COVERED.has(slug) || OFFICE_ORDER.includes(slug)) continue;
+        const r = cycles[cycle];
+        if (r) races.push({ key: `county:${slug}`, label: r.label, group: "Courts" });
       }
     }
 
     return races;
-  }, [districtRaces, history, cycle, districtField, districtValue]);
+  }, [districtRaces, history, cycle, districtField, districtValue]); // eslint-disable-line
 
   // Auto-select best race when cycle or district changes
   useEffect(() => {
@@ -296,7 +315,17 @@ export default function DistrictHeatMap({ districtField, districtValue, district
               onChange={e => setRaceKey(e.target.value || null)}
               className="rounded-lg border border-black/10 px-2 py-1 text-[11px] font-semibold bg-white"
               style={{ color: "#374151" }}>
-              {availableRaces.map(r => <option key={r.key} value={r.key}>{r.label}</option>)}
+              {/* Group by group field */}
+              {(() => {
+                const groups = [...new Set(availableRaces.map(r => r.group))];
+                return groups.map(g => (
+                  <optgroup key={g} label={g}>
+                    {availableRaces.filter(r => r.group === g).map(r => (
+                      <option key={r.key} value={r.key}>{r.label}</option>
+                    ))}
+                  </optgroup>
+                ));
+              })()}
             </select>
           )}
 

@@ -1,0 +1,748 @@
+{
+  "1": {
+    "label": "President",
+    "districtType": "county",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "president"
+  },
+  "2": {
+    "label": "U.S. Senate",
+    "districtType": "county",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "u_s_senate"
+  },
+  "6": {
+    "label": "U.S. Rep. CD-2",
+    "districtType": "cd",
+    "districtValue": "2",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "u_s_rep_cd_2"
+  },
+  "11": {
+    "label": "U.S. Rep. CD-7",
+    "districtType": "cd",
+    "districtValue": "7",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "u_s_rep_cd_7"
+  },
+  "12": {
+    "label": "U.S. Rep. CD-8",
+    "districtType": "cd",
+    "districtValue": "8",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "u_s_rep_cd_8"
+  },
+  "13": {
+    "label": "U.S. Rep. CD-9",
+    "districtType": "cd",
+    "districtValue": "9",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "u_s_rep_cd_9"
+  },
+  "22": {
+    "label": "U.S. Rep. CD-18",
+    "districtType": "cd",
+    "districtValue": "18",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "u_s_rep_cd_18"
+  },
+  "26": {
+    "label": "U.S. Rep. CD-22",
+    "districtType": "cd",
+    "districtValue": "22",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "u_s_rep_cd_22"
+  },
+  "33": {
+    "label": "U.S. Rep. CD-29",
+    "districtType": "cd",
+    "districtValue": "29",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "u_s_rep_cd_29"
+  },
+  "37": {
+    "label": "Governor",
+    "districtType": "county",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "governor"
+  },
+  "44": {
+    "label": "Railroad Commissioner Pl 1",
+    "slug": "rr_comm_1",
+    "districtType": "county",
+    "districtValue": null,
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 1174,
+    "candidates2024G": [
+      "Craddick(R)",
+      "Culbert(D)",
+      "Dunlap(L)",
+      "Espinoza(G)",
+      "McKibbin(W)"
+    ],
+    "confirmed": true
+  },
+  "49": {
+    "label": "TX Supreme Court Pl 2",
+    "slug": "sup_ct_pl2",
+    "districtType": "county",
+    "districtValue": null,
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 1174,
+    "candidates2024G": [
+      "Blacklock(R)",
+      "Jones(D)"
+    ],
+    "confirmed": true
+  },
+  "88": {
+    "label": "State Sen. SD-6",
+    "districtType": "sd",
+    "districtValue": "6",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_sen_sd_6"
+  },
+  "89": {
+    "label": "State Sen. SD-7",
+    "districtType": "sd",
+    "districtValue": "7",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_sen_sd_7"
+  },
+  "92": {
+    "label": "State Sen. SD-11",
+    "districtType": "sd",
+    "districtValue": "11",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_sen_sd_11"
+  },
+  "94": {
+    "label": "State Sen. SD-13",
+    "districtType": "sd",
+    "districtValue": "13",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_sen_sd_13"
+  },
+  "97": {
+    "label": "State Sen. SD-15",
+    "districtType": "sd",
+    "districtValue": "15",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_sen_sd_15"
+  },
+  "99": {
+    "label": "State Sen. SD-17",
+    "districtType": "sd",
+    "districtValue": "17",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_sen_sd_17"
+  },
+  "240": {
+    "label": "State Rep. HD-126",
+    "districtType": "hd",
+    "districtValue": "126",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_126"
+  },
+  "241": {
+    "label": "State Rep. HD-127",
+    "districtType": "hd",
+    "districtValue": "127",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_127"
+  },
+  "242": {
+    "label": "State Rep. HD-128",
+    "districtType": "hd",
+    "districtValue": "128",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_128"
+  },
+  "243": {
+    "label": "State Rep. HD-129",
+    "districtType": "hd",
+    "districtValue": "129",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_129"
+  },
+  "244": {
+    "label": "State Rep. HD-130",
+    "districtType": "hd",
+    "districtValue": "130",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_130"
+  },
+  "245": {
+    "label": "State Rep. HD-131",
+    "districtType": "hd",
+    "districtValue": "131",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_131"
+  },
+  "246": {
+    "label": "State Rep. HD-132",
+    "districtType": "hd",
+    "districtValue": "132",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_132"
+  },
+  "247": {
+    "label": "State Rep. HD-133",
+    "districtType": "hd",
+    "districtValue": "133",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_133"
+  },
+  "248": {
+    "label": "State Rep. HD-134",
+    "districtType": "hd",
+    "districtValue": "134",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_134"
+  },
+  "249": {
+    "label": "State Rep. HD-135",
+    "districtType": "hd",
+    "districtValue": "135",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_135"
+  },
+  "251": {
+    "label": "State Rep. HD-137",
+    "districtType": "hd",
+    "districtValue": "137",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_137"
+  },
+  "252": {
+    "label": "State Rep. HD-138",
+    "districtType": "hd",
+    "districtValue": "138",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_138"
+  },
+  "253": {
+    "label": "State Rep. HD-139",
+    "districtType": "hd",
+    "districtValue": "139",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_139"
+  },
+  "254": {
+    "label": "State Rep. HD-140",
+    "districtType": "hd",
+    "districtValue": "140",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_140"
+  },
+  "255": {
+    "label": "State Rep. HD-141",
+    "districtType": "hd",
+    "districtValue": "141",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_141"
+  },
+  "256": {
+    "label": "State Rep. HD-142",
+    "districtType": "hd",
+    "districtValue": "142",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_142"
+  },
+  "257": {
+    "label": "State Rep. HD-143",
+    "districtType": "hd",
+    "districtValue": "143",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_143"
+  },
+  "258": {
+    "label": "State Rep. HD-144",
+    "districtType": "hd",
+    "districtValue": "144",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_144"
+  },
+  "259": {
+    "label": "State Rep. HD-145",
+    "districtType": "hd",
+    "districtValue": "145",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_145"
+  },
+  "260": {
+    "label": "State Rep. HD-146",
+    "districtType": "hd",
+    "districtValue": "146",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_146"
+  },
+  "261": {
+    "label": "State Rep. HD-147",
+    "districtType": "hd",
+    "districtValue": "147",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_147"
+  },
+  "262": {
+    "label": "State Rep. HD-148",
+    "districtType": "hd",
+    "districtValue": "148",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_148"
+  },
+  "263": {
+    "label": "State Rep. HD-149",
+    "districtType": "hd",
+    "districtValue": "149",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_149"
+  },
+  "264": {
+    "label": "State Rep. HD-150",
+    "districtType": "hd",
+    "districtValue": "150",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "state_rep_hd_150"
+  },
+  "451": {
+    "label": "11th District Judge",
+    "slug": "11th_district_judge",
+    "districtType": "county",
+    "districtValue": null,
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 1174,
+    "candidates2024G": [
+      "Copeland(R)",
+      "Hawkins(D)"
+    ],
+    "confirmed": true
+  },
+  "453": {
+    "label": "61st District Judge",
+    "slug": "61st_district_judge",
+    "districtType": "county",
+    "districtValue": null,
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 1174,
+    "candidates2024G": [
+      "Shuchart(R)",
+      "Phillips(D)"
+    ],
+    "confirmed": true
+  },
+  "454": {
+    "label": "80th District Judge",
+    "slug": "80th_district_judge",
+    "districtType": "county",
+    "districtValue": null,
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 1174,
+    "candidates2024G": [
+      "Aston(R)",
+      "Manor(D)"
+    ],
+    "confirmed": true
+  },
+  "458": {
+    "label": "129th District Judge",
+    "slug": "129th_district_judge",
+    "districtType": "county",
+    "districtValue": null,
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 1174,
+    "candidates2024G": [
+      "Archer(R)",
+      "Gomez(D)"
+    ],
+    "confirmed": true
+  },
+  "459": {
+    "label": "133rd District Judge",
+    "slug": "133rd_district_judge",
+    "districtType": "county",
+    "districtValue": null,
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 1174,
+    "candidates2024G": [
+      "Landrum(R)",
+      "Perdue(D)"
+    ],
+    "confirmed": true
+  },
+  "463": {
+    "label": "164th District Judge",
+    "slug": "164th_district_judge",
+    "districtType": "county",
+    "districtValue": null,
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 1174,
+    "candidates2024G": [
+      "Adams(R)",
+      "Thornton(D)"
+    ],
+    "confirmed": true
+  },
+  "464": {
+    "label": "165th District Judge",
+    "slug": "165th_district_judge",
+    "districtType": "county",
+    "districtValue": null,
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 1174,
+    "candidates2024G": [
+      "Bain(R)",
+      "Hall(D)"
+    ],
+    "confirmed": true
+  },
+  "467": {
+    "label": "177th District Judge",
+    "slug": "177th_district_judge",
+    "districtType": "county",
+    "districtValue": null,
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 1174,
+    "candidates2024G": [
+      "Munoz Detoto(R)",
+      "Johnson(D)"
+    ],
+    "confirmed": true
+  },
+  "479": {
+    "label": "215th District Judge",
+    "slug": "215th_district_judge",
+    "districtType": "county",
+    "districtValue": null,
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 1174,
+    "candidates2024G": [
+      "Milliron(R)",
+      "Palmer(D)"
+    ],
+    "confirmed": true
+  },
+  "504": {
+    "label": "333rd District Judge",
+    "slug": "333rd_district_judge",
+    "districtType": "county",
+    "districtValue": null,
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 1174,
+    "candidates2024G": [
+      "Staley(R)",
+      "Good(D)"
+    ],
+    "confirmed": true
+  },
+  "507": {
+    "label": "338th District Judge",
+    "slug": "338th_district_judge",
+    "districtType": "county",
+    "districtValue": null,
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 1174,
+    "candidates2024G": [
+      "Oncken(R)",
+      "Mathis(D)"
+    ],
+    "confirmed": true
+  },
+  "729": {
+    "label": "Harris DA",
+    "districtType": "county",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "harris_da"
+  },
+  "737": {
+    "label": "Harris Co. Attorney",
+    "districtType": "county",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "harris_co_attorney"
+  },
+  "777": {
+    "label": "Harris Tax A-C",
+    "districtType": "county",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "harris_tax_a_c"
+  },
+  "789": {
+    "label": "Harris Sheriff",
+    "districtType": "county",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "harris_sheriff"
+  },
+  "874": {
+    "label": "Commissioner PCT-1",
+    "districtType": "pct",
+    "districtValue": "1",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "commissioner_pct_1"
+  },
+  "875": {
+    "label": "Commissioner PCT-2",
+    "districtType": "pct",
+    "districtValue": "2",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "commissioner_pct_2"
+  },
+  "876": {
+    "label": "Commissioner PCT-3",
+    "districtType": "pct",
+    "districtValue": "3",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "commissioner_pct_3"
+  },
+  "877": {
+    "label": "Commissioner PCT-4",
+    "districtType": "pct",
+    "districtValue": "4",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "commissioner_pct_4"
+  },
+  "1063": {
+    "label": "JP Pct 5 Pl 1",
+    "slug": "jp_5_pl1",
+    "districtType": "jp",
+    "districtValue": "5",
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 253,
+    "candidates2024G": [
+      "Lombardino(R)",
+      "Garcia(D)"
+    ],
+    "confirmed": true
+  },
+  "1067": {
+    "label": "JP Pct 7 Pl 1",
+    "slug": "jp_7_pl1",
+    "districtType": "jp",
+    "districtValue": "7",
+    "hasD": true,
+    "hasR": false,
+    "harrisPrecincts": 96,
+    "candidates2024G": [
+      "Adams(D)",
+      "Ofuani(W)"
+    ],
+    "confirmed": true
+  },
+  "1069": {
+    "label": "JP Pct 8 Pl 1",
+    "slug": "jp_8_pl1",
+    "districtType": "jp",
+    "districtValue": "8",
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 85,
+    "candidates2024G": [
+      "Williamson(R)",
+      "Grady(D)"
+    ],
+    "confirmed": true
+  },
+  "1197": {
+    "label": "Constable Pct 3",
+    "slug": "constable_3",
+    "districtType": "jp",
+    "districtValue": "3",
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 118,
+    "candidates2024G": [
+      "Patino(R)",
+      "Eagleton(D)"
+    ],
+    "confirmed": true
+  },
+  "1198": {
+    "label": "Constable Pct 4",
+    "slug": "constable_4",
+    "districtType": "jp",
+    "districtValue": "4",
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 252,
+    "candidates2024G": [
+      "Herman(R)",
+      "Hutchison(D)"
+    ],
+    "confirmed": true
+  },
+  "1199": {
+    "label": "Constable Pct 5",
+    "slug": "constable_5",
+    "districtType": "jp",
+    "districtValue": "5",
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 253,
+    "candidates2024G": [
+      "Allbritton(R)",
+      "Moore(D)"
+    ],
+    "confirmed": true
+  },
+  "1642": {
+    "label": "U.S. Rep. CD-36",
+    "districtType": "cd",
+    "districtValue": "36",
+    "confirmed": true,
+    "hasD": true,
+    "hasR": true,
+    "slug": "u_s_rep_cd_36"
+  },
+  "1743": {
+    "label": "507th District Judge",
+    "slug": "507th_district_judge",
+    "districtType": "county",
+    "districtValue": null,
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 1174,
+    "candidates2024G": [
+      "Lemkuil(R)",
+      "Henny Alexander(D)"
+    ],
+    "confirmed": true
+  },
+  "1744": {
+    "label": "Harris Crim Ct at Law 16",
+    "slug": "harris_crim_ct_at_law_16",
+    "districtType": "county",
+    "districtValue": null,
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 1174,
+    "candidates2024G": [
+      "Garcia(R)",
+      "Mayes Guice(D)"
+    ],
+    "confirmed": true
+  },
+  "1843": {
+    "label": "U.S. Rep. CD-38",
+    "slug": "us_rep_38",
+    "districtType": "cd",
+    "districtValue": "38",
+    "hasD": true,
+    "hasR": true,
+    "harrisPrecincts": 169,
+    "candidates2024G": [
+      "Ayers(W)",
+      "Hunt(R)",
+      "McDonough(D)"
+    ],
+    "confirmed": true
+  }
+}
