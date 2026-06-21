@@ -331,6 +331,7 @@ export const POLITICIANS: Politician[] = [
     photo: "https://house.texas.gov/images/members/3635.jpg",
     website: "https://house.texas.gov/members/member-page/?district=135",
     legiscanName: "Rosenthal",
+    note: "Vacated HD-135 to run for Railroad Commissioner (D nominee); holds seat through Jan 2027",
   },
   {
     slug: "lacey-hull",
@@ -396,6 +397,7 @@ export const POLITICIANS: Politician[] = [
     photo: "https://house.texas.gov/images/members/3090.jpg",
     website: "https://house.texas.gov/members/member-page/?district=129",
     legiscanName: "Paul",
+    note: "Vacated HD-129 to run for SD-11 (R nominee); holds seat through Jan 2027",
   },
   {
     slug: "greg-bonnen",
