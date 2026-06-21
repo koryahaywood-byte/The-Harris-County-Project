@@ -579,63 +579,8 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     detail: "Carla Wyatt has served as County Treasurer since 2019. R opponent status TBD — countywide office in safe D territory.",
   },
 
-  // Constables — all 8 precincts
-  "CONSTABLE-1": {
-    office: "Constable Precinct 1",
-    status: "partial",
-    lean: "safe-d",
-    sides: [{ name: "Alan Rosen",       party: "D", incumbent: true, gender: "M", note: "Incumbent" }],
-    detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
-  },
-  "CONSTABLE-2": {
-    office: "Constable Precinct 2",
-    status: "partial",
-    lean: "safe-d",
-    sides: [{ name: "Jerry Garcia",     party: "D", incumbent: true, gender: "M", note: "Incumbent" }],
-    detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
-  },
-  "CONSTABLE-3": {
-    office: "Constable Precinct 3",
-    status: "partial",
-    lean: "safe-d",
-    sides: [{ name: "Sherman Eagleton", party: "D", incumbent: true, gender: "M", note: "Incumbent" }],
-    detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
-  },
-  "CONSTABLE-4": {
-    office: "Constable Precinct 4",
-    status: "partial",
-    lean: "safe-r",
-    sides: [{ name: "Mark Herman",      party: "R", incumbent: true, gender: "M", note: "Incumbent" }],
-    detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
-  },
-  "CONSTABLE-5": {
-    office: "Constable Precinct 5",
-    status: "partial",
-    lean: "safe-r",
-    sides: [{ name: "Terry Allbritton", party: "R", incumbent: true, gender: "M", note: "Incumbent" }],
-    detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
-  },
-  "CONSTABLE-6": {
-    office: "Constable Precinct 6",
-    status: "partial",
-    lean: "safe-d",
-    sides: [{ name: "Silvia Trevino",   party: "D", incumbent: true, gender: "F", note: "Incumbent" }],
-    detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
-  },
-  "CONSTABLE-7": {
-    office: "Constable Precinct 7",
-    status: "partial",
-    lean: "safe-d",
-    sides: [{ name: "James Phillips",   party: "D", incumbent: true, gender: "M", note: "Incumbent" }],
-    detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
-  },
-  "CONSTABLE-8": {
-    office: "Constable Precinct 8",
-    status: "partial",
-    lean: "safe-r",
-    sides: [{ name: "Phil Sandlin",     party: "R", incumbent: true, gender: "M", note: "Incumbent" }],
-    detail: "Files campaign finance at ethics.harrisvotes.com, not TEC.",
-  },
+  // NOTE: All 8 Harris County constables (PCT 1-8) were elected in November 2024
+  // with 4-year terms running through December 2028. None are on the 2026 ballot.
 
   // JP races with full matchups (others are partial — D only, R nominee TBD)
   "JP-5-PL2": {
