@@ -54,7 +54,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Dennis Paul",           office: "State Senator SD-11 (R nominee)", level: "state",   party: "R", cash: 237061,    asOf: "Jan 2026", incumbent: false, filingUrl: TEC("Dennis Paul") },
   { name: "Greg Bonnen",           office: "State Rep HD-24",                level: "state",    party: "R", cash: 0,          asOf: "pending",  incumbent: true,  filingUrl: TEC("Greg Bonnen") },
   { name: "Mike Schofield",        office: "State Rep HD-132",               level: "state",    party: "R", cash: 0,          asOf: "pending",  incumbent: true,  filingUrl: TEC("Mike Schofield") },
-  { name: "Penny Morales Shaw",    office: "State Rep HD-148",               level: "state",    party: "D", cash: 4187,   raised: 17974, spent: 13787, asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Penny Morales Shaw") },
+  { name: "Penny Morales Shaw",    office: "State Rep HD-148",               level: "state",    party: "D", cash: 36633,    asOf: "Oct 2025", incumbent: true,  filingUrl: TEC("Penny Morales Shaw") },
   { name: "Gina Hinojosa",         office: "Governor (D nominee)",            level: "state",    party: "D", cash: 617635,  asOf: "Feb 2026", incumbent: false, filingUrl: TEC("Gina Hinojosa") },
   { name: "Ann Johnson",           office: "State Rep HD-134",               level: "state",    party: "D", cash: 531826,    asOf: "Oct 2025", incumbent: true,  filingUrl: TEC("Ann Johnson") },
   { name: "Ana Hernandez",         office: "State Rep HD-143",               level: "state",    party: "D", cash: 448309,    asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Ana Hernandez") },

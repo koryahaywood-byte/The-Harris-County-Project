@@ -533,10 +533,10 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "likely-d",
     sides: [
-      { name: "Abbie Kamin",              party: "D", incumbent: false, gender: "F", note: "Won D primary over Audrie Lawton-Evans; open seat" },
+      { name: "Abbie Kamin",              party: "D", incumbent: true,  gender: "F", note: "Won D primary; appointed interim County Attorney by Commissioners Court Apr 2026" },
       { name: "Jacqueline Lucci Smith",   party: "R", incumbent: false, gender: "F", note: "Narrowly lost to Menefee in 2024; won R primary unopposed" },
     ],
-    detail: "Open seat — Christian Menefee vacated to run for CD-18 (won). Abbie Kamin, a former Houston City Council member, won the Democratic primary. Jacqueline Lucci Smith, who narrowly lost to Menefee in 2024, is the R nominee. All-women matchup.",
+    detail: "Christian Menefee vacated to run for CD-18. Abbie Kamin (former Houston City Council Member H) won the D primary and was appointed interim County Attorney by a 3-2 Commissioners Court vote in April 2026 — making her the first woman in the role. R challenger Jacqueline Lucci Smith narrowly lost to Menefee in 2024. All-women matchup.",
   },
   "HC-District-Clerk": {
     office: "District Clerk",
