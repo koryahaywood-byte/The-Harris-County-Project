@@ -766,6 +766,55 @@ export default function WhereIsTheDough() {
         {/* ── LEADERBOARD ───────────────────────────────────────────── */}
         {tab === "leaderboard" && (
           <div>
+            {/* Head-to-head duel bars — only when level filter would show both parties */}
+            {party === "all" && !search && (() => {
+              const levelData = DATA.filter(d => level === "all" || d.level === level)
+                .filter(d => level !== "county" || countyGroup === "all" || countyGroupOf(d.office) === countyGroup);
+              // Group by office, find matched pairs
+              const byOffice = new Map<string, { d?: Candidate; r?: Candidate }>();
+              for (const c of levelData) {
+                const key = c.office.toLowerCase().trim();
+                const entry = byOffice.get(key) ?? {};
+                if (c.party === "D") entry.d = c;
+                if (c.party === "R") entry.r = c;
+                byOffice.set(key, entry);
+              }
+              const pairs = [...byOffice.values()].filter(p => p.d && p.r && (p.d.cash > 0 || p.r.cash > 0));
+              if (pairs.length === 0) return null;
+              pairs.sort((a, b) => (b.d!.cash + b.r!.cash) - (a.d!.cash + a.r!.cash));
+              return (
+                <div className="mb-6 rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
+                  <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-4" style={{ color: "#9ca3af" }}>Head-to-head — cash on hand</p>
+                    <div className="space-y-3">
+                      {pairs.slice(0, 8).map((p, i) => {
+                        const d = p.d!, r = p.r!;
+                        const total = d.cash + r.cash || 1;
+                        const dPct = Math.round(d.cash / total * 100);
+                        return (
+                          <div key={i}>
+                            <p className="text-[10px] font-semibold mb-1 truncate" style={{ color: "#6b7280" }}>{d.office}</p>
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] font-bold w-24 truncate" style={{ color: "#2563a8" }}>{d.name.split(" ").pop()}</span>
+                              <div className="flex-1 h-2 rounded-full overflow-hidden flex" style={{ background: "#e5e7eb" }}>
+                                <div className="h-full" style={{ width: `${dPct}%`, background: "#2563a8" }} />
+                                <div className="h-full" style={{ width: `${100 - dPct}%`, background: "#dc2626" }} />
+                              </div>
+                              <span className="text-[10px] font-bold w-24 truncate text-right" style={{ color: "#dc2626" }}>{r.name.split(" ").pop()}</span>
+                            </div>
+                            <div className="flex justify-between text-[9px] mt-0.5 px-0">
+                              <span style={{ color: "#2563a8" }}>{fmt(d.cash)}</span>
+                              <span style={{ color: "#dc2626" }}>{fmt(r.cash)}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
             <div className="mb-6">
               <input type="text" value={search} onChange={e => setSearch(e.target.value)}
                 placeholder="Search by name or office…"
