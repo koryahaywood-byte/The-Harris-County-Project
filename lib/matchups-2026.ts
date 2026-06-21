@@ -675,21 +675,23 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "Probate-2": {
     office: "Probate Court No. 2",
-    status: "partial",
+    status: "set",
     lean: "likely-d",
     sides: [
-      { name: "Pamela Medina", party: "D", incumbent: true, gender: "F", note: "Seeking reelection" },
+      { name: "Pamela Medina", party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
+      { name: "Paul Shanklin", party: "R", incumbent: false, gender: "M", note: "R nominee; endorsed by HRBC" },
     ],
-    detail: "Pamela Medina (D) has held Probate Court No. 2 since 2023. R nominee TBD.",
+    detail: "Pamela Medina (D) has held Probate Court No. 2 since 2023. She faces R challenger Paul Shanklin, endorsed by the Houston Region Business Coalition.",
   },
   "Probate-3": {
     office: "Probate Court No. 3",
-    status: "partial",
+    status: "set",
     lean: "likely-d",
     sides: [
-      { name: "Jason Cox", party: "D", incumbent: true, gender: "M", note: "Seeking reelection; openly LGBTQ+" },
+      { name: "Jason Cox",        party: "D", incumbent: true,  gender: "M", note: "Seeking reelection; openly LGBTQ+" },
+      { name: "Ronald Schramm",   party: "R", incumbent: false, gender: "M", note: "R nominee; endorsed by HRBC" },
     ],
-    detail: "Jason Cox (D) has held Probate Court No. 3 since 2019 and won reelection in 2022. R nominee TBD.",
+    detail: "Jason Cox (D) has held Probate Court No. 3 since 2019 — one of the few openly LGBTQ+ judges in Harris County. He won reelection in 2022 and faces R challenger Ronald Schramm in 2026.",
   },
   "Probate-4": {
     office: "Probate Court No. 4",
