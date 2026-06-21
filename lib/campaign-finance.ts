@@ -177,6 +177,27 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Jessica N. Padilla",    office: "Criminal Court at Law No. 14",     level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
   { name: "Yahaira Quezada",       office: "Criminal Court at Law No. 14 (D nominee)", level: "county", party: "D", cash: 0, asOf: "pending", incumbent: false, filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
   { name: "Tonya Jones",           office: "Criminal Court at Law No. 15",     level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  // Harris County Criminal District Courts (Felony, file at ethics.harrisvotes.com)
+  { name: "Danilo Lacayo",         office: "182nd District Court",             level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Lance Long",            office: "183rd District Court",             level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Beverly Armstrong",     office: "208th District Court",             level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Caroline Dozier",       office: "228th District Court",             level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Alyson Almaguer",       office: "228th District Court (D nominee)", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: false, filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Chris Morton",          office: "230th District Court",             level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Josh Hill",             office: "232nd District Court",             level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Hilary Unger",          office: "248th District Court",             level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Lori Chambers Gray",    office: "262nd District Court",             level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Melissa Morris",        office: "263rd District Court",             level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Veronica Nelson",       office: "482nd District Court",             level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Lori DeAngelo",         office: "495th District Court",             level: "county",   party: "R", cash: 0, asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Tiffany Hill",          office: "495th District Court (D nominee)", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: false, filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  // DC court nominees (non-incumbents)
+  { name: "Stephanie Morales",     office: "180th District Court (D nominee)", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: false, filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Julia Maldonado",       office: "183rd District Court (D nominee)", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: false, filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Katherine Thomas",      office: "184th District Court (D nominee)", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: false, filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Andrea Beall",          office: "185th District Court (D nominee)", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: false, filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Robert Johnson",        office: "209th District Court (D nominee)", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: false, filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
+  { name: "Breanna Schwartz",      office: "497th District Court (D nominee)", level: "county",   party: "D", cash: 0, asOf: "pending", incumbent: false, filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
 ];
 
 // Merge pipeline-generated data (from `npm run finance-publish`) over the static
