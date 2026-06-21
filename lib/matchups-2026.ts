@@ -142,13 +142,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "CD-22": {
     office: "U.S. Representative, District 22",
-    status: "partial",
+    status: "set",
     lean: "safe-r",
     sides: [
-      { name: "Marquette Greene-Scott", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
-      { name: "Troy Nehls",             party: "R", incumbent: true,  gender: "M", note: "Presumed nominee — primary outside Harris data" },
+      { name: "Marquette Greene-Scott", party: "D", incumbent: false, gender: "F", note: "Won March D primary" },
+      { name: "Trever Nehls",           party: "R", incumbent: false, gender: "M", note: "Won March R primary; identical twin of outgoing Rep. Troy Nehls; Trump-endorsed" },
     ],
-    detail: "CD-22 covers south Harris County (Pearland, Friendswood, Manvel, Missouri City) into Fort Bend and Brazoria counties. Troy Nehls (R) has held the seat since 2021; safe Republican district.",
+    detail: "Open seat — Troy Nehls announced Nov 2025 he would not seek re-election. His identical twin Trever Nehls (R) won the R primary with Trump's endorsement over Rebecca Clark. CD-22 covers south Harris County (Pearland, Friendswood, Missouri City) into Fort Bend and Brazoria counties — safe Republican territory.",
   },
   "CD-29": {
     office: "U.S. Representative, District 29",
@@ -161,13 +161,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "CD-36": {
     office: "U.S. Representative, District 36",
-    status: "partial",
+    status: "set",
     lean: "safe-r",
     sides: [
       { name: "Rhonda Hart",  party: "D", incumbent: false, gender: "F", note: "Won March primary" },
-      { name: "Brian Babin",  party: "R", incumbent: true,  gender: "M", note: "Presumed nominee — primary outside Harris data" },
+      { name: "Brian Babin",  party: "R", incumbent: true,  gender: "M", note: "Won March primary 81% — seeking 7th term" },
     ],
-    detail: "CD-36 covers far southeast Harris County (Baytown, La Marque, Deer Park) into Chambers, Hardin, Jefferson, and Orange counties. Brian Babin (R) has held the seat since 2015; safe Republican district.",
+    detail: "Brian Babin (R) has held CD-36 (far SE Harris into Chambers, Hardin, Jefferson, Orange counties) since 2015. Won his March primary with 81% over Jonathan Mitchell. Safe Republican district.",
   },
   "CD-38": {
     office: "U.S. Representative, District 38",
