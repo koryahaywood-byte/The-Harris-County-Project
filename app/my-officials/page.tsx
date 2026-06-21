@@ -8,6 +8,31 @@ import { getFinanceByName } from "@/lib/campaign-finance";
 interface CvapEntry { total: number; black: number; hispanic: number; white: number; asian: number }
 interface CvapData { cvap: { cd: Record<string, CvapEntry>; sd: Record<string, CvapEntry>; hd: Record<string, CvapEntry> } }
 
+const WOMEN_OFFICIALS = new Set([
+  // Congress
+  "Lizzie Fletcher", "Sylvia Garcia",
+  // Texas Senate
+  "Carol Alvarado", "Joan Huffman", "Lois Kolkhorst",
+  // Texas House
+  "Senfronia Thompson", "Ann Johnson", "Ana Hernandez", "Mary Ann Perez",
+  "Jolanda Jones", "Lauren Ashley Simmons", "Alma Allen", "Christina Morales",
+  "Charlene Ward Johnson", "Lacey Hull", "Penny Morales Shaw",
+  // Harris County
+  "Lina Hidalgo", "Lesley Briones", "Annette Ramirez", "Marilyn Burgess",
+  "Teneshia Hudspeth", "Carla Wyatt",
+  // City of Houston
+  "Amy Peck", "Tarsha Jackson", "Carolyn Evans-Shabazz", "Tiffany Thomas",
+  "Mary Nan Huffman", "Martha Castex-Tatum", "Twila Carter", "Alejandra Salinas",
+  "Sallie Alcorn", "Judith Cruz", "Patricia Allen", "Adriana Tamez", "Paula Harris",
+  // Constables / JP
+  "Jo Ann Delgado", "Dolores Lozano", "Lucia Bates", "Laryssa Korduba",
+  "Angela D. Rodriguez", "Wanda E. Adams", "Sharon M. Burney", "Holly Williamson",
+  "Silvia Trevino",
+  // Other county/city
+  "Letitia Plummer", "Darlene Breaux", "Abbie Kamin", "Lisa Jefferson",
+  "Melanie Miles", "Shannon Dicely", "Stefanie Bord", "Staci Childs",
+]);
+
 const RACE_SEGS: { key: keyof CvapEntry; label: string; color: string }[] = [
   { key: "hispanic", label: "Hispanic", color: "#ea580c" },
   { key: "black",    label: "Black",    color: "#7c3aed" },
@@ -94,6 +119,10 @@ function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupRes
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <p className="font-bold text-[15px] truncate" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>{rep.name}</p>
+          {WOMEN_OFFICIALS.has(rep.name) && (
+            <span className="text-[9px] font-bold px-1 py-0.5 rounded leading-none flex-shrink-0"
+              style={{ background: "#fce7f3", color: "#9d174d" }}>W</span>
+          )}
           <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0"
             style={{ background: `${accent}15`, color: accent }}>
             {rep.party === "NP" ? "Nonpartisan" : rep.party === "D" ? "Dem" : "Rep"}
