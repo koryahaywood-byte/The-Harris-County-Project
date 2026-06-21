@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import crosswalkRaw from "@/lib/precinct-crosswalk.json";
 import "leaflet/dist/leaflet.css";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -128,6 +130,14 @@ type Jurisdiction = "county" | "houston";
 type SortCol = "prec" | "d" | "r" | "total" | "pct" | "margin" | "swing";
 type SortDir = "asc" | "desc";
 type ViewMode = "partisan" | "swing";
+
+// ── Precinct crosswalk ─────────────────────────────────────────────────────────
+const CROSSWALK = (crosswalkRaw as { precincts: Record<string, { hd?: string; sd?: string; cd?: string; jp?: string; pct?: string }> }).precincts;
+
+function precinctDistricts(rawPrec: string): { hd?: string; sd?: string; cd?: string } {
+  const norm = normPrec(rawPrec);
+  return CROSSWALK[rawPrec] ?? CROSSWALK[norm] ?? CROSSWALK[norm.padStart(4, "0")] ?? {};
+}
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function HeatCheckHistoryMap() {
@@ -422,18 +432,16 @@ export default function HeatCheckHistoryMap() {
           </button>
         )}
 
-        {/* Partisan summary chips */}
-        {viewMode === "partisan" && precincts.length > 0 && !showIframe && (
-          <div className="flex items-center gap-2 ml-auto">
-            <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ background: "#dbeafe", color: "#1d4ed8" }}>
-              {demPrecincts.toLocaleString()} D precincts
-            </span>
-            <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ background: "#fee2e2", color: "#dc2626" }}>
-              {(precincts.length - demPrecincts).toLocaleString()} R
-            </span>
-            <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ background: "#f3f4f6", color: "#374151" }}>
-              {overallDemPct}% D countywide
-            </span>
+        {/* Partisan summary bar */}
+        {viewMode === "partisan" && precincts.length > 0 && !showIframe && totalVotes > 0 && (
+          <div className="flex items-center gap-2 ml-auto min-w-[260px]">
+            <span className="text-[10px] font-bold tabular-nums shrink-0" style={{ color: "#2563a8" }}>D {overallDemPct}%</span>
+            <div className="flex-1 h-2 rounded-full overflow-hidden flex" style={{ background: "#e5e7eb" }}>
+              <div className="h-full" style={{ width: `${overallDemPct}%`, background: "#2563a8" }} />
+              <div className="h-full" style={{ width: `${100 - overallDemPct}%`, background: "#dc2626" }} />
+            </div>
+            <span className="text-[10px] font-bold tabular-nums shrink-0" style={{ color: "#dc2626" }}>{100 - overallDemPct}% R</span>
+            <span className="text-[9px] ml-1 shrink-0" style={{ color: "#9ca3af" }}>{totalVotes.toLocaleString()} votes</span>
           </div>
         )}
       </div>
@@ -499,11 +507,27 @@ export default function HeatCheckHistoryMap() {
 
         {/* Hover tooltip */}
         {hovered && (
-          <div className="absolute bottom-4 left-4 rounded-xl p-3 z-[1000] min-w-[200px]"
+          <div className="absolute bottom-4 left-4 rounded-xl p-3 z-[1000] min-w-[220px]"
             style={{ background: "rgba(15,37,64,0.93)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.12)" }}>
-            <p className="text-[9px] font-bold uppercase tracking-[0.16em] mb-2" style={{ color: "rgba(255,255,255,0.4)" }}>
-              Precinct {hovered.prec}
-            </p>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-[9px] font-bold uppercase tracking-[0.16em]" style={{ color: "rgba(255,255,255,0.4)" }}>
+                Precinct {hovered.prec}
+              </p>
+              {/* District quick-links */}
+              {(() => {
+                const d = precinctDistricts(hovered.prec);
+                return (
+                  <div className="flex gap-1.5">
+                    {d.hd && <Link href={`/tools/districts?type=hd&district=${d.hd}`}
+                      className="text-[9px] font-bold px-1.5 py-0.5 rounded-md hover:opacity-80"
+                      style={{ background: "rgba(122,174,232,0.2)", color: "#7aaee8" }}>HD {d.hd} →</Link>}
+                    {d.sd && <Link href={`/tools/districts?type=sd&district=${d.sd}`}
+                      className="text-[9px] font-bold px-1.5 py-0.5 rounded-md hover:opacity-80"
+                      style={{ background: "rgba(122,174,232,0.12)", color: "#7aaee8" }}>SD {d.sd} →</Link>}
+                  </div>
+                );
+              })()}
+            </div>
             {hovered.data?.pct != null ? (
               viewMode === "swing" && hovered.swing != null ? (
                 <>
@@ -662,6 +686,25 @@ export default function HeatCheckHistoryMap() {
                   : `Source: Texas Legislative Council TED API · ${curCycleLabel} · Two-party share (D vs R).`}
         {jurisdiction === "houston" ? " City of Houston boundary: U.S. Census TIGER 2020." : ""}
       </p>
+
+      {/* See also */}
+      <div className="px-5 py-4 border-t border-black/8">
+        <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "#9ca3af" }}>Go deeper</p>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { href: "/tools/districts",           label: "District vote breakdown →" },
+            { href: "/tools/where-is-the-dough",  label: "Campaign finance →" },
+            { href: "/my-officials",              label: "Who represents me →" },
+            { href: "/tools/ballot-2026",         label: "2026 ballot →" },
+          ].map(l => (
+            <Link key={l.href} href={l.href}
+              className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#1a3a5c] hover:text-white hover:border-[#1a3a5c]"
+              style={{ color: "#374151", borderColor: "#e5e7eb", background: "#fff" }}>
+              {l.label}
+            </Link>
+          ))}
+        </div>
+      </div>
       </>)}
     </div>
   );
