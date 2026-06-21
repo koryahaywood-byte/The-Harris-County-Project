@@ -6,7 +6,7 @@ import { MATCHUPS_2026, type RaceLean } from "@/lib/matchups-2026";
 import { FINANCE_DATA_MERGED, fmt, type CandidateFinance } from "@/lib/campaign-finance";
 import type { CvapData } from "@/app/tools/districts/page";
 
-type RaceGroup = "statewide" | "top" | "congress" | "statelegis" | "countywide" | "local";
+type RaceGroup = "statewide" | "top" | "congress" | "statelegis" | "countywide" | "courts" | "local";
 
 // Visual lane: safe D → toss-up → safe R, 0–100
 const LEAN_LANE: Record<RaceLean, number> = {
@@ -136,10 +136,11 @@ function toGroup(key: string): { group: RaceGroup; groupLabel: string } {
   if (key.startsWith("CD-")) return { group: "congress", groupLabel: "U.S. Congress" };
   if (key.startsWith("SD-") || key.startsWith("HD-")) return { group: "statelegis", groupLabel: "State Legislature" };
   if (key.startsWith("PCT-") || key.startsWith("HC-")) return { group: "countywide", groupLabel: "Harris County" };
+  if (key.startsWith("CCL-") || key.startsWith("Probate-")) return { group: "courts", groupLabel: "Harris County Courts" };
   return { group: "local", groupLabel: "JP & Local" };
 }
 
-const GROUP_ORDER: RaceGroup[] = ["top", "statewide", "congress", "statelegis", "countywide", "local"];
+const GROUP_ORDER: RaceGroup[] = ["top", "statewide", "congress", "statelegis", "countywide", "courts", "local"];
 
 function financeFor(name: string | null): CandidateFinance | null {
   if (!name) return null;
@@ -313,7 +314,7 @@ export default function Ballot2026() {
     if (onlyContested) visible = visible.filter(r => r.dSide && r.rSide);
     if (onlyCompetitive) visible = visible.filter(r => r.lean && COMPETITIVE_LEANS.includes(r.lean));
     if (onlyWomen) visible = visible.filter(r => r.dSide?.gender === "F" || r.rSide?.gender === "F");
-    const out: Record<RaceGroup, typeof rows> = { statewide: [], top: [], congress: [], statelegis: [], countywide: [], local: [] };
+    const out: Record<RaceGroup, typeof rows> = { statewide: [], top: [], congress: [], statelegis: [], countywide: [], courts: [], local: [] };
     for (const r of visible) out[r.group].push(r);
     return out;
   }, [rows, filterGroup, onlyContested, onlyCompetitive, onlyWomen]);
@@ -381,6 +382,7 @@ export default function Ballot2026() {
             ["congress", "Congress"],
             ["statelegis", "Legislature"],
             ["countywide", "County"],
+            ["courts", "Courts"],
             ["local", "JP & Local"],
           ] as [RaceGroup | "all", string][]).map(([g, label]) => (
             <button key={g} onClick={() => setFilterGroup(g)}
