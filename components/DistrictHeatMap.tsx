@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useMemo } from "react";
+import Link from "next/link";
 import "leaflet/dist/leaflet.css";
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
 
@@ -314,9 +315,14 @@ export default function DistrictHeatMap({ districtField, districtValue, district
         <div className="flex flex-wrap items-center gap-2 px-4 py-3 border-b border-black/8"
           style={{ background: "rgba(255,255,255,0.8)" }}>
           <div className="mr-auto">
-            <p className="text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>
-              Partisan History
-            </p>
+            <div className="flex items-center gap-2">
+              <p className="text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>
+                Partisan History
+              </p>
+              <Link href="/tools/heat-check" className="text-[9px] font-semibold hover:underline" style={{ color: "#2563a8" }}>
+                Countywide map →
+              </Link>
+            </div>
             <p className="text-[11px] font-semibold" style={{ color: "#1a3a5c" }}>{districtLabel}</p>
           </div>
 
