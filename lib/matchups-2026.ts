@@ -553,30 +553,24 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HC-County-Clerk": {
     office: "County Clerk",
-    status: "partial",
+    status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Teneshia Hudspeth", party: "D", incumbent: true, gender: "F", note: "Incumbent" },
+      { name: "Teneshia Hudspeth", party: "D", incumbent: true,  gender: "F", note: "Incumbent; first Black woman to hold office" },
+      { name: "Mike Wolfe",        party: "R", incumbent: false, gender: "M", note: "Won May runoff over Lynda Sanchez" },
     ],
-    detail: "Teneshia Hudspeth has served as County Clerk since 2018. R opponent status TBD — safe D district regardless.",
+    detail: "Teneshia Hudspeth has served as County Clerk since 2018 — the first Black woman to hold the office. R challenger Mike Wolfe defeated Lynda Sanchez in the Republican runoff.",
   },
-  "HC-Tax-Assessor": {
-    office: "Tax Assessor-Collector",
-    status: "partial",
-    lean: "safe-d",
-    sides: [
-      { name: "Annette Ramirez", party: "D", incumbent: true, gender: "F", note: "Incumbent" },
-    ],
-    detail: "Annette Ramirez has served as Tax Assessor-Collector since 2023. R opponent status TBD — safe D district regardless.",
-  },
+  // HC-Tax-Assessor: Annette Ramirez won November 2024; term runs through December 2028 — NOT on 2026 ballot.
   "HC-County-Treasurer": {
     office: "County Treasurer",
-    status: "partial",
+    status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Carla Wyatt", party: "D", incumbent: true, gender: "F", note: "Incumbent" },
+      { name: "Carla Wyatt",   party: "D", incumbent: true,  gender: "F", note: "Incumbent since 2019" },
+      { name: "Marc Cowart",   party: "R", incumbent: false, gender: "M", note: "Won R primary over Hayley Hagan" },
     ],
-    detail: "Carla Wyatt has served as County Treasurer since 2019. R opponent status TBD — countywide office in safe D territory.",
+    detail: "Carla Wyatt has served as County Treasurer since 2019. R challenger Marc Cowart defeated Hayley Hagan in the Republican primary.",
   },
 
   // NOTE: All 8 Harris County constables (PCT 1-8) were elected in November 2024
