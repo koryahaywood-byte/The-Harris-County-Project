@@ -43,7 +43,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Joan Huffman",          office: "Ran for Texas AG (SD-17 term to 2029)", level: "state", party: "R", cash: 2700000, asOf: "Jan 2026",  incumbent: true,  filingUrl: TEC("Joan Huffman") },
   { name: "Senfronia Thompson",    office: "State Rep HD-141",               level: "state",    party: "D", cash: 891576,  raised: 27456, spent: 143959, asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Senfronia Thompson") },
   { name: "Harold Dutton Jr.",      office: "State Rep HD-142",               level: "state",    party: "D", cash: 131857, asOf: "Feb 2026", incumbent: true,  filingUrl: TEC("Harold Dutton Jr.") },
-  { name: "Gene Wu",               office: "State Rep HD-137",               level: "state",    party: "D", cash: 123609, raised: 138467, spent: 116773, asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Gene Wu") },
+  { name: "Gene Wu",               office: "State Rep HD-137",               level: "state",    party: "D", cash: 123609, raised: 138467, spent: 116773, asOf: "Jan 2025", incumbent: true,  filingUrl: TEC("Gene Wu") },
   { name: "Jolanda Jones",         office: "State Rep HD-147",               level: "state",    party: "D", cash: 32862,    asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Jolanda Jones") },
   { name: "Lauren Ashley Simmons", office: "State Rep HD-146",               level: "state",    party: "D", cash: 18480,  raised: 66819, spent: 73438, asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Lauren Ashley Simmons") },
   { name: "Christina Morales",     office: "State Rep HD-145",               level: "state",    party: "D", cash: 33105,    asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Christina Morales") },
@@ -75,6 +75,9 @@ export const FINANCE_DATA: CandidateFinance[] = [
   // 2026 state nominees and challengers
   { name: "Scott Bowen",           office: "State Rep HD-129 (R nominee)",   level: "state",    party: "R", cash: 54346, raised: 92616, spent: 112658, asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Scott Bowen") },
   { name: "Helen Zhou",            office: "State Rep HD-137 (R nominee)",   level: "state",    party: "R", cash: 22394, raised: 9046,  spent: 5717,   asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Helen Zhou") },
+  { name: "Michelle Williams",     office: "State Rep HD-127 (D nominee)",   level: "state",    party: "D", cash: 0,     raised: 2919,  spent: 1904,   asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Michelle Williams") },
+  { name: "Albert Wittliff",       office: "State Rep HD-129 (D nominee)",   level: "state",    party: "D", cash: 14527, raised: 21842, spent: 5287,   asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Herman Wittliff") },
+  { name: "Amanda LaBrie",         office: "State Rep HD-148 (R nominee)",   level: "state",    party: "R", cash: 4907,  raised: 8940,  spent: 4423,   asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Amanda LaBrie") },
   // 2026 open seat nominees
   { name: "Odus Evbagharu",        office: "State Rep HD-135 (D nominee)",   level: "state",    party: "D", cash: 17330, raised: 70850, spent: 48651,   asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Odus Evbagharu") },
   { name: "Liz Ramos",             office: "State Rep HD-135 (R nominee)",   level: "state",    party: "R", cash: 11915, raised: 7223,  spent: 4512,    asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Liz Ramos") },
@@ -196,6 +199,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Josh Hill",             office: "232nd District Court",             level: "county",   party: "D", cash: 11385,  raised: 5150,  spent: 6370,   asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Josh Hill") },
   { name: "Hilary Unger",          office: "248th District Court",             level: "county",   party: "D", cash: 19170,  raised: 23550, spent: 13963,  asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Hilary Unger") },
   { name: "Lori Chambers Gray",    office: "262nd District Court",             level: "county",   party: "D", cash: 15108,  raised: 22225, spent: 22061,  asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Lori Chambers Gray") },
+  { name: "Megan Long",            office: "230th District Court (R nominee)", level: "county",   party: "R", cash: 7525,   raised: 5000,  spent: 0,      loans: 2525, asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Megan Long") },
   { name: "Melissa Morris",        office: "263rd District Court",             level: "county",   party: "D", cash: 0,      asOf: "pending", incumbent: true,  filingUrl: "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx" },
   { name: "Veronica Nelson",       office: "482nd District Court",             level: "county",   party: "D", cash: 63952,  raised: 54518, spent: 5444,   asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Veronica Nelson") },
   { name: "Lori DeAngelo",         office: "495th District Court",             level: "county",   party: "R", cash: 28719,  raised: 31981, spent: 5467,   asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Lori DeAngelo") },
