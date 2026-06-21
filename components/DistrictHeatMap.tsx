@@ -285,6 +285,27 @@ export default function DistrictHeatMap({ districtField, districtValue, district
   const cycleLabel = CYCLES.find(c => c.key === cycle)?.label ?? cycle;
   const isDistrict = raceKey?.startsWith("dist:");
 
+  // D% trend across general elections
+  const GENERAL_CYCLES_TREND = ["2024G", "2022G", "2020G", "2018G", "2016G"];
+  const trendData = useMemo(() => {
+    if (!history) return [];
+    return GENERAL_CYCLES_TREND.map(cy => {
+      const cd = history.cycles[cy];
+      if (!cd?.races) return null;
+      const baseRace = raceKey?.startsWith("hist:") ? raceKey.replace("hist:", "") : null;
+      const actualRaceKey = baseRace && cd.races[baseRace] ? baseRace : Object.keys(cd.races)[0];
+      const race = cd.races[actualRaceKey];
+      if (!race) return null;
+      const lk = computeFromRace(race);
+      const entries = Object.entries(lk).filter(([p]) => inDistrict(p));
+      const valid = entries.filter(([, d]) => d.pct != null);
+      if (valid.length < 3) return null;
+      const tv = valid.reduce((s, [, d]) => s + d.total, 0);
+      const dv = valid.reduce((s, [, d]) => s + d.d, 0);
+      return { year: cy.replace("G", ""), dPct: tv ? Math.round(dv / tv * 100) : null };
+    }).filter((x): x is { year: string; dPct: number } => x != null && x.dPct != null).reverse();
+  }, [history, raceKey, districtPrecs]); // eslint-disable-line
+
   return (
     <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] mt-4">
       <div className="rounded-[1rem] overflow-hidden bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]">
@@ -347,6 +368,28 @@ export default function DistrictHeatMap({ districtField, districtValue, district
 
         {/* Map */}
         <div ref={mapRef} style={{ height: 380, width: "100%" }} />
+
+        {/* D% trend sparkline */}
+        {trendData.length >= 2 && (
+          <div className="px-4 pt-3 pb-1 border-t border-black/8">
+            <p className="text-[9px] font-bold uppercase tracking-[0.16em] mb-2" style={{ color: "#9ca3af" }}>D% — General Elections</p>
+            <div className="flex items-end gap-1.5">
+              {trendData.map(t => {
+                const isD = t.dPct >= 50;
+                const barH = Math.max(8, Math.round(t.dPct * 0.48));
+                return (
+                  <div key={t.year} className="flex flex-col items-center gap-0.5">
+                    <span className="text-[8px] font-bold tabular-nums" style={{ color: isD ? "#2563a8" : "#dc2626" }}>{t.dPct}%</span>
+                    <div style={{ height: 48, width: 22, background: "#f3f4f6", borderRadius: 3, display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
+                      <div style={{ width: "100%", height: barH, background: isD ? "#2563a8" : "#dc2626", borderRadius: 3 }} />
+                    </div>
+                    <span className="text-[8px] font-semibold" style={{ color: "#9ca3af" }}>{t.year}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Footer */}
         <div className="px-4 py-2 border-t border-black/8 space-y-0.5">

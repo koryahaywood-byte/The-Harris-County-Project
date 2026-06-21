@@ -853,6 +853,25 @@ export default function WhereIsTheDough() {
           </div>
         )}
 
+        {/* See also */}
+        <div className="mt-10 pt-6 border-t border-black/8">
+          <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "#9ca3af" }}>Go deeper</p>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { href: "/tools/districts",    label: "District vote history →" },
+              { href: "/tools/heat-check",   label: "Precinct heat map →" },
+              { href: "/my-officials",       label: "Who represents me →" },
+              { href: "/tools/ballot-2026",  label: "2026 ballot →" },
+            ].map(l => (
+              <a key={l.href} href={l.href}
+                className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#1a3a5c] hover:text-white hover:border-[#1a3a5c]"
+                style={{ color: "#374151", borderColor: "#e5e7eb", background: "#fff" }}>
+                {l.label}
+              </a>
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
   );
