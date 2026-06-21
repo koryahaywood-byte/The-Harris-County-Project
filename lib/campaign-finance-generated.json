@@ -30,15 +30,17 @@
     {
       "name": "James Talarico",
       "office": "U.S. Senate (D nominee)",
-      "level": "state",
+      "level": "federal",
       "party": "D",
-      "cash": 1135151.57,
-      "asOf": "Jan 2026",
+      "cash": 9858865,
+      "raised": 40284109,
+      "spent": 30425243,
+      "asOf": "Apr 2026",
       "incumbent": false,
-      "filingUrl": "https://ethics.state.tx.us/search/cf/SimpleSearch.php?q=Talarico%2C%20James",
+      "filingUrl": "https://www.fec.gov/data/candidate/S6TX00462/",
       "dataSource": "live",
       "fetchedAt": "2026-06-10T08:45:40.736Z",
-      "source": "tec-api"
+      "source": "fec-route"
     },
     {
       "name": "Senfronia Thompson",
