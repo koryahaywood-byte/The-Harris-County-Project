@@ -662,6 +662,46 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     detail: "Open seat — Commissioner Jim Wright lost the Republican primary runoff to Bo French. Jon Rosenthal (4-term HD-135 state rep) is the first credible Democratic challenger for a Railroad Commission seat in years. A Democrat hasn't held a RRC seat since 1994. The RRC regulates oil, gas, and pipeline safety in Texas.",
   },
 
+  // Harris County Probate Courts (all 4 on 2026 ballot)
+  "Probate-1": {
+    office: "Probate Court No. 1",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "Jerry Simoneaux", party: "D", incumbent: true,  gender: "M", note: "Seeking reelection; rematch of 2022 general" },
+      { name: "Loyd Wright",     party: "R", incumbent: false, gender: "M", note: "Lost to Simoneaux in 2022; running again" },
+    ],
+    detail: "Jerry Simoneaux has held Probate Court No. 1 since 2019. Loyd Wright lost to him in 2022 and is back for a rematch. Probate courts handle wills, estates, guardianship, and mental health cases.",
+  },
+  "Probate-2": {
+    office: "Probate Court No. 2",
+    status: "partial",
+    lean: "likely-d",
+    sides: [
+      { name: "Pamela Medina", party: "D", incumbent: true, gender: "F", note: "Seeking reelection" },
+    ],
+    detail: "Pamela Medina (D) has held Probate Court No. 2 since 2023. R nominee TBD.",
+  },
+  "Probate-3": {
+    office: "Probate Court No. 3",
+    status: "partial",
+    lean: "likely-d",
+    sides: [
+      { name: "Jason Cox", party: "D", incumbent: true, gender: "M", note: "Seeking reelection; openly LGBTQ+" },
+    ],
+    detail: "Jason Cox (D) has held Probate Court No. 3 since 2019 and won reelection in 2022. R nominee TBD.",
+  },
+  "Probate-4": {
+    office: "Probate Court No. 4",
+    status: "set",
+    lean: "likely-d",
+    sides: [
+      { name: "James Horwitz",  party: "D", incumbent: true,  gender: "M", note: "Won March D primary over Lema Mousilli" },
+      { name: "Kevin Fulton",   party: "R", incumbent: false, gender: "M", note: "R nominee" },
+    ],
+    detail: "James Horwitz (D) has held Probate Court No. 4 since 2019. He defeated a D primary challenger (Lema Mousilli) before facing Fulton in the general.",
+  },
+
   // Harris County Criminal Courts at Law (countywide misdemeanor courts — all 15 on 2026 ballot)
   "CCL-1": {
     office: "County Criminal Court at Law No. 1",
