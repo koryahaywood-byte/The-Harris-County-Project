@@ -1,137 +1,267 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { MATCHUPS_2026, type RaceLean } from "@/lib/matchups-2026";
 import { FINANCE_DATA_MERGED, fmt, type CandidateFinance } from "@/lib/campaign-finance";
-import FieldNotes from "@/components/FieldNotes";
 
 type RaceGroup = "statewide" | "top" | "congress" | "statelegis" | "countywide" | "local";
 
-const LEAN_META: Record<RaceLean, { label: string; color: string; bg: string }> = {
-  "safe-d":        { label: "Safe D",        color: "#1d4ed8", bg: "#dbeafe" },
-  "likely-d":      { label: "Likely D",      color: "#2563eb", bg: "#eff6ff" },
-  "lean-d":        { label: "Lean D",        color: "#3b82f6", bg: "#f0f9ff" },
-  "toss-up":       { label: "Toss-up",       color: "#7c3aed", bg: "#f5f3ff" },
-  "lean-r":        { label: "Lean R",        color: "#ef4444", bg: "#fff5f5" },
-  "likely-r":      { label: "Likely R",      color: "#dc2626", bg: "#fef2f2" },
-  "safe-r":        { label: "Safe R",        color: "#b91c1c", bg: "#fee2e2" },
-  "uncontested-d": { label: "Uncontested D", color: "#059669", bg: "#ecfdf5" },
-  "uncontested-r": { label: "Uncontested R", color: "#6b7280", bg: "#f3f4f6" },
+// Visual lane: safe D → toss-up → safe R, 0–100
+const LEAN_LANE: Record<RaceLean, number> = {
+  "safe-d": 10, "likely-d": 25, "lean-d": 38,
+  "toss-up": 50,
+  "lean-r": 62, "likely-r": 75, "safe-r": 90,
+  "uncontested-d": 5, "uncontested-r": 95,
+};
+const LEAN_LABEL: Record<RaceLean, string> = {
+  "safe-d": "Safe D", "likely-d": "Likely D", "lean-d": "Lean D",
+  "toss-up": "Toss-up",
+  "lean-r": "Lean R", "likely-r": "Likely R", "safe-r": "Safe R",
+  "uncontested-d": "Uncontested D", "uncontested-r": "Uncontested R",
 };
 
-interface RaceRow {
-  key: string;
-  office: string;
-  group: RaceGroup;
-  groupLabel: string;
-  status: "set" | "partial" | "runoff-pending";
-  lean?: RaceLean;
-  dSide: { name: string; note?: string } | null;
-  rSide: { name: string; note?: string } | null;
-  detail?: string;
-  districtLink?: string;
+type DistrictRaces = {
+  hd: Record<string, Record<string, Record<string, RaceData>>>;
+  sd: Record<string, Record<string, Record<string, RaceData>>>;
+  cd: Record<string, Record<string, Record<string, RaceData>>>;
+  jp: Record<string, Record<string, Record<string, RaceData>>>;
+  pct: Record<string, Record<string, Record<string, RaceData>>>;
+  county: Record<string, Record<string, RaceData>>;
+};
+type RaceData = {
+  label: string;
+  candidates: { name: string; party: string }[];
+  votes: Record<string, number[]>;
+};
+
+interface LastResult { dPct: number; rPct: number; dVotes: number; rVotes: number; cycle: string }
+
+function sumRace(race: RaceData): LastResult | null {
+  const dIdx = race.candidates.findIndex(c => c.party === "D");
+  const rIdx = race.candidates.findIndex(c => c.party === "R");
+  if (dIdx < 0 || rIdx < 0) return null;
+  let d = 0, r = 0;
+  for (const v of Object.values(race.votes)) { d += v[dIdx] ?? 0; r += v[rIdx] ?? 0; }
+  const total = d + r;
+  if (!total) return null;
+  return { dVotes: d, rVotes: r, dPct: Math.round(d / total * 100), rPct: Math.round(r / total * 100), cycle: "" };
 }
 
+function buildResultsMap(dr: DistrictRaces): Record<string, LastResult> {
+  const out: Record<string, LastResult> = {};
+
+  // State house
+  for (const [hd, cycles] of Object.entries(dr.hd ?? {})) {
+    for (const cy of ["2024G", "2022G", "2020G", "2018G"]) {
+      const c = cycles[cy]; if (!c) continue;
+      const r = sumRace(Object.values(c)[0]!); if (!r) continue;
+      out[`HD-${hd}`] = { ...r, cycle: cy }; break;
+    }
+  }
+  // State senate
+  for (const [sd, cycles] of Object.entries(dr.sd ?? {})) {
+    for (const cy of ["2024G", "2022G", "2020G", "2018G"]) {
+      const c = cycles[cy]; if (!c) continue;
+      const r = sumRace(Object.values(c)[0]!); if (!r) continue;
+      out[`SD-${sd}`] = { ...r, cycle: cy }; break;
+    }
+  }
+  // Congress
+  for (const [cd, cycles] of Object.entries(dr.cd ?? {})) {
+    for (const cy of ["2024G", "2022G", "2020G", "2018G"]) {
+      const c = cycles[cy]; if (!c) continue;
+      const r = sumRace(Object.values(c)[0]!); if (!r) continue;
+      out[`CD-${cd}`] = { ...r, cycle: cy }; break;
+    }
+  }
+  // JP
+  for (const [jp, cycles] of Object.entries(dr.jp ?? {})) {
+    for (const cy of ["2024G", "2022G", "2020G"]) {
+      const c = cycles[cy]; if (!c) continue;
+      for (const [slug, race] of Object.entries(c)) {
+        const r = sumRace(race); if (!r) continue;
+        const isConstable = slug.includes("constable");
+        const key = isConstable ? `HC-Constable-${jp}` : `JP-${jp}`;
+        if (!out[key]) out[key] = { ...r, cycle: cy };
+      }
+    }
+  }
+  // Commissioner
+  for (const [pct, cycles] of Object.entries(dr.pct ?? {})) {
+    for (const cy of ["2024G", "2022G", "2020G"]) {
+      const c = cycles[cy]; if (!c) continue;
+      const r = sumRace(Object.values(c)[0]!); if (!r) continue;
+      out[`PCT-${pct}`] = { ...r, cycle: cy }; break;
+    }
+  }
+  // County-wide
+  const countyMap: Record<string, string> = {
+    governor: "TX-Governor", u_s_senate: "US-Senate",
+    harris_da: "HC-DA", harris_sheriff: "HC-Sheriff",
+    harris_co_attorney: "HC-County-Attorney", harris_tax_a_c: "HC-Tax-Assessor",
+    president: "TX-President",
+  };
+  for (const [slug, cycles] of Object.entries(dr.county ?? {})) {
+    const key = countyMap[slug]; if (!key) continue;
+    for (const cy of ["2024G", "2022G", "2020G", "2018G"]) {
+      const race = cycles[cy]; if (!race) continue;
+      const r = sumRace(race); if (!r) continue;
+      out[key] = { ...r, cycle: cy }; break;
+    }
+  }
+  return out;
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
 function toDistrictLink(key: string): string {
-  if (key.startsWith("TX-")) return "/tools/districts?type=countywide";
-  if (key === "US-Senate") return "/tools/districts?type=countywide";
+  if (key === "US-Senate" || key.startsWith("TX-")) return "/tools/districts?type=countywide";
   if (key === "HC-Countywide") return "/tools/districts?type=countywide";
   if (key.startsWith("CD-")) return `/tools/districts?type=cd&district=${key.replace("CD-", "")}`;
   if (key.startsWith("SD-")) return `/tools/districts?type=sd&district=${key.replace("SD-", "")}`;
   if (key.startsWith("HD-")) return `/tools/districts?type=hd&district=${key.replace("HD-", "")}`;
   if (key.startsWith("PCT-")) return `/tools/districts?type=pct&district=${key.replace("PCT-", "")}`;
-  if (key.startsWith("JP-")) return `/tools/districts?type=jp&district=${key.replace("JP-", "").split("-")[0]}`;
+  if (key.startsWith("HC-JP") || key.startsWith("JP-")) return `/tools/districts?type=jp&district=${key.replace(/.*?(\d+).*/, "$1")}`;
   return "/tools/districts";
 }
 
 function toGroup(key: string): { group: RaceGroup; groupLabel: string } {
-  if (key.startsWith("TX-")) return { group: "statewide", groupLabel: "Statewide (Texas)" };
+  if (key.startsWith("TX-")) return { group: "statewide", groupLabel: "Statewide Texas" };
   if (key === "US-Senate" || key === "HC-Countywide") return { group: "top", groupLabel: "Top of Ticket" };
-  if (key.startsWith("CD-")) return { group: "congress", groupLabel: "Congress" };
+  if (key.startsWith("CD-")) return { group: "congress", groupLabel: "U.S. Congress" };
   if (key.startsWith("SD-") || key.startsWith("HD-")) return { group: "statelegis", groupLabel: "State Legislature" };
-  if (key.startsWith("PCT-") || ["HC-Sheriff","HC-DA","HC-County-Attorney","HC-District-Clerk","HC-County-Clerk","HC-Tax-Assessor","HC-County-Treasurer"].includes(key))
-    return { group: "countywide", groupLabel: "County Offices" };
-  return { group: "local", groupLabel: "Local / JP / Constable" };
+  if (key.startsWith("PCT-") || key.startsWith("HC-")) return { group: "countywide", groupLabel: "Harris County" };
+  return { group: "local", groupLabel: "JP & Local" };
 }
 
-const GROUP_ORDER: RaceGroup[] = ["statewide", "top", "congress", "statelegis", "countywide", "local"];
+const GROUP_ORDER: RaceGroup[] = ["top", "statewide", "congress", "statelegis", "countywide", "local"];
 
 function financeFor(name: string | null): CandidateFinance | null {
   if (!name) return null;
-  const lower = name.toLowerCase();
-  return FINANCE_DATA_MERGED.find(f => f.name.toLowerCase() === lower) ?? null;
+  return FINANCE_DATA_MERGED.find(f => f.name.toLowerCase() === name.toLowerCase()) ?? null;
 }
 
-function MoneyCell({ name }: { name: string | null }) {
-  const fin = financeFor(name);
-  if (!fin || fin.cash === 0) {
-    return <span className="text-gray-400 text-xs italic">no data</span>;
+// ── Sub-components ────────────────────────────────────────────────────────────
+function CandidateCol({ side, align }: { side: { name: string; party: "D"|"R"; note?: string } | null; align: "left"|"right" }) {
+  if (!side) {
+    return (
+      <div className={`flex-1 px-4 py-3 ${align === "right" ? "text-right" : ""}`}
+        style={{ background: "#fafafa" }}>
+        <span className="text-xs text-gray-400 italic">Nominee TBD</span>
+      </div>
+    );
   }
+  const fin = financeFor(side.name);
+  const isD = side.party === "D";
+  const accent = isD ? "#1d4ed8" : "#b91c1c";
+  const bg = isD ? "#eff6ff" : "#fef2f2";
+
   return (
-    <span className="text-xs font-semibold text-gray-800">
-      {fmt(fin.cash)}
-      <span className="ml-1 font-normal text-gray-400 text-[10px]">CoH</span>
-    </span>
+    <div className={`flex-1 px-4 py-3.5 ${align === "right" ? "text-right" : ""}`}
+      style={{ background: bg }}>
+      <div className={`flex items-center gap-1.5 mb-1 ${align === "right" ? "justify-end" : ""}`}>
+        {align === "left" && (
+          <span className="text-[10px] font-black px-1.5 py-0.5 rounded text-white leading-none" style={{ background: accent }}>D</span>
+        )}
+        <span className="font-bold text-[14px] leading-tight" style={{ color: "#111827" }}>{side.name}</span>
+        {align === "right" && (
+          <span className="text-[10px] font-black px-1.5 py-0.5 rounded text-white leading-none" style={{ background: accent }}>R</span>
+        )}
+      </div>
+      <div className={`flex items-center gap-2 text-[11px] ${align === "right" ? "justify-end" : ""}`}>
+        {side.note && <span style={{ color: "#6b7280" }}>{side.note}</span>}
+        {fin && fin.cash > 0 && (
+          <span className="font-semibold" style={{ color: accent }}>
+            {fmt(fin.cash)} <span style={{ color: "#9ca3af", fontWeight: 400 }}>CoH</span>
+          </span>
+        )}
+      </div>
+    </div>
   );
 }
 
-function MoneyEdgeBadge({ dName, rName }: { dName: string | null; rName: string | null }) {
-  const dCash = financeFor(dName)?.cash ?? 0;
-  const rCash = financeFor(rName)?.cash ?? 0;
-  if (!dCash && !rCash) return null;
-  if (!dCash || !rCash) return null; // need both to show edge
-  const edge = dCash - rCash;
-  const absPct = Math.round(Math.abs(edge) / Math.max(dCash, rCash) * 100);
-  if (absPct < 5) return <span className="text-[9px] text-gray-400 italic">Money even</span>;
-  const isDLeading = edge > 0;
+function LeanMeter({ lean }: { lean: RaceLean | undefined }) {
+  if (!lean) return null;
+  const pos = LEAN_LANE[lean] ?? 50;
+  const label = LEAN_LABEL[lean] ?? "";
+  const isDem = pos < 50;
+  const isRep = pos > 50;
+  const color = isDem ? "#2563eb" : isRep ? "#dc2626" : "#7c3aed";
   return (
-    <span
-      className="text-[9px] font-bold px-1.5 py-0.5 rounded"
-      style={isDLeading
-        ? { background: "#dbeafe", color: "#1d4ed8" }
-        : { background: "#fee2e2", color: "#b91c1c" }}
-    >
-      {isDLeading ? "D+" : "R+"}{fmt(Math.abs(edge)).replace("$", "")} money edge
-    </span>
+    <div className="px-3 pt-1 pb-2">
+      {/* Track */}
+      <div className="relative h-1.5 rounded-full overflow-hidden" style={{ background: "linear-gradient(90deg,#dbeafe,#e0d9f7,#fee2e2)" }}>
+        <div className="absolute top-0 bottom-0 w-0.5 rounded-full" style={{ left: `${pos}%`, background: color, transform: "translateX(-50%)", boxShadow: `0 0 4px ${color}` }} />
+      </div>
+      <p className="text-[9px] font-bold text-center mt-0.5" style={{ color }}>{label}</p>
+    </div>
   );
 }
 
-const STATUS_LABEL: Record<string, string> = {
-  set: "Full matchup",
-  partial: "Partial",
-  "runoff-pending": "Runoff pending",
-};
-const STATUS_COLOR: Record<string, string> = {
-  set: "#15803d",
-  partial: "#b45309",
-  "runoff-pending": "#1d4ed8",
-};
+function ResultBar({ result, cycle }: { result: LastResult | undefined; cycle?: string }) {
+  if (!result) return null;
+  const yearLabel = result.cycle.replace("G", "").replace("P", " pri");
+  return (
+    <div className="px-4 py-2 border-t" style={{ borderColor: "#f3f4f6", background: "#f9fafb" }}>
+      <div className="flex items-center gap-2">
+        <span className="text-[9px] font-bold w-16" style={{ color: "#2563eb" }}>
+          D {result.dPct}%
+        </span>
+        <div className="flex-1 h-2 rounded-full overflow-hidden flex" style={{ background: "#e5e7eb" }}>
+          <div className="h-full" style={{ width: `${result.dPct}%`, background: "#2563eb" }} />
+          <div className="h-full" style={{ width: `${result.rPct}%`, background: "#dc2626" }} />
+        </div>
+        <span className="text-[9px] font-bold w-16 text-right" style={{ color: "#dc2626" }}>
+          {result.rPct}% R
+        </span>
+        <span className="text-[9px] ml-1 shrink-0" style={{ color: "#9ca3af" }}>
+          {result.dVotes.toLocaleString()} – {result.rVotes.toLocaleString()} · {yearLabel}
+        </span>
+      </div>
+    </div>
+  );
+}
 
+function MoneyBar({ dName, rName }: { dName: string | null; rName: string | null }) {
+  const d = financeFor(dName)?.cash ?? 0;
+  const r = financeFor(rName)?.cash ?? 0;
+  if (!d && !r) return null;
+  const total = d + r;
+  const dPct = total ? Math.round(d / total * 100) : 50;
+  return (
+    <div className="px-4 py-2 border-t" style={{ borderColor: "#f3f4f6" }}>
+      <div className="flex items-center gap-2">
+        <span className="text-[9px] font-bold w-16" style={{ color: "#2563eb" }}>{d ? fmt(d) : "—"}</span>
+        <div className="flex-1 h-1.5 rounded-full overflow-hidden flex" style={{ background: "#e5e7eb" }}>
+          <div className="h-full" style={{ width: `${dPct}%`, background: "#93c5fd" }} />
+          <div className="h-full" style={{ width: `${100 - dPct}%`, background: "#fca5a5" }} />
+        </div>
+        <span className="text-[9px] font-bold w-16 text-right" style={{ color: "#dc2626" }}>{r ? fmt(r) : "—"}</span>
+        <span className="text-[9px] ml-1 shrink-0" style={{ color: "#9ca3af" }}>money</span>
+      </div>
+    </div>
+  );
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
 export default function Ballot2026() {
+  const [districtRaces, setDistrictRaces] = useState<DistrictRaces | null>(null);
   const [filterGroup, setFilterGroup] = useState<RaceGroup | "all">("all");
-  const [onlyContested, setOnlyContested] = useState(false);
   const [onlyCompetitive, setOnlyCompetitive] = useState(false);
+  const [onlyContested, setOnlyContested] = useState(false);
 
-  const rows: RaceRow[] = useMemo(() => {
-    return Object.entries(MATCHUPS_2026).map(([key, m]) => {
-      const { group, groupLabel } = toGroup(key);
-      const dSide = m.sides.find(s => s.party === "D") ?? null;
-      const rSide = m.sides.find(s => s.party === "R") ?? null;
-      return {
-        key,
-        office: m.office,
-        group,
-        groupLabel,
-        status: m.status,
-        lean: m.lean,
-        dSide: dSide ? { name: dSide.name, note: dSide.note } : null,
-        rSide: rSide ? { name: rSide.name, note: rSide.note } : null,
-        detail: m.detail,
-        districtLink: toDistrictLink(key),
-      };
-    });
+  useEffect(() => {
+    fetch("/data/district-races.json").then(r => r.json()).then(setDistrictRaces).catch(() => {});
   }, []);
+
+  const resultsMap = useMemo(() => districtRaces ? buildResultsMap(districtRaces) : {}, [districtRaces]);
+
+  const rows = useMemo(() => Object.entries(MATCHUPS_2026).map(([key, m]) => {
+    const { group, groupLabel } = toGroup(key);
+    const dSide = m.sides.find(s => s.party === "D") ?? null;
+    const rSide = m.sides.find(s => s.party === "R") ?? null;
+    return { key, group, groupLabel, office: m.office, status: m.status, lean: m.lean, dSide, rSide, districtLink: toDistrictLink(key) };
+  }), []);
 
   const COMPETITIVE_LEANS: RaceLean[] = ["toss-up", "lean-d", "lean-r"];
 
@@ -140,217 +270,174 @@ export default function Ballot2026() {
     if (filterGroup !== "all") visible = visible.filter(r => r.group === filterGroup);
     if (onlyContested) visible = visible.filter(r => r.dSide && r.rSide);
     if (onlyCompetitive) visible = visible.filter(r => r.lean && COMPETITIVE_LEANS.includes(r.lean));
-    const out: Record<RaceGroup, RaceRow[]> = { statewide: [], top: [], congress: [], statelegis: [], countywide: [], local: [] };
+    const out: Record<RaceGroup, typeof rows> = { statewide: [], top: [], congress: [], statelegis: [], countywide: [], local: [] };
     for (const r of visible) out[r.group].push(r);
     return out;
-  }, [rows, filterGroup, onlyContested]);
+  }, [rows, filterGroup, onlyContested, onlyCompetitive]);
 
-  const totalContested = rows.filter(r => r.dSide && r.rSide).length;
-  const totalPartial    = rows.filter(r => !(r.dSide && r.rSide)).length;
-
-  const moneyTotals = useMemo(() => {
-    let dTotal = 0, rTotal = 0, dCount = 0, rCount = 0;
+  const stats = useMemo(() => {
+    const contested = rows.filter(r => r.dSide && r.rSide).length;
+    const tossups = rows.filter(r => r.lean && COMPETITIVE_LEANS.includes(r.lean)).length;
+    let dMoney = 0, rMoney = 0;
     for (const r of rows) {
-      if (r.dSide) { const f = financeFor(r.dSide.name); if (f?.cash) { dTotal += f.cash; dCount++; } }
-      if (r.rSide) { const f = financeFor(r.rSide.name); if (f?.cash) { rTotal += f.cash; rCount++; } }
+      if (r.dSide) dMoney += financeFor(r.dSide.name)?.cash ?? 0;
+      if (r.rSide) rMoney += financeFor(r.rSide.name)?.cash ?? 0;
     }
-    return { dTotal, rTotal, dCount, rCount };
+    const moneyTotal = dMoney + rMoney;
+    return { contested, tossups, dMoney, rMoney, dMoneyPct: moneyTotal ? Math.round(dMoney / moneyTotal * 100) : 50 };
   }, [rows]);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6">
-      <div className="mb-4">
-        <h1 className="text-2xl font-bold text-gray-900">2026 General Election Ballot</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Every race on a Harris County voter&rsquo;s November 2026 ballot — statewide Texas through local.{" "}
-          <span className="text-green-700 font-medium">{totalContested} full matchups</span>
-          {" · "}
-          <span className="text-amber-700 font-medium">{totalPartial} awaiting confirmation</span>
+    <div style={{ background: "#f5f3ef", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
+
+      {/* Hero */}
+      <section className="relative overflow-hidden topo-dark"
+        style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#0f2540 60%,#162e4a 100%)", paddingTop: "3.5rem", paddingBottom: "3rem" }}>
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%,rgba(37,99,168,0.18) 0%,transparent 70%)" }} />
+        <div className="relative max-w-5xl mx-auto px-5">
+          <p className="text-sky-300 text-xs font-bold uppercase tracking-[0.22em] mb-3">November 2026</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-1" style={{ fontFamily: "var(--font-playfair,serif)" }}>
+            The 2026 Ballot
+          </h1>
+          <p className="text-white/50 text-sm mb-6">
+            {stats.contested} contested races · {stats.tossups} toss-ups · Harris County, Texas
+          </p>
+
+          {/* Money summary */}
+          {(stats.dMoney > 0 || stats.rMoney > 0) && (
+            <div className="rounded-xl px-4 py-3 max-w-lg" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-2">Cash on hand — all tracked candidates</p>
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-bold w-20" style={{ color: "#93c5fd" }}>{fmt(stats.dMoney)}</span>
+                <div className="flex-1 h-2 rounded-full overflow-hidden flex" style={{ background: "rgba(255,255,255,0.1)" }}>
+                  <div className="h-full" style={{ width: `${stats.dMoneyPct}%`, background: "#3b82f6" }} />
+                  <div className="h-full" style={{ width: `${100 - stats.dMoneyPct}%`, background: "#ef4444" }} />
+                </div>
+                <span className="text-sm font-bold w-20 text-right" style={{ color: "#fca5a5" }}>{fmt(stats.rMoney)}</span>
+              </div>
+              <div className="flex justify-between mt-0.5">
+                <span className="text-[9px] font-bold" style={{ color: "#93c5fd" }}>D {stats.dMoneyPct}%</span>
+                <span className="text-[9px] font-bold" style={{ color: "#fca5a5" }}>R {100 - stats.dMoneyPct}%</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <div className="max-w-5xl mx-auto px-5 py-6">
+
+        {/* Filters */}
+        <div className="flex flex-wrap gap-2 mb-6 items-center">
+          {([
+            ["all", "All Races"],
+            ["top", "Top of Ticket"],
+            ["statewide", "Statewide TX"],
+            ["congress", "Congress"],
+            ["statelegis", "Legislature"],
+            ["countywide", "County"],
+            ["local", "JP & Local"],
+          ] as [RaceGroup | "all", string][]).map(([g, label]) => (
+            <button key={g} onClick={() => setFilterGroup(g)}
+              className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-all"
+              style={filterGroup === g
+                ? { background: "#1a3a5c", color: "#fff", borderColor: "#1a3a5c" }
+                : { background: "#fff", color: "#374151", borderColor: "#e5e7eb" }}>
+              {label}
+            </button>
+          ))}
+          <div className="ml-auto flex gap-2">
+            <button onClick={() => setOnlyCompetitive(c => !c)}
+              className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-all"
+              style={onlyCompetitive ? { background: "#7c3aed", color: "#fff", borderColor: "#7c3aed" } : { background: "#fff", color: "#374151", borderColor: "#e5e7eb" }}>
+              Competitive only
+            </button>
+            <button onClick={() => setOnlyContested(c => !c)}
+              className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-all"
+              style={onlyContested ? { background: "#059669", color: "#fff", borderColor: "#059669" } : { background: "#fff", color: "#374151", borderColor: "#e5e7eb" }}>
+              Full matchups
+            </button>
+          </div>
+        </div>
+
+        {GROUP_ORDER.map(grp => {
+          const section = grouped[grp];
+          if (!section.length) return null;
+          return (
+            <div key={grp} className="mb-10">
+              <h2 className="text-[10px] font-bold uppercase tracking-[0.22em] mb-4" style={{ color: "#9ca3af" }}>
+                {section[0].groupLabel}
+              </h2>
+              <div className="space-y-3">
+                {section.map(r => {
+                  const result = resultsMap[r.key];
+                  const dFin = financeFor(r.dSide?.name ?? null);
+                  const rFin = financeFor(r.rSide?.name ?? null);
+                  const hasMoneyBar = (dFin?.cash ?? 0) > 0 && (rFin?.cash ?? 0) > 0;
+                  return (
+                    <div key={r.key} className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
+                      <div className="rounded-[1rem] bg-white overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]">
+
+                        {/* Office header */}
+                        <div className="flex items-center justify-between px-4 py-2 border-b" style={{ borderColor: "#f3f4f6" }}>
+                          <span className="text-[11px] font-bold" style={{ color: "#1a3a5c" }}>{r.office}</span>
+                          <div className="flex items-center gap-2">
+                            {r.status === "runoff-pending" && (
+                              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "#dbeafe", color: "#1d4ed8" }}>Runoff pending</span>
+                            )}
+                            <Link href={r.districtLink} className="text-[9px] font-semibold hover:underline" style={{ color: "#9ca3af" }}>
+                              See district →
+                            </Link>
+                          </div>
+                        </div>
+
+                        {/* Candidates row */}
+                        <div className="flex items-stretch">
+                          <CandidateCol side={r.dSide as { name: string; party: "D"|"R"; note?: string } | null} align="left" />
+                          {/* Center competitiveness */}
+                          <div className="w-28 shrink-0 border-l border-r flex flex-col justify-center" style={{ borderColor: "#f3f4f6" }}>
+                            <LeanMeter lean={r.lean} />
+                          </div>
+                          <CandidateCol side={r.rSide as { name: string; party: "D"|"R"; note?: string } | null} align="right" />
+                        </div>
+
+                        {/* Last election result bar */}
+                        <ResultBar result={result} />
+
+                        {/* Money bar — only when both sides have data */}
+                        {hasMoneyBar && <MoneyBar dName={r.dSide?.name ?? null} rName={r.rSide?.name ?? null} />}
+
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Related tools */}
+        <div className="mt-8 pt-6 border-t border-black/8">
+          <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "#9ca3af" }}>Go deeper</p>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { href: "/tools/where-is-the-dough", label: "Full campaign finance →" },
+              { href: "/tools/districts",           label: "District-by-district breakdown →" },
+              { href: "/tools/heat-check",          label: "Precinct vote history →" },
+            ].map(l => (
+              <Link key={l.href} href={l.href}
+                className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#1a3a5c] hover:text-white hover:border-[#1a3a5c]"
+                style={{ color: "#374151", borderColor: "#e5e7eb", background: "#fff" }}>
+                {l.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <p className="text-[10px] mt-6 leading-relaxed" style={{ color: "#b0b8c4" }}>
+          Last election bars show Harris County totals from TED (Texas Legislative Council). Money is cash on hand from most recent FEC/TEC filing. Competitiveness ratings reflect Harris County presidential lean adjusted for district composition — not statewide outcomes.
         </p>
       </div>
-
-      {/* Money summary bar */}
-      {(moneyTotals.dTotal > 0 || moneyTotals.rTotal > 0) && (() => {
-        const total = moneyTotals.dTotal + moneyTotals.rTotal;
-        const dPct = total ? Math.round(moneyTotals.dTotal / total * 100) : 50;
-        return (
-          <div className="mb-5 rounded-xl border border-gray-200 bg-white px-4 py-3">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Total Cash on Hand — All Tracked Races</span>
-              <span className="text-[10px] text-gray-400">{moneyTotals.dCount + moneyTotals.rCount} candidates with data</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-blue-700 w-20 text-right">{fmt(moneyTotals.dTotal)}</span>
-              <div className="flex-1 rounded-full overflow-hidden h-2.5 bg-gray-100">
-                <div className="h-full rounded-full" style={{ width: `${dPct}%`, background: "linear-gradient(90deg, #1d4ed8, #3b82f6)" }} />
-              </div>
-              <span className="text-xs font-bold text-red-700 w-20">{fmt(moneyTotals.rTotal)}</span>
-            </div>
-            <div className="flex justify-between mt-0.5 px-0.5">
-              <span className="text-[9px] text-blue-600 font-bold">D {dPct}%</span>
-              <span className="text-[9px] text-red-600 font-bold">R {100 - dPct}%</span>
-            </div>
-          </div>
-        );
-      })()}
-
-
-      {/* Filters */}
-      <div className="flex flex-wrap gap-2 mb-6 items-center">
-        {([
-          ["all", "All Races"],
-          ["statewide", "Statewide TX"],
-          ["top", "Top of Ticket"],
-          ["congress", "Congress"],
-          ["statelegis", "Legislature"],
-          ["countywide", "County Offices"],
-          ["local", "Local / JP"],
-        ] as [RaceGroup | "all", string][]).map(([g, label]) => (
-          <button
-            key={g}
-            onClick={() => setFilterGroup(g)}
-            className="px-3 py-1.5 rounded-full text-sm font-medium border transition-all"
-            style={filterGroup === g
-              ? { background: "#1e3a5f", color: "#fff", borderColor: "#1e3a5f" }
-              : { background: "#f9fafb", color: "#374151", borderColor: "#d1d5db" }}
-          >
-            {label}
-          </button>
-        ))}
-        <div className="ml-auto flex gap-2">
-          <button
-            onClick={() => setOnlyCompetitive(c => !c)}
-            className="px-3 py-1.5 rounded-full text-sm font-medium border transition-all"
-            style={onlyCompetitive
-              ? { background: "#7c3aed", color: "#fff", borderColor: "#7c3aed" }
-              : { background: "#f9fafb", color: "#374151", borderColor: "#d1d5db" }}
-          >
-            Competitive only
-          </button>
-          <button
-            onClick={() => setOnlyContested(c => !c)}
-            className="px-3 py-1.5 rounded-full text-sm font-medium border transition-all"
-            style={onlyContested
-              ? { background: "#15803d", color: "#fff", borderColor: "#15803d" }
-              : { background: "#f9fafb", color: "#374151", borderColor: "#d1d5db" }}
-          >
-            Full matchups only
-          </button>
-        </div>
-      </div>
-
-      {GROUP_ORDER.map(grp => {
-        const section = grouped[grp];
-        if (!section.length) return null;
-        return (
-          <div key={grp} className="mb-8">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3 pb-1 border-b border-gray-200">
-              {section[0].groupLabel}
-            </h2>
-            <div className="space-y-2">
-              {section.map(r => {
-                const bothKnown = r.dSide && r.rSide;
-                return (
-                  <div
-                    key={r.key}
-                    className="rounded-xl border bg-white overflow-hidden"
-                    style={{ borderColor: bothKnown ? "#e5e7eb" : "#f3f4f6" }}
-                  >
-                    <div className="flex items-start gap-0">
-                      {/* D side */}
-                      <div
-                        className="flex-1 px-4 py-3 border-r"
-                        style={{ borderColor: "#e5e7eb", background: r.dSide ? "#f0f9ff" : "#fafafa" }}
-                      >
-                        {r.dSide ? (
-                          <>
-                            <div className="flex items-center gap-1.5 mb-0.5">
-                              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded text-white" style={{ background: "#1d4ed8" }}>D</span>
-                              <span className="font-semibold text-sm text-gray-900">{r.dSide.name}</span>
-                            </div>
-                            <div className="flex items-center gap-3 text-xs text-gray-500">
-                              {r.dSide.note && <span>{r.dSide.note}</span>}
-                              <MoneyCell name={r.dSide.name} />
-                            </div>
-                          </>
-                        ) : (
-                          <span className="text-xs text-gray-400 italic">D nominee TBD</span>
-                        )}
-                      </div>
-
-                      {/* Center — office name + lean + status */}
-                      <div className="w-52 shrink-0 px-3 py-3 text-center flex flex-col items-center justify-center bg-white">
-                        <div className="text-[11px] font-semibold text-gray-700 leading-tight text-center">{r.office}</div>
-                        {r.lean && (() => {
-                          const lm = LEAN_META[r.lean];
-                          return (
-                            <div className="mt-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold"
-                              style={{ background: lm.bg, color: lm.color }}>
-                              {lm.label}
-                            </div>
-                          );
-                        })()}
-                        <div className="mt-1">
-                          <span
-                            className="text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
-                            style={{ background: STATUS_COLOR[r.status] + "18", color: STATUS_COLOR[r.status] }}
-                          >
-                            {STATUS_LABEL[r.status]}
-                          </span>
-                        </div>
-                        <div className="mt-1">
-                          <MoneyEdgeBadge dName={r.dSide?.name ?? null} rName={r.rSide?.name ?? null} />
-                        </div>
-                        <Link
-                          href={r.districtLink ?? "/tools/districts"}
-                          className="mt-1.5 text-[9px] text-blue-500 hover:underline"
-                        >
-                          View district →
-                        </Link>
-                      </div>
-
-                      {/* R side */}
-                      <div
-                        className="flex-1 px-4 py-3 border-l"
-                        style={{ borderColor: "#e5e7eb", background: r.rSide ? "#fff5f5" : "#fafafa" }}
-                      >
-                        {r.rSide ? (
-                          <>
-                            <div className="flex items-center gap-1.5 mb-0.5 justify-end">
-                              <span className="font-semibold text-sm text-gray-900">{r.rSide.name}</span>
-                              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded text-white" style={{ background: "#b91c1c" }}>R</span>
-                            </div>
-                            <div className="flex items-center gap-3 text-xs text-gray-500 justify-end">
-                              <MoneyCell name={r.rSide.name} />
-                              {r.rSide.note && <span>{r.rSide.note}</span>}
-                            </div>
-                          </>
-                        ) : (
-                          <span className="text-xs text-gray-400 italic">R nominee TBD</span>
-                        )}
-                      </div>
-                    </div>
-
-                    {r.detail && (
-                      <div className="px-4 py-2 text-[11px] text-gray-500 bg-gray-50 border-t border-gray-100">
-                        {r.detail}
-                      </div>
-                    )}
-                    <div className="px-4 pb-2 bg-gray-50 border-t border-gray-100">
-                      <FieldNotes target={`race:${r.key}`} />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        );
-      })}
-
-      <p className="text-xs text-gray-400 mt-6 text-center">
-        Cash on hand figures from most recent filings. "No data" = not yet in finance pipeline.{" "}
-        Races showing "D nominee TBD" or "R nominee TBD" still need primary/runoff confirmation.
-      </p>
     </div>
   );
 }
