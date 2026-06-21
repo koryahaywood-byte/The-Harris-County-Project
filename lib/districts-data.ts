@@ -35,7 +35,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     seatHistory: [
       { name: "Jack Fields", years: "1981–1997", party: "R" },
       { name: "Kevin Brady", years: "1997–2023", party: "R" },
-      { name: "Morgan Luttrell", years: "2023–present", party: "R" },
+      { name: "Morgan Luttrell", years: "2023–2026", party: "R" },
     ],
   },
   "CD-9": {
@@ -62,7 +62,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
       { name: "Tom DeLay", years: "1985–2006", party: "R" },
       { name: "Nick Lampson (D, special)", years: "2007–2009", party: "D" },
       { name: "Pete Olson", years: "2009–2021", party: "R" },
-      { name: "Troy Nehls", years: "2021–present", party: "R" },
+      { name: "Troy Nehls", years: "2021–2026", party: "R" },
     ],
   },
   "CD-29": {
@@ -179,10 +179,11 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "HD-129": {
-    description: "Clear Lake, Friendswood, Seabrook — NASA/JSC corridor",
+    description: "Clear Lake, Friendswood, Seabrook — NASA/JSC corridor. Open seat 2026 — Dennis Paul vacated to run for SD-11. Scott Bowen (R) won the primary.",
     seatHistory: [
       { name: "John Davis", years: "1995–2002", party: "R" },
-      { name: "Dennis Paul", years: "2015–present", party: "R" },
+      { name: "Dennis Paul", years: "2015–2026", party: "R" },
+      { name: "Scott Bowen (R nominee)", years: "2027–present", party: "R" },
     ],
   },
   "HD-130": {
@@ -228,7 +229,8 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     description: "Cypress-Fairbanks, Spring Branch — diverse northwest corridor",
     seatHistory: [
       { name: "Gary Elkins", years: "1995–2018", party: "R" },
-      { name: "Jon Rosenthal", years: "2019–present", party: "D" },
+      { name: "Jon Rosenthal", years: "2019–2026", party: "D" },
+      { name: "Odus Evbagharu (D nominee)", years: "2027–present", party: "D" },
     ],
   },
   "HD-137": {
