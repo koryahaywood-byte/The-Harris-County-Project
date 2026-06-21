@@ -246,21 +246,23 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HD-139": {
     office: "State Representative, District 139",
-    status: "partial",
+    status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Charlene Ward Johnson", party: "D", incumbent: true, gender: "F", note: "Won March primary" },
+      { name: "Charlene Ward Johnson", party: "D", incumbent: true,  gender: "F", note: "Won March primary" },
+      { name: "Kyle Harding",          party: "R", incumbent: false, gender: "M", note: "Won R primary" },
     ],
-    detail: "Charlene Ward Johnson (HD-139, Fifth Ward / Trinity Gardens) has served since 2017. Heavily Democratic majority-Black district. R nominee TBD.",
+    detail: "Charlene Ward Johnson (HD-139, Fifth Ward / Trinity Gardens) has served since 2017. Heavily Democratic majority-Black district — one of the safest D seats in Harris County. R challenger Kyle Harding.",
   },
   "HD-142": {
     office: "State Representative, District 142",
-    status: "partial",
+    status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Harold Dutton Jr.", party: "D", incumbent: true, gender: "M", note: "Won March primary outright" },
+      { name: "Harold Dutton Jr.", party: "D", incumbent: true,  gender: "M", note: "Won March primary outright; serving since 1985" },
+      { name: "Heidi Hall",        party: "R", incumbent: false, gender: "F", note: "Won R primary" },
     ],
-    detail: "Harold Dutton Jr. (HD-142, Kashmere Gardens / Trinity Gardens / NE Houston) has served since 1985 — one of the longest-serving members of the Texas House. Heavily Democratic majority-Black district. R nominee TBD.",
+    detail: "Harold Dutton Jr. (HD-142, Kashmere Gardens / Trinity Gardens / NE Houston) has served since 1985 — one of the longest-serving members of the Texas House. Heavily Democratic majority-Black district. R challenger Heidi Hall.",
   },
   "HD-144": {
     office: "State Representative, District 144",
@@ -423,12 +425,13 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HD-145": {
     office: "State Representative, District 145",
-    status: "partial",
+    status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Christina Morales", party: "D", incumbent: true, gender: "F", note: "Seeking reelection" },
+      { name: "Christina Morales",  party: "D", incumbent: true,  gender: "F", note: "Seeking reelection; chairs the Texas House Democratic Campaign Committee" },
+      { name: "Inocensia Moreno",   party: "R", incumbent: false, gender: "F", note: "Won R primary" },
     ],
-    detail: "Christina Morales (HD-145, Gulfton / Sharpstown / SW Houston) has served since 2018. Majority-Latino district with the largest SSVR in Harris County. R nominee TBD.",
+    detail: "Christina Morales (HD-145, Gulfton / Sharpstown / SW Houston) has served since 2018. Majority-Latino district with the largest SSVR in Harris County. R challenger Inocensia Moreno. All-women matchup.",
   },
   "HD-146": {
     office: "State Representative, District 146",
@@ -442,21 +445,23 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "HD-147": {
     office: "State Representative, District 147",
-    status: "partial",
+    status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Jolanda Jones", party: "D", incumbent: true, gender: "F", note: "Seeking reelection" },
+      { name: "Jolanda Jones",   party: "D", incumbent: true,  gender: "F", note: "Returned to House in 2023 after prior House and Council service" },
+      { name: "Theodis Daniel",  party: "R", incumbent: false, gender: "M", note: "Won R primary" },
     ],
-    detail: "Jolanda Jones (HD-147, Montrose / Rice Military / University) has served since 2023. Urban core of Houston — one of the most heavily Democratic districts. R nominee TBD.",
+    detail: "Jolanda Jones (HD-147, Montrose / Rice Military / University) returned to the Texas House in 2023 after prior service on Houston City Council. One of the most heavily Democratic districts in Harris County. R challenger Theodis Daniel.",
   },
   "HD-148": {
     office: "State Representative, District 148",
-    status: "partial",
+    status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Penny Morales Shaw", party: "D", incumbent: true, gender: "F", note: "Seeking reelection" },
+      { name: "Penny Morales Shaw", party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
+      { name: "Amanda LaBrie",      party: "R", incumbent: false, gender: "F", note: "Won R primary" },
     ],
-    detail: "Penny Morales Shaw (HD-148, Midtown / Heights / Near NW) has served since 2019. Gentrifying urban district trending D. R nominee TBD.",
+    detail: "Penny Morales Shaw (HD-148, Midtown / Heights / Near NW) has served since 2019. Gentrifying urban district trending D. R challenger Amanda LaBrie. All-women matchup.",
   },
   "JP-2-PL2": {
     office: "Justice of the Peace PCT 2 PL 2",
