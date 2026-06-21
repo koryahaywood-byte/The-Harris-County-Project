@@ -6,6 +6,7 @@ import ShareButton from "@/components/ShareButton";
 import { MoneyTrailView } from "@/components/MoneyTrail";
 import TerrainReport from "@/components/TerrainReport";
 import { useUrlState, readUrlParams } from "@/lib/useUrlState";
+import { WOMEN_IN_POLITICS } from "@/lib/women-names";
 import type { FECCandidate } from "@/app/api/finance/fec/route";
 import type { TECCandidate } from "@/app/api/finance/tec/route";
 
@@ -880,6 +881,9 @@ export default function WhereIsTheDough() {
                           <span className="font-semibold text-sm text-[var(--foreground)] leading-tight">{c.name}</span>
                           <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full ${isD ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"}`}>{c.party}</span>
                           {c.incumbent && <span className="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Inc</span>}
+                          {WOMEN_IN_POLITICS.has(c.name) && (
+                            <span className="text-[9px] font-bold px-1 py-0.5 rounded leading-none" style={{ background: "#fce7f3", color: "#9d174d" }}>W</span>
+                          )}
                         </div>
                         <p className="text-[10px] text-[var(--muted)] truncate mb-1">{c.office}</p>
                         {(c.raised != null || c.spent != null || c.loans != null) && (
