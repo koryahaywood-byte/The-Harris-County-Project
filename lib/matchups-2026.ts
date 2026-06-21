@@ -41,30 +41,33 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   },
   "TX-LtGov": {
     office: "Lt. Governor of Texas",
-    status: "partial",
+    status: "set",
     lean: "safe-r",
     sides: [
-      { name: "Dan Patrick", party: "R", incumbent: true, gender: "M", note: "Seeking 3rd term" },
+      { name: "Vikki Goodwin", party: "D", incumbent: false, gender: "F", note: "State Rep from Austin (HD-47); won May D runoff over Marcos Velez" },
+      { name: "Dan Patrick",   party: "R", incumbent: true,  gender: "M", note: "Seeking 4th term; Patrick has $30M+ CoH and won March primary by widest margin in his tenure" },
     ],
-    detail: "Dan Patrick is the Republican incumbent. Democratic nominee pending.",
+    detail: "Dan Patrick seeks a 4th term with $30M+ in cash on hand and Trump's endorsement. D nominee Vikki Goodwin, a state rep from Austin, won the May runoff. The structural R lean of Texas statewide races makes this safe-R barring a major environment shift.",
   },
   "TX-AG": {
     office: "Texas Attorney General",
-    status: "partial",
+    status: "set",
     lean: "safe-r",
     sides: [
-      { name: "Mayes Middleton", party: "R", incumbent: false, gender: "M", note: "Won R primary; former State Senator SD-11" },
+      { name: "Nathan Johnson",  party: "D", incumbent: false, gender: "M", note: "State Senator SD-16 (Dallas); won May D runoff over Joe Jaworski" },
+      { name: "Mayes Middleton", party: "R", incumbent: false, gender: "M", note: "Won May R runoff (56%) over U.S. Rep. Chip Roy; former State Senator SD-11" },
     ],
-    detail: "Open seat — Paxton vacated to run for U.S. Senate. Middleton (former SD-11 senator) won the Republican nomination. Democratic nominee pending.",
+    detail: "Open seat — Ken Paxton vacated to run for U.S. Senate. Middleton beat Chip Roy in the R runoff; Nathan Johnson (Dallas state senator) won the D runoff over Joe Jaworski. A nationalized race: Middleton ran as 'MAGA Mayes,' Roy as the Trump-skeptic establishment pick.",
   },
   "TX-Comptroller": {
     office: "Texas Comptroller",
-    status: "partial",
+    status: "set",
     lean: "safe-r",
     sides: [
-      { name: "Glenn Hegar", party: "R", incumbent: true, gender: "M", note: "Seeking 3rd term" },
+      { name: "Sarah Eckhardt", party: "D", incumbent: false, gender: "F", note: "Won March D primary with 60%+; former Travis County Judge" },
+      { name: "Don Huffines",   party: "R", incumbent: false, gender: "M", note: "Won R primary with 58% after Trump endorsement; former Dallas state senator" },
     ],
-    detail: "Glenn Hegar is the Republican incumbent. Democratic nominee pending.",
+    detail: "Open seat — Glenn Hegar left office in July 2026 to become Chancellor of Texas A&M. Don Huffines won the R primary with 58% after Trump endorsed him over Abbott-backed Kelly Hancock. Sarah Eckhardt (former Travis County Judge) won the D primary with 60%.",
   },
   // ── Top of Ticket ──────────────────────────────────────────────────────────
   "US-Senate": {
