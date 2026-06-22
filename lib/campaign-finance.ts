@@ -31,7 +31,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Sylvia Garcia",         office: "U.S. Rep CD-29",                 level: "federal",  party: "D", cash: 175662,    raised: 903166, spent: 1099257, asOf: "Apr 2026", incumbent: true,  filingUrl: FEC("H8TX29049") },
   // State
   { name: "Greg Abbott",           office: "Governor",                        level: "state",    party: "R", cash: 105700000, raised: 22700000, asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Greg Abbott") },
-  { name: "Dan Patrick",          office: "Lt. Governor (seeking 4th term)",  level: "state",    party: "R", cash: 30000000, asOf: "Jan 2026 est.", incumbent: true,  filingUrl: TEC("Dan Patrick") },
+  { name: "Dan Patrick",          office: "Lt. Governor (seeking 4th term)",  level: "state",    party: "R", cash: 37701658, raised: 1799374, spent: 951331,  asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Dan Patrick") },
   { name: "Vikki Goodwin",        office: "Lt. Governor (D nominee)",         level: "state",    party: "D", cash: 161130, raised: 367962, spent: 491789,  asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Vikki Goodwin") },
   { name: "Don Huffines",         office: "Comptroller (R nominee)",          level: "state",    party: "R", cash: 11773001, raised: 1043287, spent: 3981450,  asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Don Huffines") },
   { name: "Sarah Eckhardt",       office: "Comptroller (D nominee)",          level: "state",    party: "D", cash: 183692, raised: 113110, spent: 84128,  asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Sarah Eckhardt") },
