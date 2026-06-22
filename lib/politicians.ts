@@ -138,6 +138,20 @@ export const POLITICIANS: Politician[] = [
     committees: ["Health & Human Services", "Business & Commerce", "Agriculture"],
     committeeRoles: [{ committee: "Health & Human Services", role: "Chair" }],
   },
+  {
+    slug: "mayes-middleton",
+    name: "Mayes Middleton",
+    office: "Texas State Senator",
+    district: "SD-11",
+    chamber: "Senate",
+    party: "R",
+    salary: 7200,
+    photo: "https://senate.texas.gov/members/d11/img/headshot.jpg",
+    website: "https://senate.texas.gov/member.php?d=11",
+    legiscanName: "Middleton",
+    note: "Not seeking reelection — running for Attorney General",
+    committees: ["Natural Resources & Economic Development", "Transportation"],
+  },
   // ── Texas House ──────────────────────────────────────────────────────
   {
     slug: "senfronia-thompson",
