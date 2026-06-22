@@ -45,6 +45,14 @@ const TEC_CANDIDATES = [
   { tecName: "Bord, Stefanie",        name: "Stefanie Bord",       office: "State Rep HD-126 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Stanart, Stan",         name: "Stan Stanart",        office: "State Rep HD-126 (R nominee)", level: "state" as const, party: "R" as const, incumbent: false },
   { tecName: "Childs, Staci",         name: "Staci Childs",        office: "State Rep HD-131 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
+  // Incumbents not seeking reelection — still have active committees
+  { tecName: "Allen, Alma A.",        name: "Alma Allen",           office: "State Rep HD-131 (not seeking reelection)", level: "state" as const, party: "D" as const, incumbent: true },
+  { tecName: "Vo, Hubert",            name: "Hubert Vo",            office: "State Rep HD-149 (lost D runoff)", level: "state" as const, party: "D" as const, incumbent: true },
+  // R nominees found in TEC Jan 2026 report
+  { tecName: "Butler , Alexandria Nicole ", name: "Alexandria Butler", office: "State Rep HD-146 (R nominee)", level: "state" as const, party: "R" as const, incumbent: false },
+  { tecName: "Haynes , William Brent", name: "Brent Haynes",        office: "182nd District Court (R nominee)", level: "state" as const, party: "R" as const, incumbent: false },
+  { tecName: "Bennett, David L.",     name: "Dave Bennett",         office: "State Rep HD-149 (R nominee)", level: "state" as const, party: "R" as const, incumbent: false },
+  { tecName: "Garcia De Leon, Laura", name: "Laura Garcia DeLeon",  office: "State Rep HD-140 (R nominee)", level: "state" as const, party: "R" as const, incumbent: false },
   // County elected officials — file with TEC
   { tecName: "Hidalgo, Lina",         name: "Lina Hidalgo",        office: "Harris County Judge",         level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Gonzalez, Ed",          name: "Ed Gonzalez",         office: "Sheriff",                     level: "state" as const, party: "D" as const, incumbent: true },
