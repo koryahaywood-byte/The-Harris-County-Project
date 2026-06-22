@@ -317,13 +317,14 @@ export default function DistrictHeatMap({ districtField, districtValue, district
           <div className="mr-auto">
             <div className="flex items-center gap-2">
               <p className="text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>
-                Partisan History
+                {districtData.total > 0
+                  ? `${districtLabel} · ${districtData.dPct}% D — ${cycleLabel}`
+                  : "Partisan History"}
               </p>
               <Link href="/tools/heat-check" className="text-[9px] font-semibold hover:underline" style={{ color: "#2563a8" }}>
                 Countywide map →
               </Link>
             </div>
-            <p className="text-[11px] font-semibold" style={{ color: "#1a3a5c" }}>{districtLabel}</p>
           </div>
 
           {/* Cycle picker */}

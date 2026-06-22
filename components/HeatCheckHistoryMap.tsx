@@ -282,6 +282,19 @@ export default function HeatCheckHistoryMap() {
             });
           });
           lyr.on("mouseout", () => { layer.resetStyle(lyr); setHovered(null); });
+          lyr.on("click", () => {
+            const inJurisdiction = jurisdiction !== "houston" || filterPrec(raw);
+            if (!inJurisdiction) return;
+            const d = precinctDistricts(raw);
+            const href = d.hd
+              ? `/tools/districts?type=hd&district=${d.hd}`
+              : d.sd
+              ? `/tools/districts?type=sd&district=${d.sd}`
+              : d.cd
+              ? `/tools/districts?type=cd&district=${d.cd}`
+              : null;
+            if (href) window.location.href = href;
+          });
         },
       }).addTo(leafletMap.current!);
 
