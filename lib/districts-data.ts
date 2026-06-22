@@ -90,10 +90,11 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
 
   // ── TX State Senate ──────────────────────────────────────────────────────
   "SD-4": {
-    description: "North Houston suburbs — The Woodlands, Spring, Humble",
+    description: "North Houston suburbs — The Woodlands, Spring, Humble. Brandon Creighton resigned in early 2026 to become TX Tech Chancellor. Brett Ligon won the May 2026 special election.",
     seatHistory: [
       { name: "Tommy Williams", years: "2003–2014", party: "R" },
-      { name: "Brandon Creighton", years: "2015–present", party: "R" },
+      { name: "Brandon Creighton", years: "2015–2026", party: "R" },
+      { name: "Brett Ligon", years: "2026–present", party: "R" },
     ],
   },
   "SD-6": {
