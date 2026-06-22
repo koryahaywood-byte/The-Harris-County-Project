@@ -40,12 +40,12 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "CD-9": {
-    description: "SE Houston and suburbs — Pearland, Sunnyside, Missouri City, Third Ward. Open seat 2026 — Al Green ran for CD-18 and lost.",
+    description: "SE Houston and suburbs — Pearland, Sunnyside, Missouri City, Third Ward. Open seat 2026 — Al Green ran for CD-18 and lost. Leticia Gutierrez (D) vs. Alex Mealer (R) for the full term starting Jan 2027.",
     seatHistory: [
       { name: "Jack Brooks / Craig Washington", years: "1953–1995", party: "D" },
       { name: "Nick Lampson", years: "1997–2005", party: "D" },
       { name: "Al Green", years: "2005–2027", party: "D" },
-      { name: "TBD (2026 General)", years: "2027–present", party: "D" },
+      { name: "Leticia Gutierrez or Alex Mealer (2026 General)", years: "2027–present", party: "D" },
     ],
   },
   "CD-18": {
@@ -114,13 +114,13 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "SD-11": {
-    description: "Southeast Harris County, Galveston, Brazoria. Open seat 2026 — Mayes Middleton did not seek reelection (ran for Texas AG). Shannon Dicely (D) vs. R nominee TBD.",
+    description: "Southeast Harris County, Galveston, Brazoria. Open seat 2026 — Mayes Middleton did not seek reelection (ran for Texas AG). Dennis Paul (R) vs. Shannon Dicely (D) in November 2026.",
     seatHistory: [
       { name: "Kent Caperton", years: "1975–1991", party: "D" },
       { name: "Buster Brown", years: "1992–2012", party: "R" },
       { name: "Larry Taylor", years: "2013–2022", party: "R" },
       { name: "Mayes Middleton", years: "2023–2026", party: "R" },
-      { name: "TBD (2026 General)", years: "2027–present", party: "R" },
+      { name: "Dennis Paul or Shannon Dicely (2026 General)", years: "2027–present", party: "R" },
     ],
   },
   "SD-13": {
@@ -194,11 +194,11 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "HD-131": {
-    description: "South Park, Sunnyside, South Houston — historically Black community. Open seat 2026 — Alma Allen retired. Staci Childs (D) won the runoff; R nominee TBD.",
+    description: "South Park, Sunnyside, South Houston — historically Black community. Open seat 2026 — Alma Allen retired. Staci Childs (D) won the runoff and runs uncontested — no Republican filed.",
     seatHistory: [
       { name: "Al Edwards", years: "1979–2009", party: "D" },
       { name: "Alma Allen", years: "2005–2026", party: "D" },
-      { name: "Staci Childs (D nominee)", years: "2027–present", party: "D" },
+      { name: "Staci Childs", years: "2027–present", party: "D" },
     ],
   },
   "HD-132": {
@@ -342,7 +342,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     seatHistory: [
       { name: "Ed Emmett", years: "2007–2018", party: "R" },
       { name: "Lina Hidalgo", years: "2019–2026", party: "D" },
-      { name: "TBD (2026 General)", years: "2027–present", party: "D" },
+      { name: "Letitia Plummer or Orlando Sanchez (2026 General)", years: "2027–present", party: "D" },
     ],
   },
   "HC-Precinct 1": {
