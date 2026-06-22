@@ -32,7 +32,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   // State
   { name: "Greg Abbott",           office: "Governor",                        level: "state",    party: "R", cash: 105700000, raised: 22700000, asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Greg Abbott") },
   { name: "Dan Patrick",          office: "Lt. Governor (seeking 4th term)",  level: "state",    party: "R", cash: 30000000, asOf: "Jan 2026 est.", incumbent: true,  filingUrl: TEC("Dan Patrick") },
-  { name: "Vikki Goodwin",        office: "Lt. Governor (D nominee)",         level: "state",    party: "D", cash: 161000,   asOf: "Jan 2026", incumbent: false, filingUrl: TEC("Vikki Goodwin") },
+  { name: "Vikki Goodwin",        office: "Lt. Governor (D nominee)",         level: "state",    party: "D", cash: 161130, raised: 367962, spent: 491789,  asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Vikki Goodwin") },
   { name: "Don Huffines",         office: "Comptroller (R nominee)",          level: "state",    party: "R", cash: 11773001, raised: 1043287, spent: 3981450,  asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Don Huffines") },
   { name: "Sarah Eckhardt",       office: "Comptroller (D nominee)",          level: "state",    party: "D", cash: 183692, raised: 113110, spent: 84128,  asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Sarah Eckhardt") },
   { name: "Mayes Middleton",      office: "Attorney General (R nominee)",     level: "state",    party: "R", cash: 10000000, asOf: "Jan 2026 est.", incumbent: false, filingUrl: TEC("Mayes Middleton") },
@@ -63,7 +63,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Molly Cook",            office: "State Senator SD-15",            level: "state",    party: "D", cash: 117879, raised: 50831, spent: 48727,    asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Molly Cook") },
   { name: "Charles Cunningham",    office: "State Rep HD-127",               level: "state",    party: "R", cash: 99950, raised: 7500, spent: 14912, loans: 40750,  asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Charles Cunningham") },
   { name: "Briscoe Cain",         office: "State Rep HD-128 (ran for CD-9)", level: "state",   party: "R", cash: 28323, raised: 20802, spent: 90114,  asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Briscoe Cain") },
-  { name: "Mano DeAyala",         office: "State Rep HD-133",               level: "state",    party: "R", cash: 316067,    asOf: "May 2026", incumbent: true,  filingUrl: TEC("Mano DeAyala") },
+  { name: "Mano DeAyala",         office: "State Rep HD-133",               level: "state",    party: "R", cash: 316067,    asOf: "May 2026", incumbent: true,  filingUrl: TEC("Emilio DeAyala") },
   { name: "Mark Dorazio",         office: "State Rep HD-150",               level: "state",    party: "R", cash: 404315, raised: 106299, spent: 24539, asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Mark Dorazio") },
   { name: "Lois Kolkhorst",        office: "State Senator SD-18",            level: "state",    party: "R", cash: 3159564, raised: 102510, spent: 128026, asOf: "Dec 2025", incumbent: true,  filingUrl: TEC("Lois Kolkhorst") },
   { name: "Valoree Swanson",      office: "State Rep HD-150 (former, 2017–2022)", level: "state",  party: "R", cash: 76987, raised: 19488, spent: 22509, asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Valoree Swanson") },
