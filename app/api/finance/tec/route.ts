@@ -31,7 +31,7 @@ const TEC_CANDIDATES = [
   { tecName: "Walle, Armando L.",     name: "Armando Walle",       office: "State Rep HD-140",            level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Perez, Mary Ann G.",    name: "Mary Ann Perez",      office: "State Rep HD-144",            level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Talarico, James",       name: "James Talarico",      office: "U.S. Senate (D nominee)",     level: "state" as const, party: "D" as const, incumbent: false },
-  { tecName: "Hinojosa, Gina",        name: "Gina Hinojosa",       office: "Governor (D nominee)",        level: "state" as const, party: "D" as const, incumbent: false },
+  // Hinojosa, Gina (Governor D nominee) — opened governor committee after Jan 2026 filing deadline; not in report
   { tecName: "Texans for Dan Patrick", name: "Dan Patrick",         office: "Lt. Governor",                level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "Hegar, Glenn A.",       name: "Glenn Hegar",         office: "Comptroller",                 level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "Cunningham, Charles",   name: "Charles Cunningham",  office: "State Rep HD-127",             level: "state" as const, party: "R" as const, incumbent: true },
@@ -40,7 +40,7 @@ const TEC_CANDIDATES = [
   { tecName: "Dorazio, Mark E.",      name: "Mark Dorazio",        office: "State Rep HD-150",             level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "Kellum, A'Yonna L.",    name: "A'Yonna Kellum",      office: "State Rep HD-150 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Breaux, Darlene E.",    name: "Darlene Breaux",      office: "State Rep HD-149 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
-  { tecName: "Kamin, Abbie",          name: "Abbie Kamin",         office: "County Attorney (D nominee)",  level: "state" as const, party: "D" as const, incumbent: false },
+  // Kamin, Abbie (County Attorney D nominee) — county race, files with harrisvotes.com not TEC
   { tecName: "Dicely, Shannon A.",     name: "Shannon Dicely",      office: "State Senator SD-11 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Bord, Stefanie",        name: "Stefanie Bord",       office: "State Rep HD-126 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Stanart, Stan",         name: "Stan Stanart",        office: "State Rep HD-126 (R nominee)", level: "state" as const, party: "R" as const, incumbent: false },
