@@ -53,6 +53,8 @@ const TEC_CANDIDATES = [
   { tecName: "Haynes , William Brent", name: "Brent Haynes",        office: "182nd District Court (R nominee)", level: "state" as const, party: "R" as const, incumbent: false },
   { tecName: "Bennett, David L.",     name: "Dave Bennett",         office: "State Rep HD-149 (R nominee)", level: "state" as const, party: "R" as const, incumbent: false },
   { tecName: "Garcia De Leon, Laura", name: "Laura Garcia DeLeon",  office: "State Rep HD-140 (R nominee)", level: "state" as const, party: "R" as const, incumbent: false },
+  // District court judges — file with TEC
+  { tecName: "Jones, DaSean A.",      name: "DaSean Jones",         office: "180th District Court (not seeking reelection)", level: "state" as const, party: "D" as const, incumbent: true },
   // County elected officials — file with TEC
   { tecName: "Hidalgo, Lina",         name: "Lina Hidalgo",        office: "Harris County Judge",         level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Gonzalez, Ed",          name: "Ed Gonzalez",         office: "Sheriff",                     level: "state" as const, party: "D" as const, incumbent: true },
