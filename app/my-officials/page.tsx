@@ -311,6 +311,7 @@ export default function MyOfficialsPage() {
           <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "#9ca3af" }}>Go deeper</p>
           <div className="flex flex-wrap gap-2">
             {[
+              { href: "/tools/who-do-i-call",          label: "Who do I call? →" },
               { href: "/tools/districts",            label: "District vote history →" },
               { href: "/tools/where-is-the-dough",   label: "Campaign finance →" },
               { href: "/tools/heat-check",            label: "Precinct heat map →" },

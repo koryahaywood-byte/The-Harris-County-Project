@@ -711,6 +711,7 @@ export default function HeatCheckHistoryMap() {
             { href: "/tools/districts",           label: "District vote breakdown →" },
             { href: "/tools/where-is-the-dough",  label: "Campaign finance →" },
             { href: "/my-officials",              label: "Who represents me →" },
+            { href: "/tools/who-do-i-call",       label: "Who do I call? →" },
             { href: "/tools/ballot-2026",         label: "2026 ballot →" },
           ].map(l => (
             <Link key={l.href} href={l.href}

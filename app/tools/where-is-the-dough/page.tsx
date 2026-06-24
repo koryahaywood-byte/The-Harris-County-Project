@@ -936,6 +936,7 @@ export default function WhereIsTheDough() {
               { href: "/tools/districts",    label: "District vote history →" },
               { href: "/tools/heat-check",   label: "Precinct heat map →" },
               { href: "/my-officials",       label: "Who represents me →" },
+              { href: "/tools/who-do-i-call", label: "Who do I call? →" },
               { href: "/tools/ballot-2026",  label: "2026 ballot →" },
             ].map(l => (
               <Link key={l.href} href={l.href}

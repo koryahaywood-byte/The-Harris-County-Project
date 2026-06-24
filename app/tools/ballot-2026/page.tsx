@@ -526,6 +526,7 @@ export default function Ballot2026() {
               { href: "/tools/where-is-the-dough", label: "Full campaign finance →" },
               { href: "/tools/districts",           label: "District-by-district breakdown →" },
               { href: "/tools/heat-check",          label: "Precinct vote history →" },
+              { href: "/tools/who-do-i-call",       label: "Who do I call? →" },
             ].map(l => (
               <Link key={l.href} href={l.href}
                 className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#1a3a5c] hover:text-white hover:border-[#1a3a5c]"
