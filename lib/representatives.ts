@@ -38,7 +38,7 @@ const US_SENATORS: RepEntry[] = [
 // Justice Court bench per JP precinct (two places each) + constable.
 const JP_BENCH: Record<string, { jps: { name: string; place: number; party: "D" | "R" }[]; constable: { name: string; party: "D" | "R" } }> = {
   "1": { jps: [{ name: "Eric William Carter", place: 1, party: "D" }, { name: "Steve Duble", place: 2, party: "D" }],        constable: { name: "Alan Rosen", party: "D" } },
-  "2": { jps: [{ name: "Jo Ann Delgado", place: 1, party: "D" },     { name: "Dolores Lozano", place: 2, party: "D" }],      constable: { name: "Jerry Garcia", party: "D" } },
+  "2": { jps: [{ name: "Jo Ann Delgado", place: 1, party: "D" },     { name: "Dolores Lozano", place: 2, party: "D" }],      constable: { name: "Isabel G Garcia", party: "D" } },
   "3": { jps: [{ name: "Joe Stephens", place: 1, party: "D" },       { name: "Lucia Bates", place: 2, party: "D" }],         constable: { name: "Sherman Eagleton", party: "D" } },
   "4": { jps: [{ name: "Lincoln Goodwin", place: 1, party: "D" },    { name: "Laryssa Korduba", place: 2, party: "D" }],     constable: { name: "Mark Herman", party: "R" } },
   "5": { jps: [{ name: "James Lombardino", place: 1, party: "R" },   { name: "Bob Wolfe", place: 2, party: "R" }],           constable: { name: "Terry Allbritton", party: "R" } },
