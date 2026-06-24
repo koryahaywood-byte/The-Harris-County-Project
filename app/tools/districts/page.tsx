@@ -387,6 +387,24 @@ function WinNumber({ dKey }: { dKey: string }) {
                   {primEdgePos ? "+" : ""}{fmt(Math.abs(data.primary2026DemEdge))} {primEdgePos ? "Dem" : "Rep"} ballot advantage
                 </p>
               )}
+              {/* Primary Dem ballots vs win number target */}
+              {data.targetDVotes > 0 && data.primary2026DemBallots > 0 && (() => {
+                const pct = Math.min(Math.round(data.primary2026DemBallots / data.targetDVotes * 100), 100);
+                return (
+                  <div className="mt-2.5 pt-2 border-t border-gray-100">
+                    <div className="flex justify-between text-[9px] mb-1">
+                      <span className="font-semibold" style={{ color: "#2563a8" }}>D primary base toward win number</span>
+                      <span className="font-semibold tabular-nums" style={{ color: "#2563a8" }}>{pct}%</span>
+                    </div>
+                    <div className="h-2 rounded-full overflow-hidden" style={{ background: "#e5e7eb" }}>
+                      <div className="h-full rounded-full" style={{ width: `${pct}%`, background: pct >= 80 ? "#16a34a" : pct >= 50 ? "#2563a8" : "#7aaee8" }} />
+                    </div>
+                    <p className="text-[9px] mt-0.5" style={{ color: "#9ca3af" }}>
+                      {fmt(data.primary2026DemBallots)} of {fmt(data.targetDVotes)} needed to win the general
+                    </p>
+                  </div>
+                );
+              })()}
             </div>
           );
         })()}
