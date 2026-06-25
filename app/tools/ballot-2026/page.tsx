@@ -426,15 +426,22 @@ function Ballot2026Inner() {
       <div className="max-w-5xl mx-auto px-5 py-6">
 
         {/* Search + Filters */}
-        <div className="mb-3">
+        <div className="mb-3 relative max-w-sm">
           <input
             type="search"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search candidate or office…"
-            className="w-full max-w-sm px-4 py-2 rounded-full text-sm border outline-none transition-all"
-            style={{ background: "#fff", borderColor: search ? "#1a3a5c" : "#e5e7eb", color: "#1a3a5c" }}
+            className="w-full px-4 py-2 rounded-full text-sm border outline-none transition-all"
+            style={{ background: "#fff", borderColor: search ? "#1a3a5c" : "#e5e7eb", color: "#1a3a5c", paddingRight: search ? "2.5rem" : undefined }}
           />
+          {search && (
+            <button onClick={() => setSearch("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg leading-none"
+              aria-label="Clear search">
+              ×
+            </button>
+          )}
         </div>
         <div className="flex flex-wrap gap-2 mb-6 items-center">
           {([
