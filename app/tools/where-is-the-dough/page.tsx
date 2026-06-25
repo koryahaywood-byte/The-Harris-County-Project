@@ -7,6 +7,11 @@ import { MoneyTrailView } from "@/components/MoneyTrail";
 import TerrainReport from "@/components/TerrainReport";
 import { useUrlState, readUrlParams } from "@/lib/useUrlState";
 import { WOMEN_IN_POLITICS } from "@/lib/women-names";
+import { MATCHUPS_2026 } from "@/lib/matchups-2026";
+
+const ON_BALLOT_2026 = new Set(
+  Object.values(MATCHUPS_2026).flatMap(m => m.sides.map(s => s.name))
+);
 import type { FECCandidate } from "@/app/api/finance/fec/route";
 import type { TECCandidate } from "@/app/api/finance/tec/route";
 
@@ -948,24 +953,42 @@ export default function WhereIsTheDough() {
                             <p className={`tnum text-xl font-bold ${isD ? "text-blue-700" : "text-red-700"}`}
                               style={{ fontFamily: "var(--font-playfair), serif" }}>{fmt(c.cash)}</p>
                             <p className="text-[10px] text-[var(--muted)] mt-0.5 hidden md:block">cash on hand · {c.asOf}</p>
-                            {c.filingUrl && (
-                              <a href={c.filingUrl} target="_blank" rel="noopener noreferrer"
-                                className="text-[9px] font-semibold hover:underline"
-                                style={{ color: isD ? "#2563a8" : "#b91c1c" }}>
-                                Filing →
-                              </a>
-                            )}
+                            <div className="flex items-center justify-end gap-2 mt-0.5">
+                              {c.filingUrl && (
+                                <a href={c.filingUrl} target="_blank" rel="noopener noreferrer"
+                                  className="text-[9px] font-semibold hover:underline"
+                                  style={{ color: isD ? "#2563a8" : "#b91c1c" }}>
+                                  Filing →
+                                </a>
+                              )}
+                              {ON_BALLOT_2026.has(c.name) && (
+                                <Link href={`/tools/ballot-2026?q=${encodeURIComponent(c.name)}`}
+                                  className="text-[9px] font-semibold hover:underline"
+                                  style={{ color: "#d97706" }}>
+                                  Ballot →
+                                </Link>
+                              )}
+                            </div>
                           </>
                         ) : (
                           <div className="flex flex-col items-end gap-1">
                             <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full bg-gray-100 text-gray-400">Pending</span>
-                            {c.filingUrl && (
-                              <a href={c.filingUrl} target="_blank" rel="noopener noreferrer"
-                                className="text-[9px] font-semibold hover:underline"
-                                style={{ color: isD ? "#2563a8" : "#b91c1c" }}>
-                                Filing →
-                              </a>
-                            )}
+                            <div className="flex items-center gap-2">
+                              {c.filingUrl && (
+                                <a href={c.filingUrl} target="_blank" rel="noopener noreferrer"
+                                  className="text-[9px] font-semibold hover:underline"
+                                  style={{ color: isD ? "#2563a8" : "#b91c1c" }}>
+                                  Filing →
+                                </a>
+                              )}
+                              {ON_BALLOT_2026.has(c.name) && (
+                                <Link href={`/tools/ballot-2026?q=${encodeURIComponent(c.name)}`}
+                                  className="text-[9px] font-semibold hover:underline"
+                                  style={{ color: "#d97706" }}>
+                                  Ballot →
+                                </Link>
+                              )}
+                            </div>
                           </div>
                         )}
                       </div>
