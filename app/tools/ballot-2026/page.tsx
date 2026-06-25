@@ -184,6 +184,14 @@ function CandidateCol({ side, align }: { side: { name: string; party: "D"|"R"; n
             {fmt(fin.cash)} <span style={{ color: "#9ca3af", fontWeight: 400 }}>CoH</span>
           </span>
         )}
+        {fin && (
+          <Link href={`/tools/where-is-the-dough?tab=leaderboard&q=${encodeURIComponent(side.name)}`}
+            onClick={e => e.stopPropagation()}
+            className="text-[9px] font-semibold hover:opacity-80"
+            style={{ color: accent }}>
+            Finance →
+          </Link>
+        )}
       </div>
     </div>
   );
