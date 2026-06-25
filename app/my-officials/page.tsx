@@ -104,12 +104,35 @@ const ON_BALLOT_2026 = new Set(
   Object.values(MATCHUPS_2026).flatMap(m => m.sides.map(s => s.name))
 );
 
+// Map each 2026 candidate to their race's competitiveness rating for the ballot chip.
+const LEAN_2026_BY_NAME: Record<string, string> = (() => {
+  const out: Record<string, string> = {};
+  for (const m of Object.values(MATCHUPS_2026)) {
+    if (!m.lean) continue;
+    for (const s of m.sides) out[s.name] = m.lean;
+  }
+  return out;
+})();
+
+const LEAN_2026_META: Record<string, { label: string; color: string }> = {
+  "safe-d":        { label: "Safe D",    color: "#1d4ed8" },
+  "likely-d":      { label: "Likely D",  color: "#2563a8" },
+  "lean-d":        { label: "Lean D",    color: "#3b82f6" },
+  "toss-up":       { label: "Toss-up",   color: "#7c3aed" },
+  "lean-r":        { label: "Lean R",    color: "#dc2626" },
+  "likely-r":      { label: "Likely R",  color: "#dc2626" },
+  "safe-r":        { label: "Safe R",    color: "#b91c1c" },
+  "uncontested-d": { label: "Unopposed", color: "#1d4ed8" },
+  "uncontested-r": { label: "Unopposed", color: "#b91c1c" },
+};
+
 function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupResult["districts"] }) {
   const accent = partyColor(rep.party);
   const initials = rep.name.split(" ").map(w => w[0]).slice(0, 2).join("");
   const finance = getFinanceByName(rep.name);
   const distLink = districtLink(rep);
   const onBallot2026 = ON_BALLOT_2026.has(rep.name);
+  const leanMeta = LEAN_2026_META[LEAN_2026_BY_NAME[rep.name] ?? ""] ?? null;
   const inner = (
     <div className="hcp-card card-lift p-4 flex items-start gap-3.5 h-full">
       <div className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5"
@@ -150,8 +173,8 @@ function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupRes
           )}
           {onBallot2026 && (
             <Link href={`/tools/ballot-2026?q=${encodeURIComponent(rep.name)}`} onClick={e => e.stopPropagation()}
-              className="text-[10px] font-bold hover:underline" style={{ color: "#d97706" }}>
-              2026 race →
+              className="text-[10px] font-bold hover:underline" style={{ color: leanMeta?.color ?? "#d97706" }}>
+              {leanMeta ? `${leanMeta.label} in Nov →` : "2026 race →"}
             </Link>
           )}
         </div>
