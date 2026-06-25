@@ -388,7 +388,7 @@ function Ballot2026Inner() {
             The 2026 Ballot
           </h1>
           <p className="text-white/50 text-sm mb-4">
-            {stats.contested} full matchups · {stats.tossups} toss-ups · {stats.competitive} competitive · {stats.womenCount} women candidates · Harris County
+            {stats.contested} contested · {stats.tossups} toss-ups · {stats.competitive} competitive · {stats.womenCount} women candidates · Harris County
           </p>
           <ShareButton
             toolName="2026 Ballot"
