@@ -6,6 +6,7 @@ import { LEVEL_ORDER, type RepEntry } from "@/lib/representatives";
 import { getFinanceByName } from "@/lib/campaign-finance";
 import { WOMEN_IN_POLITICS } from "@/lib/women-names";
 import { MATCHUPS_2026 } from "@/lib/matchups-2026";
+import ShareButton from "@/components/ShareButton";
 
 interface CvapEntry { total: number; black: number; hispanic: number; white: number; asian: number }
 interface CvapData { cvap: { cd: Record<string, CvapEntry>; sd: Record<string, CvapEntry>; hd: Record<string, CvapEntry> } }
@@ -239,7 +240,20 @@ export default function MyOfficialsPage() {
         {result && (
           <>
             <div className="hcp-card p-5 mb-8">
-              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#9ca3af] mb-1.5">Matched Address</p>
+              <div className="flex items-start justify-between gap-2 mb-1.5">
+                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#9ca3af]">Matched Address</p>
+                <ShareButton
+                  toolName="Who Represents Me?"
+                  section="Government"
+                  description={`${result.officials.length} elected officials · ${result.matched}`}
+                  stats={[
+                    { label: "Officials", value: result.officials.length.toString() },
+                    { label: "Levels", value: grouped.length.toString() },
+                  ]}
+                  summary={`${result.officials.length} elected officials representing ${result.matched} — via The Harris County Project`}
+                  light={false}
+                />
+              </div>
               <p className="text-sm font-bold" style={{ color: "#1a3a5c" }}>{result.matched}</p>
               <div className="chip-row mt-3">
                 <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/[0.05] text-[#6b7280]">Precinct {result.precinct}</span>
