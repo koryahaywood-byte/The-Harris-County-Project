@@ -690,6 +690,10 @@ export default function WhereIsTheDough() {
                 statLabel: "Rodney Ellis · PCT 1",
                 headline: "Rodney Ellis has more cash than every other commissioner combined.",
                 body: `Commissioner Ellis's ${ellis ? fmt(ellis.cash) : "—"} war chest dwarfs his colleagues — Briones has ${briones ? fmt(briones.cash) : "—"}, Garcia ${garcia ? fmt(garcia.cash) : "—"}, Ramsey ${ramsey ? fmt(ramsey.cash) : "—"}. Ellis is up in 2026, and that pile signals to any challenger: this seat won't be cheap.`,
+                links: [
+                  { label: "Ellis finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=Rodney+Ellis" },
+                  { label: "PCT 1 ballot →", href: "/tools/ballot-2026?q=Rodney+Ellis" },
+                ],
               },
               {
                 eyebrow: "Senate Race",
@@ -699,6 +703,10 @@ export default function WhereIsTheDough() {
                 statLabel: "Cornyn · spent, and lost",
                 headline: "Cornyn spent $15.8M defending his seat — and lost the runoff anyway.",
                 body: `Four-term Senator John Cornyn burned ${cornyn ? fmt(cornyn.spent ?? 0) : "—"} and still lost the Republican nomination to Ken Paxton in May. November is now an open brawl: James Talarico (D) vs Ken Paxton (R) — the first Texas Senate race in 24 years without an incumbent on the ballot.`,
+                links: [
+                  { label: "Talarico finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=James+Talarico" },
+                  { label: "U.S. Senate ballot →", href: "/tools/ballot-2026?q=James+Talarico" },
+                ],
               },
               {
                 eyebrow: "City Hall",
@@ -708,6 +716,10 @@ export default function WhereIsTheDough() {
                 statLabel: "Mayor Whitmire",
                 headline: "The Mayor isn't up until 2027 — and he's sitting on nearly $3M.",
                 body: `John Whitmire holds ${whitmire ? fmt(whitmire.cash) : "—"} with no election until 2027. City Controller Chris Hollins — widely viewed as a likely mayoral candidate — has banked ${hollins ? fmt(hollins.cash) : "—"}. Council member Ed Pollard holds ${pollard ? fmt(pollard.cash) : "—"}, the most of any council seat, and is also seen as a future citywide contender.`,
+                links: [
+                  { label: "Whitmire finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=John+Whitmire" },
+                  { label: "Hollins finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=Chris+Hollins" },
+                ],
               },
               {
                 eyebrow: "PCT 4 Rematch",
@@ -717,8 +729,12 @@ export default function WhereIsTheDough() {
                 statLabel: "Briones · PCT 4 incumbent",
                 headline: `Briones leads the county's only contested commissioner race with a 10-to-1 cash edge over Radack.`,
                 body: `Commissioner Lesley Briones is sitting on ${briones ? fmt(briones.cash) : "—"} as she heads into her first reelection bid. Challenger Steve Radack — who held PCT 4 for 24 years before Briones flipped it in 2022 — has ${radack ? fmt(radack.cash) : "—"} on hand. Money alone won't decide this, but the gap signals that Briones has the institutional backing Radack lost when he left office.`,
+                links: [
+                  { label: "Briones finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=Lesley+Briones" },
+                  { label: "PCT 4 ballot →", href: "/tools/ballot-2026?q=Lesley+Briones" },
+                ],
               },
-            ].map(({ eyebrow, color, border, stat, statLabel, headline, body }) => (
+            ].map(({ eyebrow, color, border, stat, statLabel, headline, body, links }) => (
               <div key={eyebrow} className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px] card-lift">
                 <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-8 py-8"
                   style={{ borderLeft: `4px solid ${border}` }}>
@@ -731,6 +747,17 @@ export default function WhereIsTheDough() {
                     <div className="flex-1">
                       <h3 className="text-xl font-bold text-[var(--accent)] mb-2 leading-snug" style={{ fontFamily: "var(--font-playfair), serif" }}>{headline}</h3>
                       <p className="text-sm text-[var(--muted)] leading-relaxed">{body}</p>
+                      {links && links.length > 0 && (
+                        <div className="flex flex-wrap gap-3 mt-4">
+                          {links.map(lk => (
+                            <Link key={lk.href} href={lk.href}
+                              className="text-[11px] font-bold hover:opacity-75 transition-opacity"
+                              style={{ color }}>
+                              {lk.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
