@@ -447,14 +447,15 @@ export default function HeatCheckHistoryMap() {
 
         {/* Partisan summary bar */}
         {viewMode === "partisan" && precincts.length > 0 && !showIframe && totalVotes > 0 && (
-          <div className="flex items-center gap-2 ml-auto min-w-[260px]">
+          <div className="flex items-center gap-2 ml-auto">
+            <span className="text-[9px] shrink-0 hidden sm:block" style={{ color: "#9ca3af" }}>{curCycleLabel}</span>
             <span className="text-[10px] font-bold tabular-nums shrink-0" style={{ color: "#2563a8" }}>D {overallDemPct}%</span>
-            <div className="flex-1 h-2 rounded-full overflow-hidden flex" style={{ background: "#e5e7eb" }}>
+            <div className="h-2 rounded-full overflow-hidden flex" style={{ background: "#e5e7eb", minWidth: 80 }}>
               <div className="h-full" style={{ width: `${overallDemPct}%`, background: "#2563a8" }} />
               <div className="h-full" style={{ width: `${100 - overallDemPct}%`, background: "#dc2626" }} />
             </div>
             <span className="text-[10px] font-bold tabular-nums shrink-0" style={{ color: "#dc2626" }}>{100 - overallDemPct}% R</span>
-            <span className="text-[9px] ml-1 shrink-0" style={{ color: "#9ca3af" }}>{totalVotes.toLocaleString()} votes</span>
+            <span className="text-[9px] ml-1 shrink-0 hidden md:block" style={{ color: "#9ca3af" }}>{totalVotes.toLocaleString()} votes</span>
           </div>
         )}
       </div>
