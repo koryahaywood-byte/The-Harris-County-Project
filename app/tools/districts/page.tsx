@@ -159,9 +159,21 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
       <div className="rounded-[1.35rem] p-5" style={{ background: "#1a3a5c" }}>
         <div className="flex items-center justify-between mb-4">
           <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.4)" }}>November 2026 — The Matchup</p>
-          {matchup?.status === "runoff-pending" && (
-            <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: "rgba(251,191,36,0.15)", color: "#fbbf24" }}>Runoff Pending</span>
-          )}
+          <div className="flex items-center gap-2">
+            {matchup?.lean && (() => {
+              const lean = matchup.lean;
+              const isDem = lean.endsWith("-d") || lean === "uncontested-d";
+              const isRep = lean.endsWith("-r") || lean === "uncontested-r";
+              const isToss = lean === "toss-up";
+              const label = lean.replace(/-d$/, " D").replace(/-r$/, " R").replace(/^(\w)/, c => c.toUpperCase()).replace(/-/g, " ");
+              const bg = isDem ? "rgba(37,99,168,0.25)" : isRep ? "rgba(220,38,38,0.25)" : "rgba(124,58,237,0.25)";
+              const fg = isDem ? "#7aaee8" : isRep ? "#f08080" : "#c4b5fd";
+              return <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: bg, color: fg }}>{label}</span>;
+            })()}
+            {matchup?.status === "runoff-pending" && (
+              <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: "rgba(251,191,36,0.15)", color: "#fbbf24" }}>Runoff Pending</span>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-3">
