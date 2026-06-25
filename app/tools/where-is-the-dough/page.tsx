@@ -542,6 +542,7 @@ export default function WhereIsTheDough() {
   const whitmire = DATA.find(d => d.name === "John Whitmire");
   const hollins  = DATA.find(d => d.name === "Chris Hollins");
   const pollard  = DATA.find(d => d.name === "Ed Pollard");
+  const radack   = DATA.find(d => d.name === "Steve Radack");
 
   return (
     <div className="bg-[var(--background)] min-h-screen">
@@ -707,6 +708,15 @@ export default function WhereIsTheDough() {
                 statLabel: "Mayor Whitmire",
                 headline: "The Mayor isn't up until 2027 — and he's sitting on nearly $3M.",
                 body: `John Whitmire holds ${whitmire ? fmt(whitmire.cash) : "—"} with no election until 2027. City Controller Chris Hollins — widely viewed as a likely mayoral candidate — has banked ${hollins ? fmt(hollins.cash) : "—"}. Council member Ed Pollard holds ${pollard ? fmt(pollard.cash) : "—"}, the most of any council seat, and is also seen as a future citywide contender.`,
+              },
+              {
+                eyebrow: "PCT 4 Rematch",
+                color: "#b45309",
+                border: "#d97706",
+                stat: briones ? fmt(briones.cash) : "—",
+                statLabel: "Briones · PCT 4 incumbent",
+                headline: `Briones leads the county's only contested commissioner race with a 10-to-1 cash edge over Radack.`,
+                body: `Commissioner Lesley Briones is sitting on ${briones ? fmt(briones.cash) : "—"} as she heads into her first reelection bid. Challenger Steve Radack — who held PCT 4 for 24 years before Briones flipped it in 2022 — has ${radack ? fmt(radack.cash) : "—"} on hand. Money alone won't decide this, but the gap signals that Briones has the institutional backing Radack lost when he left office.`,
               },
             ].map(({ eyebrow, color, border, stat, statLabel, headline, body }) => (
               <div key={eyebrow} className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px] card-lift">
