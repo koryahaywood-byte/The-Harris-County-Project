@@ -97,7 +97,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Alexandria Butler",     office: "State Rep HD-146 (R nominee)",   level: "state",    party: "R", cash: 0,     asOf: "Jan 2026", incumbent: false, filingUrl: TEC("Alexandria Butler") },
   { name: "Theodis Daniel",        office: "State Rep HD-147 (R nominee)",   level: "state",    party: "R", cash: 0,     asOf: "pending", incumbent: false, filingUrl: TEC("Theodis Daniel") },
   { name: "Amanda LaBrie",         office: "State Rep HD-148 (R nominee)",   level: "state",    party: "R", cash: 4907,  raised: 8940,  spent: 4423,   asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Amanda LaBrie") },
-  { name: "Joseph L. Trahan",      office: "State Senator SD-15 (R nominee)", level: "state",   party: "R", cash: 0,     asOf: "pending", incumbent: false, filingUrl: TEC("Joseph Trahan") },
+  { name: "Joseph L. Trahan",      office: "State Senator SD-15 (R nominee)", level: "state",   party: "R", cash: 7.35,  asOf: "2025-07-31", incumbent: false, filingUrl: TEC("Joseph Trahan") },
   { name: "Erica Gillum",          office: "State Senator SD-18 (D nominee)", level: "state",   party: "D", cash: 0,     raised: 1250,  spent: 1250,   asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Erica Gillum") },
   // 2026 open seat nominees
   { name: "Odus Evbagharu",        office: "State Rep HD-135 (D nominee)",   level: "state",    party: "D", cash: 17330, raised: 70850, spent: 48651,   asOf: "Dec 2025", incumbent: false, filingUrl: TEC("Odus Evbagharu") },
@@ -126,7 +126,7 @@ export const FINANCE_DATA: CandidateFinance[] = [
   // County
   { name: "Rodney Ellis",          office: "Commissioner PCT 1",             level: "county",   party: "D", cash: 7783681,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Rodney Ellis") },
   { name: "Lesley Briones",        office: "Commissioner PCT 4",             level: "county",   party: "D", cash: 4058292,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Lesley Briones") },
-  { name: "Steve Radack",          office: "Commissioner PCT 4 (R nominee)", level: "county",   party: "R", cash: 0,         asOf: "pending",  incumbent: false, filingUrl: TEC("Steve Radack") },
+  { name: "Steve Radack",          office: "Commissioner PCT 4 (R nominee)", level: "county",   party: "R", cash: 410969.79,  asOf: "2025-12-31", incumbent: false, filingUrl: "https://ethics.harrisvotes.com/Document.aspx?ID=8clm5/UZ7yw9/6Sqmckox+EzZBFseAp1uK35cp80QU8OPjPAWK0ZMceaq2xgb30uoa8hSsy54QptvWbpzYtqOKgLMfxqfKiMLGntpysWEDHqovYMQJhT1O14pmy/DBID" },
   { name: "Adrian Garcia",         office: "Commissioner PCT 2",             level: "county",   party: "D", cash: 2544776,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Adrian Garcia") },
   { name: "Tom Ramsey",            office: "Commissioner PCT 3",             level: "county",   party: "R", cash: 2032612,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Tom Ramsey") },
   { name: "Letitia Plummer",       office: "County Judge (D nominee)",       level: "county",   party: "D", cash: 420000,    asOf: "May 2026 est.", incumbent: false, filingUrl: TEC("Letitia Plummer") },
