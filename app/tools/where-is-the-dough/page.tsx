@@ -545,6 +545,8 @@ export default function WhereIsTheDough() {
   const garcia   = DATA.find(d => d.name === "Adrian Garcia");
   const ramsey   = DATA.find(d => d.name === "Tom Ramsey");
   const cornyn   = DATA.find(d => d.name === "John Cornyn");
+  const talarico = DATA.find(d => d.name === "James Talarico");
+  const paxton   = DATA.find(d => d.name === "Ken Paxton");
   const whitmire = DATA.find(d => d.name === "John Whitmire");
   const hollins  = DATA.find(d => d.name === "Chris Hollins");
   const pollard  = DATA.find(d => d.name === "Ed Pollard");
@@ -706,12 +708,13 @@ export default function WhereIsTheDough() {
                 eyebrow: "Senate Race",
                 color: "#7c3aed",
                 border: "#a78bfa",
-                stat: cornyn ? fmt(cornyn.spent ?? 0) : "—",
-                statLabel: "Cornyn · spent, and lost",
-                headline: "Cornyn spent $15.8M defending his seat — and lost the runoff anyway.",
-                body: `Four-term Senator John Cornyn burned ${cornyn ? fmt(cornyn.spent ?? 0) : "—"} and still lost the Republican nomination to Ken Paxton in May. November is now an open brawl: James Talarico (D) vs Ken Paxton (R) — the first Texas Senate race in 24 years without an incumbent on the ballot.`,
+                stat: talarico ? fmt(talarico.cash) : "—",
+                statLabel: "Talarico · D nominee",
+                headline: "Talarico enters November with a near 4-to-1 cash lead over Paxton.",
+                body: `James Talarico (D) holds ${talarico ? fmt(talarico.cash) : "—"} cash on hand to Ken Paxton's ${paxton ? fmt(paxton.cash) : "—"} for Texas's first open Senate seat in 24 years. Paxton got here by beating four-term incumbent John Cornyn — who burned ${cornyn ? fmt(cornyn.spent ?? 0) : "—"} defending the seat and still lost the May runoff.`,
                 links: [
                   { label: "Talarico finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=James+Talarico" },
+                  { label: "Paxton finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=Ken+Paxton" },
                   { label: "U.S. Senate ballot →", href: "/tools/ballot-2026?q=James+Talarico" },
                 ],
               },
