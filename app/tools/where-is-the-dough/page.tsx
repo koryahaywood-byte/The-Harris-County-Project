@@ -619,6 +619,11 @@ export default function WhereIsTheDough() {
                   <span>Dems {dPct}% of total cash</span>
                   <span>Reps {100 - dPct}%</span>
                 </div>
+                {biggest && (biggest.level === "state" || biggest.level === "federal") && (
+                  <p className="text-[9px] text-white/35 mt-1.5 leading-snug">
+                    Statewide filings — {biggest.name}&rsquo;s {fmt(biggest.cash)} alone — inflate this split; county-level cash runs far closer.
+                  </p>
+                )}
               </div>
             );
           })()}
