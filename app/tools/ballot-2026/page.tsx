@@ -464,7 +464,7 @@ function Ballot2026Inner() {
             <button onClick={() => setOnlyContested(c => !c)}
               className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-all"
               style={onlyContested ? { background: "#059669", color: "#fff", borderColor: "#059669" } : { background: "#fff", color: "#374151", borderColor: "#e5e7eb" }}>
-              Full matchups
+              Contested only
             </button>
             <button onClick={() => setOnlyWomen(c => !c)}
               className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-all"
