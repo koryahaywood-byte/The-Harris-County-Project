@@ -847,7 +847,7 @@ export default function DistrictsPage() {
             </div>
 
             {/* Current rep */}
-            {currentRep && (
+            {currentRep ? (
               <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
                 <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
                   <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>Current Representative</p>
@@ -871,7 +871,19 @@ export default function DistrictsPage() {
                   </Link>
                 </div>
               </div>
-            )}
+            ) : type !== "countywide" && district ? (
+              <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
+                <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-2" style={{ color: "#6b7280" }}>Current Representative</p>
+                  <p className="text-[12px] leading-relaxed mb-2.5" style={{ color: "#6b7280" }}>
+                    The sitting officeholder for {headerLabel(type, district)} isn&apos;t profiled on this site yet.
+                  </p>
+                  <Link href="/my-officials" className="text-[11px] font-bold hover:underline" style={{ color: "#2563a8" }}>
+                    Look up your rep by address →
+                  </Link>
+                </div>
+              </div>
+            ) : null}
 
             {/* Real turnout stats */}
             {agg.total > 0 && (
