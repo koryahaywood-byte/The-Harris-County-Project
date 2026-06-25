@@ -6,6 +6,7 @@ import Link from "next/link";
 import { MATCHUPS_2026, type RaceLean } from "@/lib/matchups-2026";
 import { FINANCE_DATA_MERGED, fmt, type CandidateFinance } from "@/lib/campaign-finance";
 import type { CvapData } from "@/app/tools/districts/page";
+import ShareButton from "@/components/ShareButton";
 
 type RaceGroup = "statewide" | "top" | "congress" | "statelegis" | "countywide" | "courts" | "local";
 
@@ -262,7 +263,7 @@ function MoneyBar({ dName, rName }: { dName: string | null; rName: string | null
           <div className="h-full" style={{ width: `${100 - dPct}%`, background: "#fca5a5" }} />
         </div>
         <span className="text-[9px] font-bold w-16 text-right" style={{ color: "#dc2626" }}>{r ? fmt(r) : "—"}</span>
-        <span className="text-[9px] ml-1 shrink-0" style={{ color: "#9ca3af" }}>money</span>
+        <span className="text-[9px] ml-1 shrink-0" style={{ color: "#9ca3af" }}>CoH</span>
       </div>
     </div>
   );
@@ -378,9 +379,20 @@ function Ballot2026Inner() {
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-1" style={{ fontFamily: "var(--font-playfair,serif)" }}>
             The 2026 Ballot
           </h1>
-          <p className="text-white/50 text-sm mb-6">
+          <p className="text-white/50 text-sm mb-4">
             {stats.contested} full matchups · {stats.tossups} toss-ups · {stats.competitive} competitive · {stats.womenCount} women candidates · Harris County
           </p>
+          <ShareButton
+            toolName="2026 Ballot"
+            section="Elections"
+            description={`${stats.contested} races · ${stats.tossups} toss-ups · Harris County, November 2026`}
+            stats={[
+              { label: "Full matchups", value: stats.contested.toString() },
+              { label: "Toss-ups",      value: stats.tossups.toString() },
+              { label: "Competitive",   value: stats.competitive.toString() },
+            ]}
+            summary={`2026 Harris County ballot — ${stats.contested} full matchups, ${stats.tossups} toss-up races, ${stats.competitive} competitive — via The Harris County Project`}
+          />
 
           {/* Money summary */}
           {(stats.dMoney > 0 || stats.rMoney > 0) && (
