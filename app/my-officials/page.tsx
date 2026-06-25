@@ -141,7 +141,11 @@ function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupRes
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <p className="font-bold text-[15px] truncate" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>{rep.name}</p>
+          {rep.slug ? (
+            <Link href={`/politicians/${rep.slug}`} className="font-bold text-[15px] truncate hover:underline" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>{rep.name}</Link>
+          ) : (
+            <p className="font-bold text-[15px] truncate" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>{rep.name}</p>
+          )}
           {WOMEN_IN_POLITICS.has(rep.name) && (
             <span className="text-[9px] font-bold px-1 py-0.5 rounded leading-none flex-shrink-0"
               style={{ background: "#fce7f3", color: "#9d174d" }}>W</span>
@@ -159,25 +163,31 @@ function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupRes
           </p>
         )}
         <div className="flex gap-3 mt-2 flex-wrap">
-          {(rep.slug || rep.url) && (
-            <span className="text-[10px] font-bold" style={{ color: rep.slug ? "#2563a8" : "#9ca3af" }}>
-              {rep.slug ? "Profile →" : "Official site ↗"}
-            </span>
-          )}
+          {rep.slug ? (
+            <Link href={`/politicians/${rep.slug}`}
+              className="text-[10px] font-bold hover:underline" style={{ color: "#2563a8" }}>
+              Profile →
+            </Link>
+          ) : rep.url ? (
+            <a href={rep.url} target="_blank" rel="noopener noreferrer"
+              className="text-[10px] font-bold hover:underline" style={{ color: "#9ca3af" }}>
+              Official site ↗
+            </a>
+          ) : null}
           {distLink && (
-            <Link href={distLink} onClick={e => e.stopPropagation()}
+            <Link href={distLink}
               className="text-[10px] font-bold hover:underline" style={{ color: "#059669" }}>
               District map →
             </Link>
           )}
           {finance && (
-            <Link href={`/tools/where-is-the-dough?tab=leaderboard&q=${encodeURIComponent(rep.name)}`} onClick={e => e.stopPropagation()}
+            <Link href={`/tools/where-is-the-dough?tab=leaderboard&q=${encodeURIComponent(rep.name)}`}
               className="text-[10px] font-bold hover:underline" style={{ color: "#7c3aed" }}>
               Finance →
             </Link>
           )}
           {onBallot2026 && (
-            <Link href={`/tools/ballot-2026?q=${encodeURIComponent(rep.name)}`} onClick={e => e.stopPropagation()}
+            <Link href={`/tools/ballot-2026?q=${encodeURIComponent(rep.name)}`}
               className="text-[10px] font-bold hover:underline" style={{ color: leanMeta?.color ?? "#d97706" }}>
               {leanMeta ? `${leanMeta.label} in Nov →` : "2026 race →"}
             </Link>
@@ -186,8 +196,6 @@ function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupRes
       </div>
     </div>
   );
-  if (rep.slug) return <Link href={`/politicians/${rep.slug}`} className="block h-full">{inner}</Link>;
-  if (rep.url) return <a href={rep.url} target="_blank" rel="noopener noreferrer" className="block h-full">{inner}</a>;
   return inner;
 }
 
