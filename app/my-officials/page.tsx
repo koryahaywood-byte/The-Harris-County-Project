@@ -77,11 +77,27 @@ function partyColor(p: string) {
   return p === "D" ? "#2563a8" : p === "R" ? "#dc2626" : "#6b7280";
 }
 
-function districtLink(dist: string): string | null {
-  const m = dist.match(/^(CD|SD|HD|PCT|JP Precinct|Precinct)-?(\d+)/i);
-  if (!m) return null;
-  const type = m[1].toUpperCase().replace("PCT", "pct").replace("JP PRECINCT", "jp").replace("PRECINCT", "pct").replace("CD", "cd").replace("SD", "sd").replace("HD", "hd");
-  return `/tools/districts?type=${type}&district=${m[2]}`;
+function districtLink(rep: RepEntry): string | null {
+  const { district, level, office } = rep;
+  // Congress + Legislature carry an explicit prefix: CD-7, SD-15, HD-134
+  const prefixed = district.match(/^(CD|SD|HD)-(\d+)/i);
+  if (prefixed) return `/tools/districts?type=${prefixed[1].toLowerCase()}&district=${prefixed[2]}`;
+  // Justice Court — both JPs ("JP Precinct 4") and constables ("Precinct 4") use the 8 JP/constable precincts.
+  if (level === "Justice Court") {
+    const n = district.match(/(\d+)/)?.[1];
+    return n ? `/tools/districts?type=jp&district=${n}` : null;
+  }
+  // Harris County — only commissioners map to a precinct ("Precinct 4"); the County Judge is countywide.
+  if (level === "Harris County") {
+    const n = office.toLowerCase().includes("commissioner") ? district.match(/(\d+)/)?.[1] : null;
+    return n ? `/tools/districts?type=pct&district=${n}` : null;
+  }
+  // City of Houston — only district council members map ("District A"); mayor/controller/at-large are citywide.
+  if (level === "City of Houston") {
+    const m = district.match(/^District\s+(\w+)/i);
+    return m ? `/tools/districts?type=council&district=${m[1]}` : null;
+  }
+  return null;
 }
 
 const ON_BALLOT_2026 = new Set(
@@ -92,7 +108,7 @@ function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupRes
   const accent = partyColor(rep.party);
   const initials = rep.name.split(" ").map(w => w[0]).slice(0, 2).join("");
   const finance = getFinanceByName(rep.name);
-  const distLink = districtLink(rep.district);
+  const distLink = districtLink(rep);
   const onBallot2026 = ON_BALLOT_2026.has(rep.name);
   const inner = (
     <div className="hcp-card card-lift p-4 flex items-start gap-3.5 h-full">
