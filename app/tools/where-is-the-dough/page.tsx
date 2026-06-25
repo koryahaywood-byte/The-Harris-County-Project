@@ -784,19 +784,19 @@ export default function WhereIsTheDough() {
                     <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-blue-600 mb-0.5">Democrats</p>
                     <p className="text-3xl font-bold text-blue-700"
                       style={{ fontFamily: "var(--font-playfair), serif" }}>{fmt(demTotal)}</p>
-                    <p className="text-[10px] text-blue-500 mt-0.5">{((demTotal / totalPool) * 100).toFixed(0)}% of tracked cash</p>
+                    <p className="text-[10px] text-blue-500 mt-0.5">{((demTotal / (totalPool || 1)) * 100).toFixed(0)}% of tracked cash</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-red-600 mb-0.5">Republicans</p>
                     <p className="text-3xl font-bold text-red-700"
                       style={{ fontFamily: "var(--font-playfair), serif" }}>{fmt(repTotal)}</p>
-                    <p className="text-[10px] text-red-500 mt-0.5">{((repTotal / totalPool) * 100).toFixed(0)}% of tracked cash</p>
+                    <p className="text-[10px] text-red-500 mt-0.5">{((repTotal / (totalPool || 1)) * 100).toFixed(0)}% of tracked cash</p>
                   </div>
                 </div>
                 {/* Single split pill bar */}
                 <div className="h-6 rounded-full overflow-hidden flex">
                   <div className="h-full bg-gradient-to-r from-blue-600 to-blue-500 transition-all duration-1000 rounded-l-full"
-                    style={{ width: `${(demTotal / totalPool) * 100}%` }}/>
+                    style={{ width: `${(demTotal / (totalPool || 1)) * 100}%` }}/>
                   <div className="h-full bg-gradient-to-r from-red-500 to-red-600 flex-1 transition-all duration-1000 rounded-r-full"/>
                 </div>
                 <p className="text-[10px] text-[var(--muted)] mt-4">
