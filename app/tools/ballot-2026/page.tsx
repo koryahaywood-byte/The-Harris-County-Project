@@ -196,7 +196,11 @@ function CandidateCol({ side, align, lean, group, status }: { side: { name: stri
   const fin = financeFor(side.name);
   const isD = side.party === "D";
   const accent = isD ? "#1d4ed8" : "#b91c1c";
-  const bg = isD ? "#eff6ff" : "#fef2f2";
+  // Party tint sits strongest at the outer edge (where the name is) and fades toward
+  // the center lean meter, so each card reads as a face-off across the middle.
+  const bg = isD
+    ? "linear-gradient(to right, #e7f0fe, #f7faff)"
+    : "linear-gradient(to left, #fdecec, #fff8f8)";
 
   return (
     <div className={`flex-1 px-4 py-3.5 ${align === "right" ? "text-right" : ""}`}
