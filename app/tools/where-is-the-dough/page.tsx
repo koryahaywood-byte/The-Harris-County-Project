@@ -887,11 +887,19 @@ export default function WhereIsTheDough() {
               );
             })()}
 
-            <div className="mb-6">
+            <div className="mb-6 relative max-w-sm">
               <input type="text" value={search} onChange={e => setSearch(e.target.value)}
                 placeholder="Search by name or office…"
-                className="w-full max-w-sm px-4 py-2.5 rounded-full bg-white ring-1 ring-[var(--border)] text-sm text-[var(--foreground)] placeholder:text-[var(--muted)] focus:ring-[var(--accent)] focus:outline-none transition-all duration-300"
+                className="w-full px-4 py-2.5 rounded-full bg-white ring-1 ring-[var(--border)] text-sm text-[var(--foreground)] placeholder:text-[var(--muted)] focus:ring-[var(--accent)] focus:outline-none transition-all duration-300"
+                style={{ paddingRight: search ? "2.5rem" : undefined }}
               />
+              {search && (
+                <button onClick={() => setSearch("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg leading-none"
+                  aria-label="Clear search">
+                  ×
+                </button>
+              )}
             </div>
 
             <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
