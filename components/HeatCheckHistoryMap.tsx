@@ -642,8 +642,27 @@ export default function HeatCheckHistoryMap() {
                   return (
                     <tr key={row.prec}
                       style={{ background: i % 2 === 0 ? "#fff" : "#f9fafb", borderBottom: "1px solid rgba(0,0,0,0.04)" }}>
-                      <td className="px-3 py-1.5 font-bold" style={{ color: "#374151" }}>
-                        {row.prec.padStart(4, "0")}
+                      <td className="px-3 py-1.5">
+                        <span className="font-bold" style={{ color: "#374151" }}>{row.prec.padStart(4, "0")}</span>
+                        {(() => {
+                          const d = precinctDistricts(row.prec);
+                          const chips = [
+                            d.hd && { label: `HD ${d.hd}`, href: `/tools/districts?type=hd&district=${d.hd}` },
+                            d.sd && { label: `SD ${d.sd}`, href: `/tools/districts?type=sd&district=${d.sd}` },
+                          ].filter(Boolean) as { label: string; href: string }[];
+                          if (!chips.length) return null;
+                          return (
+                            <div className="flex gap-1 mt-0.5">
+                              {chips.map(c => (
+                                <Link key={c.href} href={c.href}
+                                  className="text-[8px] font-semibold hover:opacity-75"
+                                  style={{ color: "#7aaee8" }}>
+                                  {c.label} →
+                                </Link>
+                              ))}
+                            </div>
+                          );
+                        })()}
                       </td>
                       <td className="px-3 py-1.5 font-semibold tabular-nums" style={{ color: "#1d4ed8" }}>
                         {row.d.toLocaleString()}
