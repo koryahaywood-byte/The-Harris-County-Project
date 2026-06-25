@@ -921,9 +921,25 @@ export default function WhereIsTheDough() {
                             <p className={`tnum text-xl font-bold ${isD ? "text-blue-700" : "text-red-700"}`}
                               style={{ fontFamily: "var(--font-playfair), serif" }}>{fmt(c.cash)}</p>
                             <p className="text-[10px] text-[var(--muted)] mt-0.5 hidden md:block">cash on hand · {c.asOf}</p>
+                            {c.filingUrl && (
+                              <a href={c.filingUrl} target="_blank" rel="noopener noreferrer"
+                                className="text-[9px] font-semibold hover:underline"
+                                style={{ color: isD ? "#2563a8" : "#b91c1c" }}>
+                                Filing →
+                              </a>
+                            )}
                           </>
                         ) : (
-                          <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full bg-gray-100 text-gray-400">Pending</span>
+                          <div className="flex flex-col items-end gap-1">
+                            <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full bg-gray-100 text-gray-400">Pending</span>
+                            {c.filingUrl && (
+                              <a href={c.filingUrl} target="_blank" rel="noopener noreferrer"
+                                className="text-[9px] font-semibold hover:underline"
+                                style={{ color: isD ? "#2563a8" : "#b91c1c" }}>
+                                Filing →
+                              </a>
+                            )}
+                          </div>
                         )}
                       </div>
                     </div>
