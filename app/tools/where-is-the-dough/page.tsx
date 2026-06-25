@@ -525,6 +525,7 @@ export default function WhereIsTheDough() {
   const demTotal  = withCash.filter(d => d.party === "D").reduce((s, d) => s + d.cash, 0);
   const repTotal  = withCash.filter(d => d.party === "R").reduce((s, d) => s + d.cash, 0);
   const totalPool = demTotal + repTotal;
+  const biggest   = withCash.reduce<Candidate | null>((m, d) => (!m || d.cash > m.cash ? d : m), null);
 
   const filtered = DATA
     .filter(d => level === "all" || d.level === level)
@@ -592,13 +593,14 @@ export default function WhereIsTheDough() {
           )}
           <div className="mt-5 flex flex-wrap gap-3">
             {[
-              { label: "Democrat Total",    val: fmt(demTotal),         color: "#93c5fd" },
-              { label: "Republican Total",  val: fmt(repTotal),         color: "#fca5a5" },
-              { label: "Biggest War Chest", val: ellis ? fmt(ellis.cash) : "—", color: "#fde68a" },
-            ].map(({ label, val, color }) => (
+              { label: "Democrat Total",    val: fmt(demTotal),         color: "#93c5fd", sub: null },
+              { label: "Republican Total",  val: fmt(repTotal),         color: "#fca5a5", sub: null },
+              { label: "Biggest War Chest", val: biggest ? fmt(biggest.cash) : "—", color: "#fde68a", sub: biggest?.name ?? null },
+            ].map(({ label, val, color, sub }) => (
               <div key={label} className="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-3">
                 <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5 text-white/50">{label}</p>
                 <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif", color }}>{val}</p>
+                {sub && <p className="text-[10px] font-semibold text-white/50 mt-0.5">{sub}</p>}
               </div>
             ))}
           </div>
