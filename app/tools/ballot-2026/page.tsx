@@ -454,6 +454,21 @@ function Ballot2026Inner() {
           </div>
         </div>
 
+        {GROUP_ORDER.every(grp => !grouped[grp].length) && (
+          <div className="py-12 text-center">
+            <p className="text-sm font-semibold" style={{ color: "#374151" }}>
+              No races match{search ? ` "${search}"` : " these filters"}.
+            </p>
+            {search && (
+              <button onClick={() => setSearch("")}
+                className="mt-3 text-xs font-semibold hover:underline"
+                style={{ color: "#1a3a5c" }}>
+                Clear search
+              </button>
+            )}
+          </div>
+        )}
+
         {GROUP_ORDER.map(grp => {
           const section = grouped[grp];
           if (!section.length) return null;
