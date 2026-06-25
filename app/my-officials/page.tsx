@@ -5,6 +5,7 @@ import Link from "next/link";
 import { LEVEL_ORDER, type RepEntry } from "@/lib/representatives";
 import { getFinanceByName } from "@/lib/campaign-finance";
 import { WOMEN_IN_POLITICS } from "@/lib/women-names";
+import { MATCHUPS_2026 } from "@/lib/matchups-2026";
 
 interface CvapEntry { total: number; black: number; hispanic: number; white: number; asian: number }
 interface CvapData { cvap: { cd: Record<string, CvapEntry>; sd: Record<string, CvapEntry>; hd: Record<string, CvapEntry> } }
@@ -82,11 +83,16 @@ function districtLink(dist: string): string | null {
   return `/tools/districts?type=${type}&district=${m[2]}`;
 }
 
+const ON_BALLOT_2026 = new Set(
+  Object.values(MATCHUPS_2026).flatMap(m => m.sides.map(s => s.name))
+);
+
 function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupResult["districts"] }) {
   const accent = partyColor(rep.party);
   const initials = rep.name.split(" ").map(w => w[0]).slice(0, 2).join("");
   const finance = getFinanceByName(rep.name);
   const distLink = districtLink(rep.district);
+  const onBallot2026 = ON_BALLOT_2026.has(rep.name);
   const inner = (
     <div className="hcp-card card-lift p-4 flex items-start gap-3.5 h-full">
       <div className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5"
@@ -123,6 +129,12 @@ function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupRes
             <Link href={`/tools/where-is-the-dough?tab=leaderboard&q=${encodeURIComponent(rep.name)}`} onClick={e => e.stopPropagation()}
               className="text-[10px] font-bold hover:underline" style={{ color: "#7c3aed" }}>
               Finance →
+            </Link>
+          )}
+          {onBallot2026 && (
+            <Link href={`/tools/ballot-2026?q=${encodeURIComponent(rep.name)}`} onClick={e => e.stopPropagation()}
+              className="text-[10px] font-bold hover:underline" style={{ color: "#d97706" }}>
+              2026 race →
             </Link>
           )}
         </div>
