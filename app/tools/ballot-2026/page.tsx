@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { MATCHUPS_2026, type RaceLean } from "@/lib/matchups-2026";
 import { FINANCE_DATA_MERGED, fmt, type CandidateFinance } from "@/lib/campaign-finance";
@@ -291,14 +292,15 @@ function cvapTop(cvap: CvapData | null, key: string): { label: string; pct: numb
   return top;
 }
 
-export default function Ballot2026() {
+function Ballot2026Inner() {
+  const sp = useSearchParams();
   const [districtRaces, setDistrictRaces] = useState<DistrictRaces | null>(null);
   const [cvap, setCvap] = useState<CvapData | null>(null);
   const [filterGroup, setFilterGroup] = useState<RaceGroup | "all">("all");
   const [onlyCompetitive, setOnlyCompetitive] = useState(false);
   const [onlyContested, setOnlyContested] = useState(false);
   const [onlyWomen, setOnlyWomen] = useState(false);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(sp.get("q") ?? "");
 
   useEffect(() => {
     fetch("/data/district-races.json").then(r => r.json()).then(setDistrictRaces).catch(() => {});
@@ -598,5 +600,13 @@ export default function Ballot2026() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function Ballot2026() {
+  return (
+    <Suspense>
+      <Ballot2026Inner />
+    </Suspense>
   );
 }
