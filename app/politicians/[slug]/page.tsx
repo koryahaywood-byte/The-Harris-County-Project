@@ -450,7 +450,7 @@ function DemographicsBar({ pol }: { pol: import("@/lib/politicians").Politician 
         </div>
         {d.source && (
           <p className="text-[8px] mt-2" style={{ color: "rgba(255,255,255,0.2)" }}>
-            Source: {d.source} · VAN precinct data coming soon
+            Source: {d.source}
           </p>
         )}
       </div>
