@@ -150,7 +150,9 @@ function financeFor(name: string | null): CandidateFinance | null {
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
-function CandidateCol({ side, align, lean }: { side: { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null; align: "left"|"right"; lean?: string }) {
+const TEC_URL = (name: string) => `https://www.ethics.state.tx.us/search/cf/list.php?name=${encodeURIComponent(name)}&type=cand`;
+
+function CandidateCol({ side, align, lean, group }: { side: { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null; align: "left"|"right"; lean?: string; group?: string }) {
   if (!side) {
     const isUncontested = lean === "uncontested-d" || lean === "uncontested-r";
     const noFiledParty = lean === "uncontested-d" ? "R" : lean === "uncontested-r" ? "D" : null;
@@ -193,14 +195,20 @@ function CandidateCol({ side, align, lean }: { side: { name: string; party: "D"|
             {fin.asOf && <span className="text-[9px] ml-1" style={{ color: "#d1d5db", fontWeight: 400 }}>· {fin.asOf}</span>}
           </span>
         )}
-        {fin && (
+        {fin ? (
           <Link href={`/tools/where-is-the-dough?tab=leaderboard&q=${encodeURIComponent(side.name)}`}
             onClick={e => e.stopPropagation()}
             className="text-[9px] font-semibold hover:opacity-80"
             style={{ color: accent }}>
             Finance →
           </Link>
-        )}
+        ) : (group === "statewide" || group === "statelegis") ? (
+          <a href={TEC_URL(side.name)} target="_blank" rel="noopener noreferrer"
+            className="text-[9px] font-semibold hover:opacity-80"
+            style={{ color: accent }}>
+            TEC ↗
+          </a>
+        ) : null}
       </div>
     </div>
   );
@@ -553,12 +561,12 @@ function Ballot2026Inner() {
 
                         {/* Candidates row */}
                         <div className="flex items-stretch">
-                          <CandidateCol side={r.dSide as { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null} align="left" lean={r.lean} />
+                          <CandidateCol side={r.dSide as { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null} align="left" lean={r.lean} group={r.group} />
                           {/* Center competitiveness */}
                           <div className="w-28 shrink-0 border-l border-r flex flex-col justify-center" style={{ borderColor: "#f3f4f6" }}>
                             <LeanMeter lean={r.lean} />
                           </div>
-                          <CandidateCol side={r.rSide as { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null} align="right" lean={r.lean} />
+                          <CandidateCol side={r.rSide as { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null} align="right" lean={r.lean} group={r.group} />
                         </div>
 
                         {/* Last election result bar */}
