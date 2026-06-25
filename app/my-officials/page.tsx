@@ -279,9 +279,11 @@ export default function MyOfficialsPage() {
                   </Link>
                 )}
                 {result.districts.council && (
-                  <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/[0.05] text-[#6b7280]">
-                    Council {result.districts.council}
-                  </span>
+                  <Link href={`/tools/districts?type=council&district=${result.districts.council}`}
+                    className="text-[10px] font-bold px-2.5 py-1 rounded-full transition-colors hover:bg-blue-50"
+                    style={{ background: "rgba(37,99,168,0.08)", color: "#2563a8" }}>
+                    Council {result.districts.council} →
+                  </Link>
                 )}
               </div>
               {/* CVAP demographic mini-bar for most-local available district */}
