@@ -38,7 +38,7 @@ type RaceData = {
   votes: Record<string, number[]>;
 };
 
-interface LastResult { dPct: number; rPct: number; dVotes: number; rVotes: number; cycle: string }
+interface LastResult { dPct: number; rPct: number; dVotes: number; rVotes: number; cycle: string; baseline?: boolean }
 
 function sumRace(race: RaceData): LastResult | null {
   const dIdx = race.candidates.findIndex(c => c.party === "D");
@@ -114,6 +114,28 @@ function buildResultsMap(dr: DistrictRaces): Record<string, LastResult> {
     }
   }
   return out;
+}
+
+// Harris County's countywide judicial races move together within a point or two, so an
+// average across the contested judicial proxies (Supreme Court, CCL 16, district judges) gives
+// a defensible partisan baseline for the CCL / district / probate court cards that have no
+// per-court result of their own. Clearly labeled at render so it never reads as that exact race.
+function countyJudicialBaseline(dr: DistrictRaces): LastResult | null {
+  const county = dr.county ?? {};
+  const slugs = Object.keys(county).filter(s =>
+    s === "sup_ct_pl2" || s === "harris_crim_ct_at_law_16" || /_district_judge$/.test(s)
+  );
+  let dPctSum = 0, n = 0;
+  for (const slug of slugs) {
+    const race = county[slug]?.["2024G"];
+    if (!race) continue;
+    const r = sumRace(race);
+    if (!r) continue;
+    dPctSum += r.dPct; n++;
+  }
+  if (!n) return null;
+  const dPct = Math.round(dPctSum / n);
+  return { dPct, rPct: 100 - dPct, dVotes: 0, rVotes: 0, cycle: "2024G", baseline: true };
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -235,6 +257,9 @@ function LeanMeter({ lean }: { lean: RaceLean | undefined }) {
 function ResultBar({ result, cycle }: { result: LastResult | undefined; cycle?: string }) {
   if (!result) return null;
   const yearLabel = result.cycle.replace("G", "").replace("P", " pri");
+  const caption = result.baseline
+    ? `County judicial avg · ${yearLabel}`
+    : `${result.dVotes.toLocaleString()} – ${result.rVotes.toLocaleString()} · ${yearLabel}`;
   return (
     <div className="px-4 py-2 border-t" style={{ borderColor: "#f3f4f6", background: "#f9fafb" }}>
       <div className="flex items-center gap-2">
@@ -249,7 +274,7 @@ function ResultBar({ result, cycle }: { result: LastResult | undefined; cycle?: 
           {result.rPct}% R
         </span>
         <span className="text-[9px] ml-1 shrink-0" style={{ color: "#9ca3af" }}>
-          {result.dVotes.toLocaleString()} – {result.rVotes.toLocaleString()} · {yearLabel}
+          {caption}
         </span>
       </div>
     </div>
@@ -324,6 +349,7 @@ function Ballot2026Inner() {
   }, []);
 
   const resultsMap = useMemo(() => districtRaces ? buildResultsMap(districtRaces) : {}, [districtRaces]);
+  const judicialBaseline = useMemo(() => districtRaces ? countyJudicialBaseline(districtRaces) : null, [districtRaces]);
 
   const rows = useMemo(() => Object.entries(MATCHUPS_2026).map(([key, m]) => {
     const { group, groupLabel } = toGroup(key);
@@ -528,7 +554,8 @@ function Ballot2026Inner() {
               </div>
               <div className="space-y-3">
                 {section.map(r => {
-                  const result = resultsMap[r.key];
+                  // Court cards have no per-race history; fall back to the labeled countywide judicial baseline.
+                  const result = resultsMap[r.key] ?? (r.group === "courts" ? judicialBaseline ?? undefined : undefined);
                   const dFin = financeFor(r.dSide?.name ?? null);
                   const rFin = financeFor(r.rSide?.name ?? null);
                   const hasMoneyBar = (dFin?.cash ?? 0) > 0 && (rFin?.cash ?? 0) > 0;
@@ -645,7 +672,7 @@ function Ballot2026Inner() {
         </div>
 
         <p className="text-[10px] mt-6 leading-relaxed" style={{ color: "#b0b8c4" }}>
-          Last election bars show Harris County totals from TED (Texas Legislative Council). Money is cash on hand from most recent FEC/TEC filing. Competitiveness ratings reflect Harris County presidential lean adjusted for district composition — not statewide outcomes.
+          Last election bars show Harris County totals from TED (Texas Legislative Council). Court cards, which have no per-race history, instead show a &ldquo;County judicial avg&rdquo; — the average two-party result across contested countywide judicial races (Supreme Court, district judges, CCL 16) in the last cycle. Money is cash on hand from most recent FEC/TEC filing. Competitiveness ratings reflect Harris County presidential lean adjusted for district composition — not statewide outcomes.
         </p>
       </div>
     </div>
