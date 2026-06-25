@@ -149,12 +149,18 @@ function financeFor(name: string | null): CandidateFinance | null {
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
-function CandidateCol({ side, align }: { side: { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null; align: "left"|"right" }) {
+function CandidateCol({ side, align, lean }: { side: { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null; align: "left"|"right"; lean?: string }) {
   if (!side) {
+    const isUncontested = lean === "uncontested-d" || lean === "uncontested-r";
+    const noFiledParty = lean === "uncontested-d" ? "R" : lean === "uncontested-r" ? "D" : null;
     return (
       <div className={`flex-1 px-4 py-3 ${align === "right" ? "text-right" : ""}`}
         style={{ background: "#fafafa" }}>
-        <span className="text-xs text-gray-400 italic">Nominee TBD</span>
+        {isUncontested && noFiledParty ? (
+          <span className="text-[10px] font-semibold" style={{ color: "#9ca3af" }}>No {noFiledParty} filed</span>
+        ) : (
+          <span className="text-xs text-gray-400 italic">Nominee TBD</span>
+        )}
       </div>
     );
   }
@@ -520,12 +526,12 @@ function Ballot2026Inner() {
 
                         {/* Candidates row */}
                         <div className="flex items-stretch">
-                          <CandidateCol side={r.dSide as { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null} align="left" />
+                          <CandidateCol side={r.dSide as { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null} align="left" lean={r.lean} />
                           {/* Center competitiveness */}
                           <div className="w-28 shrink-0 border-l border-r flex flex-col justify-center" style={{ borderColor: "#f3f4f6" }}>
                             <LeanMeter lean={r.lean} />
                           </div>
-                          <CandidateCol side={r.rSide as { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null} align="right" />
+                          <CandidateCol side={r.rSide as { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null} align="right" lean={r.lean} />
                         </div>
 
                         {/* Last election result bar */}
