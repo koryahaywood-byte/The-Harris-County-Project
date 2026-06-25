@@ -580,7 +580,7 @@ export default function DistrictsPage() {
     const p = readUrlParams(["type", "district", "layer"]);
     if (p.type && TYPES.some(t => t.key === p.type)) setType(p.type as TypeKey);
     if (p.district) setDistrict(p.district);
-    if (p.layer === "population" || p.layer === "votes") setLayer(p.layer);
+    if (p.layer === "votes" || p.layer === "results") setLayer(p.layer);
   }, []);
   useUrlState(
     { type, district: district ?? undefined, layer },
@@ -698,7 +698,6 @@ export default function DistrictsPage() {
               <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>Layer:</span>
               {([
                 { key: "votes",      label: "Who Votes — 2026 Primary", live: true },
-                { key: "population", label: "Population Demographics",  live: false },
                 { key: "results",    label: "Election Night Results",   live: !!results },
               ] as { key: MapLayer; label: string; live: boolean }[]).map(l => (
                 <button key={l.key} onClick={() => setLayer(l.key)}
@@ -710,19 +709,13 @@ export default function DistrictsPage() {
                   }}>
                   {l.label}
                   {!l.live && <span className="text-[8px] font-bold uppercase px-1 py-px rounded" style={{ background: layer === l.key ? "rgba(255,255,255,0.25)" : "#f3f4f6", color: layer === l.key ? "#fff" : "#9ca3af" }}>
-                    {l.key === "results" ? "Upload" : "Pending"}
+                    Upload
                   </span>}
                 </button>
               ))}
             </div>
 
             {/* Layer-specific banners */}
-            {layer === "population" && (
-              <div className="rounded-xl px-4 py-3 mb-3 text-[11px] leading-relaxed" style={{ background: "#fffbeb", border: "1px solid #fde68a", color: "#92400e" }}>
-                <strong>Population demographics need one thing from you:</strong> a free Census API key (instant signup at api.census.gov/data/key_signup.html — the API now requires it).
-                With the key set as <code>CENSUS_API_KEY</code>, this layer auto-fills with ACS race/ethnicity, age, and citizen-voting-age population for every district shown here. No other work needed.
-              </div>
-            )}
             {layer === "results" && !results && (
               <div className="rounded-xl px-4 py-3 mb-3 text-[11px] leading-relaxed flex items-center justify-between gap-3" style={{ background: "#eff6ff", border: "1px solid #bfdbfe", color: "#1e40af" }}>
                 <span>
