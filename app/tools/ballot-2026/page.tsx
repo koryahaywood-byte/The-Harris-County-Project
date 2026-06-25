@@ -316,6 +316,11 @@ export default function Ballot2026() {
 
   const COMPETITIVE_LEANS: RaceLean[] = ["toss-up", "lean-d", "lean-r"];
 
+  const LEAN_SORT: Record<string, number> = {
+    "toss-up": 0, "lean-d": 1, "lean-r": 1, "likely-d": 2, "likely-r": 2,
+    "safe-d": 3, "safe-r": 3, "uncontested-d": 4, "uncontested-r": 4,
+  };
+
   const grouped = useMemo(() => {
     let visible = rows;
     if (filterGroup !== "all") visible = visible.filter(r => r.group === filterGroup);
@@ -324,6 +329,9 @@ export default function Ballot2026() {
     if (onlyWomen) visible = visible.filter(r => r.dSide?.gender === "F" || r.rSide?.gender === "F");
     const out: Record<RaceGroup, typeof rows> = { statewide: [], top: [], congress: [], statelegis: [], countywide: [], courts: [], local: [] };
     for (const r of visible) out[r.group].push(r);
+    for (const grp of Object.keys(out) as RaceGroup[]) {
+      out[grp].sort((a, b) => (LEAN_SORT[a.lean ?? ""] ?? 3) - (LEAN_SORT[b.lean ?? ""] ?? 3));
+    }
     return out;
   }, [rows, filterGroup, onlyContested, onlyCompetitive, onlyWomen]);
 
