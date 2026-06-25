@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
+import ShareButton from "@/components/ShareButton";
 import "leaflet/dist/leaflet.css";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -368,6 +369,19 @@ export default function HeatCheckHistoryMap() {
           <p className="text-[10px]" style={{ color: "#9ca3af" }}>
             {jurisdiction === "houston" ? "City of Houston precincts" : "Harris County"} · precinct-level election results · 2012 – 2026
           </p>
+        </div>
+        <div className="pb-3">
+          <ShareButton
+            toolName="Heat Check"
+            section="Maps"
+            description={`Precinct-level election results · ${jurisdiction === "houston" ? "City of Houston" : "Harris County"} · 2012–2026`}
+            stats={totalVotes > 0 ? [
+              { label: "D", value: `${overallDemPct}%` },
+              { label: "R", value: `${100 - overallDemPct}%` },
+              { label: "Votes", value: totalVotes.toLocaleString() },
+            ] : undefined}
+            summary={`Heat Check — Harris County precinct-level election map · ${curCycleLabel} · via The Harris County Project`}
+          />
         </div>
       </div>
 
