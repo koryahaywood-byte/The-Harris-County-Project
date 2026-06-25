@@ -151,6 +151,7 @@ export default function HeatCheckHistoryMap() {
   const [history, setHistory] = useState<PrecinctHistory | null>(null);
   const [geojson, setGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
   const [houstonPrecs, setHoustonPrecs] = useState<Set<string> | null>(null);
+  const [loadError, setLoadError] = useState(false);
 
   // Selectors
   const [jurisdiction, setJurisdiction] = useState<Jurisdiction>("county");
@@ -171,17 +172,25 @@ export default function HeatCheckHistoryMap() {
   } | null>(null);
 
   // ── Load data ──────────────────────────────────────────────────────────────
-  useEffect(() => {
+  const loadData = useCallback(() => {
+    setLoadError(false);
+    const getJson = (url: string) =>
+      fetch(url).then(r => { if (!r.ok) throw new Error(`${url} → ${r.status}`); return r.json(); });
     Promise.all([
-      fetch("/data/precinct-history.json").then(r => r.json()),
-      fetch("/data/harris-precincts.geojson").then(r => r.json()),
-      fetch("/data/houston-precincts.json").then(r => r.json()),
+      getJson("/data/precinct-history.json"),
+      getJson("/data/harris-precincts.geojson"),
+      getJson("/data/houston-precincts.json"),
     ]).then(([h, g, hp]) => {
       setHistory(h);
       setGeojson(g);
       setHoustonPrecs(new Set<string>(hp));
-    }).catch(console.error);
+    }).catch(err => {
+      console.error("[HeatCheck] precinct data failed to load:", err);
+      setLoadError(true);
+    });
   }, []);
+
+  useEffect(() => { loadData(); }, [loadData]);
 
   // Auto-select race when cycle changes
   useEffect(() => {
@@ -537,6 +546,21 @@ export default function HeatCheckHistoryMap() {
       {/* Map + table + footer — hidden when iframe is shown */}
       {!showIframe && (<><div className="relative" style={{ height: 520 }}>
         <div ref={mapRef} style={{ height: "100%", width: "100%" }} />
+
+        {/* Data-load failure recovery */}
+        {loadError && (
+          <div className="absolute inset-0 z-[1100] flex items-center justify-center" style={{ background: "rgba(245,243,239,0.96)" }}>
+            <div className="text-center max-w-xs px-4">
+              <p className="text-sm font-bold mb-1" style={{ color: "#1a3a5c" }}>Precinct data didn&rsquo;t load</p>
+              <p className="text-[11px] mb-3 leading-relaxed" style={{ color: "#6b7280" }}>
+                The map data failed to fetch. Check your connection and try again.
+              </p>
+              <button onClick={loadData} className="pressable rounded-full px-5 py-2 text-xs font-bold text-white" style={{ background: "#1a3a5c" }}>
+                Retry
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Hover tooltip */}
         {hovered && (
