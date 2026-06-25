@@ -274,6 +274,9 @@ export default function HeatCheckHistoryMap() {
             const inJurisdiction = jurisdiction !== "houston" || filterPrec(raw);
             if (!inJurisdiction) return;
             (lyr as L.Path).setStyle({ weight: 2, color: "#fbbf24", opacity: 1 });
+            // Signal that the precinct itself is clickable (navigates to its district breakdown).
+            const el = (lyr as L.Path).getElement();
+            if (el) (el as SVGElement).style.cursor = "pointer";
             const norm = normPrec(raw).padStart(4, "0");
             setHovered({
               prec: norm,
@@ -594,6 +597,15 @@ export default function HeatCheckHistoryMap() {
             ) : (
               <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.4)" }}>No data</p>
             )}
+            {(() => {
+              const d = precinctDistricts(hovered.prec);
+              const target = d.hd ? `HD ${d.hd}` : d.sd ? `SD ${d.sd}` : d.cd ? `CD ${d.cd}` : null;
+              return target ? (
+                <p className="text-[9px] mt-2 pt-2 border-t border-white/10" style={{ color: "rgba(255,255,255,0.5)" }}>
+                  Click precinct → {target} breakdown
+                </p>
+              ) : null;
+            })()}
           </div>
         )}
 
