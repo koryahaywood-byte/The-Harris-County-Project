@@ -298,6 +298,7 @@ export default function Ballot2026() {
   const [onlyCompetitive, setOnlyCompetitive] = useState(false);
   const [onlyContested, setOnlyContested] = useState(false);
   const [onlyWomen, setOnlyWomen] = useState(false);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetch("/data/district-races.json").then(r => r.json()).then(setDistrictRaces).catch(() => {});
@@ -322,7 +323,13 @@ export default function Ballot2026() {
   };
 
   const grouped = useMemo(() => {
+    const q = search.trim().toLowerCase();
     let visible = rows;
+    if (q) visible = visible.filter(r =>
+      r.office.toLowerCase().includes(q) ||
+      r.dSide?.name.toLowerCase().includes(q) ||
+      r.rSide?.name.toLowerCase().includes(q)
+    );
     if (filterGroup !== "all") visible = visible.filter(r => r.group === filterGroup);
     if (onlyContested) visible = visible.filter(r => r.dSide && r.rSide);
     if (onlyCompetitive) visible = visible.filter(r => r.lean && COMPETITIVE_LEANS.includes(r.lean));
@@ -333,7 +340,7 @@ export default function Ballot2026() {
       out[grp].sort((a, b) => (LEAN_SORT[a.lean ?? ""] ?? 3) - (LEAN_SORT[b.lean ?? ""] ?? 3));
     }
     return out;
-  }, [rows, filterGroup, onlyContested, onlyCompetitive, onlyWomen]);
+  }, [rows, filterGroup, onlyContested, onlyCompetitive, onlyWomen, search]);
 
   const stats = useMemo(() => {
     const contested = rows.filter(r => r.dSide && r.rSide).length;
@@ -389,7 +396,17 @@ export default function Ballot2026() {
 
       <div className="max-w-5xl mx-auto px-5 py-6">
 
-        {/* Filters */}
+        {/* Search + Filters */}
+        <div className="mb-3">
+          <input
+            type="search"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search candidate or office…"
+            className="w-full max-w-sm px-4 py-2 rounded-full text-sm border outline-none transition-all"
+            style={{ background: "#fff", borderColor: search ? "#1a3a5c" : "#e5e7eb", color: "#1a3a5c" }}
+          />
+        </div>
         <div className="flex flex-wrap gap-2 mb-6 items-center">
           {([
             ["all", "All Races"],
