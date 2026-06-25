@@ -42,6 +42,11 @@ const TYPES: { key: TypeKey; label: string }[] = [
   { key: "council", label: "City Council" },
 ];
 
+// Compact office token shown on each district chip so a bare "134" reads as "HD 134".
+const CHIP_PREFIX: Record<DistrictField, string> = {
+  cd: "CD", sd: "SD", hd: "HD", jp: "JP", pct: "Pct", council: "Dist",
+};
+
 // Real district lists derived from the precinct crosswalk (centroid point-in-polygon)
 const DISTRICT_LISTS: Record<DistrictField, string[]> = (() => {
   const sets: Record<DistrictField, Map<string, number>> = { cd: new Map(), sd: new Map(), hd: new Map(), jp: new Map(), council: new Map(), pct: new Map() };
@@ -682,7 +687,7 @@ export default function DistrictsPage() {
                       color:      district === d ? "#fff" : "#374151",
                       border:     `1.5px solid ${district === d ? "#1a3a5c" : "#e5e7eb"}`,
                     }}>
-                    {d}
+                    {CHIP_PREFIX[districtField]} {d}
                   </button>
                 ))}
               </div>
