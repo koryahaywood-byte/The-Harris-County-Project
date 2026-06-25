@@ -136,7 +136,7 @@ function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupRes
   const inner = (
     <div className="hcp-card card-lift p-4 flex items-start gap-3.5 h-full">
       <div className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5"
-        style={{ background: `${accent}1a`, color: accent, border: `1.5px solid ${accent}40` }}>
+        style={{ background: `linear-gradient(135deg, ${accent}29, ${accent}0d)`, color: accent, border: `1.5px solid ${accent}33`, boxShadow: "inset 0 1px 1px rgba(255,255,255,0.65)" }}>
         {initials}
       </div>
       <div className="min-w-0 flex-1">
