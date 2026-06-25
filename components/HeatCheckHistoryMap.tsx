@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
 import ShareButton from "@/components/ShareButton";
 import "leaflet/dist/leaflet.css";
@@ -142,6 +143,7 @@ function precinctDistricts(rawPrec: string): { hd?: string; sd?: string; cd?: st
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function HeatCheckHistoryMap() {
+  const router = useRouter();
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMap = useRef<L.Map | null>(null);
   const geoLayerRef = useRef<L.GeoJSON | null>(null);
@@ -297,7 +299,7 @@ export default function HeatCheckHistoryMap() {
               : d.cd
               ? `/tools/districts?type=cd&district=${d.cd}`
               : null;
-            if (href) window.location.href = href;
+            if (href) router.push(href);
           });
         },
       }).addTo(leafletMap.current!);
