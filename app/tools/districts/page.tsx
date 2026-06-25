@@ -212,6 +212,13 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
                       {(s.loans ?? 0) > 0 && <>Loans {fmt(s.loans!)}</>}
                     </p>
                   )}
+                  {s.name !== "Challenger" && (
+                    <Link href={`/tools/where-is-the-dough?tab=leaderboard&q=${encodeURIComponent(s.name)}`}
+                      className="text-[9px] font-semibold hover:opacity-80 mt-1.5 inline-block"
+                      style={{ color: accent }}>
+                      Finance →
+                    </Link>
+                  )}
                 </div>
                 {s.note && <p className="text-[10px] italic" style={{ color: "rgba(255,255,255,0.35)" }}>{s.note}</p>}
               </div>
