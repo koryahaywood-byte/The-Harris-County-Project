@@ -732,13 +732,13 @@ export default function WhereIsTheDough() {
                 ],
               },
               {
-                eyebrow: "PCT 4 Rematch",
+                eyebrow: "Commissioner PCT 4",
                 color: "#b45309",
                 border: "#d97706",
                 stat: briones ? fmt(briones.cash) : "—",
                 statLabel: "Briones · PCT 4 incumbent",
                 headline: `Briones leads the county's only contested commissioner race with a 10-to-1 cash edge over Radack.`,
-                body: `Commissioner Lesley Briones is sitting on ${briones ? fmt(briones.cash) : "—"} as she heads into her first reelection bid. Challenger Steve Radack — who held PCT 4 for 24 years before Briones flipped it in 2022 — has ${radack ? fmt(radack.cash) : "—"} on hand. Money alone won't decide this, but the gap signals that Briones has the institutional backing Radack lost when he left office.`,
+                body: `Commissioner Lesley Briones is sitting on ${briones ? fmt(briones.cash) : "—"} as she heads into her first reelection bid. Her Republican challenger, Steve Radack, ran neighboring Precinct 3 from 2003 to 2021 and won the 2026 primary for this seat — he reports ${radack ? fmt(radack.cash) : "—"}. Money alone won't decide it, but the gap signals the institutional backing Radack lost when he left office.`,
                 links: [
                   { label: "Briones finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=Lesley+Briones" },
                   { label: "PCT 4 ballot →", href: "/tools/ballot-2026?q=Lesley+Briones" },
