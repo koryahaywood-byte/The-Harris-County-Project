@@ -174,17 +174,19 @@ function financeFor(name: string | null): CandidateFinance | null {
 // ── Sub-components ────────────────────────────────────────────────────────────
 const TEC_URL = (name: string) => `https://www.ethics.state.tx.us/search/cf/list.php?name=${encodeURIComponent(name)}&type=cand`;
 
-function CandidateCol({ side, align, lean, group }: { side: { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null; align: "left"|"right"; lean?: string; group?: string }) {
+function CandidateCol({ side, align, lean, group, status }: { side: { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null; align: "left"|"right"; lean?: string; group?: string; status?: string }) {
   if (!side) {
-    const isUncontested = lean === "uncontested-d" || lean === "uncontested-r";
-    const noFiledParty = lean === "uncontested-d" ? "R" : lean === "uncontested-r" ? "D" : null;
+    // The empty column is always the party opposite the one that's present: left col = D, right col = R.
+    const missingParty = align === "left" ? "D" : "R";
+    // 'Nominee TBD' only when a nominee genuinely is still coming (runoff/partial); otherwise nobody filed.
+    const pending = status === "runoff-pending" || status === "partial";
     return (
       <div className={`flex-1 px-4 py-3 ${align === "right" ? "text-right" : ""}`}
         style={{ background: "#fafafa" }}>
-        {isUncontested && noFiledParty ? (
-          <span className="text-[10px] font-semibold" style={{ color: "#9ca3af" }}>No {noFiledParty} filed</span>
-        ) : (
+        {pending ? (
           <span className="text-xs text-gray-400 italic">Nominee TBD</span>
+        ) : (
+          <span className="text-[10px] font-semibold" style={{ color: "#9ca3af" }}>No {missingParty} filed</span>
         )}
       </div>
     );
@@ -595,12 +597,12 @@ function Ballot2026Inner() {
 
                         {/* Candidates row */}
                         <div className="flex items-stretch">
-                          <CandidateCol side={r.dSide as { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null} align="left" lean={r.lean} group={r.group} />
+                          <CandidateCol side={r.dSide as { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null} align="left" lean={r.lean} group={r.group} status={r.status} />
                           {/* Center competitiveness */}
                           <div className="w-28 shrink-0 border-l border-r flex flex-col justify-center" style={{ borderColor: "#f3f4f6" }}>
                             <LeanMeter lean={r.lean} />
                           </div>
-                          <CandidateCol side={r.rSide as { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null} align="right" lean={r.lean} group={r.group} />
+                          <CandidateCol side={r.rSide as { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null} align="right" lean={r.lean} group={r.group} status={r.status} />
                         </div>
 
                         {/* Last election result bar */}
