@@ -151,7 +151,9 @@ function toDistrictInfo(key: string): { href: string; label: string } {
     const jp = key.replace(/.*?(\d+).*/, "$1");
     return { href: `/tools/districts?type=jp&district=${jp}`, label: `JP ${jp} results →` };
   }
-  return { href: "/tools/districts", label: "District results →" };
+  // Remaining keys (CCL/DC/Probate courts, HC-* countywide admin) are all countywide races —
+  // send them to the countywide view rather than the districts tool's default CD-18 landing.
+  return { href: "/tools/districts?type=countywide", label: "Countywide breakdown →" };
 }
 
 function toGroup(key: string): { group: RaceGroup; groupLabel: string } {
