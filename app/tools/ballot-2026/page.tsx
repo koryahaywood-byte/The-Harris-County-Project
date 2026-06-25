@@ -448,9 +448,13 @@ export default function Ballot2026() {
                   const dFin = financeFor(r.dSide?.name ?? null);
                   const rFin = financeFor(r.rSide?.name ?? null);
                   const hasMoneyBar = (dFin?.cash ?? 0) > 0 && (rFin?.cash ?? 0) > 0;
+                  const leanAccent = r.lean
+                    ? (LEAN_LANE[r.lean] < 45 ? "#2563eb" : LEAN_LANE[r.lean] > 55 ? "#dc2626" : "#7c3aed")
+                    : "#e5e7eb";
                   return (
                     <div key={r.key} className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-                      <div className="rounded-[1rem] bg-white overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]">
+                      <div className="rounded-[1rem] bg-white overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]"
+                        style={{ borderLeft: `3px solid ${leanAccent}` }}>
 
                         {/* Office header */}
                         <div className="flex items-center justify-between px-4 py-2 border-b" style={{ borderColor: "#f3f4f6" }}>
