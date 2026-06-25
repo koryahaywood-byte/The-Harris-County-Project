@@ -183,7 +183,7 @@ function CandidateCol({ side, align, lean, group, status }: { side: { name: stri
     // 'Nominee TBD' only when a nominee genuinely is still coming (runoff/partial); otherwise nobody filed.
     const pending = status === "runoff-pending" || status === "partial";
     return (
-      <div className={`flex-1 px-4 py-3 ${align === "right" ? "text-right" : ""}`}
+      <div className={`flex-1 min-w-0 px-2.5 sm:px-4 py-3 ${align === "right" ? "text-right" : ""}`}
         style={{ background: "#fafafa" }}>
         {pending ? (
           <span className="text-xs text-gray-400 italic">Nominee TBD</span>
@@ -203,13 +203,13 @@ function CandidateCol({ side, align, lean, group, status }: { side: { name: stri
     : "linear-gradient(to left, #fdecec, #fff8f8)";
 
   return (
-    <div className={`flex-1 px-4 py-3.5 ${align === "right" ? "text-right" : ""}`}
+    <div className={`flex-1 min-w-0 px-2.5 sm:px-4 py-3.5 ${align === "right" ? "text-right" : ""}`}
       style={{ background: bg }}>
       <div className={`flex items-center gap-1.5 mb-1 ${align === "right" ? "justify-end" : ""}`}>
         {align === "left" && (
-          <span className="text-[10px] font-black px-1.5 py-0.5 rounded text-white leading-none" style={{ background: accent }}>D</span>
+          <span className="text-[10px] font-black px-1.5 py-0.5 rounded text-white leading-none shrink-0" style={{ background: accent }}>D</span>
         )}
-        <span className="font-bold text-[14px] leading-tight" style={{ color: "#111827" }}>{side.name}</span>
+        <span className="font-bold text-[13px] sm:text-[14px] leading-tight break-words min-w-0" style={{ color: "#111827" }}>{side.name}</span>
         {side.gender === "F" && (
           <span className="text-[9px] font-bold px-1 py-0.5 rounded leading-none" style={{ background: "#fce7f3", color: "#9d174d" }}>W</span>
         )}
@@ -252,12 +252,12 @@ function LeanMeter({ lean }: { lean: RaceLean | undefined }) {
   const isRep = pos > 50;
   const color = isDem ? "#2563eb" : isRep ? "#dc2626" : "#7c3aed";
   return (
-    <div className="px-3 pt-1 pb-2">
+    <div className="px-1.5 sm:px-3 pt-1 pb-2">
       {/* Track */}
       <div className="relative h-1.5 rounded-full overflow-hidden" style={{ background: "linear-gradient(90deg,#dbeafe,#e0d9f7,#fee2e2)" }}>
         <div className="absolute top-0 bottom-0 w-0.5 rounded-full" style={{ left: `${pos}%`, background: color, transform: "translateX(-50%)", boxShadow: `0 0 4px ${color}` }} />
       </div>
-      <p className="text-[9px] font-bold text-center mt-0.5" style={{ color }}>{label}</p>
+      <p className="text-[8px] sm:text-[9px] font-bold text-center mt-0.5 leading-tight" style={{ color }}>{label}</p>
     </div>
   );
 }
@@ -605,7 +605,7 @@ function Ballot2026Inner() {
                         <div className="flex items-stretch">
                           <CandidateCol side={r.dSide as { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null} align="left" lean={r.lean} group={r.group} status={r.status} />
                           {/* Center competitiveness */}
-                          <div className="w-28 shrink-0 border-l border-r flex flex-col justify-center" style={{ borderColor: "#f3f4f6" }}>
+                          <div className="w-16 sm:w-28 shrink-0 border-l border-r flex flex-col justify-center" style={{ borderColor: "#f3f4f6" }}>
                             <LeanMeter lean={r.lean} />
                           </div>
                           <CandidateCol side={r.rSide as { name: string; party: "D"|"R"; note?: string; gender?: "F"|"M" } | null} align="right" lean={r.lean} group={r.group} status={r.status} />
