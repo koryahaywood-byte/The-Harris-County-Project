@@ -415,13 +415,32 @@ export default function Ballot2026() {
         {GROUP_ORDER.map(grp => {
           const section = grouped[grp];
           if (!section.length) return null;
+          const secCompetitive = section.filter(r => r.lean && COMPETITIVE_LEANS.includes(r.lean)).length;
+          const secTossups = section.filter(r => r.lean === "toss-up").length;
+          let secD = 0, secR = 0;
+          for (const r of section) {
+            secD += financeFor(r.dSide?.name ?? null)?.cash ?? 0;
+            secR += financeFor(r.rSide?.name ?? null)?.cash ?? 0;
+          }
+          const secTotal = secD + secR;
+          const secDPct = secTotal ? Math.round(secD / secTotal * 100) : 0;
           return (
             <div key={grp} className="mb-10">
-              <div className="flex items-baseline gap-2 mb-4">
+              <div className="flex items-center gap-2 mb-4 flex-wrap">
                 <h2 className="text-[10px] font-bold uppercase tracking-[0.22em]" style={{ color: "#9ca3af" }}>
                   {section[0].groupLabel}
                 </h2>
                 <span className="text-[10px]" style={{ color: "#d1d5db" }}>{section.length} race{section.length !== 1 ? "s" : ""}</span>
+                {secCompetitive > 0 && (
+                  <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "#f3e8ff", color: "#6d28d9" }}>
+                    {secTossups > 0 ? `${secTossups} toss-up${secTossups > 1 ? "s" : ""}` : `${secCompetitive} competitive`}
+                  </span>
+                )}
+                {secTotal > 0 && (
+                  <span className="text-[9px] font-semibold tabular-nums" style={{ color: secDPct > 55 ? "#2563eb" : secDPct < 45 ? "#dc2626" : "#6b7280" }}>
+                    {secDPct > 55 ? `D leads money ${secDPct}–${100-secDPct}` : secDPct < 45 ? `R leads money ${100-secDPct}–${secDPct}` : `money even`}
+                  </span>
+                )}
               </div>
               <div className="space-y-3">
                 {section.map(r => {
