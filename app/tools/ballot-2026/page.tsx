@@ -183,6 +183,7 @@ function CandidateCol({ side, align }: { side: { name: string; party: "D"|"R"; n
         {fin && fin.cash > 0 && (
           <span className="font-semibold" style={{ color: accent }}>
             {fmt(fin.cash)} <span style={{ color: "#9ca3af", fontWeight: 400 }}>CoH</span>
+            {fin.asOf && <span className="text-[9px] ml-1" style={{ color: "#d1d5db", fontWeight: 400 }}>· {fin.asOf}</span>}
           </span>
         )}
         {fin && (
