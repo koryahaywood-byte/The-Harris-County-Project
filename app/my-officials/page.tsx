@@ -152,7 +152,12 @@ function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupRes
           </span>
         </div>
         <p className="text-xs text-[#6b7280] truncate">{rep.office} · {rep.district}</p>
-        {rep.note && <p className="text-[10px] text-amber-600 mt-0.5">{rep.note}</p>}
+        {rep.note && (
+          <p className="text-[10px] mt-0.5"
+            style={{ color: /term ends|not seeking|lost|leaving|retir|did not|vacat/i.test(rep.note) ? "#dc2626" : "#d97706" }}>
+            {rep.note}
+          </p>
+        )}
         <div className="flex gap-3 mt-2 flex-wrap">
           {(rep.slug || rep.url) && (
             <span className="text-[10px] font-bold" style={{ color: rep.slug ? "#2563a8" : "#9ca3af" }}>
