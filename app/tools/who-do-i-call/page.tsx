@@ -41,6 +41,7 @@ const FIND_PREDICATES: Record<string, (o: EnrichedOfficial) => boolean> = {
   "your constable precinct": (o) => /constable/i.test(o.office),
   "your state rep & senator": (o) => o.level === "Texas Legislature",
   "your state representative": (o) => o.level === "Texas Legislature" && /representative/i.test(o.office),
+  "your state senator": (o) => o.level === "Texas Legislature" && /senator/i.test(o.office),
 };
 
 // ── Routing model ───────────────────────────────────────────────────────────────
@@ -78,6 +79,7 @@ const CRIME_RESPONDERS: Responder[] = [
 const BAYOU_RESPONDERS: Responder[] = [
   { find: "your county commissioner" },
   { find: "your state representative" },
+  { find: "your state senator" },
 ];
 
 type Issue = {
