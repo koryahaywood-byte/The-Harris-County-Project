@@ -407,7 +407,7 @@ export default function Home() {
     <div className="overflow-x-hidden">
 
       {/* ── HERO (Synex-style: airy, two-tone headline, floating data card) ── */}
-      <section className="relative overflow-hidden topo-light px-6 pt-28 pb-20 md:pt-32 md:pb-28 min-h-[94dvh] flex items-center"
+      <section className="relative overflow-hidden topo-hero px-6 pt-28 pb-20 md:pt-32 md:pb-28 min-h-[94dvh] flex items-center"
         style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f5f3ef 55%,#eef1f5 100%)" }}>
         {/* Soft organic glows — the "terrain" light */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_78%_32%,rgba(37,99,168,0.10),transparent_70%)]" />
@@ -536,7 +536,7 @@ export default function Home() {
       </section>
 
       {/* ── CLARITY (Synex-style numbered feature columns + floating cards) ── */}
-      <section className="relative overflow-hidden px-6 py-20 md:py-28" style={{ background: "linear-gradient(180deg,#eef1f5 0%,#f5f3ef 100%)" }}>
+      <section className="relative overflow-hidden topo-hero px-6 py-20 md:py-28" style={{ background: "linear-gradient(180deg,#eef1f5 0%,#f5f3ef 100%)" }}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_45%_at_15%_30%,rgba(52,160,110,0.07),transparent_70%)]" />
         <div className="max-w-6xl mx-auto relative z-10">
           {/* Header row */}

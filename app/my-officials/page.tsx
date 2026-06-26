@@ -262,17 +262,20 @@ export default function MyOfficialsPage() {
 
   return (
     <div style={{ background: "#f5f3ef", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
-      {/* Hero */}
-      <section className="relative overflow-hidden topo-dark"
-        style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#0f2540 60%,#162e4a 100%)", paddingTop: "3.5rem", paddingBottom: "3.5rem" }}>
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%,rgba(37,99,168,0.18) 0%,transparent 70%)" }} />
+      {/* Hero — Synex-style light, with the topo terrain motif */}
+      <section className="relative overflow-hidden topo-hero"
+        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f5f3ef 60%,#eef1f5 100%)", paddingTop: "3.75rem", paddingBottom: "3.5rem" }}>
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(37,99,168,0.10),transparent_70%)]" />
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_40%_45%_at_90%_75%,rgba(52,160,110,0.07),transparent_70%)]" />
         <div className="relative max-w-3xl mx-auto px-5">
-          <p className="text-sky-300 text-xs font-bold uppercase tracking-[0.22em] mb-3">Your Government · Lookup</p>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2" style={{ fontFamily: "var(--font-playfair,serif)" }}>
-            Who Represents Me?
+          <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 flex items-center gap-2" style={{ color: "#64748b" }}>
+            <span className="w-5 h-px" style={{ background: "#94a3b8" }} />
+            Your Government · Lookup
+          </p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-3" style={{ fontFamily: "var(--font-playfair,serif)" }}>
+            <span style={{ color: "#aab4c0" }}>Who represents </span><span style={{ color: "#0f2540" }}>me?</span>
           </h1>
-          <p className="text-white/50 text-sm max-w-lg mb-6">
+          <p className="text-sm md:text-[15px] max-w-lg mb-7" style={{ color: "#5b6470" }}>
             Enter your Harris County address. Get every elected official who answers to you —
             from your Justice of the Peace to your member of Congress.
           </p>
@@ -283,27 +286,27 @@ export default function MyOfficialsPage() {
               value={address}
               onChange={e => setAddress(e.target.value)}
               placeholder="1001 Preston St, Houston, TX 77002"
-              className="flex-1 rounded-full px-5 py-3 text-sm outline-none"
-              style={{ background: "rgba(255,255,255,0.95)", color: "#1a3a5c" }}
+              className="flex-1 rounded-full px-5 py-3 text-sm outline-none transition-shadow focus:shadow-[0_0_0_3px_rgba(37,99,168,0.12)]"
+              style={{ background: "#fff", color: "#1a3a5c", border: "1px solid #e5e7eb" }}
             />
             <button type="submit" disabled={loading}
-              className="pressable rounded-full px-7 py-3 text-sm font-bold text-[#1a3a5c] disabled:opacity-60"
-              style={{ background: "#fbbf24" }}>
+              className="pressable rounded-full px-7 py-3 text-sm font-bold text-white disabled:opacity-60"
+              style={{ background: "#0f2540", boxShadow: "0 10px 24px rgba(15,37,64,0.2)" }}>
               {loading ? "Looking up…" : "Find My Officials"}
             </button>
           </form>
           <div className="flex items-center gap-2.5 mt-3">
             <button type="button" onClick={useMyLocation} disabled={loading}
               className="pressable inline-flex items-center gap-1.5 text-[13px] font-bold disabled:opacity-60"
-              style={{ color: "#fbbf24" }}>
+              style={{ color: "#2563a8" }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
               </svg>
               Use my location
             </button>
-            <span className="text-white/30 text-[11px]">or type an address</span>
+            <span className="text-[11px]" style={{ color: "#94a3b8" }}>or type an address</span>
           </div>
-          <p className="text-white/30 text-[11px] mt-3">
+          <p className="text-[11px] mt-3" style={{ color: "#94a3b8" }}>
             Your location or address is used once to find your precinct and never stored.
             Addresses are geocoded by the U.S. Census Bureau.
           </p>
