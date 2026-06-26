@@ -12,6 +12,7 @@ export interface RepEntry {
   level: "Congress" | "Texas Legislature" | "Harris County" | "Justice Court" | "City of Houston";
   slug?: string;        // present when a /politicians/[slug] profile exists
   url?: string;         // external official website (used when no internal slug)
+  photo?: string;       // headshot URL when one exists in the politicians dataset
   note?: string;
 }
 
@@ -48,7 +49,7 @@ const JP_BENCH: Record<string, { jps: { name: string; place: number; party: "D" 
 };
 
 function fromPol(p: Politician, level: RepEntry["level"]): RepEntry {
-  return { name: p.name, office: p.office, district: p.district, party: p.party, level, slug: p.slug, ...(p.note ? { note: p.note } : {}) };
+  return { name: p.name, office: p.office, district: p.district, party: p.party, level, slug: p.slug, ...(p.photo ? { photo: p.photo } : {}), ...(p.note ? { note: p.note } : {}) };
 }
 
 export interface CrosswalkEntry {
