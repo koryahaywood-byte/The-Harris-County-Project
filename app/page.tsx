@@ -2,7 +2,6 @@ import Link from "next/link";
 import ScrollReveal from "@/components/ScrollReveal";
 import DashboardWidget from "@/components/DashboardWidget";
 import ToolboxOpener from "@/components/ToolboxOpener";
-import Hero3D from "@/components/Hero3D";
 
 /* ── Tool catalogue ─────────────────────────────────────────────────────── */
 interface Tool {
@@ -407,64 +406,132 @@ export default function Home() {
   return (
     <div className="overflow-x-hidden">
 
-      {/* ── HERO ─────────────────────────────────────────────────────── */}
-      <section className="bg-[var(--accent)] text-white flex flex-col justify-center px-6 py-24 md:py-32 relative overflow-hidden min-h-[90dvh]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_60%_40%,rgba(37,99,168,0.4),transparent)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_50%_at_90%_80%,rgba(125,211,252,0.06),transparent)]" />
-        {/* 3D extruded precinct map — height = turnout, color = partisan lean */}
-        <Hero3D />
+      {/* ── HERO (Synex-style: airy, two-tone headline, floating data card) ── */}
+      <section className="relative overflow-hidden topo-light px-6 pt-28 pb-20 md:pt-32 md:pb-28 min-h-[94dvh] flex items-center"
+        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f5f3ef 55%,#eef1f5 100%)" }}>
+        {/* Soft organic glows — the "terrain" light */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_78%_32%,rgba(37,99,168,0.10),transparent_70%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_45%_at_88%_70%,rgba(52,160,110,0.08),transparent_70%)]" />
 
-        <div className="max-w-5xl mx-auto w-full relative z-10 pointer-events-none">
-          <p className="text-sky-300/70 text-[10px] font-bold uppercase tracking-[0.3em] mb-10 flex items-center gap-2">
-            <span className="w-5 h-px bg-sky-300/40" />
-            Harris County, Texas
-          </p>
+        <div className="max-w-6xl mx-auto w-full relative z-10 grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-8 items-center">
+          {/* ── Left: copy ── */}
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-7 flex items-center gap-2" style={{ color: "#64748b" }}>
+              <span className="w-5 h-px" style={{ background: "#94a3b8" }} />
+              Harris County · Civics, Reimagined
+            </p>
 
-          <h1
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.75rem] font-bold leading-[1.03] mb-8 max-w-4xl"
-            style={{ fontFamily: "var(--font-playfair), serif" }}
-          >
-            They stopped
-            <br />teaching civics.
-            <br /><span className="text-sky-300">We didn&apos;t.</span>
-          </h1>
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5rem] font-bold leading-[1.02] mb-7"
+              style={{ fontFamily: "var(--font-playfair), serif" }}>
+              <span style={{ color: "#aab4c0" }}>They stopped<br />teaching civics.</span>
+              <br /><span style={{ color: "#0f2540" }}>We didn&apos;t.</span>
+            </h1>
 
-          <p className="text-white/65 text-lg md:text-xl max-w-lg leading-relaxed mb-12" style={{ lineHeight: 1.7 }}>
-            A free toolbox for Harris County residents who want to understand
-            their government — how it votes, where it spends, and when it decides.
-          </p>
+            <p className="text-base md:text-lg max-w-md leading-relaxed mb-9" style={{ color: "#5b6470", lineHeight: 1.7 }}>
+              A free toolbox for Harris County residents — see how your government
+              votes, where it spends, and who answers to you.
+            </p>
 
-          <div className="flex flex-wrap gap-3 pointer-events-auto w-fit">
-            <a
-              href="#start-here"
-              className="group inline-flex items-center gap-3 bg-sky-300 hover:bg-sky-200 text-[var(--accent)] font-bold rounded-full px-7 py-4 text-sm transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_0_48px_rgba(125,211,252,0.35)] active:scale-[0.98]"
-            >
-              Start Exploring
-              <span className="inline-flex w-7 h-7 rounded-full bg-[var(--accent)]/15 items-center justify-center group-hover:translate-y-0.5 transition-transform duration-500">↓</span>
-            </a>
-            <a
-              href="#toolbox"
-              className="inline-flex items-center gap-2 text-white/55 hover:text-white font-semibold text-sm transition-colors duration-300 px-4 py-4"
-            >
-              Browse all 25 tools
-            </a>
+            <div className="flex flex-wrap items-center gap-3">
+              <a href="#start-here"
+                className="group inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-bold text-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98]"
+                style={{ background: "#0f2540", boxShadow: "0 12px 30px rgba(15,37,64,0.22)" }}>
+                Start exploring
+                <span className="inline-flex w-6 h-6 rounded-full items-center justify-center group-hover:translate-y-0.5 transition-transform duration-500" style={{ background: "rgba(255,255,255,0.15)" }}>↓</span>
+              </a>
+              <a href="#toolbox"
+                className="inline-flex items-center gap-2 font-semibold text-sm px-3 py-3.5 transition-colors duration-300"
+                style={{ color: "#5b6470" }}>
+                Browse all 25 tools →
+              </a>
+            </div>
+
+            <div className="mt-12 flex flex-wrap gap-10">
+              {[
+                { value: "1,011", label: "Precincts mapped" },
+                { value: "25", label: "Civic tools" },
+                { value: "100%", label: "Public data" },
+              ].map(({ value, label }) => (
+                <div key={label}>
+                  <p className="text-3xl font-bold leading-none tnum" style={{ color: "#0f2540", fontFamily: "var(--font-playfair), serif" }}>{value}</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] mt-1.5" style={{ color: "#94a3b8" }}>{label}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="mt-16 flex flex-wrap gap-8">
-            {[
-              { value: "25", label: "Civic tools" },
-              { value: "100%", label: "Public data" },
-            ].map(({ value, label }) => (
-              <div key={label}>
-                <p className="text-2xl font-bold text-white leading-none" style={{ fontFamily: "var(--font-playfair), serif" }}>{value}</p>
-                <p className="text-white/45 text-xs font-semibold uppercase tracking-[0.15em] mt-1">{label}</p>
+          {/* ── Right: floating glass data card ── */}
+          <div className="relative hidden lg:block" style={{ perspective: 1200 }}>
+            {/* Main dashboard card */}
+            <div className="hero-float relative rounded-[1.4rem] overflow-hidden mx-auto max-w-sm"
+              style={{ background: "rgba(255,255,255,0.82)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.9)", boxShadow: "0 30px 70px rgba(15,37,64,0.18), 0 6px 18px rgba(15,37,64,0.08)" }}>
+              {/* window chrome */}
+              <div className="flex items-center gap-1.5 px-4 py-2.5 border-b" style={{ borderColor: "rgba(15,37,64,0.06)" }}>
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#f87171" }} />
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#fbbf24" }} />
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#34d399" }} />
+                <span className="ml-2 text-[9px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "rgba(15,37,64,0.04)", color: "#94a3b8" }}>harriscounty.tools / heat-check</span>
               </div>
-            ))}
+              {/* body */}
+              <div className="p-5">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <span className="w-1.5 h-1.5 rounded-full alive-pulse" style={{ background: "#2563a8" }} />
+                  <span className="text-[9px] font-bold uppercase tracking-[0.16em]" style={{ color: "#94a3b8" }}>Harris County · 2024 General</span>
+                </div>
+                <div className="flex items-end gap-2 mb-3">
+                  <span className="text-4xl font-bold leading-none tnum" style={{ color: "#0f2540", fontFamily: "var(--font-playfair), serif" }}>61%</span>
+                  <span className="text-sm font-bold mb-0.5" style={{ color: "#2563a8" }}>Dem</span>
+                  <span className="text-[10px] font-semibold mb-1 ml-auto px-1.5 py-0.5 rounded-full" style={{ background: "rgba(37,160,110,0.12)", color: "#15803d" }}>+4 vs &apos;20</span>
+                </div>
+                {/* D/R bar */}
+                <div className="h-2.5 rounded-full overflow-hidden flex mb-4">
+                  <div style={{ width: "61%", background: "#2563a8" }} />
+                  <div style={{ width: "39%", background: "#dc2626" }} />
+                </div>
+                {/* mini area chart */}
+                <svg viewBox="0 0 240 64" className="w-full" style={{ height: 56 }} preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="heroArea" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#2563a8" stopOpacity="0.32" />
+                      <stop offset="100%" stopColor="#2563a8" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M0,48 L40,42 L80,46 L120,30 L160,34 L200,18 L240,22 L240,64 L0,64 Z" fill="url(#heroArea)" />
+                  <path d="M0,48 L40,42 L80,46 L120,30 L160,34 L200,18 L240,22" fill="none" stroke="#2563a8" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+                </svg>
+                {/* rows */}
+                <div className="mt-3 space-y-2">
+                  {[
+                    { k: "HD 134", v: "61% D", c: "#2563a8" },
+                    { k: "Money tracked", v: "$345M", c: "#0f2540" },
+                  ].map((r) => (
+                    <div key={r.k} className="flex items-center justify-between text-[11px]">
+                      <span className="font-semibold" style={{ color: "#64748b" }}>{r.k}</span>
+                      <span className="font-bold tnum" style={{ color: r.c }}>{r.v}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Floating stat chip — top */}
+            <div className="hero-float-2 absolute -top-5 -left-3 rounded-2xl px-4 py-3"
+              style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.9)", boxShadow: "0 18px 40px rgba(15,37,64,0.16)" }}>
+              <p className="text-[8px] font-bold uppercase tracking-[0.16em]" style={{ color: "#94a3b8" }}>Turnout · Nov &apos;24</p>
+              <p className="text-2xl font-bold leading-none tnum mt-0.5" style={{ color: "#0f2540", fontFamily: "var(--font-playfair), serif" }}>1.49M</p>
+            </div>
+
+            {/* Floating stat chip — bottom */}
+            <div className="hero-float-3 absolute -bottom-4 -right-2 rounded-2xl px-4 py-3"
+              style={{ background: "rgba(15,37,64,0.92)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.12)", boxShadow: "0 18px 40px rgba(15,37,64,0.28)" }}>
+              <p className="text-[8px] font-bold uppercase tracking-[0.16em]" style={{ color: "#7aaee8" }}>Biggest war chest</p>
+              <p className="text-2xl font-bold leading-none tnum mt-0.5 text-white" style={{ fontFamily: "var(--font-playfair), serif" }}>$105.7M</p>
+            </div>
           </div>
         </div>
 
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 opacity-30">
-          <div className="w-px h-10 bg-white/60" style={{ animation: "pulse 2s ease-in-out infinite" }} />
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 opacity-25">
+          <div className="w-px h-10" style={{ background: "#1a3a5c", animation: "pulse 2s ease-in-out infinite" }} />
         </div>
       </section>
 
