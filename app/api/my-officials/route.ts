@@ -66,33 +66,45 @@ function pointInFeature(x: number, y: number, f: GeoFeature): boolean {
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const address = searchParams.get("address")?.trim();
-  if (!address) return NextResponse.json({ error: "Missing address" }, { status: 400 });
-
-  // 1. Geocode via Census (no key required)
-  const geoUrl = `https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=${encodeURIComponent(
-    address + (/(tx|texas)/i.test(address) ? "" : ", TX")
-  )}&benchmark=Public_AR_Current&format=json`;
+  const latParam = Number(searchParams.get("lat"));
+  const lngParam = Number(searchParams.get("lng"));
+  const hasCoords = Number.isFinite(latParam) && Number.isFinite(lngParam);
+  if (!address && !hasCoords) return NextResponse.json({ error: "Missing address" }, { status: 400 });
 
   let lat: number, lng: number, matched: string;
-  try {
-    const res = await fetch(geoUrl, { signal: AbortSignal.timeout(10_000) });
-    const data = await res.json();
-    const match = data?.result?.addressMatches?.[0];
-    if (!match) {
-      return NextResponse.json({ error: "Address not found. Try adding street number, city, and ZIP." }, { status: 404 });
+
+  if (hasCoords) {
+    // Coordinates from the browser's Geolocation API — skip geocoding.
+    lat = latParam;
+    lng = lngParam;
+    matched = "Your current location";
+  } else {
+    // 1. Geocode via Census (no key required)
+    const geoUrl = `https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=${encodeURIComponent(
+      address! + (/(tx|texas)/i.test(address!) ? "" : ", TX")
+    )}&benchmark=Public_AR_Current&format=json`;
+    try {
+      const res = await fetch(geoUrl, { signal: AbortSignal.timeout(10_000) });
+      const data = await res.json();
+      const match = data?.result?.addressMatches?.[0];
+      if (!match) {
+        return NextResponse.json({ error: "Address not found. Try adding street number, city, and ZIP." }, { status: 404 });
+      }
+      lat = match.coordinates.y;
+      lng = match.coordinates.x;
+      matched = match.matchedAddress;
+    } catch {
+      return NextResponse.json({ error: "Geocoding service unavailable — try again in a moment." }, { status: 502 });
     }
-    lat = match.coordinates.y;
-    lng = match.coordinates.x;
-    matched = match.matchedAddress;
-  } catch {
-    return NextResponse.json({ error: "Geocoding service unavailable — try again in a moment." }, { status: 502 });
   }
 
   // 2. Find the voting precinct
   const feature = loadPrecincts().find(f => pointInFeature(lng, lat, f));
   if (!feature) {
     return NextResponse.json(
-      { error: "That address geocoded outside Harris County voting precincts.", matched },
+      { error: hasCoords
+          ? "You appear to be outside Harris County voting precincts."
+          : "That address geocoded outside Harris County voting precincts.", matched },
       { status: 404 }
     );
   }

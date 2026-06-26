@@ -210,12 +210,10 @@ export default function MyOfficialsPage() {
     fetch("/data/cvap-districts.json").then(r => r.json()).then(setCvap).catch(() => {});
   }, []);
 
-  async function lookup(e: React.FormEvent) {
-    e.preventDefault();
-    if (!address.trim()) return;
+  async function runLookup(url: string) {
     setLoading(true); setError(null); setResult(null);
     try {
-      const res = await fetch(`/api/my-officials?address=${encodeURIComponent(address)}`);
+      const res = await fetch(url);
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? "Lookup failed."); return; }
       setResult(data);
@@ -224,6 +222,32 @@ export default function MyOfficialsPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function lookup(e: React.FormEvent) {
+    e.preventDefault();
+    if (!address.trim()) return;
+    runLookup(`/api/my-officials?address=${encodeURIComponent(address)}`);
+  }
+
+  function useMyLocation() {
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
+      setError("Your browser can't share location — enter your address instead.");
+      return;
+    }
+    setLoading(true); setError(null); setResult(null);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => runLookup(`/api/my-officials?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}`),
+      (err) => {
+        setLoading(false);
+        setError(
+          err.code === err.PERMISSION_DENIED
+            ? "Location permission denied — enter your address instead."
+            : "Couldn't get your location — enter your address instead."
+        );
+      },
+      { enableHighAccuracy: true, timeout: 10_000, maximumAge: 60_000 }
+    );
   }
 
   const grouped = result
@@ -262,8 +286,20 @@ export default function MyOfficialsPage() {
               {loading ? "Looking up…" : "Find My Officials"}
             </button>
           </form>
+          <div className="flex items-center gap-2.5 mt-3">
+            <button type="button" onClick={useMyLocation} disabled={loading}
+              className="pressable inline-flex items-center gap-1.5 text-[13px] font-bold disabled:opacity-60"
+              style={{ color: "#fbbf24" }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
+              </svg>
+              Use my location
+            </button>
+            <span className="text-white/30 text-[11px]">or type an address</span>
+          </div>
           <p className="text-white/30 text-[11px] mt-3">
-            Your address is geocoded by the U.S. Census Bureau and never stored.
+            Your location or address is used once to find your precinct and never stored.
+            Addresses are geocoded by the U.S. Census Bureau.
           </p>
         </div>
       </section>
