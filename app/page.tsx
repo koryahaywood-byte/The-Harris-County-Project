@@ -407,7 +407,9 @@ export default function Home() {
     <div className="overflow-x-hidden">
 
       {/* ── HERO (Synex-style: airy, two-tone headline, floating data card) ── */}
-      <section className="relative overflow-hidden topo-hero px-6 pt-28 pb-20 md:pt-32 md:pb-28 min-h-[94dvh] flex items-center"
+      {/* -mt-16 pulls the hero up under the floating nav's spacer so its gradient
+          reaches the very top (no cream seam from the body background). */}
+      <section className="relative overflow-hidden topo-hero -mt-16 px-6 pt-32 pb-20 md:pt-36 md:pb-28 min-h-[94dvh] flex items-center"
         style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f5f3ef 55%,#eef1f5 100%)" }}>
         {/* Soft organic glows — the "terrain" light */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_78%_32%,rgba(37,99,168,0.10),transparent_70%)]" />
