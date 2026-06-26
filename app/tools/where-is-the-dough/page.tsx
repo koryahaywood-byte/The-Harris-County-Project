@@ -555,15 +555,19 @@ export default function WhereIsTheDough() {
   return (
     <div className="bg-[var(--background)] min-h-screen">
 
-      {/* ── Hero ──────────────────────────────────────────────────────── */}
-      <div className="bg-[var(--accent)] text-white px-6 py-16 md:py-24 relative overflow-hidden topo-dark">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_80%_50%,rgba(37,99,168,0.4),transparent)]"/>
+      {/* ── Hero — Synex-style light, topo terrain ─────────────────────── */}
+      <div className="px-6 py-14 md:py-20 relative overflow-hidden topo-hero" style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f5f3ef 60%,#eef1f5 100%)" }}>
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_60%_at_85%_40%,rgba(37,99,168,0.10),transparent_70%)]"/>
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_38%_45%_at_92%_80%,rgba(52,160,110,0.07),transparent_70%)]"/>
         <div className="max-w-6xl mx-auto relative z-10">
-          <p className="text-sky-300/80 text-[11px] font-bold uppercase tracking-[0.25em] mb-3">Money</p>
-          <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-2" style={{ fontFamily: "var(--font-playfair), serif" }}>
-            Where the Money Resides
+          <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 flex items-center gap-2" style={{ color: "#64748b" }}>
+            <span className="w-5 h-px" style={{ background: "#94a3b8" }} />
+            Money
+          </p>
+          <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-2" style={{ fontFamily: "var(--font-playfair), serif" }}>
+            <span style={{ color: "#aab4c0" }}>Where the </span><span style={{ color: "#0f2540" }}>money resides.</span>
           </h1>
-          <p className="text-white/70 text-sm max-w-lg">
+          <p className="text-sm max-w-lg" style={{ color: "#5b6470" }}>
             Cash-on-hand for every Harris County official, candidate, and challenger. TEC &amp; FEC filings.
           </p>
           <ShareButton
@@ -582,27 +586,28 @@ export default function WhereIsTheDough() {
               { label: "Cash on hand", value: fmt(filtered.reduce((s, d) => s + d.cash, 0)) },
               { label: "View", value: level === "county" && countyGroup !== "all" ? COUNTY_GROUPS[countyGroup] : LEVEL_LABELS[level] },
             ]}
+            light={false}
           />
           {(fecData.length > 0 || tecData.length > 0) && (
-            <p className="mt-2 text-[11px] text-sky-300/80 flex items-center gap-1.5">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-sky-400 alive-pulse" />
+            <p className="mt-2 text-[11px] flex items-center gap-1.5" style={{ color: "#15803d" }}>
+              <span className="inline-block w-1.5 h-1.5 rounded-full alive-pulse" style={{ background: "#22c55e" }} />
               {[
                 fecData.length > 0 ? "Federal: FEC" : null,
                 tecData.length > 0 ? "State: TEC" : null,
               ].filter(Boolean).join(" · ")} &mdash; live data
-              {fecFetchedAt && <span className="text-sky-300/50 ml-1">as of {new Date(fecFetchedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>}
+              {fecFetchedAt && <span className="ml-1" style={{ color: "#94a3b8" }}>as of {new Date(fecFetchedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>}
             </p>
           )}
           <div className="mt-5 flex flex-wrap gap-3">
             {[
-              { label: "Democrat Total",    val: fmt(demTotal),         color: "#93c5fd", sub: null },
-              { label: "Republican Total",  val: fmt(repTotal),         color: "#fca5a5", sub: null },
-              { label: "Biggest War Chest", val: biggest ? fmt(biggest.cash) : "—", color: "#fde68a", sub: biggest?.name ?? null },
+              { label: "Democrat Total",    val: fmt(demTotal),         color: "#2563a8", sub: null },
+              { label: "Republican Total",  val: fmt(repTotal),         color: "#dc2626", sub: null },
+              { label: "Biggest War Chest", val: biggest ? fmt(biggest.cash) : "—", color: "#b45309", sub: biggest?.name ?? null },
             ].map(({ label, val, color, sub }) => (
-              <div key={label} className="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-3">
-                <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5 text-white/50">{label}</p>
-                <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-playfair), serif", color }}>{val}</p>
-                {sub && <p className="text-[10px] font-semibold text-white/50 mt-0.5">{sub}</p>}
+              <div key={label} className="hcp-card rounded-2xl px-5 py-3">
+                <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: "#94a3b8" }}>{label}</p>
+                <p className="text-2xl font-bold tnum" style={{ fontFamily: "var(--font-playfair), serif", color }}>{val}</p>
+                {sub && <p className="text-[10px] font-semibold mt-0.5" style={{ color: "#94a3b8" }}>{sub}</p>}
               </div>
             ))}
           </div>
@@ -611,16 +616,16 @@ export default function WhereIsTheDough() {
             const dPct = Math.round(demTotal / totalPool * 100);
             return (
               <div className="mt-4 max-w-sm">
-                <div className="h-2 rounded-full overflow-hidden flex">
-                  <div style={{ width: `${dPct}%`, background: "#93c5fd" }} />
-                  <div style={{ width: `${100 - dPct}%`, background: "#fca5a5" }} />
+                <div className="h-2 rounded-full overflow-hidden flex" style={{ background: "#e5e7eb" }}>
+                  <div style={{ width: `${dPct}%`, background: "#2563a8" }} />
+                  <div style={{ width: `${100 - dPct}%`, background: "#dc2626" }} />
                 </div>
-                <div className="flex justify-between text-[9px] font-semibold mt-1 text-white/50">
+                <div className="flex justify-between text-[9px] font-semibold mt-1" style={{ color: "#94a3b8" }}>
                   <span>Dems {dPct}% of total cash</span>
                   <span>Reps {100 - dPct}%</span>
                 </div>
                 {biggest && (biggest.level === "state" || biggest.level === "federal") && (
-                  <p className="text-[9px] text-white/35 mt-1.5 leading-snug">
+                  <p className="text-[9px] mt-1.5 leading-snug" style={{ color: "#9ca3af" }}>
                     Statewide filings — {biggest.name}&rsquo;s {fmt(biggest.cash)} alone — inflate this split; county-level cash runs far closer.
                   </p>
                 )}

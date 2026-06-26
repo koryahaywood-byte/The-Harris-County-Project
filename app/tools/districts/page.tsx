@@ -629,16 +629,19 @@ export default function DistrictsPage() {
   return (
     <div style={{ background: "#f5f3ef", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
       {/* Hero */}
-      <section className="relative overflow-hidden topo-dark"
-        style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#0f2540 60%,#162e4a 100%)", paddingTop: "3.5rem", paddingBottom: "3.5rem" }}>
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%,rgba(37,99,168,0.18) 0%,transparent 70%)" }} />
+      <section className="relative overflow-hidden topo-hero"
+        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f5f3ef 60%,#eef1f5 100%)", paddingTop: "3.75rem", paddingBottom: "3.25rem" }}>
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(37,99,168,0.10),transparent_70%)]" />
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_40%_45%_at_90%_75%,rgba(52,160,110,0.07),transparent_70%)]" />
         <div className="relative max-w-7xl mx-auto px-5">
-          <p className="text-sky-300 text-xs font-bold uppercase tracking-[0.22em] mb-3">Elections · Representation</p>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2" style={{ fontFamily: "var(--font-playfair,serif)" }}>
-            Districts
+          <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 flex items-center gap-2" style={{ color: "#64748b" }}>
+            <span className="w-5 h-px" style={{ background: "#94a3b8" }} />
+            Elections · Representation
+          </p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-2" style={{ fontFamily: "var(--font-playfair,serif)" }}>
+            <span style={{ color: "#0f2540" }}>Districts</span>
           </h1>
-          <p className="text-white/50 text-sm max-w-lg">
+          <p className="text-sm max-w-lg" style={{ color: "#5b6470" }}>
             Every Harris County voting precinct, mapped to its real districts. See who votes, who represents the seat, and the matchup for November.
           </p>
           <ShareButton
@@ -651,6 +654,7 @@ export default function DistrictsPage() {
               { label: "Primary ballots", value: agg.total.toLocaleString() },
               { label: "Dem share", value: `${demPct}%` },
             ]}
+            light={false}
           />
         </div>
       </section>

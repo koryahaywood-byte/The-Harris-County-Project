@@ -395,6 +395,7 @@ export default function HeatCheckHistoryMap() {
               { label: "Votes", value: totalVotes.toLocaleString() },
             ] : undefined}
             summary={`Heat Check — Harris County precinct-level election map · ${curCycleLabel} · via The Harris County Project`}
+            light={false}
           />
         </div>
       </div>

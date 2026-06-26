@@ -411,17 +411,20 @@ function Ballot2026Inner() {
   return (
     <div style={{ background: "#f5f3ef", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
 
-      {/* Hero */}
-      <section className="relative overflow-hidden topo-dark"
-        style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#0f2540 60%,#162e4a 100%)", paddingTop: "3.5rem", paddingBottom: "3rem" }}>
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%,rgba(37,99,168,0.18) 0%,transparent 70%)" }} />
+      {/* Hero — Synex-style light, topo terrain */}
+      <section className="relative overflow-hidden topo-hero"
+        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f5f3ef 60%,#eef1f5 100%)", paddingTop: "3.75rem", paddingBottom: "3rem" }}>
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(37,99,168,0.10),transparent_70%)]" />
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_40%_45%_at_90%_75%,rgba(52,160,110,0.07),transparent_70%)]" />
         <div className="relative max-w-5xl mx-auto px-5">
-          <p className="text-sky-300 text-xs font-bold uppercase tracking-[0.22em] mb-3">November 2026</p>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-1" style={{ fontFamily: "var(--font-playfair,serif)" }}>
-            The 2026 Ballot
+          <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 flex items-center gap-2" style={{ color: "#64748b" }}>
+            <span className="w-5 h-px" style={{ background: "#94a3b8" }} />
+            November 2026
+          </p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-2" style={{ fontFamily: "var(--font-playfair,serif)" }}>
+            <span style={{ color: "#aab4c0" }}>The 2026 </span><span style={{ color: "#0f2540" }}>Ballot</span>
           </h1>
-          <p className="text-white/50 text-sm mb-4">
+          <p className="text-sm mb-4" style={{ color: "#5b6470" }}>
             {stats.contested} contested · {stats.tossups} toss-ups · {stats.competitive} competitive · {stats.womenCount} women candidates · Harris County
           </p>
           <ShareButton
@@ -434,23 +437,24 @@ function Ballot2026Inner() {
               { label: "Competitive",   value: stats.competitive.toString() },
             ]}
             summary={`2026 Harris County ballot — ${stats.contested} full matchups, ${stats.tossups} toss-up races, ${stats.competitive} competitive — via The Harris County Project`}
+            light={false}
           />
 
           {/* Money summary */}
           {(stats.dMoney > 0 || stats.rMoney > 0) && (
-            <div className="rounded-xl px-4 py-3 max-w-lg" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
-              <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-2">Cash on hand — all tracked candidates</p>
+            <div className="hcp-card px-4 py-3 max-w-lg">
+              <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: "#94a3b8" }}>Cash on hand — all tracked candidates</p>
               <div className="flex items-center gap-3">
-                <span className="text-sm font-bold w-20" style={{ color: "#93c5fd" }}>{fmt(stats.dMoney)}</span>
-                <div className="flex-1 h-2 rounded-full overflow-hidden flex" style={{ background: "rgba(255,255,255,0.1)" }}>
-                  <div className="h-full" style={{ width: `${stats.dMoneyPct}%`, background: "#3b82f6" }} />
-                  <div className="h-full" style={{ width: `${100 - stats.dMoneyPct}%`, background: "#ef4444" }} />
+                <span className="text-sm font-bold w-20 tnum" style={{ color: "#2563a8" }}>{fmt(stats.dMoney)}</span>
+                <div className="flex-1 h-2 rounded-full overflow-hidden flex" style={{ background: "#e5e7eb" }}>
+                  <div className="h-full" style={{ width: `${stats.dMoneyPct}%`, background: "#2563a8" }} />
+                  <div className="h-full" style={{ width: `${100 - stats.dMoneyPct}%`, background: "#dc2626" }} />
                 </div>
-                <span className="text-sm font-bold w-20 text-right" style={{ color: "#fca5a5" }}>{fmt(stats.rMoney)}</span>
+                <span className="text-sm font-bold w-20 text-right tnum" style={{ color: "#dc2626" }}>{fmt(stats.rMoney)}</span>
               </div>
               <div className="flex justify-between mt-0.5">
-                <span className="text-[9px] font-bold" style={{ color: "#93c5fd" }}>D {stats.dMoneyPct}%</span>
-                <span className="text-[9px] font-bold" style={{ color: "#fca5a5" }}>R {100 - stats.dMoneyPct}%</span>
+                <span className="text-[9px] font-bold" style={{ color: "#2563a8" }}>D {stats.dMoneyPct}%</span>
+                <span className="text-[9px] font-bold" style={{ color: "#dc2626" }}>R {100 - stats.dMoneyPct}%</span>
               </div>
             </div>
           )}
