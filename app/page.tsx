@@ -535,6 +535,108 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── CLARITY (Synex-style numbered feature columns + floating cards) ── */}
+      <section className="relative overflow-hidden px-6 py-20 md:py-28" style={{ background: "linear-gradient(180deg,#eef1f5 0%,#f5f3ef 100%)" }}>
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_45%_at_15%_30%,rgba(52,160,110,0.07),transparent_70%)]" />
+        <div className="max-w-6xl mx-auto relative z-10">
+          {/* Header row */}
+          <div className="grid md:grid-cols-[1.2fr_1fr] gap-6 md:gap-12 items-end mb-14">
+            <h2 className="text-3xl md:text-[2.75rem] font-bold leading-[1.08]" style={{ fontFamily: "var(--font-playfair),serif" }}>
+              <span style={{ color: "#aab4c0" }}>Clarity and control over </span>
+              <span style={{ color: "#0f2540" }}>every part of your county.</span>
+            </h2>
+            <p className="text-sm md:text-[15px] leading-relaxed" style={{ color: "#5b6470" }}>
+              A clear, structured view of local power — from how each precinct votes to where the
+              money flows and who, exactly, answers to you.
+            </p>
+          </div>
+
+          {/* Three numbered feature columns */}
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+            {[
+              {
+                n: "1", title: "See every vote",
+                desc: "Precinct-level results for every cycle back to 2012 — primaries, runoffs, and generals.",
+                href: "/tools/heat-check",
+                card: (
+                  <div>
+                    <div className="flex items-center justify-between mb-2.5">
+                      <span className="text-[9px] font-bold uppercase tracking-[0.16em]" style={{ color: "#94a3b8" }}>Precinct results</span>
+                      <span className="text-[10px] font-bold" style={{ color: "#2563a8" }}>61% D</span>
+                    </div>
+                    <div className="grid grid-cols-6 gap-1">
+                      {["#2563a8","#2563a8","#7aaee8","#dc2626","#2563a8","#7aaee8","#2563a8","#f08080","#2563a8","#2563a8","#7aaee8","#dc2626","#7aaee8","#2563a8","#2563a8","#2563a8","#f08080","#2563a8"].map((c,i)=>(
+                        <span key={i} className="rounded-[3px]" style={{ background: c, aspectRatio: "1", opacity: 0.9 }} />
+                      ))}
+                    </div>
+                    <p className="text-[10px] mt-2.5" style={{ color: "#9ca3af" }}>1,011 precincts · 2012–2026</p>
+                  </div>
+                ),
+              },
+              {
+                n: "2", title: "Follow every dollar",
+                desc: "Live FEC, TEC, and county filings — cash on hand for every official and challenger.",
+                href: "/tools/where-is-the-dough",
+                card: (
+                  <div>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.16em] mb-2" style={{ color: "#94a3b8" }}>Cash on hand</p>
+                    <p className="text-3xl font-bold leading-none tnum mb-3" style={{ color: "#0f2540", fontFamily: "var(--font-playfair),serif" }}>$345M</p>
+                    <div className="h-2 rounded-full overflow-hidden flex mb-1.5">
+                      <div style={{ width: "44%", background: "#93c5fd" }} />
+                      <div style={{ width: "56%", background: "#fca5a5" }} />
+                    </div>
+                    <div className="flex justify-between text-[10px] font-semibold">
+                      <span style={{ color: "#2563a8" }}>D 44%</span>
+                      <span style={{ color: "#9ca3af" }}>FEC + TEC live</span>
+                      <span style={{ color: "#dc2626" }}>R 56%</span>
+                    </div>
+                  </div>
+                ),
+              },
+              {
+                n: "3", title: "Know who answers",
+                desc: "Type your address or share your location — every official from your JP to Congress.",
+                href: "/my-officials",
+                card: (
+                  <div>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.16em] mb-2.5" style={{ color: "#94a3b8" }}>Your district</p>
+                    {[
+                      { i: "AJ", n: "Ann Johnson", o: "State Rep · HD 134", c: "#2563a8" },
+                      { i: "RE", n: "Rodney Ellis", o: "Commissioner · Pct 1", c: "#2563a8" },
+                    ].map((r) => (
+                      <div key={r.n} className="flex items-center gap-2.5 mb-2">
+                        <span className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold flex-shrink-0" style={{ background: `${r.c}1a`, color: r.c, border: `1px solid ${r.c}33` }}>{r.i}</span>
+                        <div className="min-w-0">
+                          <p className="text-[11px] font-bold leading-tight truncate" style={{ color: "#1a3a5c" }}>{r.n}</p>
+                          <p className="text-[9px] truncate" style={{ color: "#9ca3af" }}>{r.o}</p>
+                        </div>
+                      </div>
+                    ))}
+                    <p className="text-[10px] mt-1" style={{ color: "#9ca3af" }}>JP → Congress</p>
+                  </div>
+                ),
+              },
+            ].map((f) => (
+              <Link key={f.n} href={f.href} className="group block">
+                <div className="flex items-baseline gap-2.5 mb-3">
+                  <span className="text-[11px] font-bold tnum" style={{ color: "#94a3b8" }}>[{f.n}]</span>
+                  <h3 className="text-base font-bold" style={{ color: "#0f2540" }}>{f.title}</h3>
+                </div>
+                <p className="text-[13px] leading-relaxed mb-5" style={{ color: "#64748b" }}>{f.desc}</p>
+                {/* Floating frosted preview card */}
+                <div className="card-lift rounded-2xl p-4"
+                  style={{ background: "rgba(255,255,255,0.78)", backdropFilter: "blur(14px)", border: "1px solid rgba(255,255,255,0.9)", boxShadow: "0 18px 44px rgba(15,37,64,0.10), 0 3px 10px rgba(15,37,64,0.05)" }}>
+                  {f.card}
+                </div>
+                <span className="inline-flex items-center gap-1.5 mt-4 text-[12px] font-bold group-hover:gap-2.5 transition-all duration-300" style={{ color: "#2563a8" }}>
+                  Open tool <span>→</span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── DASHBOARD WIDGET ─────────────────────────────────────── */}
       <DashboardWidget />
 
