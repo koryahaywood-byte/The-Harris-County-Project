@@ -7,6 +7,13 @@ import { ALL_CONTACTS, type OfficialContact } from "@/lib/officials-contact";
 // ── Routing model ───────────────────────────────────────────────────────────────
 // A "route" is one concrete answer: who to call for a problem in a given place.
 
+// A responder is one explicit entry under "who answers for it" — used when the right
+// set isn't a clean jurisdiction+role filter (e.g. public safety spans city + county).
+type Responder =
+  | { match: string }                                                              // singleton contact, matched by office text
+  | { find: string }                                                               // "find yours by address" CTA
+  | { manual: { name: string; office: string; phone?: string; website?: string } }; // non-elected office (e.g. police chief)
+
 type Route = {
   agency: string;                                   // who actually handles it
   detail: string;                                   // one plain-language line
@@ -14,7 +21,18 @@ type Route = {
   jurisdictions: OfficialContact["jurisdiction"][];  // whose elected officials to surface
   roles: OfficialContact["roleCategory"][];
   findLabel?: string;                                // CTA when the official depends on your address
+  responders?: Responder[];                          // explicit override of the generic filter
 };
+
+// Public-safety chain, shown for crime regardless of city/county: the mayor and your
+// council member, the police chief, the sheriff, and your constable.
+const CRIME_RESPONDERS: Responder[] = [
+  { match: "Mayor" },
+  { find: "your city council member" },
+  { manual: { name: "Houston Police Department", office: "Office of the Chief · non-emergency", phone: "713-884-3131", website: "https://www.houstontx.gov/police/" } },
+  { match: "Harris County Sheriff" },
+  { find: "your constable precinct" },
+];
 
 type Issue = {
   id: string;
@@ -71,12 +89,15 @@ const ISSUES: Issue[] = [
       agency: "Houston Police Department",
       detail: "Non-emergency reports inside Houston. Always call 911 for an emergency in progress.",
       hotline: { label: "HPD non-emergency", phone: "713-884-3131" },
-      jurisdictions: ["city"], roles: ["executive", "legislative"], findLabel: "your city council member",
+      jurisdictions: ["city"], roles: ["executive", "legislative"],
+      responders: CRIME_RESPONDERS,
     },
     county: {
       agency: "Harris County Sheriff's Office",
       detail: "Law enforcement in unincorporated Harris County. Always call 911 for an emergency in progress.",
-      jurisdictions: ["county"], roles: ["law-enforcement"], findLabel: "your constable precinct",
+      hotline: { label: "Sheriff non-emergency", phone: "713-221-6000" },
+      jurisdictions: ["county"], roles: ["law-enforcement"],
+      responders: CRIME_RESPONDERS,
     },
   },
   {
@@ -187,6 +208,20 @@ function officialsForRoute(route: Route) {
   };
 }
 
+type ResolvedResponder =
+  | { type: "contact"; c: OfficialContact }
+  | { type: "manual"; m: { name: string; office: string; phone?: string; website?: string } }
+  | { type: "find"; label: string };
+
+function resolveResponders(responders: Responder[]): ResolvedResponder[] {
+  return responders.flatMap((r): ResolvedResponder[] => {
+    if ("find" in r) return [{ type: "find", label: r.find }];
+    if ("manual" in r) return [{ type: "manual", m: r.manual }];
+    const c = ALL_CONTACTS.find((x) => x.office.toLowerCase().includes(r.match.toLowerCase()));
+    return c ? [{ type: "contact", c }] : [];
+  });
+}
+
 // ── Contact card ────────────────────────────────────────────────────────────────
 
 function CallLink({ phone, children }: { phone: string; children: React.ReactNode }) {
@@ -255,10 +290,49 @@ function ContactCard({ c }: { c: OfficialContact }) {
   );
 }
 
+// Non-elected office (e.g. the police chief) — same card shape, no verification badge.
+function ManualCard({ m }: { m: { name: string; office: string; phone?: string; website?: string } }) {
+  return (
+    <div className="hcp-card p-4 flex flex-col gap-2">
+      <div>
+        <div className="font-bold text-sm" style={{ color: "#1a3a5c" }}>{m.name}</div>
+        <div className="text-xs mt-0.5" style={{ color: "#6b7280" }}>{m.office}</div>
+      </div>
+      <div className="flex flex-col gap-1 text-xs">
+        {m.phone && <CallLink phone={m.phone}>{m.phone}</CallLink>}
+        {m.website && (
+          <a href={m.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:underline" style={{ color: "#2563a8" }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+            </svg>
+            Official website
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function FindCard({ label }: { label: string }) {
+  return (
+    <Link href="/my-officials"
+      className="hcp-card card-lift p-4 flex flex-col justify-center items-start gap-1 group"
+      style={{ background: "rgba(37,99,168,0.05)" }}>
+      <span className="text-xs font-bold" style={{ color: "#1a3a5c" }}>Find {label} →</span>
+      <span className="text-[11px]" style={{ color: "#6b7280" }}>
+        This seat depends on your address — look it up by entering it.
+      </span>
+    </Link>
+  );
+}
+
 // ── One concrete answer block ─────────────────────────────────────────────────────
 
 function AnswerBlock({ place, route, issueIcon }: { place: string | null; route: Route; issueIcon: string }) {
   const { singletons, hasDistrictSeats } = officialsForRoute(route);
+  const responders = route.responders ? resolveResponders(route.responders) : null;
+  const showWho = responders ? responders.length > 0 : singletons.length > 0 || hasDistrictSeats;
   return (
     <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[5px]">
       <div className="rounded-[1.1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] overflow-hidden">
@@ -287,25 +361,24 @@ function AnswerBlock({ place, route, issueIcon }: { place: string | null; route:
         </div>
 
         {/* Who to hold accountable */}
-        {(singletons.length > 0 || hasDistrictSeats) && (
+        {showWho && (
           <div className="px-5 py-4">
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#9ca3af" }}>
               Who answers for it
             </p>
             <div className="grid sm:grid-cols-2 gap-3">
-              {singletons.map((c, i) => <ContactCard key={c.slug ?? `${c.name}-${i}`} c={c} />)}
-              {hasDistrictSeats && route.findLabel && (
-                <Link href="/my-officials"
-                  className="hcp-card card-lift p-4 flex flex-col justify-center items-start gap-1 group"
-                  style={{ background: "rgba(37,99,168,0.05)" }}>
-                  <span className="text-xs font-bold" style={{ color: "#1a3a5c" }}>
-                    Find {route.findLabel} →
-                  </span>
-                  <span className="text-[11px]" style={{ color: "#6b7280" }}>
-                    This seat depends on your address — look it up by entering it.
-                  </span>
-                </Link>
-              )}
+              {responders
+                ? responders.map((r, i) =>
+                    r.type === "contact" ? <ContactCard key={`c-${i}`} c={r.c} />
+                    : r.type === "manual" ? <ManualCard key={`m-${i}`} m={r.m} />
+                    : <FindCard key={`f-${i}`} label={r.label} />
+                  )
+                : (
+                  <>
+                    {singletons.map((c, i) => <ContactCard key={c.slug ?? `${c.name}-${i}`} c={c} />)}
+                    {hasDistrictSeats && route.findLabel && <FindCard label={route.findLabel} />}
+                  </>
+                )}
             </div>
           </div>
         )}
