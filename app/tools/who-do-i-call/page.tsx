@@ -7,6 +7,22 @@ import { ALL_CONTACTS, type OfficialContact } from "@/lib/officials-contact";
 
 const LocationMap = dynamic(() => import("@/components/LocationMap"), { ssr: false });
 
+interface EnrichedOfficial {
+  name: string;
+  office: string;
+  level: string;
+  party: "D" | "R" | "NP";
+  district: string;
+  note?: string;
+  slug?: string;
+  photo?: string;
+  phone?: string;
+  districtPhone?: string;
+  email?: string;
+  website?: string;
+  contactForm?: string;
+}
+
 interface LocResult {
   lat: number;
   lng: number;
@@ -14,7 +30,18 @@ interface LocResult {
   inHouston: boolean;
   districts: { cd?: string; sd?: string; hd?: string; jp?: string; council?: string; pct?: string };
   geometry?: GeoJSON.Geometry;
+  officials: EnrichedOfficial[];
 }
+
+// Maps each "find your ___" slot to the matching official from a resolved location.
+const FIND_PREDICATES: Record<string, (o: EnrichedOfficial) => boolean> = {
+  // The district council member (not the 5 citywide at-large seats) is the one for a local issue.
+  "your city council member": (o) => o.level === "City of Houston" && /council/i.test(o.office) && !/at-large/i.test(o.district),
+  "your county commissioner": (o) => /commissioner/i.test(o.office),
+  "your constable precinct": (o) => /constable/i.test(o.office),
+  "your state rep & senator": (o) => o.level === "Texas Legislature",
+  "your state representative": (o) => o.level === "Texas Legislature" && /representative/i.test(o.office),
+};
 
 // ── Routing model ───────────────────────────────────────────────────────────────
 // A "route" is one concrete answer: who to call for a problem in a given place.
@@ -46,6 +73,13 @@ const CRIME_RESPONDERS: Responder[] = [
   { find: "your constable precinct" },
 ];
 
+// Bayous and channels are regional — your county commissioner runs the drainage projects,
+// and flood policy/funding is set in Austin by your state representative.
+const BAYOU_RESPONDERS: Responder[] = [
+  { find: "your county commissioner" },
+  { find: "your state representative" },
+];
+
 type Issue = {
   id: string;
   label: string;
@@ -75,9 +109,9 @@ const ISSUES: Issue[] = [
     },
   },
   {
-    id: "flooding",
-    label: "Flooding or drainage",
-    icon: "🌊",
+    id: "street-flooding",
+    label: "Street / drainage flooding",
+    icon: "🌧️",
     locationDependent: true,
     city: {
       agency: "Houston Public Works — Drainage",
@@ -86,10 +120,22 @@ const ISSUES: Issue[] = [
       jurisdictions: ["city"], roles: ["legislative"], findLabel: "your city council member",
     },
     county: {
-      agency: "Harris County Flood Control District",
-      detail: "Bayous, channels, and regional drainage across the county.",
-      hotline: { label: "HCFCD", phone: "713-684-4000" },
+      agency: "Your Harris County Commissioner",
+      detail: "Roadside ditches and local drainage in unincorporated areas.",
       jurisdictions: ["county"], roles: ["legislative"], findLabel: "your county commissioner",
+    },
+  },
+  {
+    id: "bayou-flooding",
+    label: "Bayou / creek flooding",
+    icon: "🌊",
+    locationDependent: false,
+    any: {
+      agency: "Harris County Flood Control District",
+      detail: "Bayous, creeks, and regional drainage — your county commissioner runs the projects, and your state representative sets flood policy and funding in Austin.",
+      hotline: { label: "HCFCD", phone: "713-684-4000" },
+      jurisdictions: ["county", "state"], roles: ["legislative"], findLabel: "your county commissioner",
+      responders: BAYOU_RESPONDERS,
     },
   },
   {
@@ -220,20 +266,6 @@ function officialsForRoute(route: Route) {
   };
 }
 
-type ResolvedResponder =
-  | { type: "contact"; c: OfficialContact }
-  | { type: "manual"; m: { name: string; office: string; phone?: string; website?: string } }
-  | { type: "find"; label: string };
-
-function resolveResponders(responders: Responder[]): ResolvedResponder[] {
-  return responders.flatMap((r): ResolvedResponder[] => {
-    if ("find" in r) return [{ type: "find", label: r.find }];
-    if ("manual" in r) return [{ type: "manual", m: r.manual }];
-    const c = ALL_CONTACTS.find((x) => x.office.toLowerCase().includes(r.match.toLowerCase()));
-    return c ? [{ type: "contact", c }] : [];
-  });
-}
-
 // ── Contact card ────────────────────────────────────────────────────────────────
 
 function CallLink({ phone, children }: { phone: string; children: React.ReactNode }) {
@@ -339,12 +371,107 @@ function FindCard({ label }: { label: string }) {
   );
 }
 
+// A specific elected official resolved from a shared location — shown with their headshot.
+function partyTint(party: string) {
+  return party === "D" ? "#2563a8" : party === "R" ? "#dc2626" : "#6b7280";
+}
+
+function OfficialPersonCard({ o }: { o: EnrichedOfficial }) {
+  const accent = partyTint(o.party);
+  const initials = o.name.split(" ").map((w) => w[0]).slice(0, 2).join("");
+  const phone = o.phone || o.districtPhone;
+  return (
+    <div className="hcp-card card-lift p-4 flex items-start gap-3 h-full">
+      {o.photo ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={o.photo} alt={o.name} className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+          style={{ outline: `2px solid ${accent}`, outlineOffset: 1 }} />
+      ) : (
+        <div className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+          style={{ background: `linear-gradient(135deg, ${accent}29, ${accent}0d)`, color: accent, border: `1.5px solid ${accent}33` }}>
+          {initials}
+        </div>
+      )}
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-1.5">
+          {o.slug ? (
+            <Link href={`/politicians/${o.slug}`} className="font-bold text-sm truncate hover:underline" style={{ color: "#1a3a5c" }}>{o.name}</Link>
+          ) : (
+            <p className="font-bold text-sm truncate" style={{ color: "#1a3a5c" }}>{o.name}</p>
+          )}
+          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0" style={{ background: `${accent}15`, color: accent }}>
+            {o.party === "NP" ? "NP" : o.party}
+          </span>
+        </div>
+        <p className="text-[11px] truncate" style={{ color: "#6b7280" }}>{o.office}</p>
+        <div className="flex flex-col gap-0.5 mt-1.5 text-xs">
+          {phone && <CallLink phone={phone}>{phone}</CallLink>}
+          {o.email && (
+            <a href={`mailto:${o.email}`} className="truncate hover:underline" style={{ color: "#2563a8" }}>{o.email}</a>
+          )}
+          {!phone && !o.email && o.contactForm && (
+            <a href={o.contactForm} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "#2563a8" }}>Contact form →</a>
+          )}
+          {!phone && !o.email && !o.contactForm && o.website && (
+            <a href={o.website} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "#2563a8" }}>Official site →</a>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// What to show under "who answers for it", resolving address-specific slots to the real
+// officials once a location is shared.
+type WhoItem =
+  | { kind: "official"; o: EnrichedOfficial }
+  | { kind: "contact"; c: OfficialContact }
+  | { kind: "manual"; m: { name: string; office: string; phone?: string; website?: string } }
+  | { kind: "find"; label: string };
+
+function resolveWho(route: Route, loc: LocResult | null): WhoItem[] {
+  if (route.responders) {
+    return route.responders.flatMap((r): WhoItem[] => {
+      if ("manual" in r) return [{ kind: "manual", m: r.manual }];
+      if ("match" in r) {
+        const fromLoc = loc?.officials.find((o) => o.office.toLowerCase().includes(r.match.toLowerCase()));
+        if (fromLoc) return [{ kind: "official", o: fromLoc }];
+        const c = ALL_CONTACTS.find((x) => x.office.toLowerCase().includes(r.match.toLowerCase()));
+        return c ? [{ kind: "contact", c }] : [];
+      }
+      if (loc) {
+        const pred = FIND_PREDICATES[r.find];
+        const matches = pred ? loc.officials.filter(pred) : [];
+        if (matches.length) return matches.map((o) => ({ kind: "official" as const, o }));
+      }
+      return [{ kind: "find", label: r.find }];
+    });
+  }
+
+  const { singletons, hasDistrictSeats } = officialsForRoute(route);
+  if (loc) {
+    const items: WhoItem[] = [];
+    if (route.findLabel) {
+      const pred = FIND_PREDICATES[route.findLabel];
+      (pred ? loc.officials.filter(pred) : []).forEach((o) => items.push({ kind: "official", o }));
+    }
+    singletons.forEach((c) => {
+      const fromLoc = loc.officials.find((o) => o.name === c.name);
+      items.push(fromLoc ? { kind: "official", o: fromLoc } : { kind: "contact", c });
+    });
+    if (items.length) return items;
+  }
+
+  const items: WhoItem[] = singletons.map((c) => ({ kind: "contact", c }));
+  if (hasDistrictSeats && route.findLabel) items.push({ kind: "find", label: route.findLabel });
+  return items;
+}
+
 // ── One concrete answer block ─────────────────────────────────────────────────────
 
-function AnswerBlock({ place, route, issueIcon }: { place: string | null; route: Route; issueIcon: string }) {
-  const { singletons, hasDistrictSeats } = officialsForRoute(route);
-  const responders = route.responders ? resolveResponders(route.responders) : null;
-  const showWho = responders ? responders.length > 0 : singletons.length > 0 || hasDistrictSeats;
+function AnswerBlock({ place, route, issueIcon, loc }: { place: string | null; route: Route; issueIcon: string; loc: LocResult | null }) {
+  const who = resolveWho(route, loc);
+  const located = !!loc && who.some((w) => w.kind === "official");
   return (
     <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[5px]">
       <div className="rounded-[1.1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] overflow-hidden">
@@ -373,24 +500,18 @@ function AnswerBlock({ place, route, issueIcon }: { place: string | null; route:
         </div>
 
         {/* Who to hold accountable */}
-        {showWho && (
+        {who.length > 0 && (
           <div className="px-5 py-4">
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#9ca3af" }}>
-              Who answers for it
+              {located ? "Your electeds for this" : "Who answers for it"}
             </p>
             <div className="grid sm:grid-cols-2 gap-3">
-              {responders
-                ? responders.map((r, i) =>
-                    r.type === "contact" ? <ContactCard key={`c-${i}`} c={r.c} />
-                    : r.type === "manual" ? <ManualCard key={`m-${i}`} m={r.m} />
-                    : <FindCard key={`f-${i}`} label={r.label} />
-                  )
-                : (
-                  <>
-                    {singletons.map((c, i) => <ContactCard key={c.slug ?? `${c.name}-${i}`} c={c} />)}
-                    {hasDistrictSeats && route.findLabel && <FindCard label={route.findLabel} />}
-                  </>
-                )}
+              {who.map((w, i) =>
+                w.kind === "official" ? <OfficialPersonCard key={`o-${i}`} o={w.o} />
+                : w.kind === "contact" ? <ContactCard key={`c-${i}`} c={w.c} />
+                : w.kind === "manual" ? <ManualCard key={`m-${i}`} m={w.m} />
+                : <FindCard key={`f-${i}`} label={w.label} />
+              )}
             </div>
           </div>
         )}
@@ -624,7 +745,7 @@ export default function WhoDoICallPage() {
               </button>
             </div>
             {answers.map((a, i) => (
-              <AnswerBlock key={`${a.place ?? "any"}-${i}`} place={a.place} route={a.route} issueIcon={issue!.icon} />
+              <AnswerBlock key={`${a.place ?? "any"}-${i}`} place={a.place} route={a.route} issueIcon={issue!.icon} loc={loc} />
             ))}
 
             {/* Location-independent issues: offer the map + districts as a bonus */}

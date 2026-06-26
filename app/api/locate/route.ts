@@ -7,9 +7,33 @@ import { NextResponse } from "next/server";
 import { readFileSync } from "fs";
 import { join } from "path";
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
-import type { CrosswalkEntry } from "@/lib/representatives";
+import { findRepresentatives, type CrosswalkEntry, type RepEntry } from "@/lib/representatives";
+import { POLITICIANS } from "@/lib/politicians";
+import { ALL_CONTACTS } from "@/lib/officials-contact";
 
 export const dynamic = "force-dynamic";
+
+// Attach a headshot (from the politicians dataset) and contact methods (from the
+// officials-contact dataset) to each elected official the location resolves to.
+function enrich(rep: RepEntry) {
+  const pol = POLITICIANS.find((p) => (rep.slug && p.slug === rep.slug) || p.name === rep.name);
+  const contact = ALL_CONTACTS.find((c) => c.name === rep.name);
+  return {
+    name: rep.name,
+    office: rep.office,
+    level: rep.level,
+    party: rep.party,
+    district: rep.district,
+    note: rep.note,
+    slug: rep.slug ?? pol?.slug,
+    photo: pol?.photo,
+    phone: contact?.phone,
+    districtPhone: contact?.districtPhone,
+    email: contact?.email,
+    website: contact?.website ?? rep.url,
+    contactForm: contact?.contactForm,
+  };
+}
 
 type Ring = [number, number][];
 interface GeoFeature {
@@ -90,6 +114,8 @@ export async function GET(req: Request) {
   // reliable "are you inside city limits?" signal for routing.
   const inHouston = !!districts.council;
 
+  const officials = findRepresentatives(districts).map(enrich);
+
   return NextResponse.json({
     lat,
     lng,
@@ -97,5 +123,6 @@ export async function GET(req: Request) {
     districts,
     inHouston,
     geometry: feature.geometry,
+    officials,
   });
 }
