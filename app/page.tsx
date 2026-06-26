@@ -230,64 +230,59 @@ function FeaturedSection() {
 
         <div className="flex flex-col gap-5">
 
-          {/* Hero — Heat Check */}
-          <Link href={hero.href} className="group relative rounded-[2rem] overflow-hidden cursor-pointer block"
-            style={{ minHeight: 380 }}>
-            <img src={hero.photo} alt="" loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105"
-              style={{ opacity: 0.5 }} />
-            <div className="absolute inset-0" style={{ background: hero.gradient, opacity: 0.78 }} />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-            <div className="relative z-10 flex flex-col justify-end h-full p-8 md:p-10" style={{ minHeight: 380 }}>
-              <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/50 mb-3">{hero.eyebrow}</span>
-              <h2 className="text-4xl md:text-5xl font-bold text-white leading-[1.08] mb-4 whitespace-pre-line"
-                style={{ fontFamily: "var(--font-playfair), serif" }}>
+          {/* Hero — Heat Check (light Synex) */}
+          <Link href={hero.href} className="group block relative rounded-[2rem] overflow-hidden hcp-card card-lift"
+            style={{ minHeight: 340 }}>
+            <div className="absolute inset-0" style={{ background: hero.gradient, opacity: 0.10 }} />
+            <div className="absolute inset-0 topo-light opacity-70" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_55%_60%_at_85%_25%,rgba(37,99,168,0.10),transparent_70%)]" />
+            <div className="relative z-10 flex flex-col justify-end h-full p-8 md:p-10" style={{ minHeight: 340 }}>
+              <span className="text-[9px] font-bold uppercase tracking-[0.25em] mb-3" style={{ color: "#94a3b8" }}>{hero.eyebrow}</span>
+              <h2 className="text-4xl md:text-5xl font-bold leading-[1.08] mb-4 whitespace-pre-line"
+                style={{ fontFamily: "var(--font-playfair), serif", color: "#0f2540" }}>
                 {hero.headline}
               </h2>
-              <p className="text-white/70 text-sm leading-relaxed max-w-xl mb-6">{hero.description}</p>
+              <p className="text-sm leading-relaxed max-w-xl mb-6" style={{ color: "#5b6470" }}>{hero.description}</p>
               <div className="flex flex-wrap gap-2 mb-6">
                 {hero.proof.map(p => (
                   <span key={p} className="text-[10px] font-bold px-3 py-1 rounded-full"
-                    style={{ background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.85)", border: "1px solid rgba(255,255,255,0.18)" }}>
+                    style={{ background: "rgba(37,99,168,0.08)", color: "#2563a8", border: "1px solid rgba(37,99,168,0.15)" }}>
                     {p}
                   </span>
                 ))}
               </div>
-              <span className="inline-flex items-center gap-2 text-sm font-bold text-white group-hover:gap-3 transition-all duration-300">
+              <span className="inline-flex items-center gap-2 text-sm font-bold group-hover:gap-3 transition-all duration-300" style={{ color: "#0f2540" }}>
                 Open Heat Check
-                <span className="inline-flex w-8 h-8 rounded-full bg-white/15 items-center justify-center group-hover:bg-white/25 transition-colors">→</span>
+                <span className="inline-flex w-8 h-8 rounded-full items-center justify-center" style={{ background: "rgba(15,37,64,0.08)" }}>→</span>
               </span>
             </div>
           </Link>
 
-          {/* Three equal cards */}
+          {/* Three equal cards (light Synex) */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {three.map(tool => (
               <Link key={tool.href} href={tool.href}
-                className="group relative rounded-[2rem] overflow-hidden cursor-pointer block"
-                style={{ minHeight: 230 }}>
-                <img src={tool.photo} alt="" loading="lazy"
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105"
-                  style={{ opacity: 0.5 }} />
-                <div className="absolute inset-0" style={{ background: tool.gradient, opacity: 0.78 }} />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="relative z-10 flex flex-col justify-end h-full p-6" style={{ minHeight: 230 }}>
-                  <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/50 mb-2">{tool.eyebrow}</span>
-                  <h3 className="text-2xl font-bold text-white leading-[1.1] mb-3 whitespace-pre-line"
-                    style={{ fontFamily: "var(--font-playfair), serif" }}>
+                className="group block relative rounded-[2rem] overflow-hidden hcp-card card-lift"
+                style={{ minHeight: 220 }}>
+                <div className="absolute inset-0" style={{ background: tool.gradient, opacity: 0.10 }} />
+                <div className="absolute inset-0 topo-light opacity-60" />
+                <div className="relative z-10 flex flex-col justify-end h-full p-6" style={{ minHeight: 220 }}>
+                  <span className="text-[9px] font-bold uppercase tracking-[0.25em] mb-2" style={{ color: "#94a3b8" }}>{tool.eyebrow}</span>
+                  <h3 className="text-2xl font-bold leading-[1.1] mb-3 whitespace-pre-line"
+                    style={{ fontFamily: "var(--font-playfair), serif", color: "#0f2540" }}>
                     {tool.headline}
                   </h3>
-                  <p className="text-white/60 text-[11px] leading-relaxed mb-3 line-clamp-2">{tool.description}</p>
+                  <p className="text-[11px] leading-relaxed mb-3 line-clamp-2" style={{ color: "#64748b" }}>{tool.description}</p>
                   <div className="flex items-center justify-between">
                     <div className="flex flex-wrap gap-1.5">
                       {tool.proof.map(p => (
                         <span key={p} className="text-[9px] font-bold px-2 py-0.5 rounded-full"
-                          style={{ background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.8)", border: "1px solid rgba(255,255,255,0.15)" }}>
+                          style={{ background: "rgba(37,99,168,0.08)", color: "#2563a8", border: "1px solid rgba(37,99,168,0.14)" }}>
                           {p}
                         </span>
                       ))}
                     </div>
-                    <span className="text-white/50 text-sm font-bold group-hover:text-white group-hover:translate-x-1 transition-all duration-300">→</span>
+                    <span className="text-sm font-bold group-hover:translate-x-1 transition-all duration-300" style={{ color: "#2563a8" }}>→</span>
                   </div>
                 </div>
               </Link>
@@ -300,48 +295,33 @@ function FeaturedSection() {
   );
 }
 
-/* ── Browse card ─────────────────────────────────────────────────────────── */
+/* ── Browse card (light Synex: frosted white, soft color accent) ─────────── */
 function BrowseCard({ tool }: { tool: Tool }) {
   const card = (
     <div
-      className={`group relative flex-shrink-0 w-[230px] rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-2 hover:shadow-[0_14px_36px_rgba(26,58,92,0.18),0_4px_8px_rgba(0,0,0,0.07)] ${tool.status === "coming" ? "opacity-40 pointer-events-none" : ""}`}
-      style={{
-        background: "#fff",
-        border: "1px solid rgba(0,0,0,0.06)",
-        boxShadow: "0 2px 8px rgba(26,58,92,0.08), 0 1px 2px rgba(0,0,0,0.04)",
-      }}
+      className={`group hcp-card card-lift flex-shrink-0 w-[230px] overflow-hidden ${tool.status === "coming" ? "opacity-40 pointer-events-none" : ""}`}
     >
-      {/* Cover — photo + gradient overlay */}
-      <div className="w-full h-[130px] relative overflow-hidden" style={{ background: "#0a0a0a" }}>
-        {tool.photo && (
-          <img
-            src={tool.photo}
-            alt=""
-            loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105"
-            style={{ opacity: 0.45 }}
-          />
-        )}
-        {/* Gradient colour identity — slightly translucent so photo shows through */}
-        <div className="absolute inset-0" style={{ background: tool.gradient, opacity: tool.photo ? 0.72 : 1 }} />
-        {/* Hover shimmer */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-br from-white/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      {/* Soft tinted preview header with a colored chip for identity */}
+      <div className="h-14 relative overflow-hidden" style={{ background: "#fff" }}>
+        <div className="absolute inset-0" style={{ background: tool.gradient, opacity: 0.13 }} />
+        <div className="absolute inset-0 topo-light opacity-60" />
+        <div className="absolute left-4 -bottom-4 w-9 h-9 rounded-xl"
+          style={{ background: tool.gradient, boxShadow: "0 6px 16px rgba(15,37,64,0.2)", border: "2px solid #fff" }} />
       </div>
       {/* Info */}
-      <div className="p-4">
+      <div className="p-4 pt-5">
         <h3
-          className="font-bold text-sm text-[#1a3a5c] leading-tight mb-1.5 group-hover:text-[#2563a8] transition-colors duration-300"
-          style={{ fontFamily: "var(--font-playfair), serif" }}
+          className="font-bold text-sm leading-tight mb-1.5 group-hover:text-[#2563a8] transition-colors duration-300"
+          style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair), serif" }}
         >
           {tool.name}
         </h3>
-        <p className="text-[11px] text-[#6b7280] leading-relaxed line-clamp-2">
+        <p className="text-[11px] leading-relaxed line-clamp-2" style={{ color: "#6b7280" }}>
           {tool.description}
         </p>
         {tool.status !== "coming" && (
-          <p className="mt-2 text-[11px] font-semibold text-[#2563a8] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            Open <span>→</span>
+          <p className="mt-2 text-[11px] font-semibold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ color: "#2563a8" }}>
+            Open <span className="group-hover:translate-x-0.5 transition-transform">→</span>
           </p>
         )}
       </div>
