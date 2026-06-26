@@ -1,8 +1,20 @@
 "use client";
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import ShareButton from "@/components/ShareButton";
 import { ALL_CONTACTS, type OfficialContact } from "@/lib/officials-contact";
+
+const LocationMap = dynamic(() => import("@/components/LocationMap"), { ssr: false });
+
+interface LocResult {
+  lat: number;
+  lng: number;
+  precinct: string;
+  inHouston: boolean;
+  districts: { cd?: string; sd?: string; hd?: string; jp?: string; council?: string; pct?: string };
+  geometry?: GeoJSON.Geometry;
+}
 
 // ── Routing model ───────────────────────────────────────────────────────────────
 // A "route" is one concrete answer: who to call for a problem in a given place.
@@ -387,22 +399,123 @@ function AnswerBlock({ place, route, issueIcon }: { place: string | null; route:
   );
 }
 
+// ── Location panel ──────────────────────────────────────────────────────────────
+
+function DistrictChips({ districts }: { districts: LocResult["districts"] }) {
+  const chips = [
+    districts.cd && { label: `CD ${districts.cd}`, href: `/tools/districts?type=cd&district=${districts.cd}` },
+    districts.sd && { label: `SD ${districts.sd}`, href: `/tools/districts?type=sd&district=${districts.sd}` },
+    districts.hd && { label: `HD ${districts.hd}`, href: `/tools/districts?type=hd&district=${districts.hd}` },
+    districts.pct && { label: `Commissioner Pct ${districts.pct}`, href: `/tools/districts?type=pct&district=${districts.pct}` },
+    districts.jp && { label: `JP / Constable ${districts.jp}`, href: `/tools/districts?type=jp&district=${districts.jp}` },
+    districts.council && { label: `Council ${districts.council}`, href: `/tools/districts?type=council&district=${districts.council}` },
+  ].filter(Boolean) as { label: string; href: string }[];
+  if (!chips.length) return null;
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {chips.map((c) => (
+        <Link key={c.href} href={c.href}
+          className="text-[10px] font-bold px-2.5 py-1 rounded-full transition-colors hover:bg-blue-50"
+          style={{ background: "rgba(37,99,168,0.08)", color: "#2563a8" }}>
+          {c.label} →
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+function LocationPanel({
+  loc, locating, locError, onUse, compact,
+}: {
+  loc: LocResult | null;
+  locating: boolean;
+  locError: string | null;
+  onUse: () => void;
+  compact?: boolean;
+}) {
+  return (
+    <div>
+      <button onClick={onUse} disabled={locating}
+        className="pressable inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-bold disabled:opacity-60"
+        style={{ background: compact ? "var(--card)" : "#1a3a5c", color: compact ? "#1a3a5c" : "#fff", boxShadow: "var(--ring-card), 0 2px 8px rgba(26,58,92,0.08)" }}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
+        </svg>
+        {locating ? "Locating…" : compact ? "See the districts you're in" : "Use my location"}
+      </button>
+      {locError && (
+        <p className="text-[11px] mt-2" style={{ color: "#b91c1c" }}>{locError}</p>
+      )}
+      {loc && (
+        <div className="hcp-card p-4 mt-3">
+          <p className="text-sm font-bold mb-0.5" style={{ color: "#1a3a5c" }}>
+            You&rsquo;re in {loc.inHouston ? "the City of Houston" : "unincorporated Harris County"}
+          </p>
+          <p className="text-[11px] mb-3" style={{ color: "#9ca3af" }}>Voting precinct {loc.precinct}</p>
+          <LocationMap lat={loc.lat} lng={loc.lng} geometry={loc.geometry} />
+          <p className="text-[10px] font-bold uppercase tracking-[0.16em] mt-3 mb-2" style={{ color: "#9ca3af" }}>The districts you&rsquo;re in</p>
+          <DistrictChips districts={loc.districts} />
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Page ───────────────────────────────────────────────────────────────────────
 
 export default function WhoDoICallPage() {
   const [issue, setIssue] = useState<Issue | null>(null);
   const [where, setWhere] = useState<Where | null>(null);
+  const [loc, setLoc] = useState<LocResult | null>(null);
+  const [locating, setLocating] = useState(false);
+  const [locError, setLocError] = useState<string | null>(null);
 
-  // Resolve: location-independent issues skip step 2 entirely.
+  // A shared location overrides the manual city/county pick (it's exact).
+  const locWhere: Where | null = loc ? (loc.inHouston ? "city" : "county") : null;
+
+  // Resolve: location-independent issues skip step 2; a shared location wins over a manual pick.
   const needsWhere = !!issue?.locationDependent;
-  const resolvedWhere: Where | null = !issue ? null : needsWhere ? where : "both";
+  const resolvedWhere: Where | null = !issue ? null : needsWhere ? (locWhere ?? where) : "both";
   const answers = issue && resolvedWhere ? routesFor(issue, resolvedWhere) : [];
 
   function pickIssue(i: Issue) {
     setIssue(i.id === issue?.id ? null : i);
     setWhere(null);
   }
-  function reset() { setIssue(null); setWhere(null); }
+  function reset() { setIssue(null); setWhere(null); setLoc(null); setLocError(null); }
+
+  function useMyLocation() {
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
+      setLocError("Your browser can't share location. Use the address lookup instead.");
+      return;
+    }
+    setLocating(true);
+    setLocError(null);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude, longitude } = pos.coords;
+          const res = await fetch(`/api/locate?lat=${latitude}&lng=${longitude}`);
+          const data = await res.json();
+          if (!res.ok) { setLocError(data.error ?? "Couldn't match your location."); return; }
+          setLoc(data as LocResult);
+        } catch {
+          setLocError("Something went wrong matching your location — try again.");
+        } finally {
+          setLocating(false);
+        }
+      },
+      (err) => {
+        setLocating(false);
+        setLocError(
+          err.code === err.PERMISSION_DENIED
+            ? "Location permission denied. Pick a location below or look it up by address."
+            : "Couldn't get your location — pick a location below instead."
+        );
+      },
+      { enableHighAccuracy: true, timeout: 10_000, maximumAge: 60_000 }
+    );
+  }
 
   return (
     <div style={{ background: "var(--background)", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
@@ -461,15 +574,24 @@ export default function WhoDoICallPage() {
               <span className="flex items-center justify-center w-5 h-5 rounded-full text-[11px] font-bold text-white" style={{ background: "#1a3a5c" }}>2</span>
               <h2 className="text-sm font-bold uppercase tracking-[0.16em]" style={{ color: "#1a3a5c" }}>Where is it?</h2>
             </div>
+
+            {/* Smart option: share location → exact precinct, districts, and city/county */}
+            <div className="mb-4">
+              <LocationPanel loc={loc} locating={locating} locError={locError} onUse={useMyLocation} />
+            </div>
+
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-2" style={{ color: "#9ca3af" }}>
+              {loc ? "Or pick manually" : "Or pick a location"}
+            </p>
             <div className="grid sm:grid-cols-3 gap-2.5">
               {([
                 { key: "city" as Where, label: "Inside Houston", sub: "City of Houston limits" },
                 { key: "county" as Where, label: "Unincorporated county", sub: "Outside any city" },
                 { key: "both" as Where, label: "Not sure", sub: "Show both answers" },
               ]).map((opt) => {
-                const active = where === opt.key;
+                const active = (locWhere ?? where) === opt.key;
                 return (
-                  <button key={opt.key} onClick={() => setWhere(opt.key)}
+                  <button key={opt.key} onClick={() => { setLoc(null); setWhere(opt.key); }}
                     className="pressable text-left rounded-[1rem] px-4 py-3 transition-all duration-150"
                     style={{
                       background: active ? "#2563a8" : "var(--card)",
@@ -481,10 +603,12 @@ export default function WhoDoICallPage() {
                 );
               })}
             </div>
-            <p className="text-[11px] mt-2.5" style={{ color: "#9ca3af" }}>
-              Not sure which one you&rsquo;re in?{" "}
-              <Link href="/my-officials" className="font-semibold hover:underline" style={{ color: "#2563a8" }}>Look it up by address →</Link>
-            </p>
+            {!loc && (
+              <p className="text-[11px] mt-2.5" style={{ color: "#9ca3af" }}>
+                Not sure which one you&rsquo;re in?{" "}
+                <Link href="/my-officials" className="font-semibold hover:underline" style={{ color: "#2563a8" }}>Look it up by address →</Link>
+              </p>
+            )}
           </div>
         )}
 
@@ -502,13 +626,20 @@ export default function WhoDoICallPage() {
             {answers.map((a, i) => (
               <AnswerBlock key={`${a.place ?? "any"}-${i}`} place={a.place} route={a.route} issueIcon={issue!.icon} />
             ))}
+
+            {/* Location-independent issues: offer the map + districts as a bonus */}
+            {issue && !needsWhere && (
+              <div className="pt-1">
+                <LocationPanel loc={loc} locating={locating} locError={locError} onUse={useMyLocation} compact />
+              </div>
+            )}
           </div>
         )}
 
         {/* Prompt to finish step 2 */}
-        {issue && needsWhere && !where && (
+        {issue && needsWhere && !where && !loc && (
           <p className="text-sm text-center py-4" style={{ color: "#9ca3af" }}>
-            Pick a location above to see who to call.
+            Share your location or pick a place above to see who to call.
           </p>
         )}
 
