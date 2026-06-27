@@ -152,9 +152,11 @@ export default function DistrictsMap({
           }
 
           if (!active) {
-            return { fillColor: fill, fillOpacity: 0.14, color: "rgba(255,255,255,0.6)", weight: 0.4 };
+            return { fillColor: fill, fillOpacity: 0.12, color: "rgba(255,255,255,0.5)", weight: 0.3 };
           }
-          return { fillColor: fill, fillOpacity: opacity, color: "rgba(255,255,255,0.85)", weight: 0.6 };
+          // Active precincts: thin same-tone seams so contiguous precincts merge into one
+          // continuous district surface (no navy grid). The district reads via opacity contrast.
+          return { fillColor: fill, fillOpacity: opacity, color: fill, weight: 0.5 };
         }}
         onEachFeature={(feature, lyr) => {
           const prec = (feature as PrecinctFeature).properties.PREC ?? "";
@@ -202,13 +204,15 @@ export default function DistrictsMap({
         }}
       />
 
-      {/* Bold outline tracing the active district, drawn above the fills */}
+      {/* Navy wash over the active district — fills every in-district precinct (including
+          ones with no turnout data) so the whole district reads as one continuous shape
+          rather than scattered colored cells. The lean colors still show through. */}
       {districtField && districtValue && activeFC && (
         <GeoJSON
-          key={`outline_${fitKey}`}
+          key={`wash_${fitKey}`}
           data={activeFC}
           interactive={false}
-          style={{ fill: false, color: "#1a3a5c", weight: 1.6, opacity: 0.9 }}
+          style={{ fill: true, fillColor: "#1a3a5c", fillOpacity: 0.14, stroke: false }}
         />
       )}
     </MapContainer>

@@ -53,9 +53,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Nav />
         <main className="flex-1">{children}</main>
         <ChatWidget />
-        <footer className="border-t border-[var(--border)] bg-[var(--accent)] text-white">
+        <footer className="relative overflow-hidden topo-dark text-white" style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#0f2540 100%)" }}>
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_15%_0%,rgba(37,99,168,0.25),transparent_70%)]" />
           {/* Top strip */}
-          <div className="max-w-6xl mx-auto px-6 pt-14 pb-10 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-10">
+          <div className="max-w-6xl mx-auto px-6 pt-14 pb-10 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-10 relative z-10">
             {/* Left — brand */}
             <div className="max-w-sm">
               <p style={{ fontFamily: "var(--font-dancing), cursive", fontSize: "2rem", lineHeight: 1.1 }} className="mb-3">
@@ -93,7 +94,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
 
           {/* Bottom bar */}
-          <div className="border-t border-white/10 px-6 py-4 max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+          <div className="border-t border-white/10 px-6 py-4 max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 relative z-10">
             <p className="text-white/40 text-xs">
               The Harris County Project &mdash; Free, always. Data from public sources.
             </p>
