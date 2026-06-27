@@ -211,13 +211,14 @@ export default function MyOfficialsPage() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<LookupResult | null>(null);
   const [cvap, setCvap] = useState<CvapData | null>(null);
+  const [cvapSel, setCvapSel] = useState<"cd" | "sd" | "hd" | null>(null);
 
   useEffect(() => {
     fetch("/data/cvap-districts.json").then(r => r.json()).then(setCvap).catch(() => {});
   }, []);
 
   async function runLookup(url: string) {
-    setLoading(true); setError(null); setResult(null);
+    setLoading(true); setError(null); setResult(null); setCvapSel(null);
     try {
       const res = await fetch(url);
       const data = await res.json();
@@ -260,13 +261,23 @@ export default function MyOfficialsPage() {
     ? LEVEL_ORDER.map(level => ({ level, reps: result.officials.filter(o => o.level === level) })).filter(g => g.reps.length)
     : [];
 
+  // Which district's demographics to show in the matched-address card. Clicking a CD/SD/HD
+  // chip switches this inline (no navigation); defaults to the most-local available district.
+  const hasCvap = (t: "cd" | "sd" | "hd") => {
+    const v = result?.districts[t];
+    return !!(v && cvap?.cvap[t][v]);
+  };
+  const cvapDefault: "cd" | "sd" | "hd" | null =
+    hasCvap("hd") ? "hd" : hasCvap("cd") ? "cd" : hasCvap("sd") ? "sd" : null;
+  const cvapActive = (cvapSel && hasCvap(cvapSel)) ? cvapSel : cvapDefault;
+
   return (
     <div style={{ background: "#f2f5f9", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
       {/* Hero — Synex-style light, with the topo terrain motif */}
       <section className="relative overflow-hidden topo-hero"
-        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 60%,#eef1f5 100%)", paddingTop: "3.75rem", paddingBottom: "3.5rem" }}>
+        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 60%,#f2f5f9 100%)", paddingTop: "3.75rem", paddingBottom: "3.5rem" }}>
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(37,99,168,0.10),transparent_70%)]" />
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_40%_45%_at_90%_75%,rgba(52,160,110,0.07),transparent_70%)]" />
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_40%_45%_at_90%_75%,rgba(52,160,110,0.04),transparent_70%)]" />
         <div className="relative max-w-3xl mx-auto px-5">
           <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 flex items-center gap-2" style={{ color: "#64748b" }}>
             <span className="w-5 h-px" style={{ background: "#94a3b8" }} />
@@ -354,26 +365,21 @@ export default function MyOfficialsPage() {
               <p className="text-sm font-bold" style={{ color: "#1a3a5c" }}>{result.matched}</p>
               <div className="chip-row mt-3">
                 <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/[0.05] text-[#6b7280]">Precinct {result.precinct}</span>
-                {result.districts.cd && (
-                  <Link href={`/tools/districts?type=cd&district=${result.districts.cd}`}
-                    className="text-[10px] font-bold px-2.5 py-1 rounded-full transition-colors hover:bg-blue-50"
-                    style={{ background: "rgba(37,99,168,0.08)", color: "#2563a8" }}>
-                    CD-{result.districts.cd} →
-                  </Link>
-                )}
-                {result.districts.sd && (
-                  <Link href={`/tools/districts?type=sd&district=${result.districts.sd}`}
-                    className="text-[10px] font-bold px-2.5 py-1 rounded-full transition-colors hover:bg-blue-50"
-                    style={{ background: "rgba(37,99,168,0.08)", color: "#2563a8" }}>
-                    SD-{result.districts.sd} →
-                  </Link>
-                )}
-                {result.districts.hd && (
-                  <Link href={`/tools/districts?type=hd&district=${result.districts.hd}`}
-                    className="text-[10px] font-bold px-2.5 py-1 rounded-full transition-colors hover:bg-blue-50"
-                    style={{ background: "rgba(37,99,168,0.08)", color: "#2563a8" }}>
-                    HD-{result.districts.hd} →
-                  </Link>
+                {/* CD/SD/HD chips toggle the demographics shown below (no navigation) */}
+                {([
+                  ["cd", `CD-${result.districts.cd}`],
+                  ["sd", `SD-${result.districts.sd}`],
+                  ["hd", `HD-${result.districts.hd}`],
+                ] as const).map(([t, label]) =>
+                  result.districts[t] ? (
+                    <button key={t} onClick={() => setCvapSel(t)}
+                      className="text-[10px] font-bold px-2.5 py-1 rounded-full transition-colors"
+                      style={cvapActive === t
+                        ? { background: "#2563a8", color: "#fff" }
+                        : { background: "rgba(37,99,168,0.08)", color: "#2563a8" }}>
+                      {label}
+                    </button>
+                  ) : null
                 )}
                 {result.districts.pct && (
                   <Link href={`/tools/districts?type=pct&district=${result.districts.pct}`}
@@ -397,16 +403,18 @@ export default function MyOfficialsPage() {
                   </Link>
                 )}
               </div>
-              {/* CVAP demographic mini-bar for most-local available district */}
-              {cvap && (() => {
-                const hd = result.districts.hd;
-                const cd = result.districts.cd;
-                const sd = result.districts.sd;
-                if (hd && cvap.cvap.hd[hd]) return <CvapMini entry={cvap.cvap.hd[hd]} label={`HD ${hd}`} />;
-                if (cd && cvap.cvap.cd[cd]) return <CvapMini entry={cvap.cvap.cd[cd]} label={`CD ${cd}`} />;
-                if (sd && cvap.cvap.sd[sd]) return <CvapMini entry={cvap.cvap.sd[sd]} label={`SD ${sd}`} />;
-                return null;
-              })()}
+              {/* CVAP demographics for the selected (or most-local) district */}
+              {cvap && cvapActive && result.districts[cvapActive] && cvap.cvap[cvapActive][result.districts[cvapActive]!] && (
+                <CvapMini
+                  entry={cvap.cvap[cvapActive][result.districts[cvapActive]!]}
+                  label={`${cvapActive.toUpperCase()} ${result.districts[cvapActive]}`}
+                />
+              )}
+              {result.districts.cd || result.districts.sd || result.districts.hd ? (
+                <p className="text-[10px] mt-2.5" style={{ color: "#9ca3af" }}>
+                  Tap CD / SD / HD to see that district&rsquo;s demographics.
+                </p>
+              ) : null}
             </div>
 
             {grouped.map(({ level, reps }) => (

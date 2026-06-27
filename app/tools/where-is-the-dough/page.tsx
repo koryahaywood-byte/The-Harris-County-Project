@@ -556,9 +556,9 @@ export default function WhereIsTheDough() {
     <div className="bg-[var(--background)] min-h-screen">
 
       {/* ── Hero — Synex-style light, topo terrain ─────────────────────── */}
-      <div className="px-6 py-14 md:py-20 relative overflow-hidden topo-hero" style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 60%,#eef1f5 100%)" }}>
+      <div className="px-6 py-14 md:py-20 relative overflow-hidden topo-hero" style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 60%,#f2f5f9 100%)" }}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_60%_at_85%_40%,rgba(37,99,168,0.10),transparent_70%)]"/>
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_38%_45%_at_92%_80%,rgba(52,160,110,0.07),transparent_70%)]"/>
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_38%_45%_at_92%_80%,rgba(52,160,110,0.04),transparent_70%)]"/>
         <div className="max-w-6xl mx-auto relative z-10">
           <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 flex items-center gap-2" style={{ color: "#64748b" }}>
             <span className="w-5 h-px" style={{ background: "#94a3b8" }} />

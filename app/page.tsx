@@ -392,10 +392,10 @@ export default function Home() {
       {/* -mt-16 pulls the hero up under the floating nav's spacer so its gradient
           reaches the very top (no cream seam from the body background). */}
       <section className="relative overflow-hidden topo-hero -mt-16 px-6 pt-32 pb-20 md:pt-36 md:pb-28 min-h-[94dvh] flex items-center"
-        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 55%,#eef1f5 100%)" }}>
+        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 55%,#f2f5f9 100%)" }}>
         {/* Soft organic glows — the "terrain" light */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_78%_32%,rgba(37,99,168,0.10),transparent_70%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_45%_at_88%_70%,rgba(52,160,110,0.08),transparent_70%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_45%_at_88%_70%,rgba(52,160,110,0.045),transparent_70%)]" />
 
         <div className="max-w-6xl mx-auto w-full relative z-10 grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-8 items-center">
           {/* ── Left: copy ── */}
@@ -520,8 +520,8 @@ export default function Home() {
       </section>
 
       {/* ── CLARITY (Synex-style numbered feature columns + floating cards) ── */}
-      <section className="relative overflow-hidden topo-hero px-6 py-20 md:py-28" style={{ background: "linear-gradient(180deg,#eef1f5 0%,#f2f5f9 100%)" }}>
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_45%_at_15%_30%,rgba(52,160,110,0.07),transparent_70%)]" />
+      <section className="relative overflow-hidden topo-hero px-6 py-20 md:py-28" style={{ background: "linear-gradient(180deg,#f2f5f9 0%,#f2f5f9 100%)" }}>
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_45%_at_15%_30%,rgba(52,160,110,0.04),transparent_70%)]" />
         <div className="max-w-6xl mx-auto relative z-10">
           {/* Header row */}
           <div className="grid md:grid-cols-[1.2fr_1fr] gap-6 md:gap-12 items-end mb-14">

@@ -548,29 +548,33 @@ function DistrictChips({ districts }: { districts: LocResult["districts"] }) {
 }
 
 function LocationPanel({
-  loc, locating, locError, onUse, compact,
+  loc, locating, locError, onUse, compact, hideResult, hideButton,
 }: {
   loc: LocResult | null;
   locating: boolean;
   locError: string | null;
   onUse: () => void;
   compact?: boolean;
+  hideResult?: boolean;   // show only the button (the map/districts render elsewhere)
+  hideButton?: boolean;   // show only the map/districts result
 }) {
   return (
     <div>
-      <button onClick={onUse} disabled={locating}
-        className="pressable inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-bold disabled:opacity-60"
-        style={{ background: compact ? "var(--card)" : "#1a3a5c", color: compact ? "#1a3a5c" : "#fff", boxShadow: "var(--ring-card), 0 2px 8px rgba(26,58,92,0.08)" }}>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
-        </svg>
-        {locating ? "Locating…" : compact ? "See the districts you're in" : "Use my location"}
-      </button>
-      {locError && (
+      {!hideButton && (
+        <button onClick={onUse} disabled={locating}
+          className="pressable inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-bold disabled:opacity-60"
+          style={{ background: compact ? "var(--card)" : "#1a3a5c", color: compact ? "#1a3a5c" : "#fff", boxShadow: "var(--ring-card), 0 2px 8px rgba(26,58,92,0.08)" }}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
+          </svg>
+          {locating ? "Locating…" : compact ? "See the districts you're in" : "Use my location"}
+        </button>
+      )}
+      {!hideButton && locError && (
         <p className="text-[11px] mt-2" style={{ color: "#b91c1c" }}>{locError}</p>
       )}
-      {loc && (
-        <div className="hcp-card p-4 mt-3">
+      {loc && !hideResult && (
+        <div className={`hcp-card p-4 ${hideButton ? "" : "mt-3"}`}>
           <p className="text-sm font-bold mb-0.5" style={{ color: "#1a3a5c" }}>
             You&rsquo;re in {loc.inHouston ? "the City of Houston" : "unincorporated Harris County"}
           </p>
@@ -644,9 +648,9 @@ export default function WhoDoICallPage() {
     <div style={{ background: "var(--background)", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
       {/* Hero */}
       <section className="relative overflow-hidden topo-hero"
-        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 60%,#eef1f5 100%)", paddingTop: "3.75rem", paddingBottom: "3rem" }}>
+        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 60%,#f2f5f9 100%)", paddingTop: "3.75rem", paddingBottom: "3rem" }}>
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(37,99,168,0.10),transparent_70%)]" />
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_40%_45%_at_90%_75%,rgba(52,160,110,0.07),transparent_70%)]" />
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_40%_45%_at_90%_75%,rgba(52,160,110,0.04),transparent_70%)]" />
         <div className="relative max-w-3xl mx-auto px-5">
           <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 flex items-center gap-2" style={{ color: "#64748b" }}>
             <span className="w-5 h-px" style={{ background: "#94a3b8" }} />
@@ -702,9 +706,10 @@ export default function WhoDoICallPage() {
               <h2 className="text-sm font-bold uppercase tracking-[0.16em]" style={{ color: "#1a3a5c" }}>Where is it?</h2>
             </div>
 
-            {/* Smart option: share location → exact precinct, districts, and city/county */}
+            {/* Smart option: share location → exact precinct, districts, and city/county.
+                Button only here; the map + districts render below the answer. */}
             <div className="mb-4">
-              <LocationPanel loc={loc} locating={locating} locError={locError} onUse={useMyLocation} />
+              <LocationPanel loc={loc} locating={locating} locError={locError} onUse={useMyLocation} hideResult />
             </div>
 
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-2" style={{ color: "#9ca3af" }}>
@@ -753,6 +758,14 @@ export default function WhoDoICallPage() {
             {answers.map((a, i) => (
               <AnswerBlock key={`${a.place ?? "any"}-${i}`} place={a.place} route={a.route} issueIcon={issue!.icon} loc={loc} />
             ))}
+
+            {/* The map + the districts you're in — below the contact, as context */}
+            {needsWhere && loc && (
+              <div className="pt-1">
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: "#9ca3af" }}>Where you are</p>
+                <LocationPanel loc={loc} locating={locating} locError={locError} onUse={useMyLocation} hideButton />
+              </div>
+            )}
 
             {/* Location-independent issues: offer the map + districts as a bonus */}
             {issue && !needsWhere && (
