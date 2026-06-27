@@ -409,11 +409,11 @@ function Ballot2026Inner() {
   }, [rows]);
 
   return (
-    <div style={{ background: "#f5f3ef", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
+    <div style={{ background: "#f2f5f9", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
 
       {/* Hero — Synex-style light, topo terrain */}
       <section className="relative overflow-hidden topo-hero"
-        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f5f3ef 60%,#eef1f5 100%)", paddingTop: "3.75rem", paddingBottom: "3rem" }}>
+        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 60%,#eef1f5 100%)", paddingTop: "3.75rem", paddingBottom: "3rem" }}>
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(37,99,168,0.10),transparent_70%)]" />
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_40%_45%_at_90%_75%,rgba(52,160,110,0.07),transparent_70%)]" />
         <div className="relative max-w-5xl mx-auto px-5">

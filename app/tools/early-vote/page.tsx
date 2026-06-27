@@ -131,7 +131,7 @@ export default function EarlyVotePage() {
   const repOverallPct   = Math.round((totalRepVoted / totalRepUniverse) * 100);
 
   return (
-    <div style={{ background: "#f5f3ef", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
+    <div style={{ background: "#f2f5f9", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
 
       {/* Hero */}
       <section className="relative overflow-hidden"

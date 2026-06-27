@@ -473,7 +473,7 @@ export default function TVStation() {
   const activeStream = STREAMS[activeIdx] ?? STREAMS[0];
 
   return (
-    <div style={{ background: "var(--bg, #f5f3ef)", minHeight: "100vh", fontFamily: "var(--font-outfit), sans-serif" }}>
+    <div style={{ background: "var(--bg, #f2f5f9)", minHeight: "100vh", fontFamily: "var(--font-outfit), sans-serif" }}>
 
       {/* Hero */}
       <section

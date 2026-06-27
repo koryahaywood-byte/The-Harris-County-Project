@@ -4,7 +4,7 @@ export default function NotFound() {
   return (
     <div
       className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center px-6 text-center"
-      style={{ background: "#f5f3ef" }}
+      style={{ background: "#f2f5f9" }}
     >
       {/* Big number */}
       <p

@@ -168,6 +168,8 @@ const ROWS: { section: string; tools: Tool[] }[] = [
 ];
 
 /* ── Start Here — the 4 tools to master first ───────────────────────────── */
+/* tint/accent are a refined cool palette (blue, emerald, indigo, cyan) used for the
+   light Synex cards — not the raw warm tool gradients. */
 const START_HERE = [
   {
     href:        "/tools/heat-check",
@@ -176,8 +178,9 @@ const START_HERE = [
     headline:    "See how every\nprecinct voted.",
     description: "1,011 precincts. Every election cycle back to 2012 — primaries, runoffs, and generals. Zoom into any neighborhood and see exactly how it voted.",
     proof:       ["1,011 precincts mapped", "2012 – 2026 · all cycles", "Precinct-level detail"],
-    photo:       U("1596422846543-75c6fc197f07"),
-    gradient:    "linear-gradient(135deg,#7f1d1d 0%,#991b1b 60%,#dc2626 100%)",
+    accent:      "#2563a8",
+    tint:        "linear-gradient(135deg,rgba(37,99,168,0.10),rgba(37,99,168,0.02))",
+    chip:        "linear-gradient(135deg,#2563a8,#3b82f6)",
     hero:        true,
   },
   {
@@ -187,8 +190,9 @@ const START_HERE = [
     headline:    "Follow the money.",
     description: "Live FEC, TEC, and county filings for every Harris County elected official.",
     proof:       ["All elected officials", "FEC + TEC live"],
-    photo:       U("1611974789855-9c2a0a7236a3"),
-    gradient:    "linear-gradient(135deg,#78350f 0%,#b45309 60%,#d97706 100%)",
+    accent:      "#0d9c6c",
+    tint:        "linear-gradient(135deg,rgba(13,156,108,0.09),rgba(13,156,108,0.02))",
+    chip:        "linear-gradient(135deg,#0d9c6c,#34d399)",
     hero:        false,
   },
   {
@@ -198,8 +202,9 @@ const START_HERE = [
     headline:    "Your district,\nin full.",
     description: "Demographics, vote history, 2026 matchup, win number, and actual race results for every seat.",
     proof:       ["Every seat covered", "Actual race results"],
-    photo:       U("1569091791842-7cfb64e04797"),
-    gradient:    "linear-gradient(135deg,#0f2540 0%,#1a3a5c 100%)",
+    accent:      "#4f46e5",
+    tint:        "linear-gradient(135deg,rgba(79,70,229,0.09),rgba(79,70,229,0.02))",
+    chip:        "linear-gradient(135deg,#4f46e5,#818cf8)",
     hero:        false,
   },
   {
@@ -209,8 +214,9 @@ const START_HERE = [
     headline:    "Enter your\naddress.",
     description: "Every official who answers to you — JP to Congress — with contact info, money raised, and record.",
     proof:       ["JP to Congress", "Real contact info"],
-    photo:       U("1449157291145-7efd050a4d0e"),
-    gradient:    "linear-gradient(135deg,#92400e 0%,#d97706 100%)",
+    accent:      "#0891b2",
+    tint:        "linear-gradient(135deg,rgba(8,145,178,0.09),rgba(8,145,178,0.02))",
+    chip:        "linear-gradient(135deg,#0891b2,#22d3ee)",
     hero:        false,
   },
 ] as const;
@@ -218,7 +224,7 @@ const START_HERE = [
 function FeaturedSection() {
   const [hero, ...three] = START_HERE;
   return (
-    <section id="start-here" className="py-16 md:py-24 px-6" style={{ background: "#f5f3ef" }}>
+    <section id="start-here" className="py-16 md:py-24 px-6" style={{ background: "#f2f5f9" }}>
       <div className="max-w-6xl mx-auto">
         {/* Section label */}
         <div className="flex items-center gap-3 mb-10">
@@ -233,11 +239,11 @@ function FeaturedSection() {
           {/* Hero — Heat Check (light Synex) */}
           <Link href={hero.href} className="group block relative rounded-[2rem] overflow-hidden hcp-card card-lift"
             style={{ minHeight: 340 }}>
-            <div className="absolute inset-0" style={{ background: hero.gradient, opacity: 0.10 }} />
-            <div className="absolute inset-0 topo-light opacity-70" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_55%_60%_at_85%_25%,rgba(37,99,168,0.10),transparent_70%)]" />
+            <div className="absolute inset-0" style={{ background: hero.tint }} />
+            <div className="absolute inset-0 topo-light opacity-60" />
             <div className="relative z-10 flex flex-col justify-end h-full p-8 md:p-10" style={{ minHeight: 340 }}>
-              <span className="text-[9px] font-bold uppercase tracking-[0.25em] mb-3" style={{ color: "#94a3b8" }}>{hero.eyebrow}</span>
+              <div className="w-11 h-11 rounded-2xl mb-5" style={{ background: hero.chip, boxShadow: `0 8px 20px ${hero.accent}40` }} />
+              <span className="text-[9px] font-bold uppercase tracking-[0.25em] mb-3" style={{ color: hero.accent }}>{hero.eyebrow}</span>
               <h2 className="text-4xl md:text-5xl font-bold leading-[1.08] mb-4 whitespace-pre-line"
                 style={{ fontFamily: "var(--font-playfair), serif", color: "#0f2540" }}>
                 {hero.headline}
@@ -246,14 +252,14 @@ function FeaturedSection() {
               <div className="flex flex-wrap gap-2 mb-6">
                 {hero.proof.map(p => (
                   <span key={p} className="text-[10px] font-bold px-3 py-1 rounded-full"
-                    style={{ background: "rgba(37,99,168,0.08)", color: "#2563a8", border: "1px solid rgba(37,99,168,0.15)" }}>
+                    style={{ background: `${hero.accent}14`, color: hero.accent, border: `1px solid ${hero.accent}28` }}>
                     {p}
                   </span>
                 ))}
               </div>
               <span className="inline-flex items-center gap-2 text-sm font-bold group-hover:gap-3 transition-all duration-300" style={{ color: "#0f2540" }}>
                 Open Heat Check
-                <span className="inline-flex w-8 h-8 rounded-full items-center justify-center" style={{ background: "rgba(15,37,64,0.08)" }}>→</span>
+                <span className="inline-flex w-8 h-8 rounded-full items-center justify-center text-white" style={{ background: hero.accent }}>→</span>
               </span>
             </div>
           </Link>
@@ -264,10 +270,11 @@ function FeaturedSection() {
               <Link key={tool.href} href={tool.href}
                 className="group block relative rounded-[2rem] overflow-hidden hcp-card card-lift"
                 style={{ minHeight: 220 }}>
-                <div className="absolute inset-0" style={{ background: tool.gradient, opacity: 0.10 }} />
-                <div className="absolute inset-0 topo-light opacity-60" />
+                <div className="absolute inset-0" style={{ background: tool.tint }} />
+                <div className="absolute inset-0 topo-light opacity-50" />
                 <div className="relative z-10 flex flex-col justify-end h-full p-6" style={{ minHeight: 220 }}>
-                  <span className="text-[9px] font-bold uppercase tracking-[0.25em] mb-2" style={{ color: "#94a3b8" }}>{tool.eyebrow}</span>
+                  <div className="w-9 h-9 rounded-xl mb-3" style={{ background: tool.chip, boxShadow: `0 6px 16px ${tool.accent}40` }} />
+                  <span className="text-[9px] font-bold uppercase tracking-[0.25em] mb-2" style={{ color: tool.accent }}>{tool.eyebrow}</span>
                   <h3 className="text-2xl font-bold leading-[1.1] mb-3 whitespace-pre-line"
                     style={{ fontFamily: "var(--font-playfair), serif", color: "#0f2540" }}>
                     {tool.headline}
@@ -277,12 +284,12 @@ function FeaturedSection() {
                     <div className="flex flex-wrap gap-1.5">
                       {tool.proof.map(p => (
                         <span key={p} className="text-[9px] font-bold px-2 py-0.5 rounded-full"
-                          style={{ background: "rgba(37,99,168,0.08)", color: "#2563a8", border: "1px solid rgba(37,99,168,0.14)" }}>
+                          style={{ background: `${tool.accent}14`, color: tool.accent, border: `1px solid ${tool.accent}26` }}>
                           {p}
                         </span>
                       ))}
                     </div>
-                    <span className="text-sm font-bold group-hover:translate-x-1 transition-all duration-300" style={{ color: "#2563a8" }}>→</span>
+                    <span className="text-sm font-bold group-hover:translate-x-1 transition-all duration-300" style={{ color: tool.accent }}>→</span>
                   </div>
                 </div>
               </Link>
@@ -295,36 +302,31 @@ function FeaturedSection() {
   );
 }
 
-/* ── Browse card (light Synex: frosted white, soft color accent) ─────────── */
+/* ── Browse card (light Synex: clean white card, vivid app-icon chip) ─────── */
 function BrowseCard({ tool }: { tool: Tool }) {
   const card = (
     <div
-      className={`group hcp-card card-lift flex-shrink-0 w-[230px] overflow-hidden ${tool.status === "coming" ? "opacity-40 pointer-events-none" : ""}`}
+      className={`group hcp-card card-lift flex-shrink-0 w-[230px] p-4 ${tool.status === "coming" ? "opacity-40 pointer-events-none" : ""}`}
     >
-      {/* Soft tinted preview header with a colored chip for identity */}
-      <div className="h-14 relative overflow-hidden" style={{ background: "#fff" }}>
-        <div className="absolute inset-0" style={{ background: tool.gradient, opacity: 0.13 }} />
-        <div className="absolute inset-0 topo-light opacity-60" />
-        <div className="absolute left-4 -bottom-4 w-9 h-9 rounded-xl"
-          style={{ background: tool.gradient, boxShadow: "0 6px 16px rgba(15,37,64,0.2)", border: "2px solid #fff" }} />
+      {/* Fully-visible color chip — app-icon style */}
+      <div className="w-11 h-11 rounded-2xl mb-3.5 relative overflow-hidden"
+        style={{ background: tool.gradient, boxShadow: "0 7px 18px rgba(15,37,64,0.20)" }}>
+        <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent" />
       </div>
-      {/* Info */}
-      <div className="p-4 pt-5">
-        <h3
-          className="font-bold text-sm leading-tight mb-1.5 group-hover:text-[#2563a8] transition-colors duration-300"
-          style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair), serif" }}
-        >
-          {tool.name}
-        </h3>
-        <p className="text-[11px] leading-relaxed line-clamp-2" style={{ color: "#6b7280" }}>
-          {tool.description}
+      <h3
+        className="font-bold text-sm leading-tight mb-1.5 group-hover:text-[#2563a8] transition-colors duration-300"
+        style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair), serif" }}
+      >
+        {tool.name}
+      </h3>
+      <p className="text-[11px] leading-relaxed line-clamp-2" style={{ color: "#6b7280" }}>
+        {tool.description}
+      </p>
+      {tool.status !== "coming" && (
+        <p className="mt-2.5 text-[11px] font-semibold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ color: "#2563a8" }}>
+          Open <span className="group-hover:translate-x-0.5 transition-transform">→</span>
         </p>
-        {tool.status !== "coming" && (
-          <p className="mt-2 text-[11px] font-semibold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ color: "#2563a8" }}>
-            Open <span className="group-hover:translate-x-0.5 transition-transform">→</span>
-          </p>
-        )}
-      </div>
+      )}
     </div>
   );
 
@@ -363,7 +365,7 @@ function BrowseRow({ section, tools }: { section: string; tools: Tool[] }) {
 /* ── Full toolbox browse ─────────────────────────────────────────────────── */
 function ToolboxBrowse() {
   return (
-    <section id="toolbox" className="pb-20" style={{ background: "#f5f3ef", borderTop: "1px solid #ddd9d0" }}>
+    <section id="toolbox" className="pb-20" style={{ background: "#f2f5f9", borderTop: "1px solid #dde3ec" }}>
       <div className="max-w-7xl mx-auto px-6 pt-12 pb-6">
         <div className="flex items-center gap-3">
           <span className="block w-8 h-px bg-[var(--accent)]/25" />
@@ -390,7 +392,7 @@ export default function Home() {
       {/* -mt-16 pulls the hero up under the floating nav's spacer so its gradient
           reaches the very top (no cream seam from the body background). */}
       <section className="relative overflow-hidden topo-hero -mt-16 px-6 pt-32 pb-20 md:pt-36 md:pb-28 min-h-[94dvh] flex items-center"
-        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f5f3ef 55%,#eef1f5 100%)" }}>
+        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 55%,#eef1f5 100%)" }}>
         {/* Soft organic glows — the "terrain" light */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_78%_32%,rgba(37,99,168,0.10),transparent_70%)]" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_45%_at_88%_70%,rgba(52,160,110,0.08),transparent_70%)]" />
@@ -518,7 +520,7 @@ export default function Home() {
       </section>
 
       {/* ── CLARITY (Synex-style numbered feature columns + floating cards) ── */}
-      <section className="relative overflow-hidden topo-hero px-6 py-20 md:py-28" style={{ background: "linear-gradient(180deg,#eef1f5 0%,#f5f3ef 100%)" }}>
+      <section className="relative overflow-hidden topo-hero px-6 py-20 md:py-28" style={{ background: "linear-gradient(180deg,#eef1f5 0%,#f2f5f9 100%)" }}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_45%_at_15%_30%,rgba(52,160,110,0.07),transparent_70%)]" />
         <div className="max-w-6xl mx-auto relative z-10">
           {/* Header row */}

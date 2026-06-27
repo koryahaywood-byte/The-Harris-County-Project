@@ -34,7 +34,7 @@ export default function PipelinesAdmin() {
   const blocked = jobs.filter(([, j]) => j.status === "blocked").length;
 
   return (
-    <div style={{ background: "#f5f3ef", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }} className="px-5 py-10">
+    <div style={{ background: "#f2f5f9", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }} className="px-5 py-10">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-baseline justify-between flex-wrap gap-2 mb-1">
           <h1 className="text-2xl font-bold" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>

@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f5f3ef;
+  --background: #f2f5f9;
   --foreground: #1a1a1a;
   --accent: #1a3a5c;
   --accent-light: #2563a8;
   --muted: #6b7280;
-  --border: #ddd9d0;
+  --border: #dde3ec;
   --card: #ffffff;
 
   /* Liquid glass tokens */
@@ -70,7 +70,7 @@
   100% { background-position: 400px 0; }
 }
 .skeleton {
-  background: linear-gradient(90deg, #ece9e2 25%, #f5f3ef 50%, #ece9e2 75%);
+  background: linear-gradient(90deg, #e5eaf1 25%, #f2f5f9 50%, #e5eaf1 75%);
   background-size: 800px 100%;
   animation: shimmer 1.6s linear infinite;
   border-radius: 8px;
@@ -102,7 +102,7 @@ body {
 
 ::selection {
   background: #1a3a5c;
-  color: #f5f3ef;
+  color: #f2f5f9;
 }
 
 :focus-visible {
@@ -203,7 +203,7 @@ img { image-rendering: -webkit-optimize-contrast; }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #ddd9d0; border-radius: 99px; }
+::-webkit-scrollbar-thumb { background: #dde3ec; border-radius: 99px; }
 ::-webkit-scrollbar-thumb:hover { background: #1a3a5c40; }
 
 /* ── Toolbox opening animation ───────────────────────────────────────────── */

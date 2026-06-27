@@ -258,7 +258,7 @@ export default function CivicCalendar() {
     .sort((a, b) => a.date.localeCompare(b.date))[0];
 
   return (
-    <div style={{ background: "var(--bg, #f5f3ef)", minHeight: "100vh", fontFamily: "var(--font-outfit), sans-serif" }}>
+    <div style={{ background: "var(--bg, #f2f5f9)", minHeight: "100vh", fontFamily: "var(--font-outfit), sans-serif" }}>
       {/* Hero */}
       <section className="relative overflow-hidden"
         style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#0f2540 60%,#162e4a 100%)", paddingTop: "3rem", paddingBottom: "3rem" }}>
