@@ -164,12 +164,17 @@ const ISSUES: Issue[] = [
     id: "trash",
     label: "Trash or bulk pickup",
     icon: "🗑️",
-    locationDependent: false,
-    any: {
+    locationDependent: true,
+    city: {
       agency: "Houston Solid Waste Management",
       detail: "Garbage, recycling, and heavy/bulk pickup inside city limits.",
       hotline: { label: "Houston 311", phone: "311" },
-      jurisdictions: ["city"], roles: ["executive", "legislative"], findLabel: "your city council member",
+      jurisdictions: ["city"], roles: ["legislative"], findLabel: "your city council member",
+    },
+    county: {
+      agency: "Your MUD or private hauler",
+      detail: "Unincorporated Harris County has no county-run trash pickup — it's handled by your municipal utility district (MUD) or a private hauler. Your county commissioner's office can point you to your provider.",
+      jurisdictions: ["county"], roles: ["legislative"], findLabel: "your county commissioner",
     },
   },
   {
