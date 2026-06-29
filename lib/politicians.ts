@@ -150,7 +150,7 @@ export const POLITICIANS: Politician[] = [
     photo: "https://senate.texas.gov/members/d11/img/headshot.jpg",
     website: "https://senate.texas.gov/member.php?d=11",
     legiscanName: "Middleton",
-    note: "Not seeking reelection — running for Attorney General",
+    note: "Not seeking reelection. Running for Attorney General",
     committees: ["Natural Resources & Economic Development", "Transportation"],
   },
   // ── Texas House ──────────────────────────────────────────────────────
@@ -307,7 +307,7 @@ export const POLITICIANS: Politician[] = [
     website: "https://house.texas.gov/members/member-page/?district=131",
     legiscanName: "Allen",
     termStart: 2005,
-    note: "Retiring — not seeking reelection 2026; holds seat through Jan 2027",
+    note: "Retiring. Not seeking reelection 2026; holds seat through Jan 2027",
     committees: ["Public Education", "Higher Education"],
     committeeRoles: [{ committee: "Public Education", role: "Vice Chair" }],
   },
@@ -659,7 +659,7 @@ export const POLITICIANS: Politician[] = [
   },
 
   // ── City of Houston ───────────────────────────────────────────────────
-  // Source: houstontx.gov/council — verified June 2026
+  // Source: houstontx.gov/council: verified June 2026
   {
     slug: "john-whitmire",
     name: "John Whitmire",

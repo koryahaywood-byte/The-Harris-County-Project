@@ -18,21 +18,21 @@ export interface RepEntry {
 
 // Current U.S. House officeholders for Harris-area districts (June 2026).
 // District lines shown are the 2025 enacted plan (PLANC2333); members were
-// elected under prior lines — flagged in the UI note.
+// elected under prior lines. Flagged in the UI note.
 const CONGRESS: Record<string, { name: string; party: "D" | "R"; url?: string; note?: string }> = {
   "2":  { name: "Dan Crenshaw",      party: "R", url: "https://crenshaw.house.gov", note: "Lost March 2026 primary to Steve Toth; term ends Jan 2027" },
   "7":  { name: "Lizzie Fletcher",   party: "D", url: "https://fletcher.house.gov" },
-  "8":  { name: "Morgan Luttrell",   party: "R", url: "https://luttrell.house.gov", note: "Not seeking reelection — open seat 2026; term ends Jan 2027" },
-  "9":  { name: "Al Green",          party: "D", url: "https://algreen.house.gov", note: "Retiring — lost CD-18 runoff; term ends Jan 2027" },
+  "8":  { name: "Morgan Luttrell",   party: "R", url: "https://luttrell.house.gov", note: "Not seeking reelection. Open seat 2026; term ends Jan 2027" },
+  "9":  { name: "Al Green",          party: "D", url: "https://algreen.house.gov", note: "Retiring. Lost CD-18 runoff; term ends Jan 2027" },
   "18": { name: "Christian Menefee", party: "D", note: "Sworn in after Sylvester Turner's death; won May 2026 Democratic runoff over Al Green 69–31%; seeking first full term" },
-  "22": { name: "Troy Nehls",        party: "R", url: "https://nehls.house.gov", note: "Not seeking reelection — open seat 2026; term ends Jan 2027" },
+  "22": { name: "Troy Nehls",        party: "R", url: "https://nehls.house.gov", note: "Not seeking reelection. Open seat 2026; term ends Jan 2027" },
   "29": { name: "Sylvia Garcia",     party: "D", url: "https://sylviagarcia.house.gov" },
   "36": { name: "Brian Babin",       party: "R", url: "https://babin.house.gov" },
-  "38": { name: "Wesley Hunt",       party: "R", url: "https://wesleyhunt.house.gov", note: "Leaving — ran for Senate; term ends Jan 2027" },
+  "38": { name: "Wesley Hunt",       party: "R", url: "https://wesleyhunt.house.gov", note: "Leaving. Ran for Senate; term ends Jan 2027" },
 };
 
 const US_SENATORS: RepEntry[] = [
-  { name: "John Cornyn", office: "U.S. Senator", district: "Texas", party: "R", level: "Congress", url: "https://www.cornyn.senate.gov", note: "Lost runoff — term ends Jan 2027" },
+  { name: "John Cornyn", office: "U.S. Senator", district: "Texas", party: "R", level: "Congress", url: "https://www.cornyn.senate.gov", note: "Lost runoff. Term ends Jan 2027" },
   { name: "Ted Cruz",    office: "U.S. Senator", district: "Texas", party: "R", level: "Congress", url: "https://www.cruz.senate.gov" },
 ];
 

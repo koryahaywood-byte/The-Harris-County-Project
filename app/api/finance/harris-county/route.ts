@@ -5,7 +5,7 @@ import Anthropic from "@anthropic-ai/sdk";
 const HC_BASE = "https://ethics.harrisvotes.com";
 const SEARCH_URL = `${HC_BASE}/CampaignFinanceReports/COR.aspx`;
 
-// Harris County local filers — search name must be "Last, First"
+// Harris County local filers. Search name must be "Last, First"
 // All county elected officials file at ethics.harrisvotes.com
 const HC_CANDIDATES = [
   // 2026 County Judge nominees (open seat)
@@ -17,7 +17,7 @@ const HC_CANDIDATES = [
   { searchName: "Garcia, Adrian",      name: "Adrian Garcia",         office: "Commissioner PCT 2",          party: "D" as const, incumbent: true },
   { searchName: "Ramsey, Tom",         name: "Tom Ramsey",            office: "Commissioner PCT 3",          party: "R" as const, incumbent: true },
   { searchName: "Briones, Lesley",     name: "Lesley Briones",        office: "Commissioner PCT 4",          party: "D" as const, incumbent: true },
-  // Justice of the Peace — sourced from jp.hctx.net
+  // Justice of the Peace: sourced from jp.hctx.net
   { searchName: "Carter, Eric",        name: "Eric William Carter",   office: "Justice of the Peace PCT 1 PL 1", party: "D" as const, incumbent: true },
   { searchName: "Duble, Steve",        name: "Steve Duble",           office: "Justice of the Peace PCT 1 PL 2", party: "D" as const, incumbent: true },
   { searchName: "Delgado, Jo Ann",     name: "Jo Ann Delgado",        office: "Justice of the Peace PCT 2 PL 1", party: "D" as const, incumbent: true },
@@ -27,7 +27,7 @@ const HC_CANDIDATES = [
   { searchName: "Goodwin, Lincoln",    name: "Lincoln Goodwin",       office: "Justice of the Peace PCT 4 PL 1", party: "D" as const, incumbent: true },
   { searchName: "Korduba, Laryssa",    name: "Laryssa Korduba",       office: "Justice of the Peace PCT 4 PL 2", party: "D" as const, incumbent: true },
   { searchName: "Lombardino, James",   name: "James Lombardino",      office: "Justice of the Peace PCT 5 PL 1", party: "R" as const, incumbent: true },
-  // Bob Wolfe lost May 2026 R primary to Mark Fury — keep for historical data, add nominees
+  // Bob Wolfe lost May 2026 R primary to Mark Fury. Keep for historical data, add nominees
   { searchName: "Wolfe, Bob",          name: "Bob Wolfe",             office: "Justice of the Peace PCT 5 PL 2 (lost R primary)", party: "R" as const, incumbent: false },
   { searchName: "Fury, Mark",          name: "Mark Fury",             office: "Justice of the Peace PCT 5 PL 2 (R nominee)", party: "R" as const, incumbent: false },
   { searchName: "Jefferson, Lisa",     name: "Lisa Jefferson",        office: "Justice of the Peace PCT 5 PL 2 (D nominee)", party: "D" as const, incumbent: false },
@@ -39,7 +39,7 @@ const HC_CANDIDATES = [
   { searchName: "Miles, Melanie",      name: "Melanie Miles",         office: "Justice of the Peace PCT 7 PL 2 (D nominee)", party: "D" as const, incumbent: false },
   { searchName: "Williamson, Holly",   name: "Holly Williamson",      office: "Justice of the Peace PCT 8 PL 1", party: "R" as const, incumbent: true },
   { searchName: "Ditta, Louie",        name: "Louie Ditta",           office: "Justice of the Peace PCT 8 PL 2", party: "R" as const, incumbent: true },
-  // Constables — also file at ethics.harrisvotes.com
+  // Constables. Also file at ethics.harrisvotes.com
   { searchName: "Rosen, Alan",         name: "Alan Rosen",            office: "Constable PCT 1",                 party: "D" as const, incumbent: true },
   { searchName: "Garcia, Jerry",       name: "Jerry Garcia",          office: "Constable PCT 2",                 party: "D" as const, incumbent: true },
   { searchName: "Eagleton, Sherman",   name: "Sherman Eagleton",      office: "Constable PCT 3",                 party: "D" as const, incumbent: true },
@@ -278,7 +278,7 @@ export async function GET() {
 
   return NextResponse.json({ results, fetchedAt }, {
     headers: {
-      // Cache aggressively — data only changes after TEC filing deadlines
+      // Cache aggressively. Data only changes after TEC filing deadlines
       "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
     },
   });

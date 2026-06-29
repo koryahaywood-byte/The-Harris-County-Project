@@ -15,7 +15,7 @@ interface Change {
   new?: string;
 }
 
-// Known fixed FEC quarterly schedule — update annually if FEC changes
+// Known fixed FEC quarterly schedule. Update annually if FEC changes
 function fecDeadlines(year: number): Deadline[] {
   return [
     { type: "Q1 Quarterly", due: `${year}-04-15`, period: `Jan 1–Mar 31 ${year}` },
@@ -61,7 +61,7 @@ async function sendAlert(changes: Change[]) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      subject: `Filing Schedule Change Detected — ${changes.length} update(s)`,
+      subject: `Filing Schedule Change Detected: ${changes.length} update(s)`,
       message: `The quarterly filing schedule check found changes:\n\n${body}\n\nReview data/filing-schedules.json and update vercel.json cron triggers if needed.`,
     }),
   }).catch(() => {});
@@ -98,20 +98,20 @@ export async function GET() {
     // Any new deadline beyond the standard semi-annuals is noteworthy
   }
 
-  // Check FEC (fixed schedule — flag if a non-standard date is detected)
+  // Check FEC (fixed schedule. Flag if a non-standard date is detected)
   const knownFEC = fecDeadlines(year).map(d => d.due);
-  // For now, FEC quarterly dates are statutory and don't move — just log the check
+  // For now, FEC quarterly dates are statutory and don't move. Just log the check
 
   // Look for special elections (TEC publishes new deadline pages when elections are called)
   try {
     const res = await fetch(TEC_URL, { cache: "no-store" });
     const html = await res.text();
-    // Count election-specific deadline links — if count increases, a special election was called
+    // Count election-specific deadline links. If count increases, a special election was called
     const electionLinks = (html.match(/Special.*Election|Primary.*Runoff|Runoff.*Election/gi) ?? []).length;
     if (electionLinks > 2) {
       changes.push({
         source: "TEC",
-        description: `${electionLinks} special/runoff election deadline(s) detected — check for new pre-election report obligations`,
+        description: `${electionLinks} special/runoff election deadline(s) detected. Check for new pre-election report obligations`,
       });
     }
   } catch { /* non-fatal */ }

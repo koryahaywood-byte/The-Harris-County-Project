@@ -1,4 +1,4 @@
-// Pipeline health — every ingestion job, its last run, and its failures,
+// Pipeline health. Every ingestion job, its last run, and its failures,
 // visible immediately. Unlinked + noindexed, same model as /admin/freshness.
 // Refresh: node scripts/run-pipelines.mjs
 
@@ -45,7 +45,7 @@ export default function PipelinesAdmin() {
         <p className="text-xs mb-6" style={{ color: "#6b7280" }}>
           {health
             ? `Last orchestrator run ${new Date(health.updatedAt).toLocaleString("en-US")} · ${jobs.length} jobs · ${failed} failed · ${blocked} blocked`
-            : "No runs recorded yet — run `node scripts/run-pipelines.mjs`."}
+            : "No runs recorded yet: run `node scripts/run-pipelines.mjs`."}
         </p>
 
         <div className="space-y-3">
@@ -84,7 +84,7 @@ export default function PipelinesAdmin() {
 
         <p className="text-[10px] mt-6 leading-relaxed" style={{ color: "#9ca3af" }}>
           Run all: <code>node scripts/run-pipelines.mjs</code> · one job: <code>--only fec-donors</code>.
-          Logs append to data/pipeline-logs/. Vercel&apos;s filesystem is ephemeral — scheduled runs
+          Logs append to data/pipeline-logs/. Vercel&apos;s filesystem is ephemeral: scheduled runs
           happen on a machine with the repo and commit their outputs (archive-first model).
         </p>
       </div>

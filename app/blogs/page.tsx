@@ -12,12 +12,12 @@ interface Source {
 
 const SOURCES: Source[] = [
   // ── News & Journalism ────────────────────────────────────────────────────
-  { name: "Houston Chronicle Politics",   platform: "Website",     url: "https://www.houstonchronicle.com/politics/", description: "The Chronicle's dedicated politics desk — county, city, and state coverage. Best place for breaking news on Harris County government.", tags: ["Elections", "Government", "Breaking News"], recommended: true },
+  { name: "Houston Chronicle Politics",   platform: "Website",     url: "https://www.houstonchronicle.com/politics/", description: "The Chronicle's dedicated politics desk. County, city, and state coverage. Best place for breaking news on Harris County government.", tags: ["Elections", "Government", "Breaking News"], recommended: true },
   { name: "Texas Tribune",               platform: "Newsletter",   url: "https://www.texastribune.org", description: "Nonprofit investigative journalism covering Texas government, politics, and policy. Exceptional depth on the state legislature and statewide races.", tags: ["Legislature", "Statewide", "Investigative"], recommended: true },
   { name: "Houston Public Media",        platform: "Website",      url: "https://www.houstonpublicmedia.org", description: "NPR and PBS affiliate covering Houston civic affairs. Reliable long-form reporting on city, county, and education.", tags: ["Radio", "Government", "Education"] },
   { name: "Axios Houston",               platform: "Newsletter",   url: "https://www.axios.com/local/houston", description: "Daily smart-brevity newsletter covering Houston politics, business, and development. Great for staying up on what matters quickly.", tags: ["Daily Briefing", "City Politics"] },
-  { name: "Houston Landing (Closed)",    platform: "Website",      url: "https://houstonlanding.org", description: "Closed in 2026. Was a local nonprofit newsroom covering Houston accountability journalism — housing, environment, and education.", tags: ["Investigative", "Housing", "Education"] },
-  { name: "The Appeal",                  platform: "Website",      url: "https://theappeal.org", description: "National but covers Harris County criminal justice — DA races, policing, and court reform.", tags: ["Criminal Justice", "DA", "Policing"] },
+  { name: "Houston Landing (Closed)",    platform: "Website",      url: "https://houstonlanding.org", description: "Closed in 2026. Was a local nonprofit newsroom covering Houston accountability journalism. Housing, environment, and education.", tags: ["Investigative", "Housing", "Education"] },
+  { name: "The Appeal",                  platform: "Website",      url: "https://theappeal.org", description: "National but covers Harris County criminal justice. DA races, policing, and court reform.", tags: ["Criminal Justice", "DA", "Policing"] },
 
   // ── Political Commentary & Analysis ─────────────────────────────────────
   { name: "Off the Kuff",               platform: "Blog",         url: "https://offthekuff.com", handle: "@OffTheKuff", description: "The definitive Houston progressive politics blog since 2002. Deep-dives on Texas elections, court cases, and redistricting. Required reading for Harris County politics.", tags: ["Elections", "Analysis", "Progressive"], recommended: true },
@@ -29,7 +29,7 @@ const SOURCES: Source[] = [
   { name: "Mustafa Tameez",             platform: "Twitter/X",    url: "https://twitter.com/mustafatameez", handle: "@mustafatameez", description: "Houston Democratic strategist. Prolific commentator on Harris County races, polling, and campaign dynamics.", tags: ["Strategy", "Democratic", "Commentary"], recommended: true },
   { name: "Greg Jefferson",             platform: "Twitter/X",    url: "https://twitter.com/gregjefferson", handle: "@gregjefferson", description: "Houston Chronicle politics reporter. Follow for breaking coverage of Harris County government.", tags: ["Journalism", "Breaking News"] },
   { name: "Robert Downen",              platform: "Twitter/X",    url: "https://twitter.com/RobDownenChron", handle: "@RobDownenChron", description: "Chronicle reporter covering Texas politics with a focus on the legislature and extremism.", tags: ["Legislature", "Journalism"] },
-  { name: "Jeremy Wallace",             platform: "Twitter/X",    url: "https://twitter.com/JeremySWallace", handle: "@JeremySWallace", description: "Houston Chronicle Austin bureau — TX Legislature, state government, and Harris County delegation.", tags: ["Legislature", "Journalism"] },
+  { name: "Jeremy Wallace",             platform: "Twitter/X",    url: "https://twitter.com/JeremySWallace", handle: "@JeremySWallace", description: "Houston Chronicle Austin bureau. TX Legislature, state government, and Harris County delegation.", tags: ["Legislature", "Journalism"] },
   { name: "Texas Tribune Politics",     platform: "Twitter/X",    url: "https://twitter.com/TexasTribune",  handle: "@TexasTribune",  description: "The Tribune's main account. Live updates from the Capitol, redistricting, and election night coverage.", tags: ["Statewide", "Elections"] },
 
   // ── Community & Civic Orgs ───────────────────────────────────────────────
@@ -51,8 +51,8 @@ const SOURCES: Source[] = [
   { name: "iangelcarroll",              platform: "Instagram",    url: "https://www.instagram.com/iangelcarroll", handle: "@iangelcarroll", description: "Houston-based content creator and civic voice bringing Houston politics and culture to a younger, engaged audience.", tags: ["Youth", "Houston Culture", "Community"] },
 
   // ── Threads ──────────────────────────────────────────────────────────────
-  { name: "Texas Tribune",              platform: "Threads",      url: "https://www.threads.net/@texastribune", handle: "@texastribune", description: "The Texas Tribune's Threads presence — breaking Texas politics, legislative updates, and election coverage.", tags: ["Legislature", "Statewide", "Breaking News"], recommended: true },
-  { name: "Shea Jordan Smith",          platform: "Threads",      url: "https://www.threads.net/@sheajordansmith", handle: "@sheajordansmith", description: "Houston civic voice on Threads — local politics and community news for a younger audience.", tags: ["Community", "Houston Culture", "Civic Engagement"] },
+  { name: "Texas Tribune",              platform: "Threads",      url: "https://www.threads.net/@texastribune", handle: "@texastribune", description: "The Texas Tribune's Threads presence. Breaking Texas politics, legislative updates, and election coverage.", tags: ["Legislature", "Statewide", "Breaking News"], recommended: true },
+  { name: "Shea Jordan Smith",          platform: "Threads",      url: "https://www.threads.net/@sheajordansmith", handle: "@sheajordansmith", description: "Houston civic voice on Threads. Local politics and community news for a younger audience.", tags: ["Community", "Houston Culture", "Civic Engagement"] },
 ];
 
 const PLATFORM_ICON: Record<string, string> = {
@@ -151,7 +151,7 @@ export default function BlogsPage() {
             Journalists & Voices
           </h1>
           <p className="text-white/70 text-sm max-w-lg">
-            The best journalists, bloggers, and civic accounts covering Harris County politics. Curated — not comprehensive.
+            The best journalists, bloggers, and civic accounts covering Harris County politics. Curated: not comprehensive.
           </p>
         </div>
       </div>
@@ -161,7 +161,7 @@ export default function BlogsPage() {
         <div className="mb-16">
           <div className="flex items-center gap-2 mb-6">
             <span className="block w-6 h-px bg-[var(--muted)]/40" />
-            <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--muted)]">Staff Picks — Start Here</span>
+            <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--muted)]">Staff Picks: Start Here</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {staffPicks.map((s) => <SourceCard key={s.name} source={s} />)}

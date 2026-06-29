@@ -27,7 +27,7 @@ export default function NotFound() {
           This district doesn&apos;t exist
         </h1>
         <p className="text-[var(--muted)] text-sm max-w-sm mx-auto leading-relaxed">
-          The page you&apos;re looking for isn&apos;t here — it may have moved,
+          The page you&apos;re looking for isn&apos;t here. It may have moved,
           been renamed, or never existed.
         </p>
       </div>

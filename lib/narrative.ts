@@ -1,8 +1,8 @@
-// Narrative generation — the auto-updating plain-English read on every
+// Narrative generation. The auto-updating plain-English read on every
 // official. Deterministic prose assembled from live data, so it literally
 // rewrites itself the moment a new filing, bill action, or cycle of precinct
 // results lands. Every sentence traces to a source listed alongside it.
-// A signal for the reader — never a conclusion.
+// A signal for the reader: never a conclusion.
 
 import type { Politician } from "./politicians";
 import { getFinanceByName, fmt } from "./campaign-finance";
@@ -37,7 +37,7 @@ export function generateNarrative(
   const years = pol.termStart ? 2026 - pol.termStart : null;
   sentences.push(
     years !== null
-      ? `${pol.name} has held elected office since ${pol.termStart} — ${years} years — currently as ${pol.office.toLowerCase().startsWith("u.s.") ? pol.office : `${pol.office} for ${pol.district}`}.`
+      ? `${pol.name} has held elected office since ${pol.termStart}: ${years} years: currently as ${pol.office.toLowerCase().startsWith("u.s.") ? pol.office : `${pol.office} for ${pol.district}`}.`
       : `${pol.name} serves as ${pol.office} for ${pol.district}.`
   );
 
@@ -49,11 +49,11 @@ export function generateNarrative(
     sentences.push(
       `The latest filing (${finance.asOf}) shows ${fmt(finance.cash)} cash on hand` +
       (finance.raised ? `, ${fmt(finance.raised)} raised in the period` : "") +
-      ` — ${standing}.`
+      `: ${standing}.`
     );
     sources.push(`Campaign finance filing, ${finance.asOf} (${finance.level === "federal" ? "FEC" : finance.level === "state" ? "TEC" : finance.level === "houston" ? "City of Houston" : "harrisvotes.com"})`);
   } else {
-    sentences.push(`No campaign finance figures are on record yet — the next filing window will populate this.`);
+    sentences.push(`No campaign finance figures are on record yet. The next filing window will populate this.`);
   }
 
   // Legislation
@@ -61,7 +61,7 @@ export function generateNarrative(
     const rate = Math.round(((opts.lawCount ?? 0) / opts.billCount) * 100);
     sentences.push(
       `In the 89th Legislature ${pol.name.split(" ").pop()} has filed ${opts.billCount} bills with ${opts.lawCount ?? 0} signed into law (${rate}%)` +
-      (rate >= 25 ? " — a high conversion rate; most members land well under that." : ".")
+      (rate >= 25 ? ". A high conversion rate; most members land well under that." : ".")
     );
     sources.push("LegiScan, TX 89th Legislature (live)");
   }
@@ -84,12 +84,12 @@ export function generateNarrative(
     (stats.warChest >= stats.tenure && stats.warChest >= stats.influence ? "fundraising strength"
       : stats.tenure >= stats.influence ? "tenure" : "the scope of the office") + `.`
   );
-  sources.push("Accountability Score + OVR — formulas published at /methodology");
+  sources.push("Accountability Score + OVR. Formulas published at /methodology");
 
   return {
     paragraph: sentences.join(" "),
     sources: [...new Set(sources)],
     confidence: finance && finance.cash > 0 ? "high" : "medium",
-    confidenceNote: "Assembled sentence-by-sentence from the records cited below — no inference beyond arithmetic. Rewrites automatically when any source updates.",
+    confidenceNote: "Assembled sentence-by-sentence from the records cited below. No inference beyond arithmetic. Rewrites automatically when any source updates.",
   };
 }

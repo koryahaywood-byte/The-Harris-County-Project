@@ -42,7 +42,7 @@ function buildTooltip(precinctId: string, demPct: number, repPct: number, daysPa
   return `
     <div style="font-family:system-ui,sans-serif;font-size:12px;color:#1a3a5c;min-width:170px">
       <div style="font-weight:700;font-size:13px;margin-bottom:5px;border-bottom:1px solid rgba(26,58,92,0.1);padding-bottom:3px">
-        Precinct ${parseInt(precinctId, 10)} — Day ${daysPassed}
+        Precinct ${parseInt(precinctId, 10)}: Day ${daysPassed}
       </div>
       <div style="margin-bottom:4px">
         <span style="color:#2563a8;font-weight:600">Dem Universe:</span>

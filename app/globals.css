@@ -19,7 +19,7 @@
   --lift-shadow: 0 20px 60px rgba(26,58,92,0.18), 0 4px 16px rgba(26,58,92,0.10);
   --lift-shadow-sm: 0 8px 28px rgba(26,58,92,0.13);
 
-  /* Design-system tokens — single source of truth for card/chip/tab treatments */
+  /* Design-system tokens - single source of truth for card/chip/tab treatments */
   --radius-card: 1.35rem;
   --radius-chip: 9999px;
   --ring-card: 0 0 0 1px rgba(0,0,0,0.07);
@@ -38,7 +38,7 @@
 }
 
 /* ── Terrain intelligence motif ─────────────────────────────────────────────
-   Subtle topographic contour texture — the platform reads like a field map.
+   Subtle topographic contour texture - the platform reads like a field map.
    Light surfaces get navy contours at ~4% opacity; dark surfaces get white.
    Refined texture, never decorative noise. */
 .topo-light {
@@ -49,7 +49,7 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280' viewBox='0 0 280 280'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.05' stroke-width='1'%3E%3Cpath d='M20 250c40-60 10-90 50-120s90-10 110-50 60-40 90-60'/%3E%3Cpath d='M0 230c50-55 25-85 62-112s85-15 108-52 58-36 92-58'/%3E%3Cpath d='M-15 210c55-50 40-80 74-104s80-20 106-54 56-32 94-56'/%3E%3Cpath d='M40 280c35-65 0-95 38-128s95-5 112-48 62-44 86-62'/%3E%3Cpath d='M65 280c30-60-5-88 32-122s90-8 110-46'/%3E%3C/g%3E%3C/svg%3E");
   background-size: 280px 280px;
 }
-/* Hero terrain — the contour motif made more present, as the civic "terrain"
+/* Hero terrain - the contour motif made more present, as the civic "terrain"
    under floating cards (the light counterpart to organic landscape imagery). */
 .topo-hero {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='340' height='340' viewBox='0 0 340 340'%3E%3Cg fill='none' stroke='%231a3a5c' stroke-opacity='0.07' stroke-width='1'%3E%3Cpath d='M24 304c48-72 12-108 60-144s108-12 132-60 72-48 108-72'/%3E%3Cpath d='M0 280c60-66 30-102 74-134s102-18 130-62 70-44 110-70'/%3E%3Cpath d='M-18 256c66-60 48-96 89-125s96-24 127-65 67-38 113-67'/%3E%3Cpath d='M48 340c42-78 0-114 46-154s114-6 134-58 74-53 103-74'/%3E%3Cpath d='M78 340c36-72-6-106 38-146s108-10 132-55'/%3E%3C/g%3E%3C/svg%3E");
@@ -64,7 +64,7 @@
 .pressable { transition: transform 0.15s ease; }
 .pressable:active { transform: scale(0.96); }
 
-/* Loading shimmer — intentional skeletons instead of bare "Loading…" text */
+/* Loading shimmer - intentional skeletons instead of bare "Loading…" text */
 @keyframes shimmer {
   0%   { background-position: -400px 0; }
   100% { background-position: 400px 0; }
@@ -76,7 +76,7 @@
   border-radius: 8px;
 }
 
-/* Empty state — looks deliberate, not broken */
+/* Empty state - looks deliberate, not broken */
 .empty-state {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   text-align: center; padding: 3rem 1.5rem; gap: 0.5rem;
@@ -132,14 +132,14 @@ body {
 
 /* ── Alive animations (2026) ─────────────────────────────────────────────── */
 
-/* Breathing pulse — soft scale/opacity loop for live indicators */
+/* Breathing pulse - soft scale/opacity loop for live indicators */
 @keyframes alive-pulse {
   0%,100% { transform: scale(1);    opacity: 1; }
   50%      { transform: scale(1.35); opacity: 0.7; }
 }
 .alive-pulse { animation: alive-pulse 2.4s cubic-bezier(0.4,0,0.6,1) infinite; }
 
-/* Halo ring that expands and fades — wraps the pulse dot */
+/* Halo ring that expands and fades - wraps the pulse dot */
 @keyframes alive-halo {
   0%   { transform: scale(1);   opacity: 0.5; }
   100% { transform: scale(2.8); opacity: 0; }
@@ -148,7 +148,7 @@ body {
   animation: alive-halo 2.4s cubic-bezier(0.4,0,0.6,1) infinite;
 }
 
-/* Ambient particle drift — hero background noise */
+/* Ambient particle drift - hero background noise */
 @keyframes drift-a {
   0%,100% { transform: translate(0,0) scale(1);    opacity: 0.06; }
   33%      { transform: translate(18px,-12px) scale(1.1); opacity: 0.12; }
@@ -189,7 +189,7 @@ body {
   .hero-float, .hero-float-2, .hero-float-3 { animation: none; }
 }
 
-/* Card lift on hover — physics feel */
+/* Card lift on hover - physics feel */
 .card-lift {
   transition: transform 0.55s cubic-bezier(0.32,0.72,0,1),
               box-shadow 0.55s cubic-bezier(0.32,0.72,0,1);
@@ -265,7 +265,7 @@ img { image-rendering: -webkit-optimize-contrast; }
 }
 
 /*
-  Tool fall trajectories — all tools start at SVG origin (170,108).
+  Tool fall trajectories - all tools start at SVG origin (170,108).
   Each keyframe translates from origin → peak → shelf landing position.
   Shelf x offsets from 170: -122, -62, 0, +62, +122
   Shelf y offset from 108: +108 (lands at y=216, below box bottom at y=200)
@@ -341,7 +341,7 @@ img { image-rendering: -webkit-optimize-contrast; }
 .tb-ring-1       { animation: tb-ring 0.9s cubic-bezier(0.22,1,0.36,1) 0ms   forwards; }
 .tb-ring-2       { animation: tb-ring 0.9s cubic-bezier(0.22,1,0.36,1) 180ms forwards; }
 
-/* Staggered tool falls — each 80ms apart so they pop out like a fountain */
+/* Staggered tool falls - each 80ms apart so they pop out like a fountain */
 .tb-fall-1 { animation: tb-fall-1 1.1s cubic-bezier(0.33,0,0.66,1) 0ms   forwards; }
 .tb-fall-2 { animation: tb-fall-2 1.1s cubic-bezier(0.33,0,0.66,1) 80ms  forwards; }
 .tb-fall-3 { animation: tb-fall-3 1.1s cubic-bezier(0.33,0,0.66,1) 160ms forwards; }

@@ -45,12 +45,12 @@ export async function GET() {
   const cycles = data.cycles ?? {};
   const demographics: Record<string, { vap: number; anglo: number; black: number; hisp: number; asian: number }> = data.demographics ?? {};
 
-  // 2026 primary party split (March 2026 — US Senate race ballots)
+  // 2026 primary party split (March 2026. US Senate race ballots)
   let primary2026: Record<string, { dem: number; rep: number }> = {};
   try {
     const t26raw = readFileSync(turnout26Path, "utf-8");
     primary2026 = JSON.parse(t26raw).precincts ?? {};
-  } catch { /* optional — silently missing is ok */ }
+  } catch { /* optional. Silently missing is ok */ }
 
   // Helper: find D and R candidate indices in a race
   function dRIdx(race: { candidates: { party: string }[] }) {

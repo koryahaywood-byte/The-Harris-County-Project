@@ -18,7 +18,7 @@ export default function CardShareButton({ slug, name, office }: Props) {
       ? `${window.location.origin}/politicians/${slug}/card`
       : `https://the-harris-county-project.vercel.app/politicians/${slug}/card`;
 
-  const shareText = `${name} · ${office} — via The Harris County Project`;
+  const shareText = `${name} · ${office}. Via The Harris County Project`;
 
   async function shareNative() {
     const url = cardUrl();

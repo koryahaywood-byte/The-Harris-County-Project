@@ -4,7 +4,7 @@ export default function InfrastructureFunding() {
       <iframe
         src="/infrastructure-funding.html"
         className="flex-1 w-full border-0"
-        title="Infrastructure Funding Map — Harris County"
+        title="Infrastructure Funding Map: Harris County"
         allowFullScreen
       />
     </div>

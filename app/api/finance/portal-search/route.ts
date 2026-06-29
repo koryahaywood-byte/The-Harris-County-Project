@@ -73,7 +73,7 @@ async function hcSearch(searchName: string): Promise<PortalFiling[]> {
     `${HC_BASE}/${m[1].replace(/^\.\.\//, "")}`
   );
 
-  // Pair them — each doc row has a date before it
+  // Pair them. Each doc row has a date before it
   for (let i = 0; i < allDocs.length; i++) {
     filings.push({
       date:   allDates[i] ?? "Unknown",
@@ -147,7 +147,7 @@ async function cohSearch(last: string, first: string): Promise<PortalFiling[]> {
   const resultsRes  = await fetch(COH_RESULTS, { headers: { Cookie: cookies }, cache: "no-store" });
   const resultsHtml = await resultsRes.text();
 
-  // Extract filing links — Houston COH results page has either:
+  // Extract filing links. Houston COH results page has either:
   // (a) a grid with Select$N postback rows (requires another POST to get PDF)
   // (b) direct links to PDFs in the grid
   const filings: PortalFiling[] = [];
@@ -174,16 +174,16 @@ async function cohSearch(last: string, first: string): Promise<PortalFiling[]> {
   // If we found links, pair with dates
   const count = Math.max(dates.length, links.length);
   if (count === 0) {
-    // No filings found — check if it's a "no results" page
+    // No filings found. Check if it's a "no results" page
     if (resultsHtml.includes("No records") || resultsHtml.includes("no results") || resultsHtml.includes("0 records")) {
       return [];
     }
-    // Could be postback-only grid — return a stub pointing to the results page
+    // Could be postback-only grid. Return a stub pointing to the results page
     // with note that user should use the portal directly
     if (resultsHtml.includes("Select$")) {
       filings.push({
         date:   "See portal",
-        label:  "Filings found — open portal to download",
+        label:  "Filings found. Open portal to download",
         url:    COH_RESULTS,
         portal: "houston",
       });

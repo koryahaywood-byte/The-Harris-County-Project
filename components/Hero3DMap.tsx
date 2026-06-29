@@ -1,6 +1,6 @@
 "use client";
 
-// Interactive 3D Harris County — the landing hero.
+// Interactive 3D Harris County: the landing hero.
 // Every one of the 1,172 precincts is hoverable: a raycast against a single
 // hidden picking mesh (per-face precinct index) drives a live tooltip and a
 // glowing highlight extrusion. Camera follows the cursor with soft parallax;
@@ -104,19 +104,19 @@ function buildCounty(features: Feature[], turnout: Record<string, { dem: number;
   const picker = new THREE.Mesh(pickerGeo, new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false, side: THREE.DoubleSide }));
   picker.renderOrder = -1;
 
-  // Glowing county silhouette under the extrusions — the unmistakable
+  // Glowing county silhouette under the extrusions: the unmistakable
   // "this is Harris County" border. Two layers: a bright tight border + a
   // soft outer halo so the county shape reads immediately.
   const silGeos = metas.map(m => new THREE.ShapeGeometry(m.shape));
   const silMerged = mergeGeometries(silGeos, false);
   silGeos.forEach(g => g.dispose());
   if (silMerged) {
-    // Outer halo — wide soft glow
+    // Outer halo: wide soft glow
     const halo = new THREE.Mesh(silMerged.clone(), new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.10, depthWrite: false }));
     halo.scale.set(1.08, 1.08, 1);
     halo.position.z = -0.6;
     visible.add(halo);
-    // Inner border — tight bright rim that traces the county edge
+    // Inner border. Tight bright rim that traces the county edge
     const border = new THREE.Mesh(silMerged, new THREE.MeshBasicMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.75, depthWrite: false }));
     border.scale.set(1.045, 1.045, 1);
     border.position.z = -0.4;
@@ -167,7 +167,7 @@ export default function Hero3DMap() {
       if (disposed) return;
       st.built = st.built ?? buildCounty(geo.features, t.precincts);
       county.add(st.built.visible, st.built.picker);
-      // downtown Houston marker — pulsing amber ring + core
+      // downtown Houston marker. Pulsing amber ring + core
       const [dx, dy] = st.built.downtown;
       const marker = new THREE.Group();
       const ring = new THREE.Mesh(new THREE.RingGeometry(2.2, 2.9, 40), new THREE.MeshBasicMaterial({ color: 0xfbbf24, transparent: true, opacity: 0.9, side: THREE.DoubleSide, depthWrite: false }));
@@ -230,7 +230,7 @@ export default function Hero3DMap() {
       pointer.set(st.px, st.py);
       const built = st.built;
 
-      // North stays up — only a whisper of idle sway, paused while exploring
+      // North stays up. Only a whisper of idle sway, paused while exploring
       const tEl = clock.getElapsedTime();
       const idle = reduced ? 0 : Math.sin(tEl * 0.25) * 0.035;
       county.rotation.z += ((st.hovering ? 0 : idle) - county.rotation.z) * 0.04;
@@ -240,7 +240,7 @@ export default function Hero3DMap() {
       const marker = county.getObjectByName("downtown-marker");
       if (marker) marker.scale.setScalar(1 + Math.sin(tEl * 2.4) * 0.18);
 
-      // Cursor parallax — the map leans toward the pointer
+      // Cursor parallax. The map leans toward the pointer
       camera.position.x += (camBase.x + st.parX * 7 - camera.position.x) * 0.05;
       camera.position.y += (camBase.y - st.parY * 5 - camera.position.y) * 0.05;
       camera.lookAt(0, -3, 2);

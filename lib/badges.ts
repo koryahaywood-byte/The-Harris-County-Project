@@ -197,7 +197,7 @@ const ALL_BADGES: Array<Badge & { check: (ctx: BadgeContext) => boolean }> = [
   {
     id: "freshman",
     name: "The Freshman",
-    description: "First term in this office — elected 2023 or later.",
+    description: "First term in this office. Elected 2023 or later.",
     tier: "bronze",
     icon: "N",
     check: ({ pol }) => !!pol.termStart && pol.termStart >= 2023,
@@ -207,7 +207,7 @@ const ALL_BADGES: Array<Badge & { check: (ctx: BadgeContext) => boolean }> = [
   {
     id: "committee-chair",
     name: "Committee Chair",
-    description: "Chairs a legislative committee — controls the agenda and hearings.",
+    description: "Chairs a legislative committee. Controls the agenda and hearings.",
     tier: "gold",
     icon: "C",
     check: ({ pol }) => !!(pol.committeeRoles?.some(r => r.role === "Chair")),
@@ -239,7 +239,7 @@ const ALL_BADGES: Array<Badge & { check: (ctx: BadgeContext) => boolean }> = [
   {
     id: "the-mayor",
     name: "The Mayor",
-    description: "Mayor of Houston — leads the nation's 4th largest city.",
+    description: "Mayor of Houston. Leads the nation's 4th largest city.",
     tier: "hof",
     icon: "M",
     check: ({ pol }) => !!(pol.roles?.includes("mayor")),
@@ -247,7 +247,7 @@ const ALL_BADGES: Array<Badge & { check: (ctx: BadgeContext) => boolean }> = [
   {
     id: "county-judge",
     name: "County Judge",
-    description: "Presides over Commissioners Court — the CEO of Harris County.",
+    description: "Presides over Commissioners Court. The CEO of Harris County.",
     tier: "hof",
     icon: "J",
     check: ({ pol }) => !!(pol.roles?.includes("county-judge")),

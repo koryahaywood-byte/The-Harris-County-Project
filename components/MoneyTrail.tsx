@@ -1,6 +1,6 @@
 "use client";
 
-// Money Trail — cross-official donor network.
+// Money Trail: cross-official donor network.
 // Data: public/data/donor-network.json (FEC itemized Schedule A, built by
 // scripts/build-donor-network.mjs). Zero-dependency SVG network graph:
 // officials anchored on a ring, donors positioned between the officials
@@ -79,7 +79,7 @@ function NetworkGraph({ net, donors, focus }: { net: DonorNetwork; donors: Donor
         <circle key={donor.name} cx={x} cy={y} r={r}
           fill={donor.recipients.length > 1 ? "#d97706" : "#9ca3af"}
           fillOpacity={focus ? (donor.name === focus ? 1 : 0.25) : 0.75}>
-          <title>{`${donor.name}${donor.employer ? ` (${donor.employer})` : ""} — ${fmtMoney(donor.total)} across ${donor.recipients.length} official(s)`}</title>
+          <title>{`${donor.name}${donor.employer ? ` (${donor.employer})` : ""}: ${fmtMoney(donor.total)} across ${donor.recipients.length} official(s)`}</title>
         </circle>
       ))}
       {/* official nodes */}
@@ -132,7 +132,7 @@ export function MoneyTrailView() {
         </div>
         <p className="text-xs leading-relaxed mb-4" style={{ color: "#374151" }}>
           Officials and the donors who fund them. <span style={{ color: "#d97706" }}>Amber</span> donors
-          give to more than one tracked official — the connective tissue of Harris County money.
+          give to more than one tracked official. The connective tissue of Harris County money.
           Line weight is contribution size. Hover any node{mode === "3d" ? ", drag to orbit" : ""}.
         </p>
         {mode === "3d"
@@ -144,7 +144,7 @@ export function MoneyTrailView() {
       {shared.length > 0 && (
         <div className="hcp-card p-5 md:p-6">
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: MUTED }}>
-            Donors funding multiple officials — click to trace
+            Donors funding multiple officials: click to trace
           </p>
           <div className="space-y-1.5">
             {shared.slice(0, 25).map(d => (

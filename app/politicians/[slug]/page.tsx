@@ -330,7 +330,7 @@ function VitruvianFigure({ slug, photo, party, name, legiscanName }: {
           <ellipse cx="342" cy="135" rx="8" ry="12" fill="#c8946a"/>
           <ellipse cx="341" cy="135" rx="4" ry="7" fill="#bf8a5e" opacity="0.6"/>
 
-          {/* HEAD — clean sphere, no photo inside SVG */}
+          {/* HEAD. Clean sphere, no photo inside SVG */}
           <circle cx="280" cy="135" r="63" fill="#d4a87a"/>
           {/* Sphere shading for depth */}
           <circle cx="280" cy="135" r="63">
@@ -343,7 +343,7 @@ function VitruvianFigure({ slug, photo, party, name, legiscanName }: {
           </radialGradient>
           <circle cx="280" cy="135" r="63" fill={`url(#face-sh-${slug})`}/>
 
-          {/* Minimal face features — elegant, not cartoonish */}
+          {/* Minimal face features. Elegant, not cartoonish */}
           <ellipse cx="262" cy="132" rx="4.5" ry="5.5" fill="rgba(60,35,20,0.55)"/>
           <ellipse cx="298" cy="132" rx="4.5" ry="5.5" fill="rgba(60,35,20,0.55)"/>
           <path d="M268,152 Q280,160 292,152" fill="none" stroke="rgba(60,35,20,0.35)" strokeWidth="2" strokeLinecap="round"/>
@@ -381,7 +381,7 @@ function VitruvianFigure({ slug, photo, party, name, legiscanName }: {
         )}
       </svg>
 
-      {/* ── Photo overlay — floats above the SVG head, liquid glass frame ── */}
+      {/* ── Photo overlay. Floats above the SVG head, liquid glass frame ── */}
       {photo && (
         <div
           className="vit-photo absolute pointer-events-none"
@@ -677,11 +677,11 @@ function SocialFeed({ pol }: { pol: import("@/lib/politicians").Politician }) {
         </div>
       </div>
 
-      {/* Official feed — Twitter/X timeline */}
+      {/* Official feed: Twitter/X timeline */}
       {pol.twitter && (
         <div>
           <p className="text-[9px] font-black uppercase tracking-[0.25em] mb-2" style={{ color: "var(--muted)" }}>
-            Official Posts — @{pol.twitter}
+            Official Posts: @{pol.twitter}
           </p>
           <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(26,58,92,0.1)" }}>
             <TwitterTimeline handle={pol.twitter} />
@@ -710,15 +710,15 @@ function SocialFeed({ pol }: { pol: import("@/lib/politicians").Politician }) {
             {pol.tiktok    && <ProfileCard platform="tiktok"    handle={pol.tiktok}    color="#010101" bg="#f9f9f9" />}
           </div>
           <p className="text-[9px] mt-2" style={{ color: "var(--muted)" }}>
-            Instagram and TikTok don&apos;t allow third-party feed embeds — view directly on their platforms.
+            Instagram and TikTok don&apos;t allow third-party feed embeds. View directly on their platforms.
           </p>
         </div>
       )}
 
-      {/* Buzz — Bluesky + Google News mentions */}
+      {/* Buzz. Bluesky + Google News mentions */}
       <div>
         <p className="text-[9px] font-black uppercase tracking-[0.25em] mb-2" style={{ color: "var(--muted)" }}>
-          Buzz — What People Are Saying
+          Buzz. What People Are Saying
         </p>
         {loadingBuzzes ? (
           <div className="py-8 flex items-center justify-center gap-2" style={{ color: "var(--muted)" }}>
@@ -984,7 +984,7 @@ export default function PoliticianProfile() {
         {/* Main hero grid: figure left, stats right */}
         <div className="relative max-w-6xl mx-auto px-4 pt-2 pb-6 grid grid-cols-1 md:grid-cols-[340px_1fr] gap-0 md:gap-6 items-end">
 
-          {/* Figure column — character-select arena */}
+          {/* Figure column: character-select arena */}
           <div className="relative">
             <style>{`
               @keyframes arena-ring   { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
@@ -1145,7 +1145,7 @@ export default function PoliticianProfile() {
         )}
       </div>
 
-      {/* ── Field Briefing — auto-updating narrative ───────────────────── */}
+      {/* ── Field Briefing. Auto-updating narrative ───────────────────── */}
       <NarrativePanel pol={pol} billCount={billTotal} lawCount={lawBills.length} />
 
       {/* ── Tabs + Content ─────────────────────────────────────────────── */}
@@ -1362,7 +1362,7 @@ export default function PoliticianProfile() {
                           </span>
                         )}
                         {financeError && (
-                          <span className="text-[10px] text-amber-600">({financeError} — showing cached data)</span>
+                          <span className="text-[10px] text-amber-600">({financeError}: showing cached data)</span>
                         )}
                       </p>
                     </div>
@@ -1403,7 +1403,7 @@ export default function PoliticianProfile() {
                     )}
                   </div>
 
-                  {/* Burn rate bar — only if both raised and spent */}
+                  {/* Burn rate bar. Only if both raised and spent */}
                   {finance.raised && finance.spent && (
                     <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[5px]">
                       <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-5">
@@ -1475,10 +1475,10 @@ export default function PoliticianProfile() {
                                     {h.cash >= 1000000 ? `$${(h.cash / 1000000).toFixed(2)}M` : h.cash >= 1000 ? `$${(h.cash / 1000).toFixed(1)}K` : `$${h.cash}`}
                                   </td>
                                   <td className="py-1.5 text-right text-[var(--muted)]">
-                                    {h.raised > 0 ? (h.raised >= 1000000 ? `$${(h.raised / 1000000).toFixed(2)}M` : h.raised >= 1000 ? `$${(h.raised / 1000).toFixed(1)}K` : `$${h.raised}`) : "—"}
+                                    {h.raised > 0 ? (h.raised >= 1000000 ? `$${(h.raised / 1000000).toFixed(2)}M` : h.raised >= 1000 ? `$${(h.raised / 1000).toFixed(1)}K` : `$${h.raised}`) : "–"}
                                   </td>
                                   <td className="py-1.5 text-right text-[var(--muted)]">
-                                    {h.spent > 0 ? (h.spent >= 1000000 ? `$${(h.spent / 1000000).toFixed(2)}M` : h.spent >= 1000 ? `$${(h.spent / 1000).toFixed(1)}K` : `$${h.spent}`) : "—"}
+                                    {h.spent > 0 ? (h.spent >= 1000000 ? `$${(h.spent / 1000000).toFixed(2)}M` : h.spent >= 1000 ? `$${(h.spent / 1000).toFixed(1)}K` : `$${h.spent}`) : "–"}
                                   </td>
                                 </tr>
                               ))}
@@ -1502,7 +1502,7 @@ export default function PoliticianProfile() {
                     </Link>
                   </div>
 
-                  {/* Money Trail — shared donors across officials */}
+                  {/* Money Trail. Shared donors across officials */}
                   <SharedDonors officialName={pol.name} />
                 </div>
               );
@@ -1521,7 +1521,7 @@ export default function PoliticianProfile() {
                 ) : (
                   <>
                     <p className="text-xs text-[var(--muted)] mb-5 font-semibold uppercase tracking-[0.18em]">
-                      Recent Coverage — {pol.name}
+                      Recent Coverage: {pol.name}
                     </p>
                     <div className="space-y-3">
                       {news.map((article, i) => {
@@ -1566,7 +1566,7 @@ export default function PoliticianProfile() {
 
           </div>
 
-          {/* ── District shift — historical depth layer ── */}
+          {/* ── District shift. Historical depth layer ── */}
           {(() => {
             const d = pol.district;
             const filt: [string, string] | null =

@@ -5,7 +5,7 @@ import path from "path";
 // POST /api/archive/council-meeting
 // Body: { date: "YYYY-MM-DD", data: CouncilMeetingData }
 // This is called by the city-hall API after a successful fetch (or by Vercel cron).
-// It writes to data/council-meetings/YYYY-MM-DD.json — never overwrites.
+// It writes to data/council-meetings/YYYY-MM-DD.json: never overwrites.
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
@@ -25,12 +25,12 @@ export async function POST(req: Request) {
 
   await mkdir(dir, { recursive: true });
 
-  // Never overwrite — archive-first ethos
+  // Never overwrite: archive-first ethos
   try {
     await readFile(filePath);
     return NextResponse.json({ status: "exists", path: `data/council-meetings/${date}.json` });
   } catch {
-    // File doesn't exist — write it
+    // File doesn't exist: write it
   }
 
   const payload = {
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
   return NextResponse.json({ status: "written", path: `data/council-meetings/${date}.json` });
 }
 
-// GET /api/archive/council-meeting?list=true — list all archived meetings
+// GET /api/archive/council-meeting?list=true. List all archived meetings
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const dir = path.join(process.cwd(), "data", "council-meetings");

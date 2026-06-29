@@ -1,6 +1,6 @@
 "use client";
 
-// Liquid-glass two-sided flip card for an official. Presentation layer only —
+// Liquid-glass two-sided flip card for an official. Presentation layer only –
 // reads the same data model as the profile page (politicians, stats, badges,
 // finance, district info). Used inline on /politicians/[slug] (Card View
 // toggle) and standalone at /politicians/[slug]/card.
@@ -141,7 +141,7 @@ export default function OfficialCard({ pol, defaultSide = "front" }: { pol: Poli
         style={{ transformStyle: "preserve-3d", transform: flipped ? "rotateY(180deg)" : "none", aspectRatio: "5/7.2" }}
         onClick={() => setFlipped(f => !f)}
         role="button"
-        aria-label={`${pol.name} official card — tap to flip`}
+        aria-label={`${pol.name} official card: tap to flip`}
       >
         {/* ── FRONT ── */}
         <div className="absolute inset-0 rounded-[1.6rem] overflow-hidden p-5 flex flex-col" style={{ ...glass, backfaceVisibility: "hidden" }}>
@@ -186,16 +186,16 @@ export default function OfficialCard({ pol, defaultSide = "front" }: { pol: Poli
             {/* Facts row */}
             <div className="grid grid-cols-3 gap-2 mb-3">
               <div className="rounded-xl py-2 text-center" style={{ background: "rgba(255,255,255,0.05)" }}>
-                <p className="text-sm font-bold text-white">{pol.termStart ?? "—"}</p>
+                <p className="text-sm font-bold text-white">{pol.termStart ?? "–"}</p>
                 <p className="text-[8px] uppercase tracking-[0.14em] text-white/40 font-bold">First elected</p>
               </div>
               <div className="rounded-xl py-2 text-center" style={{ background: "rgba(255,255,255,0.05)" }}>
-                <p className="text-sm font-bold text-white">{yearsIn !== null ? `${yearsIn} yrs` : "—"}</p>
+                <p className="text-sm font-bold text-white">{yearsIn !== null ? `${yearsIn} yrs` : "–"}</p>
                 <p className="text-[8px] uppercase tracking-[0.14em] text-white/40 font-bold">In office</p>
               </div>
               <div className="rounded-xl py-2 text-center" style={{ background: "rgba(255,255,255,0.05)" }}>
                 <p className="text-sm font-bold" style={{ color: GOLD_BRIGHT }}>
-                  {finance?.cash ? fmt(finance.cash) : "—"}
+                  {finance?.cash ? fmt(finance.cash) : "–"}
                 </p>
                 <p className="text-[8px] uppercase tracking-[0.14em] text-white/40 font-bold">Cash on hand</p>
               </div>
@@ -231,7 +231,7 @@ export default function OfficialCard({ pol, defaultSide = "front" }: { pol: Poli
             </p>
           </div>
           <p className="text-[8.5px] text-white/30 -mt-1.5 px-1">
-            Top itemized donors pending Schedule A extraction — totals from latest filing ({finance?.asOf ?? "n/a"}).
+            Top itemized donors pending Schedule A extraction. Totals from latest filing ({finance?.asOf ?? "n/a"}).
           </p>
 
           {/* Stat grid */}

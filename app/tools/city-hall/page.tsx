@@ -157,8 +157,8 @@ const JOURNALISTS = [
   { name: "Dylan McGuinness", outlet: "Houston Chronicle",    beat: "Houston City Council & Mayor",           handle: "@dylmcguinness",  url: "https://x.com/dylmcguinness" },
   { name: "Mike Morris",      outlet: "Houston Chronicle",    beat: "Harris County & Houston government",     handle: "@mmorrisHC",      url: "https://x.com/mmorrisHC" },
   { name: "Jasper Scherer",   outlet: "Houston Chronicle",    beat: "Houston politics & City Hall",           handle: "@jaspscherer",    url: "https://x.com/jaspscherer" },
-  { name: "Abby Church",      outlet: "Houston Chronicle",    beat: "City Hall reporter — budget, council, mayor's office", handle: "@abbychurch",     url: "https://x.com/abbychurch" },
-  { name: "Evan Mintz",       outlet: "Houston Chronicle",    beat: "Opinion & commentary — city politics",   handle: "@EvanMintz",      url: "https://x.com/EvanMintz" },
+  { name: "Abby Church",      outlet: "Houston Chronicle",    beat: "City Hall reporter. Budget, council, mayor's office", handle: "@abbychurch",     url: "https://x.com/abbychurch" },
+  { name: "Evan Mintz",       outlet: "Houston Chronicle",    beat: "Opinion & commentary. City politics",   handle: "@EvanMintz",      url: "https://x.com/EvanMintz" },
   { name: "Andrew Schneider", outlet: "Houston Public Media", beat: "City government, housing & transit",     handle: "@aschneider_hpm", url: "https://x.com/aschneider_hpm" },
   { name: "Paul Cobler",      outlet: "Texas Tribune",        beat: "Houston / Harris County accountability", handle: "@paulcobler",     url: "https://x.com/paulcobler" },
   { name: "Courier Texas",    outlet: "Courier Texas",        beat: "Statewide + Houston politics and policy",handle: "@CourierTexas",   url: "https://x.com/CourierTexas" },
@@ -173,10 +173,10 @@ const COMMUNITY_VOICES = [
 
 const HASHTAGS = [
   { tag: "#HoustonCityCouncil", desc: "City Council votes, zoning, contracts, and mayoral proposals" },
-  { tag: "#HTownPolitics",      desc: "Broad Houston political conversation — elections, endorsements, debates" },
+  { tag: "#HTownPolitics",      desc: "Broad Houston political conversation. Elections, endorsements, debates" },
   { tag: "#HoustonChron",       desc: "Houston Chronicle breaking news and investigations" },
   { tag: "#HoustonPublicMedia", desc: "HPM's public-radio coverage of city and county government" },
-  { tag: "#HISD",               desc: "Houston ISD — school board votes, superintendent news, voucher impact" },
+  { tag: "#HISD",               desc: "Houston ISD. School board votes, superintendent news, voucher impact" },
   { tag: "#HoustonBudget",      desc: "City of Houston budget process, property taxes, and bond elections" },
 ];
 
@@ -190,16 +190,16 @@ interface SocialPost {
 }
 
 const SOCIAL_POSTS: SocialPost[] = [
-  { platform: "Twitter/X", author: "Abby Church",           handle: "@abbychurch",           content: "Houston City Council passes Mayor Whitmire's $7.5B budget 15-1. Ed Pollard the lone no vote; Tiffany Thomas absent. The $5/month trash fee starts in July — first time Houston has ever charged for garbage pickup.",                url: "https://x.com/abbychurch",                time: "25m ago" },
+  { platform: "Twitter/X", author: "Abby Church",           handle: "@abbychurch",           content: "Houston City Council passes Mayor Whitmire's $7.5B budget 15-1. Ed Pollard the lone no vote; Tiffany Thomas absent. The $5/month trash fee starts in July. First time Houston has ever charged for garbage pickup.",                url: "https://x.com/abbychurch",                time: "25m ago" },
   { platform: "Threads",   author: "Texas Tribune",         handle: "@texastribune",         content: "Houston City Council approved a controversial housing ordinance today that could affect thousands of renters in Harris County.",                                    url: "https://www.threads.net/@texastribune",   time: "2h ago" },
-  { platform: "Threads",   author: "Andrew Schneider",      handle: "@aschneider_hpm",       content: "Sat in on today's council meeting. The budget line items on public safety drew the sharpest debate — here's what officials actually said.",                         url: "https://www.threads.net/@aschneider_hpm", time: "3h ago" },
+  { platform: "Threads",   author: "Andrew Schneider",      handle: "@aschneider_hpm",       content: "Sat in on today's council meeting. The budget line items on public safety drew the sharpest debate. Here's what officials actually said.",                         url: "https://www.threads.net/@aschneider_hpm", time: "3h ago" },
   { platform: "Threads",   author: "Shea Jordan Smith",     handle: "@sheajordansmith",      content: "City Hall again dragging its feet on the Third Ward development proposal. Community voices were clear. Watch what they actually vote on vs what they say.",         url: "https://www.threads.net/@sheajordansmith",time: "4h ago" },
-  { platform: "Twitter/X", author: "Courier Texas",         handle: "@CourierTexas",         content: "Houston becomes the last major Texas city to adopt a garbage fee. The $5/month charge is a small number with a big political story — it's been 40 years of 'low taxes, low services.'",                                            url: "https://x.com/CourierTexas",              time: "4h ago" },
+  { platform: "Twitter/X", author: "Courier Texas",         handle: "@CourierTexas",         content: "Houston becomes the last major Texas city to adopt a garbage fee. The $5/month charge is a small number with a big political story. It's been 40 years of 'low taxes, low services.'",                                            url: "https://x.com/CourierTexas",              time: "4h ago" },
   { platform: "Twitter/X", author: "Evan Mintz",            handle: "@EvanMintz",            content: "The trash fee isn't really about trash. It's about whether Houston can stop bleeding money from a general fund that's run deficits every year since 2009. That's the real vote that happened today.",                               url: "https://x.com/EvanMintz",                 time: "5h ago" },
   { platform: "Threads",   author: "Black Girls Who Brunch",handle: "@blackgirlswhobrunchtx",content: "Houston just passed a $7.5B budget and you're going to start paying a $5 trash fee every month. Know who your council member is and whether they voted yes. This is why local elections matter.",                                  url: "https://www.threads.net/@blackgirlswhobrunchtx", time: "6h ago" },
-  { platform: "Twitter/X", author: "Mustafa Tameez",        handle: "@mustafatameez",        content: "The real story from today's Houston City Council meeting isn't the headline vote — it's what was quietly tabled. Worth paying attention.",                          url: "https://twitter.com/mustafatameez",       time: "6h ago" },
+  { platform: "Twitter/X", author: "Mustafa Tameez",        handle: "@mustafatameez",        content: "The real story from today's Houston City Council meeting isn't the headline vote. It's what was quietly tabled. Worth paying attention.",                          url: "https://twitter.com/mustafatameez",       time: "6h ago" },
   { platform: "Threads",   author: "Angel Carroll",         handle: "@iangelcarrol",         content: "so houston is charging us $5/month for trash now. i have questions. is this going to actually fix pickup? because my block has missed collection THREE times this year alone",                                                       url: "https://www.threads.net/@iangelcarrol",   time: "7h ago" },
-  { platform: "Threads",   author: "The Southern Socialite",handle: "@thesouthernsocialite", content: "Watching the budget vote live. The city council chamber is packed — protesters just got escorted out chanting. Houston politics never boring.",                     url: "https://www.threads.net/@thesouthernsocialite", time: "7h ago" },
+  { platform: "Threads",   author: "The Southern Socialite",handle: "@thesouthernsocialite", content: "Watching the budget vote live. The city council chamber is packed. Protesters just got escorted out chanting. Houston politics never boring.",                     url: "https://www.threads.net/@thesouthernsocialite", time: "7h ago" },
   { platform: "Twitter/X", author: "Greg Jefferson",        handle: "@gregjefferson",        content: "Council vote on the $280M infrastructure bond: passed 13-4. Districts C, E, G, J voted no. Full roll call in my story.",                                          url: "https://twitter.com/gregjefferson",       time: "8h ago" },
   { platform: "Facebook",  author: "Harris County Dems",    handle: "fb/harriscountydems",   content: "Today's city council vote on the East End affordable housing project: a win for working families. Commissioner Ellis statement attached.",                           url: "https://www.facebook.com/groups/search/results/?q=harris+county+politics", time: "9h ago" },
 ];
@@ -256,7 +256,7 @@ export default function CityHallPage() {
             )}
           </div>
 
-          {/* Stats snapshot — clickable filter tabs */}
+          {/* Stats snapshot. Clickable filter tabs */}
           {data && allItems.length > 0 && (
             <div className="flex items-stretch gap-px overflow-hidden rounded-t-2xl">
               {(["high", "medium", "low"] as const).map(s => (
@@ -317,7 +317,7 @@ export default function CityHallPage() {
         {error && (
           <div className="rounded-xl ring-1 ring-red-200 p-5 mb-8" style={{ background: "#fef2f2", color: "#7f1d1d" }}>
             <p className="font-semibold text-sm mb-1">Could not load latest meeting</p>
-            <p className="text-xs opacity-70">{error} — check <a href="https://emilytakesnotes.com" target="_blank" rel="noopener noreferrer" className="underline">emilytakesnotes.com</a></p>
+            <p className="text-xs opacity-70">{error}: check <a href="https://emilytakesnotes.com" target="_blank" rel="noopener noreferrer" className="underline">emilytakesnotes.com</a></p>
           </div>
         )}
 
@@ -429,7 +429,7 @@ export default function CityHallPage() {
                 </div>
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--muted)] mb-4">Community Voices — When They Talk City Hall</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--muted)] mb-4">Community Voices. When They Talk City Hall</p>
                 <div className="space-y-3">
                   {COMMUNITY_VOICES.map(j => (
                     <a key={j.handle} href={j.url} target="_blank" rel="noopener noreferrer"

@@ -13,7 +13,7 @@ export default function Nav() {
     pathname.startsWith("/blogs") ||
     pathname.startsWith("/politicians");
 
-  // Only these tools pull live data — everything else is static
+  // Only these tools pull live data. Everything else is static
   const LIVE_TOOLS = [
     "/tools/heat-check",
     "/tools/precinct-lookup",

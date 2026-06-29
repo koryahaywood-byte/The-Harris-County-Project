@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { PDFDocument } from "pdf-lib";
 import Anthropic from "@anthropic-ai/sdk";
 
-// Allow up to 5 minutes — Vercel cron uses this route, which needs time for 17 sequential scrapes
+// Allow up to 5 minutes. Vercel cron uses this route, which needs time for 17 sequential scrapes
 export const maxDuration = 300;
 
 const COH_SEARCH  = "https://cohweb.houstontx.gov/CampaignFinanceWeb/CFRwebsiteSimpleSearch.aspx";
@@ -61,7 +61,7 @@ async function getFormTokens(url: string, cookies = ""): Promise<FormTokens> {
   const html = await res.text();
   const rawCookies = res.headers.get("set-cookie") ?? "";
 
-  // Collect ALL cookies the site sets — session + anonymous token both required
+  // Collect ALL cookies the site sets. Session + anonymous token both required
   const parts: string[] = [];
   for (const match of rawCookies.matchAll(/([A-Za-z_.][A-Za-z0-9_.]*=[^;,]+)/g)) {
     const kv = match[1].trim();
@@ -139,7 +139,7 @@ async function searchAndGetRows(
   tokens.viewStateGen    = vgMatch?.[1] ?? "";
   tokens.eventValidation = evMatch?.[1] ?? "";
 
-  // Find all rows — match Select$N then grab nearest date (MM/DD/YYYY) and report ID number
+  // Find all rows. Match Select$N then grab nearest date (MM/DD/YYYY) and report ID number
   // Two patterns: old <font> tags and newer <span>/<td> markup
   const rowRegex = /Select\$(\d+)[\s\S]{0,600}?(\d{2}\/\d{2}\/\d{4})[\s\S]{0,400}?(?:<[^>]+>)*(\d{5,})/g;
   const rows: { rowIndex: number; date: string; reportId: string }[] = [];
@@ -255,7 +255,7 @@ export async function GET() {
   const results: COHCandidate[] = [];
   const seen = new Set<string>();
 
-  // Each candidate needs its own fresh session — run in parallel, 4 at a time
+  // Each candidate needs its own fresh session. Run in parallel, 4 at a time
   const unique = COH_CANDIDATES.filter((c) => {
     if (seen.has(c.name)) return false;
     seen.add(c.name);

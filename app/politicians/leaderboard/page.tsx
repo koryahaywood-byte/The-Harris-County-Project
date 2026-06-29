@@ -95,7 +95,7 @@ export default function LeaderboardPage() {
             OVR Leaderboard
           </h1>
           <p className="text-white/65 text-sm max-w-lg">
-            {rows.length} elected officials serving Harris County residents — ranked by composite score. Sort by any attribute.
+            {rows.length} elected officials serving Harris County residents. Ranked by composite score. Sort by any attribute.
           </p>
 
           {/* Top 3 podium */}
@@ -256,7 +256,7 @@ export default function LeaderboardPage() {
                     </div>
                   </div>
 
-                  {/* OVR — big */}
+                  {/* OVR: big */}
                   <div className="text-right">
                     <span className={`text-2xl font-black tabular-nums leading-none ${
                       stats.ovr >= 85 ? "text-amber-500" :

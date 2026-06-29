@@ -7,24 +7,24 @@ import ThreadsFeed from "@/components/ThreadsFeed";
 // The 9 congressional districts that cover Harris County (verified against the
 // precinct crosswalk: congressional = 2025 PLANC2333, state/local = TIGER 2024).
 const REPS = [
-  { name: "Seat Vacant (CD-18)", district: "CD-18", party: "D", note: "D nominee: Christian Menefee — seat vacant since SJL's death Jul 2024",    photo: "" },
-  { name: "Al Green",           district: "CD-9",  party: "D", note: "Retiring — lost CD-18 runoff; term ends Jan 2027",          photo: "https://unitedstates.github.io/images/congress/450x550/G000553.jpg" },
+  { name: "Seat Vacant (CD-18)", district: "CD-18", party: "D", note: "D nominee: Christian Menefee. Seat vacant since SJL's death Jul 2024",    photo: "" },
+  { name: "Al Green",           district: "CD-9",  party: "D", note: "Retiring. Lost CD-18 runoff; term ends Jan 2027",          photo: "https://unitedstates.github.io/images/congress/450x550/G000553.jpg" },
   { name: "Lizzie Fletcher",    district: "CD-7",  party: "D", note: "Energy & Commerce Committee",  photo: "https://unitedstates.github.io/images/congress/450x550/F000468.jpg" },
   { name: "Sylvia Garcia",      district: "CD-29", party: "D", note: "House Judiciary Committee",    photo: "https://unitedstates.github.io/images/congress/450x550/G000587.jpg" },
   { name: "Dan Crenshaw",       district: "CD-2",  party: "R", note: "House Armed Services",         photo: "https://unitedstates.github.io/images/congress/450x550/C001120.jpg" },
   { name: "Morgan Luttrell",    district: "CD-8",  party: "R", note: "North Harris & Montgomery",    photo: "https://unitedstates.github.io/images/congress/450x550/L000595.jpg" },
   { name: "Troy Nehls",         district: "CD-22", party: "R", note: "Fort Bend & southwest Harris", photo: "https://unitedstates.github.io/images/congress/450x550/N000026.jpg" },
   { name: "Brian Babin",        district: "CD-36", party: "R", note: "East Harris & Ship Channel",   photo: "https://unitedstates.github.io/images/congress/450x550/B001291.jpg" },
-  { name: "Wesley Hunt",        district: "CD-38", party: "R", note: "Leaving — ran for Senate, lost primary; term ends Jan 2027",                 photo: "https://unitedstates.github.io/images/congress/450x550/H001090.jpg" },
+  { name: "Wesley Hunt",        district: "CD-38", party: "R", note: "Leaving. Ran for Senate, lost primary; term ends Jan 2027",                 photo: "https://unitedstates.github.io/images/congress/450x550/H001090.jpg" },
 ];
 
 const CONGRESS = { name: "119th Congress", status: "In Session", term: "Jan 2025 – Jan 2027" };
 
 const TRACKS = [
-  { label: "Floor Votes",          desc: "Every vote cast by Harris County's US delegation — party-line, bipartisan, and notable splits.", color: "#991b1b" },
+  { label: "Floor Votes",          desc: "Every vote cast by Harris County's US delegation. Party-line, bipartisan, and notable splits.", color: "#991b1b" },
   { label: "Committee Work",       desc: "Hearings, markups, and chair positions. Fletcher (Energy & Commerce) and Babin (Science Chair) tracked closely.", color: "#b91c1c" },
   { label: "Federal Funding",      desc: "FEMA disaster relief, Port of Houston grants, HUD housing dollars, and TxDOT highway money flowing to Harris County.", color: "#0891b2" },
-  { label: "Campaign Finance",     desc: "FEC filings for all 9 reps — donors, PAC money, and spending compared to district lean.", color: "#b45309" },
+  { label: "Campaign Finance",     desc: "FEC filings for all 9 reps. Donors, PAC money, and spending compared to district lean.", color: "#b45309" },
 ];
 
 const JOURNALISTS = [
@@ -38,8 +38,8 @@ const JOURNALISTS = [
 const HASHTAGS = [
   { tag: "#HoustonCongress",  desc: "Houston delegation floor votes, committee work, and federal funding wins" },
   { tag: "#HarrisCounty",     desc: "County-level angle on federal legislation and FEMA disaster relief" },
-  { tag: "#CD7",              desc: "Lizzie Fletcher's district — energy corridor, Westheimer, Katy" },
-  { tag: "#CD18",             desc: "CD-18 (Third Ward, Midtown, Heights) — seat vacant; Menefee is the D nominee for November" },
+  { tag: "#CD7",              desc: "Lizzie Fletcher's district. Energy corridor, Westheimer, Katy" },
+  { tag: "#CD18",             desc: "CD-18 (Third Ward, Midtown, Heights). Seat vacant; Menefee is the D nominee for November" },
   { tag: "#HoustonChron",     desc: "Houston Chronicle breaking news and investigations" },
   { tag: "#texastribune",     desc: "Texas Tribune non-partisan accountability journalism" },
 ];
@@ -47,11 +47,11 @@ const HASHTAGS = [
 interface SocialPost { platform: "Threads"|"Facebook"|"Twitter/X"; author: string; handle: string; content: string; url: string; time: string; image?: string; verified?: boolean; }
 const SOCIAL: SocialPost[] = [
   { platform: "Twitter/X", author: "Houston Chronicle",  handle: "@HoustonChron",    verified: true, image: "https://images.unsplash.com/photo-1503198515498-d0bd9ed16902?auto=format&fit=crop&w=800&q=70", content: "Houston's congressional delegation split on the latest federal budget deal. Green, Garcia, Fletcher voted yes. Crenshaw, Nehls, Hunt voted no. Full breakdown in our story.", url: "https://twitter.com/HoustonChron",      time: "2h ago" },
-  { platform: "Twitter/X", author: "Mike Morris",        handle: "@mmorrisHC",       content: "FEMA approved supplemental disaster relief for Harris County — $800M incoming. Bipartisan push led by Crenshaw and Garcia cleared the committee hurdle.",             url: "https://twitter.com/mmorrisHC",         time: "4h ago" },
+  { platform: "Twitter/X", author: "Mike Morris",        handle: "@mmorrisHC",       content: "FEMA approved supplemental disaster relief for Harris County: $800M incoming. Bipartisan push led by Crenshaw and Garcia cleared the committee hurdle.",             url: "https://twitter.com/mmorrisHC",         time: "4h ago" },
   { platform: "Threads",   author: "Texas Tribune",      handle: "@texastribune",    content: "Babin's Science Committee hearing on NASA's budget drew sharp questions about Johnson Space Center funding. Full transcript available.",                url: "https://www.threads.net/@texastribune", time: "5h ago" },
   { platform: "Twitter/X", author: "Dylan McGuinness",   handle: "@dylmcguinness",   content: "Lizzie Fletcher secured $45M in federal transit funding for the Westpark Tollway expansion in today's Transportation appropriations markup. Quiet win, big impact.",        url: "https://twitter.com/dylmcguinness",     time: "7h ago" },
   { platform: "Twitter/X", author: "Dan Crenshaw",       handle: "@DanCrenshawTX",   content: "Voted against the spending bill today. $2T in new debt our kids will pay for. I won't sign off on fiscal irresponsibility no matter which party brings it.",              url: "https://twitter.com/DanCrenshawTX",     time: "8h ago" },
-  { platform: "Facebook",  author: "Houston Dems",       handle: "fb/houstondems",   content: "Al Green's floor speech on the Voting Rights Act today was powerful. 30+ years fighting for Houston — and the fight isn't over. Full video in our stories.",               url: "https://www.facebook.com/groups/search/results/?q=houston+democrats", time: "1d ago" },
+  { platform: "Facebook",  author: "Houston Dems",       handle: "fb/houstondems",   content: "Al Green's floor speech on the Voting Rights Act today was powerful. 30+ years fighting for Houston. And the fight isn't over. Full video in our stories.",               url: "https://www.facebook.com/groups/search/results/?q=houston+democrats", time: "1d ago" },
   { platform: "Facebook",  author: "Harris County GOP",  handle: "fb/harriscountygop",content: "Dan Crenshaw's amendment to cut EPA red tape from Port of Houston expansion passed committee 22-15. Real relief for Houston's energy economy coming.",                      url: "https://www.facebook.com/groups/search/results/?q=harris+county+republican", time: "1d ago" },
 ];
 
@@ -74,7 +74,7 @@ export default function CongressBeatPage() {
             Congressional Beat
           </h1>
           <p className="text-white/55 text-sm max-w-md mb-6">
-            Harris County in Washington — 9 representatives, every vote, every dollar, every hearing.
+            Harris County in Washington. 9 representatives, every vote, every dollar, every hearing.
           </p>
 
           {/* Congress info */}
@@ -109,7 +109,7 @@ export default function CongressBeatPage() {
         {tab === "overview" && (
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--muted)] mb-4">Harris County Delegation — 119th Congress</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--muted)] mb-4">Harris County Delegation: 119th Congress</p>
 
               {/* Party split bar */}
               <div className="rounded-2xl bg-white ring-1 ring-black/7 p-4 mb-6">
@@ -126,7 +126,7 @@ export default function CongressBeatPage() {
                 </div>
               </div>
 
-              {/* Rep cards — 2 col grid */}
+              {/* Rep cards. 2 col grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
                 {REPS.map(r => (
                   <div key={r.district} className="flex items-center gap-3 rounded-2xl bg-white ring-1 ring-black/7 p-3.5">
@@ -181,7 +181,7 @@ export default function CongressBeatPage() {
               </div>
               <div className="rounded-[1.5rem] p-5 text-center" style={{ background: "linear-gradient(135deg,#991b1b,#dc2626)" }}>
                 <p className="text-xs font-bold text-white mb-1" style={{ fontFamily: "var(--font-playfair), serif" }}>Live Vote Tracking</p>
-                <p className="text-[10px] text-white/60 mb-3">Real-time floor vote tracking for all 8 Harris County reps — in development.</p>
+                <p className="text-[10px] text-white/60 mb-3">Real-time floor vote tracking for all 8 Harris County reps: in development.</p>
                 <span className="inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.15em] text-red-200">
                   <span className="relative flex h-2 w-2"><span className="alive-halo absolute inline-flex h-full w-full rounded-full bg-red-300" /><span className="alive-pulse relative inline-flex h-2 w-2 rounded-full bg-red-300" /></span>
                   In Development

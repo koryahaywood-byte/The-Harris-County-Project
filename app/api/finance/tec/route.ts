@@ -31,7 +31,7 @@ const TEC_CANDIDATES = [
   { tecName: "Walle, Armando L.",     name: "Armando Walle",       office: "State Rep HD-140",            level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Perez, Mary Ann G.",    name: "Mary Ann Perez",      office: "State Rep HD-144",            level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Talarico, James",       name: "James Talarico",      office: "U.S. Senate (D nominee)",     level: "state" as const, party: "D" as const, incumbent: false },
-  // Hinojosa, Gina (Governor D nominee) — opened governor committee after Jan 2026 filing deadline; not in report
+  // Hinojosa, Gina (Governor D nominee). Opened governor committee after Jan 2026 filing deadline; not in report
   { tecName: "Texans for Dan Patrick", name: "Dan Patrick",         office: "Lt. Governor",                level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "Hegar, Glenn A.",       name: "Glenn Hegar",         office: "Comptroller",                 level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "Cunningham, Charles",   name: "Charles Cunningham",  office: "State Rep HD-127",             level: "state" as const, party: "R" as const, incumbent: true },
@@ -40,12 +40,12 @@ const TEC_CANDIDATES = [
   { tecName: "Dorazio, Mark E.",      name: "Mark Dorazio",        office: "State Rep HD-150",             level: "state" as const, party: "R" as const, incumbent: true },
   { tecName: "Kellum, A'Yonna L.",    name: "A'Yonna Kellum",      office: "State Rep HD-150 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Breaux, Darlene E.",    name: "Darlene Breaux",      office: "State Rep HD-149 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
-  // Kamin, Abbie (County Attorney D nominee) — county race, files with harrisvotes.com not TEC
+  // Kamin, Abbie (County Attorney D nominee). County race, files with harrisvotes.com not TEC
   { tecName: "Dicely, Shannon A.",     name: "Shannon Dicely",      office: "State Senator SD-11 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Bord, Stefanie",        name: "Stefanie Bord",       office: "State Rep HD-126 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
   { tecName: "Stanart, Stan",         name: "Stan Stanart",        office: "State Rep HD-126 (R nominee)", level: "state" as const, party: "R" as const, incumbent: false },
   { tecName: "Childs, Staci D.",       name: "Staci Childs",        office: "State Rep HD-131 (D nominee)", level: "state" as const, party: "D" as const, incumbent: false },
-  // Incumbents not seeking reelection — still have active committees
+  // Incumbents not seeking reelection. Still have active committees
   { tecName: "Allen, Alma A.",        name: "Alma Allen",           office: "State Rep HD-131 (not seeking reelection)", level: "state" as const, party: "D" as const, incumbent: true },
   { tecName: "Vo, Hubert",            name: "Hubert Vo",            office: "State Rep HD-149 (lost D runoff)", level: "state" as const, party: "D" as const, incumbent: true },
   // R nominees found in TEC Jan 2026 report
@@ -53,7 +53,7 @@ const TEC_CANDIDATES = [
   { tecName: "Haynes , William Brent", name: "Brent Haynes",        office: "182nd District Court (R nominee)", level: "state" as const, party: "R" as const, incumbent: false },
   { tecName: "Bennett, David L.",     name: "Dave Bennett",         office: "State Rep HD-149 (R nominee)", level: "state" as const, party: "R" as const, incumbent: false },
   { tecName: "Garcia De Leon, Laura", name: "Laura Garcia DeLeon",  office: "State Rep HD-140 (R nominee)", level: "state" as const, party: "R" as const, incumbent: false },
-  // District court judges — confirmed in TEC report
+  // District court judges. Confirmed in TEC report
   { tecName: "Jones, DaSean A.",      name: "DaSean Jones",         office: "180th District Court (not seeking reelection)", level: "state" as const, party: "D" as const, incumbent: true },
   // NOTE: Harris County elected officials (commissioners, DA, county clerk, etc.)
   // file with harrisvotes.com (the county filing authority), NOT TEC. They are

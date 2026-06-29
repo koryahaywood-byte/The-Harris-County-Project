@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // Summary for leaderboard pre-load — fetches all pages for accurate counts
+    // Summary for leaderboard pre-load. Fetches all pages for accurate counts
     if (action === "summary" && repName) {
       const parts = repName.trim().split(/\s+/);
       const lastName = parts[parts.length - 1];
@@ -66,7 +66,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ total: totalCount, page_total: pageTotal, bills: allBills });
     }
 
-    // Full search — fetches all pages for drill-down
+    // Full search. Fetches all pages for drill-down
     if (action === "search" && repName) {
       const parts = repName.trim().split(/\s+/);
       const lastName = parts[parts.length - 1];

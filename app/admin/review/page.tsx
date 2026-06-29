@@ -1,6 +1,6 @@
-// Field Notes review queue — open community flags + the annotator roster.
+// Field Notes review queue. Open community flags + the annotator roster.
 // Unlinked + noindexed. Flags resolve by editing data/field-notes/flags.jsonl
-// (status: open → resolved/dismissed) and committing — archive-first.
+// (status: open → resolved/dismissed) and committing: archive-first.
 
 import type { Metadata } from "next";
 import { readFileSync, existsSync } from "fs";
@@ -57,7 +57,7 @@ export default function ReviewQueue() {
         </div>
         <p className="text-[10px] mt-4 leading-relaxed" style={{ color: "#9ca3af" }}>
           Resolve flags by setting status in data/field-notes/flags.jsonl and committing.
-          Issue annotator keys by adding to annotators.json — tiers: media, academic, community.
+          Issue annotator keys by adding to annotators.json. Tiers: media, academic, community.
         </p>
       </div>
     </div>

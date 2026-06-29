@@ -15,7 +15,7 @@ interface ShareButtonProps {
   light?: boolean;        // light style for dark hero backgrounds (default true)
 }
 
-/* True dynamic share — no screenshots.
+/* True dynamic share: no screenshots.
    Shares the current URL (filter state lives in the query string via useUrlState),
    a live text summary of what the user is looking at, and the OG image is
    generated server-side at /api/og from the same view state. */
@@ -24,7 +24,7 @@ export default function ShareButton({ toolName, section, description, stats, sum
   const [open, setOpen] = useState(false);
 
   const shareText = () =>
-    summary ?? `${toolName} — ${description} via The Harris County Project`;
+    summary ?? `${toolName}. ${description} via The Harris County Project`;
 
   const currentUrl = () =>
     typeof window !== "undefined" ? window.location.href : "https://the-harris-county-project.vercel.app";
@@ -46,7 +46,7 @@ export default function ShareButton({ toolName, section, description, stats, sum
         await navigator.share({ title: `${toolName} · The Harris County Project`, text, url });
         setOpen(false);
         return;
-      } catch { /* user cancelled or unsupported — fall through */ }
+      } catch { /* user cancelled or unsupported. Fall through */ }
     }
     copyLink();
   }
@@ -92,7 +92,7 @@ export default function ShareButton({ toolName, section, description, stats, sum
             style={{ border: "1px solid rgba(26,58,92,0.15)" }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Live OG preview — rendered server-side from current view state */}
+            {/* Live OG preview. Rendered server-side from current view state */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={ogUrl()} alt={`${toolName} share preview`} className="w-full block" style={{ aspectRatio: "1200/630", background: "#0f2540" }} />
 

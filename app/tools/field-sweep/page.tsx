@@ -102,7 +102,7 @@ export default function FieldSweepPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Field Sweep — Harris County Precincts</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Field Sweep: Harris County Precincts</h1>
         <p className="text-sm text-gray-500 mt-1">
           All {data.length} precincts classified by GOTV opportunity. Based on top-of-ticket D% across 2020/2022/2024 generals.
         </p>
@@ -148,10 +148,10 @@ export default function FieldSweepPage() {
             <div key={cls} className="rounded-lg p-3 text-sm" style={{ background: m.bg }}>
               <div className="font-semibold" style={{ color: m.color }}>{m.text} ({counts[cls]})</div>
               <div className="text-xs text-gray-600 mt-0.5">
-                {cls === "surge" && "D ≥65% — pure turnout play"}
-                {cls === "hold" && "D 55-65% — protect margin + GOTV"}
-                {cls === "persuasion" && "D 44-55% — battleground, persuasion mail"}
-                {cls === "strongR" && "D <44% — R base, minimal investment"}
+                {cls === "surge" && "D ≥65%: pure turnout play"}
+                {cls === "hold" && "D 55-65%. Protect margin + GOTV"}
+                {cls === "persuasion" && "D 44-55%. Battleground, persuasion mail"}
+                {cls === "strongR" && "D <44%. R base, minimal investment"}
               </div>
             </div>
           );
@@ -190,23 +190,23 @@ export default function FieldSweepPage() {
                     </span>
                   </td>
                   <td className="px-3 py-2 font-semibold" style={{ color: m.color }}>
-                    {p.avgDPct !== null ? `${p.avgDPct}%` : "—"}
+                    {p.avgDPct !== null ? `${p.avgDPct}%` : "–"}
                   </td>
-                  <td className="px-3 py-2 text-gray-700">{p.dPct2024 !== null ? `${p.dPct2024}%` : "—"}</td>
-                  <td className="px-3 py-2 text-gray-500">{p.dPct2022 !== null ? `${p.dPct2022}%` : "—"}</td>
-                  <td className="px-3 py-2 text-gray-500">{p.dPct2020 !== null ? `${p.dPct2020}%` : "—"}</td>
-                  <td className="px-3 py-2 text-gray-700">{p.reg2024?.toLocaleString() ?? "—"}</td>
-                  <td className="px-3 py-2 text-gray-700">{p.turnout2024?.toLocaleString() ?? "—"}</td>
+                  <td className="px-3 py-2 text-gray-700">{p.dPct2024 !== null ? `${p.dPct2024}%` : "–"}</td>
+                  <td className="px-3 py-2 text-gray-500">{p.dPct2022 !== null ? `${p.dPct2022}%` : "–"}</td>
+                  <td className="px-3 py-2 text-gray-500">{p.dPct2020 !== null ? `${p.dPct2020}%` : "–"}</td>
+                  <td className="px-3 py-2 text-gray-700">{p.reg2024?.toLocaleString() ?? "–"}</td>
+                  <td className="px-3 py-2 text-gray-700">{p.turnout2024?.toLocaleString() ?? "–"}</td>
                   <td className="px-3 py-2 font-medium" style={{ color: (p.turnoutDelta ?? 0) > 0 ? "#15803d" : "#b91c1c" }}>
-                    {p.turnoutDelta !== null ? (p.turnoutDelta > 0 ? `+${p.turnoutDelta.toLocaleString()}` : p.turnoutDelta.toLocaleString()) : "—"}
+                    {p.turnoutDelta !== null ? (p.turnoutDelta > 0 ? `+${p.turnoutDelta.toLocaleString()}` : p.turnoutDelta.toLocaleString()) : "–"}
                   </td>
-                  <td className="px-3 py-2 text-gray-700">{p.ssvr?.toLocaleString() ?? "—"}</td>
-                  <td className="px-3 py-2 text-blue-700 font-medium">{p.primary2026DemBallots?.toLocaleString() ?? "—"}</td>
-                  <td className="px-3 py-2 text-red-700">{p.primary2026RepBallots?.toLocaleString() ?? "—"}</td>
+                  <td className="px-3 py-2 text-gray-700">{p.ssvr?.toLocaleString() ?? "–"}</td>
+                  <td className="px-3 py-2 text-blue-700 font-medium">{p.primary2026DemBallots?.toLocaleString() ?? "–"}</td>
+                  <td className="px-3 py-2 text-red-700">{p.primary2026RepBallots?.toLocaleString() ?? "–"}</td>
                   <td className="px-3 py-2 font-medium" style={{ color: (p.primary2026DemEdge ?? 0) > 0 ? "#1d4ed8" : "#b91c1c" }}>
                     {p.primary2026DemEdge !== null
                       ? (p.primary2026DemEdge > 0 ? `+${p.primary2026DemEdge.toLocaleString()}` : p.primary2026DemEdge.toLocaleString())
-                      : "—"}
+                      : "–"}
                   </td>
                 </tr>
               );
@@ -214,7 +214,7 @@ export default function FieldSweepPage() {
             {sorted.length > 500 && (
               <tr>
                 <td colSpan={13} className="px-3 py-2 text-center text-gray-400 text-xs italic">
-                  Showing 500 of {sorted.length} — use filter or Export CSV for full list
+                  Showing 500 of {sorted.length}. Use filter or Export CSV for full list
                 </td>
               </tr>
             )}

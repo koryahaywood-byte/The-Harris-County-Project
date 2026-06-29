@@ -74,7 +74,7 @@ export async function GET(req: Request) {
   let lat: number, lng: number, matched: string;
 
   if (hasCoords) {
-    // Coordinates from the browser's Geolocation API — skip geocoding.
+    // Coordinates from the browser's Geolocation API: skip geocoding.
     lat = latParam;
     lng = lngParam;
     matched = "Your current location";
@@ -94,7 +94,7 @@ export async function GET(req: Request) {
       lng = match.coordinates.x;
       matched = match.matchedAddress;
     } catch {
-      return NextResponse.json({ error: "Geocoding service unavailable — try again in a moment." }, { status: 502 });
+      return NextResponse.json({ error: "Geocoding service unavailable. Try again in a moment." }, { status: 502 });
     }
   }
 
@@ -110,7 +110,7 @@ export async function GET(req: Request) {
   }
   const precinct = String(feature.properties.PREC);
 
-  // 3. Direct PIP for commissioner precinct — overrides crosswalk centroid which fails at boundaries
+  // 3. Direct PIP for commissioner precinct. Overrides crosswalk centroid which fails at boundaries
   const commFeature = loadCommPrecincts().find(f => pointInFeature(lng, lat, f));
   const commPct = commFeature ? String(commFeature.properties.PCT_NO) : undefined;
 

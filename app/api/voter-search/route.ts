@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "last name required" }, { status: 400 });
   }
 
-  // Check if DB exists — if not, return graceful no_data state
+  // Check if DB exists. If not, return graceful no_data state
   if (!fs.existsSync(DB_PATH)) {
     return NextResponse.json({ status: "no_data" });
   }

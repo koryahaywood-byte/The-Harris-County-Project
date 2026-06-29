@@ -8,7 +8,7 @@ import type { Feature, GeoJsonObject } from "geojson";
 
 /* Heat Check visual language: continuous precinct fills over a Carto light
    basemap, thin white borders, out-of-district precincts dimmed to warm gray.
-   No cutouts — every precinct always renders. */
+   No cutouts. Every precinct always renders. */
 
 export interface PrecinctFeature extends Feature {
   properties: { PREC: string; [key: string]: unknown };
@@ -85,7 +85,7 @@ export default function DistrictsMap({
   }
 
   const inDistrict = (prec: string): boolean => {
-    if (!districtField || !districtValue) return true; // countywide — everything active
+    if (!districtField || !districtValue) return true; // countywide: everything active
     return crosswalk[prec]?.[districtField] === districtValue;
   };
 
@@ -134,7 +134,7 @@ export default function DistrictsMap({
           }
 
           // Heat Check treatment: EVERY precinct keeps its data color, always.
-          // Out-of-district precincts fade to low opacity but never go blank —
+          // Out-of-district precincts fade to low opacity but never go blank –
           // the county reads as one continuous surface with the district popped.
           let fill = GREY_OUT;
           if (layer === "results" && results) {
@@ -204,7 +204,7 @@ export default function DistrictsMap({
         }}
       />
 
-      {/* Navy wash over the active district — fills every in-district precinct (including
+      {/* Navy wash over the active district. Fills every in-district precinct (including
           ones with no turnout data) so the whole district reads as one continuous shape
           rather than scattered colored cells. The lean colors still show through. */}
       {districtField && districtValue && activeFC && (

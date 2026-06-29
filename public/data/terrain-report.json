@@ -14,10 +14,10 @@
     "current precinct lines"
    ],
    "confidence": "high",
-   "confidenceNote": "Official certified counts; the screen measures change, not its cause — boundary-stable join covers 1,170 of 1,172 precincts.",
+   "confidenceNote": "Official certified counts; the screen measures change, not its cause. Boundary-stable join covers 1,170 of 1,172 precincts.",
    "links": [
     {
-     "label": "Districts — history layer",
+     "label": "Districts, history layer",
      "href": "/tools/districts"
     }
    ],
@@ -48,7 +48,7 @@
     "FEC itemized Schedule A, 2026 cycle"
    ],
    "confidence": "high",
-   "confidenceNote": "Name-matched aggregation across committees — common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
+   "confidenceNote": "Name-matched aggregation across committees. Common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
    "links": [
     {
      "label": "Money Trail",
@@ -81,7 +81,7 @@
     "FEC itemized Schedule A, 2026 cycle"
    ],
    "confidence": "high",
-   "confidenceNote": "Name-matched aggregation across committees — common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
+   "confidenceNote": "Name-matched aggregation across committees. Common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
    "links": [
     {
      "label": "Money Trail",
@@ -110,7 +110,7 @@
     "FEC itemized Schedule A, 2026 cycle"
    ],
    "confidence": "high",
-   "confidenceNote": "Name-matched aggregation across committees — common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
+   "confidenceNote": "Name-matched aggregation across committees. Common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
    "links": [
     {
      "label": "Money Trail",
@@ -137,7 +137,7 @@
     "FEC itemized Schedule A, 2026 cycle"
    ],
    "confidence": "high",
-   "confidenceNote": "Name-matched aggregation across committees — common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
+   "confidenceNote": "Name-matched aggregation across committees. Common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
    "links": [
     {
      "label": "Money Trail",
@@ -168,7 +168,7 @@
     "FEC itemized Schedule A, 2026 cycle"
    ],
    "confidence": "high",
-   "confidenceNote": "Name-matched aggregation across committees — common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
+   "confidenceNote": "Name-matched aggregation across committees. Common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
    "links": [
     {
      "label": "Money Trail",
@@ -198,7 +198,7 @@
     "FEC itemized Schedule A, 2026 cycle"
    ],
    "confidence": "high",
-   "confidenceNote": "Name-matched aggregation across committees — common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
+   "confidenceNote": "Name-matched aggregation across committees. Common names can merge distinct donors; coverage is federal filings only until TEC Schedule A extraction lands.",
    "links": [
     {
      "label": "Money Trail",

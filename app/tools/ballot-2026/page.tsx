@@ -151,7 +151,7 @@ function toDistrictInfo(key: string): { href: string; label: string } {
     const jp = key.replace(/.*?(\d+).*/, "$1");
     return { href: `/tools/districts?type=jp&district=${jp}`, label: `JP ${jp} results →` };
   }
-  // Remaining keys (CCL/DC/Probate courts, HC-* countywide admin) are all countywide races —
+  // Remaining keys (CCL/DC/Probate courts, HC-* countywide admin) are all countywide races –
   // send them to the countywide view rather than the districts tool's default CD-18 landing.
   return { href: "/tools/districts?type=countywide", label: "Countywide breakdown →" };
 }
@@ -298,12 +298,12 @@ function MoneyBar({ dName, rName }: { dName: string | null; rName: string | null
   return (
     <div className="px-4 py-2 border-t" style={{ borderColor: "#f3f4f6" }}>
       <div className="flex items-center gap-2">
-        <span className="text-[9px] font-bold w-16" style={{ color: "#2563eb" }}>{d ? fmt(d) : "—"}</span>
+        <span className="text-[9px] font-bold w-16" style={{ color: "#2563eb" }}>{d ? fmt(d) : "–"}</span>
         <div className="flex-1 h-1.5 rounded-full overflow-hidden flex" style={{ background: "#e5e7eb" }}>
           <div className="h-full" style={{ width: `${dPct}%`, background: "#93c5fd" }} />
           <div className="h-full" style={{ width: `${100 - dPct}%`, background: "#fca5a5" }} />
         </div>
-        <span className="text-[9px] font-bold w-16 text-right" style={{ color: "#dc2626" }}>{r ? fmt(r) : "—"}</span>
+        <span className="text-[9px] font-bold w-16 text-right" style={{ color: "#dc2626" }}>{r ? fmt(r) : "–"}</span>
         <span className="text-[9px] ml-1 shrink-0" style={{ color: "#9ca3af" }}>CoH</span>
       </div>
     </div>
@@ -411,7 +411,7 @@ function Ballot2026Inner() {
   return (
     <div style={{ background: "#f2f5f9", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
 
-      {/* Hero — Synex-style light, topo terrain */}
+      {/* Hero. Synex-style light, topo terrain */}
       <section className="relative overflow-hidden topo-hero"
         style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 60%,#f2f5f9 100%)", paddingTop: "3.75rem", paddingBottom: "3rem" }}>
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(37,99,168,0.10),transparent_70%)]" />
@@ -436,14 +436,14 @@ function Ballot2026Inner() {
               { label: "Toss-ups",      value: stats.tossups.toString() },
               { label: "Competitive",   value: stats.competitive.toString() },
             ]}
-            summary={`2026 Harris County ballot — ${stats.contested} full matchups, ${stats.tossups} toss-up races, ${stats.competitive} competitive — via The Harris County Project`}
+            summary={`2026 Harris County ballot: ${stats.contested} full matchups, ${stats.tossups} toss-up races, ${stats.competitive} competitive. Via The Harris County Project`}
             light={false}
           />
 
           {/* Money summary */}
           {(stats.dMoney > 0 || stats.rMoney > 0) && (
             <div className="hcp-card px-4 py-3 max-w-lg">
-              <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: "#94a3b8" }}>Cash on hand — all tracked candidates</p>
+              <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: "#94a3b8" }}>Cash on hand: all tracked candidates</p>
               <div className="flex items-center gap-3">
                 <span className="text-sm font-bold w-20 tnum" style={{ color: "#2563a8" }}>{fmt(stats.dMoney)}</span>
                 <div className="flex-1 h-2 rounded-full overflow-hidden flex" style={{ background: "#e5e7eb" }}>
@@ -618,7 +618,7 @@ function Ballot2026Inner() {
                         {/* Last election result bar */}
                         <ResultBar result={result} />
 
-                        {/* Money bar — only when both sides have data */}
+                        {/* Money bar. Only when both sides have data */}
                         {hasMoneyBar && <MoneyBar dName={r.dSide?.name ?? null} rName={r.rSide?.name ?? null} />}
 
                         {/* District demographics snapshot */}
@@ -684,7 +684,7 @@ function Ballot2026Inner() {
         </div>
 
         <p className="text-[10px] mt-6 leading-relaxed" style={{ color: "#b0b8c4" }}>
-          Last election bars show Harris County totals from TED (Texas Legislative Council). Court cards, which have no per-race history, instead show a &ldquo;County judicial avg&rdquo; — the average two-party result across contested countywide judicial races (Supreme Court, district judges, CCL 16) in the last cycle. Money is cash on hand from most recent FEC/TEC filing. Competitiveness ratings reflect Harris County presidential lean adjusted for district composition — not statewide outcomes.
+          Last election bars show Harris County totals from TED (Texas Legislative Council). Court cards, which have no per-race history, instead show a &ldquo;County judicial avg&rdquo;. The average two-party result across contested countywide judicial races (Supreme Court, district judges, CCL 16) in the last cycle. Money is cash on hand from most recent FEC/TEC filing. Competitiveness ratings reflect Harris County presidential lean adjusted for district composition: not statewide outcomes.
         </p>
       </div>
     </div>

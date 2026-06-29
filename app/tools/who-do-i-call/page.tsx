@@ -47,7 +47,7 @@ const FIND_PREDICATES: Record<string, (o: EnrichedOfficial) => boolean> = {
 // ── Routing model ───────────────────────────────────────────────────────────────
 // A "route" is one concrete answer: who to call for a problem in a given place.
 
-// A responder is one explicit entry under "who answers for it" — used when the right
+// A responder is one explicit entry under "who answers for it". Used when the right
 // set isn't a clean jurisdiction+role filter (e.g. public safety spans city + county).
 type Responder =
   | { match: string }                                                              // singleton contact, matched by office text
@@ -74,7 +74,7 @@ const CRIME_RESPONDERS: Responder[] = [
   { find: "your constable precinct" },
 ];
 
-// Bayous and channels are regional — your county commissioner runs the drainage projects,
+// Bayous and channels are regional. Your county commissioner runs the drainage projects,
 // and flood policy/funding is set in Austin by your state representative.
 const BAYOU_RESPONDERS: Responder[] = [
   { find: "your county commissioner" },
@@ -106,7 +106,7 @@ const ISSUES: Issue[] = [
     },
     county: {
       agency: "Your Harris County Commissioner",
-      detail: "Commissioners maintain roads in unincorporated areas — each precinct runs its own road crews.",
+      detail: "Commissioners maintain roads in unincorporated areas. Each precinct runs its own road crews.",
       jurisdictions: ["county"], roles: ["legislative"], findLabel: "your county commissioner",
     },
   },
@@ -116,7 +116,7 @@ const ISSUES: Issue[] = [
     icon: "🌧️",
     locationDependent: true,
     city: {
-      agency: "Houston Public Works — Drainage",
+      agency: "Houston Public Works, Drainage",
       detail: "Street flooding and clogged storm drains inside the city.",
       hotline: { label: "Houston 311", phone: "311" },
       jurisdictions: ["city"], roles: ["legislative"], findLabel: "your city council member",
@@ -134,7 +134,7 @@ const ISSUES: Issue[] = [
     locationDependent: false,
     any: {
       agency: "Harris County Flood Control District",
-      detail: "Bayous, creeks, and regional drainage — your county commissioner runs the projects, and your state representative sets flood policy and funding in Austin.",
+      detail: "Bayous, creeks, and regional drainage. Your county commissioner runs the projects, and your state representative sets flood policy and funding in Austin.",
       hotline: { label: "HCFCD", phone: "713-684-4000" },
       jurisdictions: ["county", "state"], roles: ["legislative"], findLabel: "your county commissioner",
       responders: BAYOU_RESPONDERS,
@@ -173,7 +173,7 @@ const ISSUES: Issue[] = [
     },
     county: {
       agency: "Your MUD or private hauler",
-      detail: "Unincorporated Harris County has no county-run trash pickup — it's handled by your municipal utility district (MUD) or a private hauler. Your county commissioner's office can point you to your provider.",
+      detail: "Unincorporated Harris County has no county-run trash pickup. It's handled by your municipal utility district (MUD) or a private hauler. Your county commissioner's office can point you to your provider.",
       jurisdictions: ["county"], roles: ["legislative"], findLabel: "your county commissioner",
     },
   },
@@ -195,7 +195,7 @@ const ISSUES: Issue[] = [
     locationDependent: false,
     any: {
       agency: "Harris Central Appraisal District (HCAD)",
-      detail: "HCAD sets your appraised value — protest it here. Your county commissioners set the tax rate.",
+      detail: "HCAD sets your appraised value: protest it here. Your county commissioners set the tax rate.",
       hotline: { label: "HCAD", phone: "713-957-7800" },
       jurisdictions: ["county"], roles: ["legislative"], findLabel: "your county commissioner",
     },
@@ -206,7 +206,7 @@ const ISSUES: Issue[] = [
     icon: "🗳️",
     locationDependent: false,
     any: {
-      agency: "Harris County Clerk — Elections",
+      agency: "Harris County Clerk, Elections",
       detail: "Voter registration, polling places, mail ballots, and official results.",
       hotline: { label: "Harris County Clerk", phone: "713-274-8683" },
       jurisdictions: ["county"], roles: ["clerk"],
@@ -253,7 +253,7 @@ function routesFor(issue: Issue, where: Where): { place: string | null; route: R
   if (!issue.locationDependent && issue.any) return [{ place: null, route: issue.any }];
   if (where === "city" && issue.city) return [{ place: "Inside Houston city limits", route: issue.city }];
   if (where === "county" && issue.county) return [{ place: "Unincorporated Harris County", route: issue.county }];
-  // "both" / not sure — show each side
+  // "both" / not sure: show each side
   const out: { place: string | null; route: Route }[] = [];
   if (issue.city) out.push({ place: "Inside Houston city limits", route: issue.city });
   if (issue.county) out.push({ place: "Unincorporated Harris County", route: issue.county });
@@ -341,7 +341,7 @@ function ContactCard({ c }: { c: OfficialContact }) {
   );
 }
 
-// Non-elected office (e.g. the police chief) — same card shape, no verification badge.
+// Non-elected office (e.g. the police chief). Same card shape, no verification badge.
 function ManualCard({ m }: { m: { name: string; office: string; phone?: string; website?: string } }) {
   return (
     <div className="hcp-card p-4 flex flex-col gap-2">
@@ -372,13 +372,13 @@ function FindCard({ label }: { label: string }) {
       style={{ background: "rgba(37,99,168,0.05)" }}>
       <span className="text-xs font-bold" style={{ color: "#1a3a5c" }}>Find {label} →</span>
       <span className="text-[11px]" style={{ color: "#6b7280" }}>
-        This seat depends on your address — look it up by entering it.
+        This seat depends on your address. Look it up by entering it.
       </span>
     </Link>
   );
 }
 
-// A specific elected official resolved from a shared location — shown with their headshot.
+// A specific elected official resolved from a shared location. Shown with their headshot.
 function partyTint(party: string) {
   return party === "D" ? "#2563a8" : party === "R" ? "#dc2626" : "#6b7280";
 }
@@ -632,7 +632,7 @@ export default function WhoDoICallPage() {
           if (!res.ok) { setLocError(data.error ?? "Couldn't match your location."); return; }
           setLoc(data as LocResult);
         } catch {
-          setLocError("Something went wrong matching your location — try again.");
+          setLocError("Something went wrong matching your location: try again.");
         } finally {
           setLocating(false);
         }
@@ -642,7 +642,7 @@ export default function WhoDoICallPage() {
         setLocError(
           err.code === err.PERMISSION_DENIED
             ? "Location permission denied. Pick a location below or look it up by address."
-            : "Couldn't get your location — pick a location below instead."
+            : "Couldn't get your location. Pick a location below instead."
         );
       },
       { enableHighAccuracy: true, timeout: 10_000, maximumAge: 60_000 }
@@ -665,20 +665,20 @@ export default function WhoDoICallPage() {
             <span style={{ color: "#aab4c0" }}>Who do I </span><span style={{ color: "#0f2540" }}>call?</span>
           </h1>
           <p className="text-sm max-w-lg mb-5" style={{ color: "#5b6470" }}>
-            Two questions — what&rsquo;s wrong and where it is — and you&rsquo;ll have the right number to call and the official who answers for it.
+            Two questions. What&rsquo;s wrong and where it is. And you&rsquo;ll have the right number to call and the official who answers for it.
           </p>
           <ShareButton
             toolName="Who Do I Call?"
             section="Government"
             description="Pick a problem and a location, get the right Harris County or Houston contact."
-            summary="Who Do I Call? — pick your problem and location, get the right number to call in Harris County — via The Harris County Project"
+            summary="Who Do I Call?. Pick your problem and location, get the right number to call in Harris County. Via The Harris County Project"
             light={false}
           />
         </div>
       </section>
 
       <div className="max-w-3xl mx-auto px-5 py-8">
-        {/* Step 1 — the problem */}
+        {/* Step 1: the problem */}
         <div className="flex items-baseline gap-2 mb-3">
           <span className="flex items-center justify-center w-5 h-5 rounded-full text-[11px] font-bold text-white" style={{ background: "#1a3a5c" }}>1</span>
           <h2 className="text-sm font-bold uppercase tracking-[0.16em]" style={{ color: "#1a3a5c" }}>What&rsquo;s the problem?</h2>
@@ -703,7 +703,7 @@ export default function WhoDoICallPage() {
           })}
         </div>
 
-        {/* Step 2 — where (only when it changes the answer) */}
+        {/* Step 2. Where (only when it changes the answer) */}
         {issue && needsWhere && (
           <div className="mb-8 animate-in visible">
             <div className="flex items-baseline gap-2 mb-3">
@@ -764,7 +764,7 @@ export default function WhoDoICallPage() {
               <AnswerBlock key={`${a.place ?? "any"}-${i}`} place={a.place} route={a.route} issueIcon={issue!.icon} loc={loc} />
             ))}
 
-            {/* The map + the districts you're in — below the contact, as context */}
+            {/* The map + the districts you're in. Below the contact, as context */}
             {needsWhere && loc && (
               <div className="pt-1">
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: "#9ca3af" }}>Where you are</p>

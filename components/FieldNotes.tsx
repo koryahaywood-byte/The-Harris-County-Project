@@ -1,6 +1,6 @@
 "use client";
 
-// Field Notes — the community context layer. A toggle chip reveals verified
+// Field Notes. The community context layer. A toggle chip reveals verified
 // annotations (media / academic / community-org tiers) attached to any data
 // point, plus a flag form so anyone can report suspect data into the review
 // queue. Notes are a distinct visual layer: off by default, never mixed into
@@ -50,7 +50,7 @@ export default function FieldNotes({ target, dark = false }: { target: string; d
       localStorage.setItem("hcp-annotator-key", key);
       setNotes(n => [...(n ?? []), d.note]);
     }
-    setMsg(mode === "flag" ? "Flagged — queued for annotator review." : "Field Note posted.");
+    setMsg(mode === "flag" ? "Flagged. Queued for annotator review." : "Field Note posted.");
     setText(""); setMode("view");
   }
 
@@ -66,7 +66,7 @@ export default function FieldNotes({ target, dark = false }: { target: string; d
           border: `1px solid ${open ? "#0f766e" : "#0f766e35"}`,
         }}>
         <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 2h8v6H5l-3 3V2z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/></svg>
-        Field Notes{notes ? ` · ${notes.length}` : ""}{open ? " — on" : ""}
+        Field Notes{notes ? ` · ${notes.length}` : ""}{open ? ": on" : ""}
       </button>
 
       {open && (
@@ -76,8 +76,8 @@ export default function FieldNotes({ target, dark = false }: { target: string; d
             <p className="text-[11px]" style={{ color: fg }}>Loading…</p>
           ) : notes.length === 0 ? (
             <p className="text-[11px]" style={{ color: fg }}>
-              No Field Notes on this data point yet. Verified annotators — media, academic, and
-              community-org — can add the first one.
+              No Field Notes on this data point yet. Verified annotators. Media, academic, and
+              community-org. Can add the first one.
             </p>
           ) : (
             <div className="space-y-3">
@@ -98,7 +98,7 @@ export default function FieldNotes({ target, dark = false }: { target: string; d
 
           {flags > 0 && (
             <p className="text-[10px] mt-3 font-bold" style={{ color: "#b45309" }}>
-              ⚑ {flags} open community flag{flags > 1 ? "s" : ""} on this data point — under review.
+              ⚑ {flags} open community flag{flags > 1 ? "s" : ""} on this data point: under review.
             </p>
           )}
 
@@ -119,7 +119,7 @@ export default function FieldNotes({ target, dark = false }: { target: string; d
                   style={{ background: "#fff", color: "#1a3a5c", border: "1px solid #e5e7eb" }} />
               )}
               <textarea value={text} onChange={e => setText(e.target.value)} rows={3}
-                placeholder={mode === "note" ? "Context the data can't show — what's behind this number?" : "What looks wrong, and how do you know?"}
+                placeholder={mode === "note" ? "Context the data can't show. What's behind this number?" : "What looks wrong, and how do you know?"}
                 className="w-full rounded-xl px-3 py-2 text-[11px] outline-none resize-none"
                 style={{ background: "#fff", color: "#1a3a5c", border: "1px solid #e5e7eb" }} />
               <div className="flex items-center gap-2.5">

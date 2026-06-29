@@ -21,14 +21,14 @@ const BUDGET: BudgetLine[] = [
   { dept: "Debt Service",               category: "Debt",            amount: 1140, change:  1.8,               description: "General obligation and revenue bond principal and interest" },
   { dept: "Public Works & Engineering", category: "Infrastructure",  amount:  850, change:  3.7, employees: 1200, description: "Streets, drainage, traffic management, and capital improvements" },
   { dept: "Housing & Community Dev",    category: "Housing",         amount:  300, change:  5.3, employees:  180, description: "Affordable housing, community block grants, and anti-displacement programs" },
-  { dept: "Solid Waste Management",     category: "Operations",      amount:  134, change:    0, employees: 1100, description: "Moved to Combined Utility System — no longer a General Fund line item in FY27", note: "Shifted to utility" },
+  { dept: "Solid Waste Management",     category: "Operations",      amount:  134, change:    0, employees: 1100, description: "Moved to Combined Utility System. No longer a General Fund line item in FY27", note: "Shifted to utility" },
   { dept: "Parks & Recreation",         category: "Quality of Life", amount:  175, change:  4.2, employees: 1800, description: "Parks, pools, recreation centers, trails, and youth programming" },
   { dept: "General Administration",     category: "Administration",  amount:  220, change:  2.3, employees: 1500, description: "Mayor's Office, City Council, legal, HR, and support services" },
   { dept: "Health & Human Services",    category: "Health",          amount:  155, change:  4.7, employees:  650, description: "Public health clinics, environmental health, and social services" },
   { dept: "Information Technology",     category: "Operations",      amount:  105, change:  7.1, employees:  420, description: "IT infrastructure, cybersecurity, 311, and digital government services" },
   { dept: "Houston Public Library",     category: "Quality of Life", amount:   68, change:  6.3, employees:  850, description: "44 library branches, digital resources, and community programs" },
   { dept: "Planning & Development",     category: "Administration",  amount:   50, change:  4.2, employees:  340, description: "Zoning, permitting, historic preservation, and urban planning" },
-  { dept: "Aviation / Airport System", category: "Enterprise",      amount:  620, change:  6.9, employees: 1600, description: "IAH and Hobby airports — self-funded from revenues" },
+  { dept: "Aviation / Airport System", category: "Enterprise",      amount:  620, change:  6.9, employees: 1600, description: "IAH and Hobby airports. Self-funded from revenues" },
   { dept: "Other Departments & Reserves",category:"Other",           amount:  800, change:  1.2,               description: "Controller, municipal courts, fleet, and contingency reserves" },
 ];
 
@@ -39,7 +39,7 @@ const MOVES = [
     step: "01",
     title: "$5 Trash Fee",
     sub: "Houston's first-ever garbage fee",
-    body: "Starting FY27, the ~400,000 residents who get solid waste pickup pay $5/month. That's new — Houston was the only major Texas city without one. The fee can ramp to $25/month over time, eventually generating up to $120M/year.",
+    body: "Starting FY27, the ~400,000 residents who get solid waste pickup pay $5/month. That's new. Houston was the only major Texas city without one. The fee can ramp to $25/month over time, eventually generating up to $120M/year.",
     chip: "$24M in year one",
     note: "→ ramps to $120M/yr at full scale",
     color: "#0891b2",
@@ -49,7 +49,7 @@ const MOVES = [
     step: "02",
     title: "Solid Waste Exits the General Fund",
     sub: "~$100M department off the books",
-    body: "The entire Solid Waste department moves out of the General Fund and into the Combined Utility System — the same fund running water and wastewater. On paper, the General Fund looks leaner. In practice, utility ratepayers carry the load.",
+    body: "The entire Solid Waste department moves out of the General Fund and into the Combined Utility System. The same fund running water and wastewater. On paper, the General Fund looks leaner. In practice, utility ratepayers carry the load.",
     chip: "$100M shifted",
     note: "from General Fund to water bill",
     color: "#7c3aed",
@@ -58,7 +58,7 @@ const MOVES = [
   {
     step: "03",
     title: "City Charges Its Own Utility",
-    sub: "Circular — but legal",
+    sub: "Circular. But legal",
     body: "The city bills the Combined Utility System a right-of-way fee for using public streets to run pipes. The utility pays $104M/year, which flows straight back into the General Fund. That money ultimately comes from your water and sewer bill.",
     chip: "$104M/yr",
     note: "utility → General Fund annually",
@@ -138,7 +138,7 @@ function MonarchBudgetBar({ line, max }: { line: BudgetLine; max: number }) {
           <span className={`inline-flex items-center gap-0.5 text-[10px] font-bold ${
             up ? "text-emerald-600" : line.change < 0 ? "text-red-500" : "text-[var(--muted)]"
           }`}>
-            {up ? "▲" : line.change < 0 ? "▼" : "—"} {Math.abs(line.change).toFixed(1)}%
+            {up ? "▲" : line.change < 0 ? "▼" : "–"} {Math.abs(line.change).toFixed(1)}%
           </span>
         </div>
       </div>
@@ -218,12 +218,12 @@ export default function CityBudget() {
             Houston City Budget
           </h1>
           <p className="text-white/70 text-sm max-w-lg">
-            How Houston closed a $180M gap without raising taxes — and where your money actually goes. FY2027, passed 15–1 on June 10, 2026.
+            How Houston closed a $180M gap without raising taxes. And where your money actually goes. FY2027, passed 15–1 on June 10, 2026.
           </p>
           <ShareButton
             toolName="Houston City Budget"
             section="Money"
-            description="How Houston closed a $180M gap without raising taxes — and where your money goes. FY2027."
+            description="How Houston closed a $180M gap without raising taxes. And where your money goes. FY2027."
             stats={[{ label: "Total Budget", value: "$7.5B" }, { label: "General Fund", value: "$3.1B" }, { label: "Vote", value: "15–1" }]}
           />
           <div className="mt-5 flex gap-4 flex-wrap">
@@ -297,10 +297,10 @@ export default function CityBudget() {
                 <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[5px] md:col-span-2">
                   <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-6">
                     <p className="text-sm text-[var(--muted)] leading-relaxed mb-4">
-                      The city&apos;s <strong className="text-[var(--foreground)]">$3.1 billion General Fund</strong> — which pays for police, fire, libraries, parks, and trash pickup — has run structural deficits for over a decade. By FY26, Houston was staring at a <strong className="text-[var(--foreground)]">$107M shortfall</strong>. FY27 was worse: <strong className="text-[var(--foreground)]">$180M</strong>.
+                      The city&apos;s <strong className="text-[var(--foreground)]">$3.1 billion General Fund</strong>. Which pays for police, fire, libraries, parks, and trash pickup. Has run structural deficits for over a decade. By FY26, Houston was staring at a <strong className="text-[var(--foreground)]">$107M shortfall</strong>. FY27 was worse: <strong className="text-[var(--foreground)]">$180M</strong>.
                     </p>
                     <p className="text-sm text-[var(--muted)] leading-relaxed">
-                      Mayor Whitmire&apos;s FY27 budget, passed <strong className="text-[var(--foreground)]">15–1 on June 10, 2026</strong>, closes the gap without raising property taxes. Three accounting moves make that possible — but City Controller Chris Hollins argues the moves trade one-year relief for long-term risk.
+                      Mayor Whitmire&apos;s FY27 budget, passed <strong className="text-[var(--foreground)]">15–1 on June 10, 2026</strong>, closes the gap without raising property taxes. Three accounting moves make that possible. But City Controller Chris Hollins argues the moves trade one-year relief for long-term risk.
                     </p>
                   </div>
                 </div>
@@ -334,7 +334,7 @@ export default function CityBudget() {
                 Three moves. No tax increase.
               </h2>
               <p className="text-sm text-[var(--muted)] mb-8 max-w-2xl">
-                Taken together, these three mechanisms redirect over $229M toward the General Fund — without any single action that can officially be called a tax increase.
+                Taken together, these three mechanisms redirect over $229M toward the General Fund. Without any single action that can officially be called a tax increase.
               </p>
 
               {/* Progress bar across all 3 */}
@@ -382,7 +382,7 @@ export default function CityBudget() {
                     <p className="font-bold text-[var(--accent)] text-lg leading-snug" style={{ fontFamily: "var(--font-playfair), serif" }}>
                       Gap officially closed. But the Controller says it&apos;s accounting, not reform.
                     </p>
-                    <p className="text-sm text-[var(--muted)] mt-1">$229M+ redirected to the General Fund — none of it officially a tax increase. Whether it&apos;s sustainable depends on who you ask.</p>
+                    <p className="text-sm text-[var(--muted)] mt-1">$229M+ redirected to the General Fund. None of it officially a tax increase. Whether it&apos;s sustainable depends on who you ask.</p>
                   </div>
                   <div className="flex-shrink-0 text-right">
                     <p className="text-3xl font-bold text-emerald-600" style={{ fontFamily: "var(--font-playfair), serif" }}>$229M+</p>
@@ -392,7 +392,7 @@ export default function CityBudget() {
               </div>
 
               <div className="mt-4 flex flex-wrap gap-1.5">
-                <SourceBadge source={{ label: "Houston Chronicle", detail: "Abby Church, June 10 2026 — budget passage coverage", type: "news" }} />
+                <SourceBadge source={{ label: "Houston Chronicle", detail: "Abby Church, June 10 2026. Budget passage coverage", type: "news" }} />
                 <SourceBadge source={{ label: "htxbudget.com", detail: "Local Insight / OCSI analysis", type: "news", url: "https://htxbudget.com" }} />
                 <SourceBadge source={{ label: "Houston Public Media", detail: "FY27 budget coverage", type: "news" }} />
                 <SourceBadge source={{ label: "City of Houston", detail: "FY2027 Proposed Budget document", type: "government", url: "https://www.houstontx.gov/budget" }} />
@@ -410,7 +410,7 @@ export default function CityBudget() {
                         HPD alone consumes 39% of the General Fund
                       </h3>
                       <p className="text-sm text-[var(--muted)] leading-relaxed">
-                        At <strong className="text-[var(--foreground)]">$1.2B+</strong>, the Houston Police Department is by far the single largest line item. That&apos;s why the budget is nearly impossible to balance without either cutting public safety, raising revenue, or shifting costs — like moving trash out of the General Fund entirely.
+                        At <strong className="text-[var(--foreground)]">$1.2B+</strong>, the Houston Police Department is by far the single largest line item. That&apos;s why the budget is nearly impossible to balance without either cutting public safety, raising revenue, or shifting costs. Like moving trash out of the General Fund entirely.
                       </p>
                     </div>
                     <div className="flex-shrink-0 text-center md:text-right">
@@ -475,9 +475,9 @@ export default function CityBudget() {
               </div>
             </div>
             <EvidencePanel className="mt-6" sources={[
-              { label: "City of Houston FY2027 Proposed Budget", detail: "Official budget document — department figures, General Fund", type: "government", url: "https://www.houstontx.gov/budget" },
-              { label: "htxbudget.com / Local Insight", detail: "Three Moves analysis — OCSI civic finance reporting", type: "news", url: "https://htxbudget.com" },
-              { label: "Houston Public Media", detail: "FY27 budget coverage — Chris Hollins Controller objections", type: "news" },
+              { label: "City of Houston FY2027 Proposed Budget", detail: "Official budget document. Department figures, General Fund", type: "government", url: "https://www.houstontx.gov/budget" },
+              { label: "htxbudget.com / Local Insight", detail: "Three Moves analysis. OCSI civic finance reporting", type: "news", url: "https://htxbudget.com" },
+              { label: "Houston Public Media", detail: "FY27 budget coverage. Chris Hollins Controller objections", type: "news" },
               { label: "City Controller Chris Hollins", detail: "Issued formal objection to one-time accounting moves", type: "government" },
             ]} />
           </div>
@@ -487,7 +487,7 @@ export default function CityBudget() {
         {tab === "council" && (
           <div>
             <p className="text-sm text-[var(--muted)] mb-6 max-w-2xl">
-              Each Houston City Council member controls District Improvement Funds for capital projects, street repairs, and community investments. The FY27 budget passed 15–1 on June 10, 2026 — Pollard voted no, Thomas was absent.
+              Each Houston City Council member controls District Improvement Funds for capital projects, street repairs, and community investments. The FY27 budget passed 15–1 on June 10, 2026. Pollard voted no, Thomas was absent.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {COUNCIL.map((cm) => (

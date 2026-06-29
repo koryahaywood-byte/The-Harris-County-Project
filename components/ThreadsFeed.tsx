@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-/* Threads-style social feed — clean white cards, real avatars, optional post images.
+/* Threads-style social feed. Clean white cards, real avatars, optional post images.
    Avatars resolve via unavatar.io from the X handle; falls back to initials. */
 
 export interface ThreadsPost {
@@ -76,7 +76,7 @@ function PostCard({ post, isLast }: { post: ThreadsPost; isLast: boolean }) {
               <img src={post.image} alt="" className="w-full h-auto object-cover max-h-72" loading="lazy" />
             </div>
           )}
-          {/* Action row — display only */}
+          {/* Action row: display only */}
           <div className="flex items-center gap-5 mt-2.5 text-[#999]">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
@@ -93,14 +93,14 @@ function PostCard({ post, isLast }: { post: ThreadsPost; isLast: boolean }) {
 export default function ThreadsFeed({ posts, footer }: { posts: ThreadsPost[]; footer?: React.ReactNode }) {
   return (
     <div className="max-w-xl">
-      {/* Honesty label — these are editorial summaries in feed format, not live posts */}
+      {/* Honesty label. These are editorial summaries in feed format, not live posts */}
       <div className="flex items-center gap-2 mb-2.5 px-1">
         <span className="text-[9px] font-bold uppercase tracking-[0.16em] px-2.5 py-1 rounded-full"
           style={{ background: "#d9770614", color: "#b45309", border: "1px solid #d9770630" }}>
           Curated Digest
         </span>
         <p className="text-[10px] leading-snug" style={{ color: "#9ca3af" }}>
-          Written by our newsroom in feed format — not live social posts. Follow the linked accounts for their actual feeds.
+          Written by our newsroom in feed format. Not live social posts. Follow the linked accounts for their actual feeds.
         </p>
       </div>
       <div className="rounded-3xl bg-white ring-1 ring-black/8 overflow-hidden shadow-[0_1px_8px_rgba(26,58,92,0.06)]">

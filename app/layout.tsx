@@ -12,20 +12,20 @@ const dancing = Dancing_Script({ subsets: ["latin"], variable: "--font-dancing" 
 
 export const metadata: Metadata = {
   title: "The Harris County Project",
-  description: "Civic tools for Harris County residents. They stopped teaching civics — we didn't.",
+  description: "Civic tools for Harris County residents. They stopped teaching civics: we didn't.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${outfit.variable} ${playfair.variable} ${dancing.variable}`}>
       <body className="min-h-screen flex flex-col" style={{ fontFamily: "var(--font-outfit), sans-serif" }}>
-        {/* Global SVG filter defs — cel-shade effect applied to politician photos */}
+        {/* Global SVG filter defs. Cel-shade effect applied to politician photos */}
         <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
           <defs>
             <filter id="hcp-cel" colorInterpolationFilters="sRGB" x="-2%" y="-2%" width="104%" height="104%">
               {/* 1. Slight blur to kill JPEG noise before processing */}
               <feGaussianBlur in="SourceGraphic" stdDeviation="0.6" result="blurred"/>
-              {/* 2. Posterize to 7 levels — smooth enough for skin tones */}
+              {/* 2. Posterize to 7 levels. Smooth enough for skin tones */}
               <feComponentTransfer in="blurred" result="poster">
                 <feFuncR type="discrete" tableValues="0 0.17 0.33 0.5 0.67 0.83 1"/>
                 <feFuncG type="discrete" tableValues="0 0.17 0.33 0.5 0.67 0.83 1"/>
@@ -57,7 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_15%_0%,rgba(37,99,168,0.25),transparent_70%)]" />
           {/* Top strip */}
           <div className="max-w-6xl mx-auto px-6 pt-14 pb-10 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-10 relative z-10">
-            {/* Left — brand */}
+            {/* Left: brand */}
             <div className="max-w-sm">
               <p style={{ fontFamily: "var(--font-dancing), cursive", fontSize: "2rem", lineHeight: 1.1 }} className="mb-3">
                 Built With Wood
@@ -67,7 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </p>
             </div>
 
-            {/* Right — nav links */}
+            {/* Right: nav links */}
             <nav className="grid grid-cols-2 gap-x-12 gap-y-2 text-sm text-white/70 self-start pt-1">
               <div className="flex flex-col gap-2">
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 mb-1">Tools</p>
@@ -96,10 +96,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* Bottom bar */}
           <div className="border-t border-white/10 px-6 py-4 max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 relative z-10">
             <p className="text-white/40 text-xs">
-              The Harris County Project &mdash; Free, always. Data from public sources.
+              The Harris County Project. Free, always. Data from public sources.
             </p>
             <p className="text-white/40 text-xs">
-              Houston, TX &mdash; Built for the people
+              Houston, TX. Built for the people
             </p>
           </div>
         </footer>

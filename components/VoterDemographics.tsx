@@ -147,7 +147,7 @@ export default function VoterDemographics({ districtField, districtValue }: Prop
               ))}
             </div>
 
-            {/* Party filter — only shown for primary/runoff */}
+            {/* Party filter. Only shown for primary/runoff */}
             {electionTab !== "general" && (
               <div className="flex rounded-lg overflow-hidden border border-black/10 text-[10px] font-semibold">
                 {([["total", "All"], ["dem", "D"], ["rep", "R"]] as const).map(([p, l]) => (

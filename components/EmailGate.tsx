@@ -11,7 +11,7 @@ export default function EmailGate() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Only show on first visit — check localStorage after mount
+    // Only show on first visit. Check localStorage after mount
     const passed = localStorage.getItem(STORAGE_KEY);
     const skipped = sessionStorage.getItem(SKIP_KEY);
     if (!passed && !skipped) setShow(true);
@@ -45,7 +45,7 @@ export default function EmailGate() {
   }
 
   function skipForNow() {
-    // Skip for this browsing session — they'll see it again next visit
+    // Skip for this browsing session. They'll see it again next visit
     sessionStorage.setItem(SKIP_KEY, "1");
     setShow(false);
   }
@@ -74,11 +74,11 @@ export default function EmailGate() {
               Get free access to<br />The Harris County Toolbox
             </h2>
             <p className="text-[var(--muted)] text-sm leading-relaxed mb-7">
-              Drop your email and we&apos;ll let you know when new tools and data drop. No spam — just civic updates.
+              Drop your email and we&apos;ll let you know when new tools and data drop. No spam: just civic updates.
             </p>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-              {/* Email input — double bezel */}
+              {/* Email input: double bezel */}
               <div className="rounded-[1.35rem] ring-1 ring-[var(--border)] bg-white/60 p-[5px] focus-within:ring-[var(--accent-light)] transition-all duration-500">
                 <input
                   type="email"

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 // Harris County voting precincts via Census TIGERweb (layer 15 = Voting Districts)
-// The WHERE clause MUST use literal single quotes — Census ArcGIS rejects %27 encoding.
+// The WHERE clause MUST use literal single quotes. Census ArcGIS rejects %27 encoding.
 // We build the URL manually to avoid URLSearchParams encoding the quotes.
 const BASE = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/15/query";
 const COMMON = "&outFields=VTD,NAME&f=geojson&geometryPrecision=4&outSR=4326&maxAllowableOffset=0.003&resultRecordCount=550&orderByFields=VTD";
@@ -12,7 +12,7 @@ function pageUrl(offset: number) {
 
 export async function GET() {
   try {
-    // Harris County has ~1011 precincts — fetch in two pages of 550
+    // Harris County has ~1011 precincts. Fetch in two pages of 550
     const [res1, res2] = await Promise.all([
       fetch(pageUrl(0),   { next: { revalidate: 86400 } }),
       fetch(pageUrl(550), { next: { revalidate: 86400 } }),

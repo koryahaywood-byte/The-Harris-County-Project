@@ -65,7 +65,7 @@ function getResults(history: PrecinctHistory, cycle: string, prec: string) {
   return results.length ? results : null;
 }
 
-// ── Field Intel — GOTV opportunity classification ─────────────────────────
+// ── Field Intel. GOTV opportunity classification ─────────────────────────
 type FieldClass = "surge" | "persuasion" | "hold" | "strongR" | "unknown";
 
 interface FieldIntel {
@@ -100,8 +100,8 @@ function classifyPrecinct(trend: { year: number; dPct: number }[], cycleData: { 
     return {
       classification: "surge", label: "GOTV Surge Target", color: "#1d4ed8", bg: "#dbeafe",
       avgDPct, turnoutDelta,
-      summary: `Reliably Democratic (avg ${Math.round(avgDPct * 100)}% D). ${isSleeping ? `Turnout dropped ${Math.abs(turnoutDelta!)} votes from 2020→2024 — sleeping Democratic voters.` : "High-yield for turnout investment."}`,
-      action: isSleeping ? "Prioritize door-knocks and mail here — turnout drop means untapped votes." : "High-efficiency canvass target — every voter contact yields near-certain D votes.",
+      summary: `Reliably Democratic (avg ${Math.round(avgDPct * 100)}% D). ${isSleeping ? `Turnout dropped ${Math.abs(turnoutDelta!)} votes from 2020→2024: sleeping Democratic voters.` : "High-yield for turnout investment."}`,
+      action: isSleeping ? "Prioritize door-knocks and mail here. Turnout drop means untapped votes." : "High-efficiency canvass target. Every voter contact yields near-certain D votes.",
     };
   }
   if (rDPct >= 0.55) {
@@ -109,15 +109,15 @@ function classifyPrecinct(trend: { year: number; dPct: number }[], cycleData: { 
       classification: "hold", label: "Hold & Grow", color: "#059669", bg: "#dcfce7",
       avgDPct, turnoutDelta,
       summary: `Lean Democratic (avg ${Math.round(avgDPct * 100)}% D). Needs defense and modest turnout lift.`,
-      action: "Mobilize base with targeted mail. Don't over-invest — move excess resources to surge precincts.",
+      action: "Mobilize base with targeted mail. Don't over-invest. Move excess resources to surge precincts.",
     };
   }
   if (rDPct >= 0.44) {
     const isMovingD = recent.dPct > oldest.dPct + 0.03;
     return {
-      classification: "persuasion", label: isMovingD ? "Trending D — Persuasion" : "Battleground — Persuasion", color: "#d97706", bg: "#fef3c7",
+      classification: "persuasion", label: isMovingD ? "Trending D: Persuasion" : "Battleground. Persuasion", color: "#d97706", bg: "#fef3c7",
       avgDPct, turnoutDelta,
-      summary: `Competitive battleground (avg ${Math.round(avgDPct * 100)}% D). ${isMovingD ? "Trending blue — swing voters are moving." : "True coin-flip territory."}`,
+      summary: `Competitive battleground (avg ${Math.round(avgDPct * 100)}% D). ${isMovingD ? "Trending blue. Swing voters are moving." : "True coin-flip territory."}`,
       action: "Air cover + persuasion mail. Door-knock undecided voters. This is the margin-of-victory precinct.",
     };
   }
@@ -195,7 +195,7 @@ function PrecinctLookupInner() {
     })).filter(c => c.results !== null);
   }, [history, prec]);
 
-  // Trend: D% per cycle (presidential/governor only — first general election race)
+  // Trend: D% per cycle (presidential/governor only. First general election race)
   const trend = useMemo(() => {
     if (!cycleData) return [];
     return cycleData
@@ -315,7 +315,7 @@ function PrecinctLookupInner() {
             {trend.length >= 2 && (
               <div className="rounded-2xl p-5" style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)" }}>
                 <p className="text-[10px] font-black uppercase tracking-[0.18em] mb-4" style={{ color: "#374151" }}>
-                  Democratic Share — Primary Race by Cycle
+                  Democratic Share. Primary Race by Cycle
                 </p>
                 <div className="flex items-end gap-3" style={{ height: 120 }}>
                   {[...trend].sort((a, b) => a.year - b.year).map(t => {
@@ -410,7 +410,7 @@ function PrecinctLookupInner() {
                                 {r.dName}
                               </p>
                               <p className="text-[10px]" style={{ color: "#6b7280" }}>
-                                {r.d.toLocaleString()} votes · {r.dPct != null ? Math.round(r.dPct * 100) : "—"}%
+                                {r.d.toLocaleString()} votes · {r.dPct != null ? Math.round(r.dPct * 100) : "–"}%
                               </p>
                             </div>
                             <div className="text-right">
@@ -418,7 +418,7 @@ function PrecinctLookupInner() {
                                 {r.rName}
                               </p>
                               <p className="text-[10px]" style={{ color: "#6b7280" }}>
-                                {r.r.toLocaleString()} votes · {r.dPct != null ? 100 - Math.round(r.dPct * 100) : "—"}%
+                                {r.r.toLocaleString()} votes · {r.dPct != null ? 100 - Math.round(r.dPct * 100) : "–"}%
                               </p>
                             </div>
                           </div>

@@ -4,7 +4,7 @@ export default function DiscretionaryFunds() {
       <iframe
         src="/discretionary-funds.html"
         className="flex-1 w-full border-0"
-        title="Discretionary Funds Map — Houston City Council"
+        title="Discretionary Funds Map: Houston City Council"
         allowFullScreen
       />
     </div>

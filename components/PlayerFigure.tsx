@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 
-// Load the Three.js scene client-side only — no SSR (Canvas requires window)
+// Load the Three.js scene client-side only. No SSR (Canvas requires window)
 const PlayerFigure3D = dynamic(() => import("./PlayerFigure3D"), {
   ssr: false,
   loading: () => (

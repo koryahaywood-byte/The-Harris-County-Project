@@ -61,7 +61,7 @@ function genderLabel(g?: string) {
 }
 
 function paddedPrec(p?: string) {
-  if (!p) return "—";
+  if (!p) return "–";
   return p.padStart(4, "0");
 }
 
@@ -283,7 +283,7 @@ export default function VoterSearch() {
             <div>
               <p className="text-xs font-bold mb-0.5" style={{ color: "#1a3a5c" }}>Voter roll pending import</p>
               <p className="text-xs leading-relaxed" style={{ color: "#6b7280" }}>
-                Harris County voter registration data is not yet loaded. The tool is ready — once the roll is imported, searches go live instantly.
+                Harris County voter registration data is not yet loaded. The tool is ready. Once the roll is imported, searches go live instantly.
               </p>
             </div>
           </div>
@@ -395,7 +395,7 @@ export default function VoterSearch() {
                   style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)" }}>
                   <p className="text-sm font-bold mb-1" style={{ color: "#374151" }}>No voters found</p>
                   <p className="text-xs" style={{ color: "#9ca3af" }}>
-                    Try a broader search — only last name is required.
+                    Try a broader search. Only last name is required.
                   </p>
                 </div>
               )}
@@ -413,7 +413,7 @@ export default function VoterSearch() {
                   </div>
                   {(result.pages ?? 1) > 1 && (
                     <p className="text-[10px] text-center mt-4" style={{ color: "#9ca3af" }}>
-                      Page {result.page} of {result.pages} — refine your search to narrow results
+                      Page {result.page} of {result.pages}. Refine your search to narrow results
                     </p>
                   )}
                 </div>

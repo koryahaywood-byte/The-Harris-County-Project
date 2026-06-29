@@ -1,7 +1,7 @@
 // War room dashboard data layer.
 // Primary: Google News RSS (aggregates paywalled publications, always fresh)
 // Fallback: Bing News RSS
-// Stories are always the most recent — never show "no story" for active publications.
+// Stories are always the most recent. Never show "no story" for active publications.
 
 import { EVENTS } from "@/lib/civic-events";
 
@@ -55,7 +55,7 @@ function parseRssItems(xml: string): Array<{
   while ((m = itemRe.exec(xml)) !== null) {
     const item = m[1];
 
-    // Title — strip CDATA, HTML entities, trailing " - Source" suffixes
+    // Title. Strip CDATA, HTML entities, trailing " - Source" suffixes
     const rawTitle = item.match(/<title[^>]*>([\s\S]*?)<\/title>/)?.[1] ?? "";
     const title = rawTitle
       .replace(/<!\[CDATA\[|\]\]>/g, "")
@@ -65,7 +65,7 @@ function parseRssItems(xml: string): Array<{
       .replace(/\s[-|]\s[^-|]{3,60}$/, "")
       .trim();
 
-    // Link — Google News wraps in <a>, Bing uses redirect URL
+    // Link. Google News wraps in <a>, Bing uses redirect URL
     const rawLink = item.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.trim()
       ?? item.match(/<guid[^>]*>([\s\S]*?)<\/guid>/)?.[1]?.trim() ?? "";
     const bingUrl  = rawLink.match(/[?&]url=([^&]+)/)?.[1];
@@ -74,13 +74,13 @@ function parseRssItems(xml: string): Array<{
     // Pub date
     const pubDate = item.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1]?.trim() ?? "";
 
-    // Source — Google News puts it in <source>, Bing in <News:Source>
+    // Source. Google News puts it in <source>, Bing in <News:Source>
     const source =
       item.match(/<source[^>]*>([\s\S]*?)<\/source>/)?.[1]?.replace(/<!\[CDATA\[|\]\]>/g, "").trim()
       ?? item.match(/<News:Source>([\s\S]*?)<\/News:Source>/)?.[1]?.trim()
       ?? "";
 
-    // Image — Bing <News:Image>, or og:image in enclosure, or media:content
+    // Image: Bing <News:Image>, or og:image in enclosure, or media:content
     const image =
       item.match(/<News:Image>([\s\S]*?)<\/News:Image>/)?.[1]?.trim()
       ?? item.match(/<media:content[^>]+url="([^"]+)"/)?.[1]
@@ -129,7 +129,7 @@ async function scrapeOgImage(articleUrl: string): Promise<string | null> {
     clearTimeout(tid);
     if (!res.ok) return null;
 
-    // Stream only the first 24 KB — enough to reach </head>
+    // Stream only the first 24 KB: enough to reach </head>
     const reader = res.body?.getReader();
     if (!reader) return null;
     const chunks: Uint8Array[] = [];
@@ -193,14 +193,14 @@ async function fetchFromFeed(url: string, todayStr: string, sourceName?: string)
 const GN = "https://news.google.com/rss/search?hl=en-US&gl=US&ceid=US:en&q=";
 
 async function fetchTier(feeds: Array<{ url: string; source?: string }>, todayStr: string) {
-  // Try all feeds in parallel — prefer today's story from any source
+  // Try all feeds in parallel. Prefer today's story from any source
   const results = await Promise.all(feeds.map(f => fetchFromFeed(f.url, todayStr, f.source)));
   return results.find(r => r?.isToday) ?? results.find(r => r !== null) ?? null;
 }
 
 // ── Feed definitions ──────────────────────────────────────────────────────────
 
-// LOCAL — Chronicle Houston Politics section only (city hall, Harris County, mayor, commissioners)
+// LOCAL. Chronicle Houston Politics section only (city hall, Harris County, mayor, commissioners)
 // Explicitly exclude Texas/national Chronicle sections so we don't bleed tiers
 const LOCAL_FEEDS = [
   // Chronicle's Houston Politics RSS (direct section feed)
@@ -212,7 +212,7 @@ const LOCAL_FEEDS = [
   { url: "https://www.bing.com/news/search?q=Houston+city+hall+mayor+Whitmire+Harris+County+commissioner&format=rss" },
 ];
 
-// STATE — Tribune primary + Chronicle Texas Politics section
+// STATE. Tribune primary + Chronicle Texas Politics section
 const STATE_FEEDS = [
   // Texas Tribune direct RSS (always fresh TX-specific coverage)
   { url: "https://www.texastribune.org/feeds/", source: "Texas Tribune" },
@@ -223,7 +223,7 @@ const STATE_FEEDS = [
   { url: "https://www.bing.com/news/search?q=Texas+Tribune+Texas+politics+Austin+legislature&format=rss" },
 ];
 
-// FEDERAL — Chronicle US/World + WaPo/NYT
+// FEDERAL. Chronicle US/World + WaPo/NYT
 const FEDERAL_FEEDS = [
   // Chronicle US & World Politics section RSS
   { url: "https://www.houstonchronicle.com/rss/feed/US-World-Politics-2341360.php", source: "Houston Chronicle" },
@@ -233,13 +233,13 @@ const FEDERAL_FEEDS = [
   { url: "https://www.bing.com/news/search?q=Congress+Senate+White+House+federal+politics+2026&format=rss" },
 ];
 
-// November 2026 Harris County ballot — lean ratings sync'd with matchups-2026.ts
+// November 2026 Harris County ballot. Lean ratings sync'd with matchups-2026.ts
 const NOVEMBER_2026_BALLOT: BallotRace[] = [
-  { office: "Harris County Judge",     incumbent: "Plummer (D) vs Sanchez (R) — open", party: "D", competitive: "Lean D",  href: "/tools/ballot-2026" },
+  { office: "Harris County Judge",     incumbent: "Plummer (D) vs Sanchez (R). Open", party: "D", competitive: "Lean D",  href: "/tools/ballot-2026" },
   { office: "U.S. Senate (TX)",        incumbent: "Talarico (D) vs Paxton (R)",         party: "D", competitive: "Lean D",  href: "/tools/ballot-2026" },
   { office: "U.S. House TX-07",        incumbent: "Fletcher (D) vs Hale (R)",           party: "D", competitive: "Toss-up", href: "/tools/ballot-2026" },
-  { office: "U.S. House TX-09",        incumbent: "Open — Gutierrez (D) vs Mealer (R)", party: "D", competitive: "Toss-up", href: "/tools/ballot-2026" },
-  { office: "U.S. House TX-38",        incumbent: "McDonough (D) vs Bonck (R) — open",  party: "R", competitive: "Lean R",  href: "/tools/ballot-2026" },
+  { office: "U.S. House TX-09",        incumbent: "Open. Gutierrez (D) vs Mealer (R)", party: "D", competitive: "Toss-up", href: "/tools/ballot-2026" },
+  { office: "U.S. House TX-38",        incumbent: "McDonough (D) vs Bonck (R). Open",  party: "R", competitive: "Lean R",  href: "/tools/ballot-2026" },
   { office: "TX Governor",             incumbent: "Hinojosa (D) vs Abbott (R)",         party: "R", competitive: "Safe R",  href: "/tools/ballot-2026" },
 ];
 

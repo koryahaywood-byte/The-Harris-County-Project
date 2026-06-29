@@ -353,7 +353,7 @@ export default function ConsultantFlowchart() {
               onClick={() => setSelected(null)}
               className="text-xs font-semibold text-[var(--accent-light)] underline underline-offset-2"
             >
-              Clear selection — show all
+              Clear selection: show all
             </button>
           </div>
         )}

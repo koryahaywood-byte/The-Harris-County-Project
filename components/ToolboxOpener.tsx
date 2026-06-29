@@ -5,14 +5,14 @@ import { useRef, useState, useEffect } from "react";
 // Phase timeline (ms from trigger):
 //   0    → appear   : box slides up from below
 //   750  → shake    : whole box rattles (something inside wants OUT)
-//   1450 → bounce   : lid teases — front edge lifts, snaps back
+//   1450 → bounce   : lid teases. Front edge lifts, snaps back
 //   1950 → open     : lid flips back with 3-D perspective overshoot
 //   2100 → burst    : 5 tools shoot up and arc down to their shelves
 //   2800 → content  : heading rises in; shelf labels fade in
 
 type Phase = "idle" | "appear" | "shake" | "bounce" | "open" | "burst" | "content";
 
-// 5 sections in the browse grid — order matches ROWS in page.tsx
+// 5 sections in the browse grid. Order matches ROWS in page.tsx
 const SHELF = [
   { label: "Money",       icon: "dollar"   },
   { label: "Elections",   icon: "chart"    },
@@ -186,13 +186,13 @@ export default function ToolboxOpener() {
               opacity="0"
             />
 
-            {/* ── BOX BODY — front face ── */}
+            {/* ── BOX BODY. Front face ── */}
             <g filter="url(#tb-drop)">
               {/* Main body */}
               <rect x="30" y="118" width="280" height="82" rx="8"
                 fill="url(#tb-body-grad)"/>
 
-              {/* Interior floor — revealed when lid opens */}
+              {/* Interior floor. Revealed when lid opens */}
               <rect x="32" y="120" width="276" height="22" rx="4"
                 fill="url(#tb-interior)"
                 style={{ transition: "opacity 0.35s ease 0.25s" }}
@@ -232,7 +232,7 @@ export default function ToolboxOpener() {
             <circle cx="170" cy="119" r="5"   fill="#2563a8"/>
             <circle cx="170" cy="119" r="2.2" fill="#1a3a5c" opacity="0.5"/>
 
-            {/* ── 5 TOOL ICONS — fall to shelf ── */}
+            {/* ── 5 TOOL ICONS. Fall to shelf ── */}
             {SHELF.map((s, i) => (
               <g
                 key={s.label}
@@ -244,7 +244,7 @@ export default function ToolboxOpener() {
               </g>
             ))}
 
-            {/* ── SHELF LABELS — fade in when tools land (content phase) ── */}
+            {/* ── SHELF LABELS. Fade in when tools land (content phase) ── */}
             {SHELF.map((s, i) => (
               <text
                 key={`lbl-${s.label}`}
@@ -266,7 +266,7 @@ export default function ToolboxOpener() {
               </text>
             ))}
 
-            {/* ── LID GROUP — 3-D forward flip ── */}
+            {/* ── LID GROUP. 3-D forward flip ── */}
             <g
               className={lidClass}
               filter="url(#tb-lid-drop)"

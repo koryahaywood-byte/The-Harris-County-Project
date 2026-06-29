@@ -3,7 +3,7 @@ import { useState } from "react";
 import ShareButton from "@/components/ShareButton";
 import { SourceBadge, EvidencePanel, type Source } from "@/components/SourceBadge";
 
-/* ─── Budget Data — Harris County FY2027 Proposed (~$2.84B) ─────────────── */
+/* ─── Budget Data. Harris County FY2027 Proposed (~$2.84B) ─────────────── */
 interface BudgetLine {
   dept: string;
   category: string;
@@ -134,7 +134,7 @@ function MonarchBudgetBar({ line, max }: { line: BudgetLine; max: number }) {
           <span className={`inline-flex items-center gap-0.5 text-[10px] font-bold ${
             up ? "text-emerald-600" : line.change < 0 ? "text-red-500" : "text-[var(--muted)]"
           }`}>
-            {up ? "▲" : line.change < 0 ? "▼" : "—"} {Math.abs(line.change).toFixed(1)}%
+            {up ? "▲" : line.change < 0 ? "▼" : "–"} {Math.abs(line.change).toFixed(1)}%
           </span>
         </div>
       </div>
@@ -226,12 +226,12 @@ export default function CountyBudget() {
             Harris County Budget
           </h1>
           <p className="text-white/70 text-sm max-w-lg">
-            Harris County is set to cross $3 billion for the first time — with a projected deficit commissioners must close before Oct. 1.
+            Harris County is set to cross $3 billion for the first time. With a projected deficit commissioners must close before Oct. 1.
           </p>
           <ShareButton
             toolName="Harris County Budget"
             section="Money"
-            description="Harris County's FY2027 proposed budget tops $3B for the first time — with a $129M–$287M deficit to close."
+            description="Harris County's FY2027 proposed budget tops $3B for the first time. With a $129M–$287M deficit to close."
             stats={[{ label: "Total Budget", value: "$3B+" }, { label: "Projected Deficit", value: "$129M–$287M" }]}
           />
           <div className="mt-5 flex flex-wrap gap-3">
@@ -312,17 +312,17 @@ export default function CountyBudget() {
               <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[var(--muted)] mb-2">What You Need to Know</p>
               <h2 className="text-3xl md:text-4xl font-bold text-[var(--accent)] leading-tight max-w-2xl"
                 style={{ fontFamily: "var(--font-playfair), serif" }}>
-                Harris County just crossed $3 billion — and it&rsquo;s still not enough.
+                Harris County just crossed $3 billion. And it&rsquo;s still not enough.
               </h2>
               <p className="mt-3 text-sm text-[var(--muted)] max-w-2xl leading-relaxed">
-                For the first time ever, Harris County&rsquo;s budget tops $3 billion. And for the fifth consecutive year, commissioners have to close a deficit before the fiscal year even starts. This is not a one-time problem — budget director Daniel Ramos calls it structural. Here&rsquo;s what&rsquo;s driving it.
+                For the first time ever, Harris County&rsquo;s budget tops $3 billion. And for the fifth consecutive year, commissioners have to close a deficit before the fiscal year even starts. This is not a one-time problem. Budget director Daniel Ramos calls it structural. Here&rsquo;s what&rsquo;s driving it.
               </p>
             </div>
 
             <StoryBeat
-              eyebrow="The Deficit — FY2027"
+              eyebrow="The Deficit: FY2027"
               headline="Up to $287 million in the hole before October 1."
-              body={`If commissioners keep services exactly as they are today, the projected deficit is $287 million. If they raise property taxes to the maximum allowed under state law — something Judge Lina Hidalgo says she doubts will happen in an election year — the gap narrows to $129 million. Either way, commissioners must pass a balanced budget by law, meaning every dollar of deficit must be cut or found somewhere. And there's also a $27 million gap to close right now, before this fiscal year even ends Sept. 30.`}
+              body={`If commissioners keep services exactly as they are today, the projected deficit is $287 million. If they raise property taxes to the maximum allowed under state law. Something Judge Lina Hidalgo says she doubts will happen in an election year. The gap narrows to $129 million. Either way, commissioners must pass a balanced budget by law, meaning every dollar of deficit must be cut or found somewhere. And there's also a $27 million gap to close right now, before this fiscal year even ends Sept. 30.`}
               stat="$287M"
               statLabel="Worst-case deficit FY2027"
               color="#dc2626"
@@ -336,7 +336,7 @@ export default function CountyBudget() {
             <StoryBeat
               eyebrow="The Badge Bill"
               headline="Law enforcement raises are the single biggest driver."
-              body={`Last year, commissioners approved a 24% raise for all Harris County law enforcement to match pay raises Houston Mayor John Whitmire gave HPD officers (36.5% over five years). The problem: officials expected officers to retire and be replaced by cheaper hires — what budget director Ramos called "an escalator." The attrition never materialized. Combined with another round of raises locked in over the next four years, law enforcement salaries account for roughly $73 million in added costs for FY2027 alone. State law also prohibits cutting law enforcement budgets, meaning the county must fund vacant positions — adding another $31 million.`}
+              body={`Last year, commissioners approved a 24% raise for all Harris County law enforcement to match pay raises Houston Mayor John Whitmire gave HPD officers (36.5% over five years). The problem: officials expected officers to retire and be replaced by cheaper hires. What budget director Ramos called "an escalator." The attrition never materialized. Combined with another round of raises locked in over the next four years, law enforcement salaries account for roughly $73 million in added costs for FY2027 alone. State law also prohibits cutting law enforcement budgets, meaning the county must fund vacant positions. Adding another $31 million.`}
               stat="$73M"
               statLabel="Law enforcement salary increase"
               color="#1d4ed8"
@@ -349,8 +349,8 @@ export default function CountyBudget() {
 
             <StoryBeat
               eyebrow="The State Constraint"
-              headline="Austin caps how much Harris County can raise — and even Tom Ramsey is frustrated."
-              body={`A state law passed in 2019 limits how much counties can grow their property tax revenue without voter approval. Harris County began projecting deficits in FY2023, two years after the law took effect. Add $68 million in rising benefit and healthcare costs, plus $20 million in inflationary expenses tied to tech services, fleet management, and fuel — some of it driven by the War in Iran — and the math gets brutal fast. Harris County isn't alone: Fort Bend County faces an $80M deficit, Bexar County is warning of a major shortfall. But Harris County's lone Republican commissioner, Tom Ramsey, put it bluntly: "Thank God for Harris County. Otherwise we'd have a problem in the state of Texas."`}
+              headline="Austin caps how much Harris County can raise. And even Tom Ramsey is frustrated."
+              body={`A state law passed in 2019 limits how much counties can grow their property tax revenue without voter approval. Harris County began projecting deficits in FY2023, two years after the law took effect. Add $68 million in rising benefit and healthcare costs, plus $20 million in inflationary expenses tied to tech services, fleet management, and fuel. Some of it driven by the War in Iran. And the math gets brutal fast. Harris County isn't alone: Fort Bend County faces an $80M deficit, Bexar County is warning of a major shortfall. But Harris County's lone Republican commissioner, Tom Ramsey, put it bluntly: "Thank God for Harris County. Otherwise we'd have a problem in the state of Texas."`}
               stat="5th"
               statLabel="Consecutive deficit year"
               color="#7c3aed"
@@ -378,7 +378,7 @@ export default function CountyBudget() {
                       role: "Harris County Budget Director",
                     },
                     {
-                      quote: "When people gather in Austin and they talk about the 'problem' that is Harris County — talk to me about the port, talk to me about the Medical Center. So there should be more help.",
+                      quote: "When people gather in Austin and they talk about the 'problem' that is Harris County. Talk to me about the port, talk to me about the Medical Center. So there should be more help.",
                       name: "Commissioner Tom Ramsey",
                       role: "Precinct 3 (Republican)",
                     },
@@ -403,10 +403,10 @@ export default function CountyBudget() {
               </button>
             </div>
             <EvidencePanel sources={[
-              { label: "Houston Chronicle", detail: "May 14, 2026 · John Lomax V — primary reporting on FY2027 budget", type: "news", url: "https://www.houstonchronicle.com" },
+              { label: "Houston Chronicle", detail: "May 14, 2026 · John Lomax V. Primary reporting on FY2027 budget", type: "news", url: "https://www.houstonchronicle.com" },
               { label: "Harris County Commissioners Court", detail: "Budget Director Daniel Ramos presentation, May 2026", type: "court" },
               { label: "Texas HB 3158 (2019)", detail: "State revenue cap law limiting county property tax growth", type: "law" },
-              { label: "Harris County Budget Office", detail: "FY2027 Proposed Budget — department figures", type: "government", url: "https://www.harriscountytx.gov/Budget" },
+              { label: "Harris County Budget Office", detail: "FY2027 Proposed Budget. Department figures", type: "government", url: "https://www.harriscountytx.gov/Budget" },
             ]} />
           </div>
         )}
@@ -436,7 +436,7 @@ export default function CountyBudget() {
         {view === "contractors" && (
           <div>
             <p className="text-sm text-[var(--muted)] mb-6">
-              Top vendors by total contract value — Harris County FY2027 Proposed. Data sourced from Harris County procurement records.
+              Top vendors by total contract value. Harris County FY2027 Proposed. Data sourced from Harris County procurement records.
             </p>
             <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
               <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] overflow-hidden">
@@ -490,9 +490,9 @@ export default function CountyBudget() {
         {view === "map" && (
           <div className="-mx-6 -mb-12">
             <div className="px-6 pb-4">
-              <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--muted)] mb-1">Capital Projects — Harris County FY2027</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--muted)] mb-1">Capital Projects: Harris County FY2027</p>
               <p className="text-sm text-[var(--muted)] max-w-2xl">
-                25 major capital projects mapped across Harris County — roads, flood control, health facilities, parks, and operations. Click any marker for project details.
+                25 major capital projects mapped across Harris County. Roads, flood control, health facilities, parks, and operations. Click any marker for project details.
               </p>
             </div>
             <iframe

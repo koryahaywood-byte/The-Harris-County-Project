@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
-          source: "The Harris County Project — Email Gate",
+          source: "The Harris County Project. Email Gate",
           timestamp: new Date().toISOString(),
         }),
       });

@@ -142,7 +142,7 @@ function EventDetail({ event }: { event: CivicEvent }) {
             </h3>
             <p className="text-[11px] mt-0.5" style={{ color: "#9ca3af" }}>
               {event.endDate
-                ? `${dateLabel} — ${new Date(event.endDate + "T12:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric" })}`
+                ? `${dateLabel}: ${new Date(event.endDate + "T12:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric" })}`
                 : dateLabel}
             </p>
           </div>
@@ -269,7 +269,7 @@ export default function CivicCalendar() {
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-2"
             style={{ fontFamily: "var(--font-playfair), serif" }}>Civic Calendar</h1>
           <p className="text-white/50 text-sm max-w-lg mb-4">
-            Election days, voter registration deadlines, court meetings, city council, HISD — every date that matters.
+            Election days, voter registration deadlines, court meetings, city council, HISD. Every date that matters.
           </p>
           {nextUp && (
             <div className="inline-flex items-center gap-3 rounded-full px-4 py-2 text-xs"
@@ -361,7 +361,7 @@ export default function CivicCalendar() {
                 })}
               </div>
 
-              {/* Civic map — shows when Civic filter active */}
+              {/* Civic map. Shows when Civic filter active */}
               {(filter === "civic" || cats.has("Civic")) && (
                 <div className="mt-4">
                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: CAT_COLOR.Civic }}>
@@ -463,7 +463,7 @@ export default function CivicCalendar() {
                                 borderLeft: `2px solid ${CAT_COLOR[e.category]}`,
                                 opacity: isStart ? 1 : 0.6,
                               }}>
-                              <span className="truncate">{e.title.split(" — ")[0].split(" — ")[0].slice(0, 20)}</span>
+                              <span className="truncate">{e.title.split(": ")[0].split(": ")[0].slice(0, 20)}</span>
                             </div>
                           );
                         })}
@@ -512,7 +512,7 @@ export default function CivicCalendar() {
           {(filter === "civic" || cats.has("Civic")) && civicMapEvents.length > 0 && (
             <div className="md:hidden mt-4 mb-2">
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: CAT_COLOR.Civic }}>
-                Civic Locations — {MONTH_NAMES[month]}
+                Civic Locations: {MONTH_NAMES[month]}
               </p>
               <CivicMap events={civicMapEvents} />
             </div>

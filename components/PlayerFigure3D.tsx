@@ -1,6 +1,6 @@
 "use client";
 
-// NBA2K-style 3D character figure — replaces the SVG version.
+// NBA2K-style 3D character figure. Replaces the SVG version.
 // Uses React Three Fiber + Three.js (already in package.json).
 // Toon/cel shading, arena court backdrop, idle breathe + sway animation,
 // official headshot mapped onto the head sphere.
@@ -143,23 +143,23 @@ function SuitCharacter({ photo, party }: { photo?: string; party: string }) {
           <primitive attach="material" object={mDark} />
         </mesh>
 
-        {/* LEFT ARM — upper */}
+        {/* LEFT ARM: upper */}
         <mesh position={[-0.28, 1.14, 0.02]} rotation={[0.06, 0, 0.18]} castShadow>
           <capsuleGeometry args={[0.067, 0.24, 8, 16]} />
           <primitive attach="material" object={mSuit} />
         </mesh>
-        {/* LEFT ARM — forearm */}
+        {/* LEFT ARM: forearm */}
         <mesh position={[-0.32, 0.87, 0.05]} rotation={[0.16, 0, 0.07]} castShadow>
           <capsuleGeometry args={[0.057, 0.21, 8, 16]} />
           <primitive attach="material" object={mSuit} />
         </mesh>
 
-        {/* RIGHT ARM — upper */}
+        {/* RIGHT ARM: upper */}
         <mesh position={[0.28, 1.14, 0.02]} rotation={[0.06, 0, -0.18]} castShadow>
           <capsuleGeometry args={[0.067, 0.24, 8, 16]} />
           <primitive attach="material" object={mSuit} />
         </mesh>
-        {/* RIGHT ARM — forearm */}
+        {/* RIGHT ARM: forearm */}
         <mesh position={[0.32, 0.87, 0.05]} rotation={[0.16, 0, -0.07]} castShadow>
           <capsuleGeometry args={[0.057, 0.21, 8, 16]} />
           <primitive attach="material" object={mSuit} />
@@ -284,7 +284,7 @@ export default function PlayerFigure3D({
       >
         <SceneSetup />
 
-        {/* KEY — warm, upper-left, hard + shadow */}
+        {/* KEY. Warm, upper-left, hard + shadow */}
         <directionalLight
           position={[-2.5, 5, 3.5]} intensity={2.4} color="#fff4e8"
           castShadow
@@ -297,11 +297,11 @@ export default function PlayerFigure3D({
           shadow-camera-top={4}
           shadow-camera-bottom={-2}
         />
-        {/* FILL — cool from right */}
+        {/* FILL. Cool from right */}
         <directionalLight position={[3, 2, -0.5]} intensity={0.55} color="#b8ccff" />
-        {/* RIM — accent from behind */}
+        {/* RIM. Accent from behind */}
         <pointLight position={[0, 1.5, -2.2]} intensity={1.1} color={th.ring} distance={6} />
-        {/* FLOOR GLOW — accent from below */}
+        {/* FLOOR GLOW. Accent from below */}
         <pointLight position={[0, 0.15, 0.5]} intensity={0.7} color={th.accent} distance={3.5} />
         {/* AMBIENT */}
         <ambientLight intensity={0.22} color="#8898b0" />
@@ -347,7 +347,7 @@ export default function PlayerFigure3D({
         )}
       </div>
 
-      {/* Drag hint — disappears after first interaction */}
+      {/* Drag hint. Disappears after first interaction */}
       <p className="absolute top-2 left-0 right-0 text-center text-[9px] font-bold tracking-[0.18em] opacity-35 pointer-events-none"
         style={{ color: "#ffffff" }}>
         DRAG TO ROTATE

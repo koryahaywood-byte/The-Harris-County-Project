@@ -15,7 +15,7 @@ export interface DistrictInfo {
 export const DISTRICT_INFO: Record<string, DistrictInfo> = {
   // ── Congressional Districts ───────────────────────────────────────────────
   "CD-2": {
-    description: "NW Harris County into Montgomery County — The Woodlands, Spring, Cypress, Katy. Safe Republican. Dan Crenshaw lost the March 2026 R primary to Steve Toth.",
+    description: "NW Harris County into Montgomery County. The Woodlands, Spring, Cypress, Katy. Safe Republican. Dan Crenshaw lost the March 2026 R primary to Steve Toth.",
     seatHistory: [
       { name: "Jack Fields", years: "1981–1997", party: "R" },
       { name: "Ted Poe", years: "2005–2019", party: "R" },
@@ -24,7 +24,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "CD-7": {
-    description: "West Houston — River Oaks, Bellaire, Memorial, Westheimer, Katy. Most competitive congressional seat in Harris County.",
+    description: "West Houston. River Oaks, Bellaire, Memorial, Westheimer, Katy. Most competitive congressional seat in Harris County.",
     seatHistory: [
       { name: "Bill Archer", years: "1971–2001", party: "R" },
       { name: "John Culberson", years: "2001–2019", party: "R" },
@@ -40,7 +40,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "CD-9": {
-    description: "SE Houston and suburbs — Pearland, Sunnyside, Missouri City, Third Ward. Open seat 2026 — Al Green ran for CD-18 and lost. Leticia Gutierrez (D) vs. Alex Mealer (R) for the full term starting Jan 2027.",
+    description: "SE Houston and suburbs. Pearland, Sunnyside, Missouri City, Third Ward. Open seat 2026. Al Green ran for CD-18 and lost. Leticia Gutierrez (D) vs. Alex Mealer (R) for the full term starting Jan 2027.",
     seatHistory: [
       { name: "Jack Brooks / Craig Washington", years: "1953–1995", party: "D" },
       { name: "Nick Lampson", years: "1997–2005", party: "D" },
@@ -49,7 +49,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "CD-18": {
-    description: "Houston urban core — Third Ward, Midtown, Montrose, Heights, Near Northside. Sheila Jackson Lee held this seat for 29 years until her death in July 2024. Erica Lee Carter (SJL's daughter) won the Nov 2024 special election for the 118th Congress remainder. Christian Menefee won the 2026 D primary runoff and is the Democratic nominee for the 119th Congress. Safe Democratic.",
+    description: "Houston urban core. Third Ward, Midtown, Montrose, Heights, Near Northside. Sheila Jackson Lee held this seat for 29 years until her death in July 2024. Erica Lee Carter (SJL's daughter) won the Nov 2024 special election for the 118th Congress remainder. Christian Menefee won the 2026 D primary runoff and is the Democratic nominee for the 119th Congress. Safe Democratic.",
     seatHistory: [
       { name: "Craig Washington", years: "1989–1995", party: "D" },
       { name: "Sheila Jackson Lee", years: "1995–2024", party: "D" },
@@ -67,7 +67,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "CD-29": {
-    description: "NE Houston — Galena Park, Pasadena, Jacinto City. Heavily Hispanic and Democratic. No R opponent 2026.",
+    description: "NE Houston. Galena Park, Pasadena, Jacinto City. Heavily Hispanic and Democratic. No R opponent 2026.",
     seatHistory: [
       { name: "Gene Green", years: "1993–2019", party: "D" },
       { name: "Sylvia Garcia", years: "2019–present", party: "D" },
@@ -81,16 +81,16 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "CD-38": {
-    description: "SW Harris County, Katy, Fort Bend — created in 2023 redistricting. Open seat 2026 — Wesley Hunt ran for U.S. Senate (lost R primary).",
+    description: "SW Harris County, Katy, Fort Bend. Created in 2023 redistricting. Open seat 2026. Wesley Hunt ran for U.S. Senate (lost R primary).",
     seatHistory: [
       { name: "Wesley Hunt", years: "2023–2027", party: "R" },
-      { name: "TBD (2026 General — Bonck R vs McDonough D)", years: "2027–present", party: "R" },
+      { name: "TBD (2026 General. Bonck R vs McDonough D)", years: "2027–present", party: "R" },
     ],
   },
 
   // ── TX State Senate ──────────────────────────────────────────────────────
   "SD-4": {
-    description: "North Houston suburbs — The Woodlands, Spring, Humble. Brandon Creighton resigned in early 2026 to become TX Tech Chancellor. Brett Ligon won the May 2026 special election.",
+    description: "North Houston suburbs. The Woodlands, Spring, Humble. Brandon Creighton resigned in early 2026 to become TX Tech Chancellor. Brett Ligon won the May 2026 special election.",
     seatHistory: [
       { name: "Tommy Williams", years: "2003–2014", party: "R" },
       { name: "Brandon Creighton", years: "2015–2026", party: "R" },
@@ -98,7 +98,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "SD-6": {
-    description: "East Houston, Pasadena, Baytown — heavily Hispanic",
+    description: "East Houston, Pasadena, Baytown. Heavily Hispanic",
     seatHistory: [
       { name: "Mario Gallegos Jr.", years: "1995–2012", party: "D" },
       { name: "Sylvia Garcia", years: "2013–2019", party: "D" },
@@ -106,7 +106,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "SD-7": {
-    description: "West Houston, Katy, Memorial — affluent suburban",
+    description: "West Houston, Katy, Memorial. Affluent suburban",
     seatHistory: [
       { name: "Jon Lindsay", years: "1991–2002", party: "R" },
       { name: "Kyle Janek", years: "2003–2014", party: "R" },
@@ -114,7 +114,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "SD-11": {
-    description: "Southeast Harris County, Galveston, Brazoria. Open seat 2026 — Mayes Middleton did not seek reelection (ran for Texas AG). Dennis Paul (R) vs. Shannon Dicely (D) in November 2026.",
+    description: "Southeast Harris County, Galveston, Brazoria. Open seat 2026. Mayes Middleton did not seek reelection (ran for Texas AG). Dennis Paul (R) vs. Shannon Dicely (D) in November 2026.",
     seatHistory: [
       { name: "Kent Caperton", years: "1975–1991", party: "D" },
       { name: "Buster Brown", years: "1992–2012", party: "R" },
@@ -124,7 +124,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "SD-13": {
-    description: "South and Southwest Houston — Fifth Ward, Third Ward, Stafford",
+    description: "South and Southwest Houston. Fifth Ward, Third Ward, Stafford",
     seatHistory: [
       { name: "Chet Brooks", years: "1967–1991", party: "D" },
       { name: "Gene Green", years: "1985–1992", party: "D" },
@@ -147,7 +147,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "SD-18": {
-    description: "Brenham, Bay City, Victoria, Wharton — rural corridor west and south of Harris County",
+    description: "Brenham, Bay City, Victoria, Wharton. Rural corridor west and south of Harris County",
     seatHistory: [
       { name: "Buster Brown", years: "1979–1992", party: "R" },
       { name: "David Sibley", years: "1993–2002", party: "R" },
@@ -158,28 +158,28 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
 
   // ── TX State House ───────────────────────────────────────────────────────
   "HD-126": {
-    description: "Northwest Houston — FM 1960, Willowbrook, Copperfield. Open seat 2026: Stan Stanart (R) vs. Stefanie Bord (D).",
+    description: "Northwest Houston. FM 1960, Willowbrook, Copperfield. Open seat 2026: Stan Stanart (R) vs. Stefanie Bord (D).",
     seatHistory: [
       { name: "Patricia Harless", years: "2007–2018", party: "R" },
       { name: "Sam Harless", years: "2019–2026", party: "R" },
     ],
   },
   "HD-127": {
-    description: "Atascocita, Humble, Kingwood — northeast Harris County",
+    description: "Atascocita, Humble, Kingwood. Northeast Harris County",
     seatHistory: [
       { name: "Dan Huberty", years: "2011–2022", party: "R" },
       { name: "Charles Cunningham", years: "2023–present", party: "R" },
     ],
   },
   "HD-128": {
-    description: "Pasadena, Deer Park, La Porte — Southeast industrial. Open seat 2026: Tom Butler (R) vs. Desiree Klaus (D). Briscoe Cain vacated to run for CD-9 (lost runoff).",
+    description: "Pasadena, Deer Park, La Porte: Southeast industrial. Open seat 2026: Tom Butler (R) vs. Desiree Klaus (D). Briscoe Cain vacated to run for CD-9 (lost runoff).",
     seatHistory: [
       { name: "John Davis", years: "2003–2016", party: "R" },
       { name: "Briscoe Cain", years: "2017–2026", party: "R" },
     ],
   },
   "HD-129": {
-    description: "Clear Lake, Friendswood, Seabrook — NASA/JSC corridor. Open seat 2026 — Dennis Paul vacated to run for SD-11. Scott Bowen (R) won the primary.",
+    description: "Clear Lake, Friendswood, Seabrook: NASA/JSC corridor. Open seat 2026. Dennis Paul vacated to run for SD-11. Scott Bowen (R) won the primary.",
     seatHistory: [
       { name: "John Davis", years: "1995–2002", party: "R" },
       { name: "Dennis Paul", years: "2015–2026", party: "R" },
@@ -194,7 +194,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "HD-131": {
-    description: "South Park, Sunnyside, South Houston — historically Black community. Open seat 2026 — Alma Allen retired. Staci Childs (D) won the runoff and runs uncontested — no Republican filed.",
+    description: "South Park, Sunnyside, South Houston: historically Black community. Open seat 2026: Alma Allen retired. Staci Childs (D) won the runoff and runs uncontested: no Republican filed.",
     seatHistory: [
       { name: "Al Edwards", years: "1979–2009", party: "D" },
       { name: "Alma Allen", years: "2005–2026", party: "D" },
@@ -226,7 +226,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "HD-135": {
-    description: "Cypress-Fairbanks, Spring Branch — diverse northwest corridor",
+    description: "Cypress-Fairbanks, Spring Branch. Diverse northwest corridor",
     seatHistory: [
       { name: "Gary Elkins", years: "1995–2018", party: "R" },
       { name: "Jon Rosenthal", years: "2019–2026", party: "D" },
@@ -234,7 +234,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "HD-137": {
-    description: "Bellaire, Sharpstown, Westwood — Southwest Houston",
+    description: "Bellaire, Sharpstown, Westwood. Southwest Houston",
     seatHistory: [
       { name: "Scott Hochberg", years: "1993–2012", party: "D" },
       { name: "Gene Wu", years: "2013–present", party: "D" },
@@ -248,7 +248,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "HD-139": {
-    description: "Independence Heights, Acres Homes, Kashmere Gardens — North Houston",
+    description: "Independence Heights, Acres Homes, Kashmere Gardens. North Houston",
     seatHistory: [
       { name: "Sylvester Turner", years: "1989–2016", party: "D" },
       { name: "Jarvis Johnson", years: "2017–2022", party: "D" },
@@ -256,56 +256,56 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "HD-140": {
-    description: "Near Northside, Aldine, Northside Village — North Houston Hispanic",
+    description: "Near Northside, Aldine, Northside Village. North Houston Hispanic",
     seatHistory: [
       { name: "Kevin Bailey", years: "1989–2002", party: "D" },
       { name: "Armando Walle", years: "2009–present", party: "D" },
     ],
   },
   "HD-141": {
-    description: "Fifth Ward, Settegast, Pleasantville — historically Black northeast Houston",
+    description: "Fifth Ward, Settegast, Pleasantville. Historically Black northeast Houston",
     seatHistory: [
       { name: "Craig Washington", years: "1973–1983", party: "D" },
       { name: "Senfronia Thompson", years: "1973–present", party: "D" },
     ],
   },
   "HD-142": {
-    description: "Kashmere Gardens, Trinity/Houston Gardens — Northeast Houston",
+    description: "Kashmere Gardens, Trinity/Houston Gardens. Northeast Houston",
     seatHistory: [
       { name: "Wilhelmina Delco", years: "1975–1985", party: "D" },
       { name: "Harold Dutton Jr.", years: "1985–present", party: "D" },
     ],
   },
   "HD-143": {
-    description: "East End, Magnolia Park — heavily Hispanic East Houston",
+    description: "East End, Magnolia Park. Heavily Hispanic East Houston",
     seatHistory: [
       { name: "Rick Noriega", years: "1999–2008", party: "D" },
       { name: "Ana Hernandez", years: "2007–present", party: "D" },
     ],
   },
   "HD-144": {
-    description: "South Houston, Galena Park, Channelview — Ship Channel corridor",
+    description: "South Houston, Galena Park, Channelview. Ship Channel corridor",
     seatHistory: [
       { name: "Robert Talton", years: "1993–2010", party: "R" },
       { name: "Mary Ann Perez", years: "2013–present", party: "D" },
     ],
   },
   "HD-145": {
-    description: "Second Ward, Midtown, EaDo — near east Houston",
+    description: "Second Ward, Midtown, EaDo. Near east Houston",
     seatHistory: [
       { name: "Jessica Farrar", years: "1994–2018", party: "D" },
       { name: "Christina Morales", years: "2019–present", party: "D" },
     ],
   },
   "HD-146": {
-    description: "Riverside Terrace, MacGregor, South Main — Third Ward south",
+    description: "Riverside Terrace, MacGregor, South Main. Third Ward south",
     seatHistory: [
       { name: "Garnet Coleman", years: "1991–2022", party: "D" },
       { name: "Lauren Ashley Simmons", years: "2023–present", party: "D" },
     ],
   },
   "HD-147": {
-    description: "Third Ward, Midtown, Museum District — historically Black",
+    description: "Third Ward, Midtown, Museum District. Historically Black",
     seatHistory: [
       { name: "Ron Wilson", years: "1977–2004", party: "D" },
       { name: "Garnet Coleman", years: "1991–2022", party: "D" },
@@ -313,14 +313,14 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "HD-148": {
-    description: "Heights, Montrose, Washington Avenue — urban core west of downtown",
+    description: "Heights, Montrose, Washington Avenue. Urban core west of downtown",
     seatHistory: [
       { name: "Jessica Farrar", years: "1994–2018", party: "D" },
       { name: "Penny Morales Shaw", years: "2019–present", party: "D" },
     ],
   },
   "HD-149": {
-    description: "Alief, Westwood — Southwest Houston, diverse immigrant communities",
+    description: "Alief, Westwood. Southwest Houston, diverse immigrant communities",
     seatHistory: [
       { name: "Martha Wong", years: "1991–2002", party: "R" },
       { name: "Hubert Vo", years: "2005–2027", party: "D" },
@@ -328,7 +328,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "HD-150": {
-    description: "Katy, Cinco Ranch — far west Harris County. Mark Dorazio (R, incumbent) vs. A'Yonna Kellum (D) in November 2026.",
+    description: "Katy, Cinco Ranch. Far west Harris County. Mark Dorazio (R, incumbent) vs. A'Yonna Kellum (D) in November 2026.",
     seatHistory: [
       { name: "Debbie Riddle", years: "2003–2016", party: "R" },
       { name: "Valoree Swanson", years: "2017–2022", party: "R" },
@@ -338,7 +338,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
 
   // ── Harris County ────────────────────────────────────────────────────────
   "HC-Countywide": {
-    description: "Harris County — 4.7 million residents, 3rd largest county in the US. County Judge 2026: Letitia Plummer (D) vs. Orlando Sanchez (R). Lina Hidalgo did not seek reelection.",
+    description: "Harris County: 4.7 million residents, 3rd largest county in the US. County Judge 2026: Letitia Plummer (D) vs. Orlando Sanchez (R). Lina Hidalgo did not seek reelection.",
     seatHistory: [
       { name: "Ed Emmett", years: "2007–2018", party: "R" },
       { name: "Lina Hidalgo", years: "2019–2026", party: "D" },
@@ -346,7 +346,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "HC-Precinct 1": {
-    description: "South and southeast Houston — Third Ward, Sunnyside, South Main",
+    description: "South and southeast Houston. Third Ward, Sunnyside, South Main",
     seatHistory: [
       { name: "El Franco Lee", years: "1985–2016", party: "D" },
       { name: "Gene Locke (interim)", years: "2016", party: "D" },
@@ -354,7 +354,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "HC-Precinct 2": {
-    description: "East Harris County — Pasadena, Deer Park, Galena Park",
+    description: "East Harris County. Pasadena, Deer Park, Galena Park",
     seatHistory: [
       { name: "Sylvia Garcia", years: "2001–2010", party: "D" },
       { name: "Jack Morman", years: "2011–2018", party: "R" },
@@ -362,14 +362,14 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "HC-Precinct 3": {
-    description: "Northwest Harris County — Katy, Cypress, Jersey Village",
+    description: "Northwest Harris County. Katy, Cypress, Jersey Village",
     seatHistory: [
       { name: "Steve Radack", years: "1989–2020", party: "R" },
       { name: "Tom Ramsey", years: "2021–present", party: "R" },
     ],
   },
   "HC-Precinct 4": {
-    description: "North Harris County — The Woodlands, Spring, Tomball",
+    description: "North Harris County. The Woodlands, Spring, Tomball",
     seatHistory: [
       { name: "Jerry Eversole", years: "1995–2011", party: "R" },
       { name: "Jack Cagle", years: "2011–2022", party: "R" },
@@ -379,14 +379,14 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
 
   // ── City of Houston ──────────────────────────────────────────────────────
   "COH-Citywide": {
-    description: "City of Houston — 2.3 million residents, 4th largest city in the US",
+    description: "City of Houston: 2.3 million residents, 4th largest city in the US",
     seatHistory: [
       { name: "Sylvester Turner", years: "2016–2024", party: "D" },
       { name: "John Whitmire", years: "2024–present", party: "D" },
     ],
   },
   "COH-District A": {
-    description: "Northwest Houston — Spring Branch, Garden Oaks, Oak Forest",
+    description: "Northwest Houston. Spring Branch, Garden Oaks, Oak Forest",
     seatHistory: [
       { name: "Helena Brown", years: "2012–2013", party: "R" },
       { name: "Brenda Stardig", years: "2014–2019", party: "R" },
@@ -394,7 +394,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "COH-District B": {
-    description: "Northeast Houston — Northside, Acres Homes, Kashmere",
+    description: "Northeast Houston. Northside, Acres Homes, Kashmere",
     seatHistory: [
       { name: "Jarvis Johnson", years: "2004–2012", party: "D" },
       { name: "Jerry Davis", years: "2012–2019", party: "D" },
@@ -402,7 +402,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "COH-District C": {
-    description: "West Houston — Rice Military, Memorial, Tanglewood",
+    description: "West Houston. Rice Military, Memorial, Tanglewood",
     seatHistory: [
       { name: "Anne Clutterbuck", years: "2008–2012", party: "R" },
       { name: "Ellen Cohen", years: "2013–2019", party: "D" },
@@ -411,7 +411,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "COH-District D": {
-    description: "South Houston — Sunnyside, South Park, OST/South Union",
+    description: "South Houston. Sunnyside, South Park, OST/South Union",
     seatHistory: [
       { name: "Wanda Adams", years: "2004–2014", party: "D" },
       { name: "Dwight Boykins", years: "2014–2020", party: "D" },
@@ -419,7 +419,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "COH-District E": {
-    description: "Southeast Houston — Clear Lake, Friendswood, Gulfgate",
+    description: "Southeast Houston. Clear Lake, Friendswood, Gulfgate",
     seatHistory: [
       { name: "Mike Sullivan", years: "2008–2013", party: "R" },
       { name: "Dave Martin", years: "2013–2023", party: "R" },
@@ -427,7 +427,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "COH-District F": {
-    description: "Southwest Houston — Alief, Westchase, Sharpstown",
+    description: "Southwest Houston. Alief, Westchase, Sharpstown",
     seatHistory: [
       { name: "Al Hoang", years: "2010–2014", party: "R" },
       { name: "Steve Le", years: "2014–2020", party: "R" },
@@ -435,7 +435,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "COH-District G": {
-    description: "West Houston — Memorial, Energy Corridor, Westside",
+    description: "West Houston. Memorial, Energy Corridor, Westside",
     seatHistory: [
       { name: "Joe Tully", years: "1995–2002", party: "R" },
       { name: "Melissa Noriega", years: "2006–2009", party: "D" },
@@ -445,7 +445,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "COH-District H": {
-    description: "East Houston — Second Ward, East End, Harrisburg",
+    description: "East Houston. Second Ward, East End, Harrisburg",
     seatHistory: [
       { name: "Adrian Garcia", years: "2002–2008", party: "D" },
       { name: "Ed Gonzalez", years: "2010–2017", party: "D" },
@@ -463,7 +463,7 @@ export const DISTRICT_INFO: Record<string, DistrictInfo> = {
     ],
   },
   "COH-District J": {
-    description: "Westpark, Gulfton, Braeswood — highly diverse Southwest",
+    description: "Westpark, Gulfton, Braeswood. Highly diverse Southwest",
     seatHistory: [
       { name: "Mike Laster", years: "2010–2020", party: "D" },
       { name: "Ed Pollard", years: "2020–present", party: "D" },
@@ -492,7 +492,7 @@ export function getDistrictKey(districtType: string, districtNumber: string): st
 }
 
 // Synthetic precinct-to-district assignment for types without Census TIGER crosswalk.
-// Uses deterministic modulo bucketing — approximate geographic distribution only.
+// Uses deterministic modulo bucketing. Approximate geographic distribution only.
 export function syntheticDistrictForPrecinct(
   precinctId: string,
   districtType: string,

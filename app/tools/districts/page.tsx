@@ -116,7 +116,7 @@ function KalshiStrip({ dKey }: { dKey: string }) {
     <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
       <div className="flex items-center justify-between mb-2">
         <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.4)" }}>
-          Market Odds — Who Wins
+          Market Odds: Who Wins
         </p>
         <a href={odds.url} target="_blank" rel="noopener noreferrer"
           className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity"
@@ -140,12 +140,12 @@ function KalshiStrip({ dKey }: { dKey: string }) {
   );
 }
 
-/* ── VS card — incumbent vs challenger with money ─────────────────────────── */
+/* ── VS card. Incumbent vs challenger with money ─────────────────────────── */
 function VsCard({ dKey, office }: { dKey: string; office: string }) {
   const matchup = getMatchup(dKey === "US-Senate" ? "US-Senate" : dKey);
   const pol = POLITICIANS.find((p: Politician) => p.district === office);
 
-  // Build the two sides — from matchup data, falling back to incumbent + TBD
+  // Build the two sides. From matchup data, falling back to incumbent + TBD
   const sides = matchup?.sides ?? (pol ? [{ name: pol.name, party: pol.party as "D" | "R", incumbent: true }] : []);
   if (sides.length === 0) return null;
 
@@ -163,7 +163,7 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
     <div className="rounded-[1.35rem] mt-4" style={{ background: "#1a2e44" }}>
       <div className="rounded-[1.35rem] p-5" style={{ background: "#1a3a5c" }}>
         <div className="flex items-center justify-between mb-4">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.4)" }}>November 2026 — The Matchup</p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.4)" }}>November 2026: The Matchup</p>
           <div className="flex items-center gap-2">
             {matchup?.lean && (() => {
               const lean = matchup.lean;
@@ -213,7 +213,7 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
                 {/* Money */}
                 <div className="w-full">
                   <p className="text-xl font-bold" style={{ color: accent, fontFamily: "var(--font-playfair,serif)" }}>
-                    {s.cash > 0 ? fmt(s.cash) : "—"}
+                    {s.cash > 0 ? fmt(s.cash) : "–"}
                   </p>
                   <p className="text-[9px] uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.35)" }}>
                     Cash on hand{s.asOf ? ` · ${s.asOf}` : ""}
@@ -339,7 +339,7 @@ function WinNumber({ dKey }: { dKey: string }) {
     <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] mt-4">
       <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
         <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>
-          Win Number — 2026 Outlook
+          Win Number: 2026 Outlook
         </p>
 
         {/* Target to win + progress bar */}
@@ -500,7 +500,7 @@ function VoterProfile({ type, district, agg, cvap }: {
           Who Actually Votes Here
         </p>
 
-        {/* Race/ethnicity — lead section */}
+        {/* Race/ethnicity: lead section */}
         {entry ? (
           <div className="mb-5">
             {topGroup && (
@@ -648,7 +648,7 @@ export default function DistrictsPage() {
             toolName="Districts"
             section="Elections"
             description="Every Harris County voting precinct, mapped to its real districts."
-            summary={`${headerLabel(type, district)} — ${agg.total.toLocaleString()} 2026 primary ballots across ${agg.count} precincts (${demPct}% Dem) — via The Harris County Project`}
+            summary={`${headerLabel(type, district)}: ${agg.total.toLocaleString()} 2026 primary ballots across ${agg.count} precincts (${demPct}% Dem). Via The Harris County Project`}
             stats={[
               { label: "District", value: headerLabel(type, district) },
               { label: "Primary ballots", value: agg.total.toLocaleString() },
@@ -701,7 +701,7 @@ export default function DistrictsPage() {
             <div className="chip-row items-center mb-3">
               <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>Layer:</span>
               {([
-                { key: "votes",      label: "Who Votes — 2026 Primary", live: true },
+                { key: "votes",      label: "Who Votes. 2026 Primary", live: true },
                 { key: "results",    label: "Election Night Results",   live: !!results },
               ] as { key: MapLayer; label: string; live: boolean }[]).map(l => (
                 <button key={l.key} onClick={() => setLayer(l.key)}
@@ -723,8 +723,8 @@ export default function DistrictsPage() {
             {layer === "results" && !results && (
               <div className="rounded-xl px-4 py-3 mb-3 text-[11px] leading-relaxed flex items-center justify-between gap-3" style={{ background: "#eff6ff", border: "1px solid #bfdbfe", color: "#1e40af" }}>
                 <span>
-                  <strong>Election night mode.</strong> Upload precinct results as they come in — CSV with header
-                  <code className="mx-1">precinct,Candidate A,Candidate B</code> — and the map colors each precinct by who&rsquo;s leading.
+                  <strong>Election night mode.</strong> Upload precinct results as they come in: CSV with header
+                  <code className="mx-1">precinct,Candidate A,Candidate B</code>. And the map colors each precinct by who&rsquo;s leading.
                 </span>
                 <button onClick={() => fileRef.current?.click()}
                   className="shrink-0 rounded-full px-4 py-1.5 text-[11px] font-bold text-white" style={{ background: "#2563a8" }}>
@@ -768,13 +768,13 @@ export default function DistrictsPage() {
               </div>
             )}
 
-            {/* Map — Heat Check treatment */}
+            {/* Map. Heat Check treatment */}
             <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
               <div className="rounded-[1rem] overflow-hidden bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]">
                 {mapError ? (
                   <div className="empty-state" style={{ height: 540, border: "none" }}>
                     <p className="text-sm font-semibold" style={{ color: "#1a3a5c" }}>The precinct map didn&rsquo;t load.</p>
-                    <p className="text-xs max-w-xs">Usually a network hiccup — the boundary file is ~1MB.</p>
+                    <p className="text-xs max-w-xs">Usually a network hiccup. The boundary file is ~1MB.</p>
                     <button onClick={() => { setMapError(false); fetch("/data/harris-precincts.geojson").then(r => r.json()).then(setGeojson).catch(() => setMapError(true)); }}
                       className="pressable mt-2 rounded-full px-5 py-2 text-xs font-bold text-white" style={{ background: "#1a3a5c" }}>
                       Try again
@@ -808,19 +808,19 @@ export default function DistrictsPage() {
               districtValue={district}
             />
 
-            {/* Historical depth layer — four cycles, combined view, surname module */}
+            {/* Historical depth layer. Four cycles, combined view, surname module */}
             <div className="mt-4">
               <DistrictHistory field={districtField} value={district} />
             </div>
 
-            {/* Partisan heatmap — Heat Check filtered to this district */}
+            {/* Partisan heatmap. Heat Check filtered to this district */}
             <DistrictHeatMap
               districtField={districtField}
               districtValue={district}
               districtLabel={headerLabel(type, district)}
             />
 
-            {/* Terrain Report — turnout signals */}
+            {/* Terrain Report: turnout signals */}
             <div className="mt-4">
               <TerrainReport types={["turnout"]} compact />
             </div>
@@ -886,7 +886,7 @@ export default function DistrictsPage() {
             {agg.total > 0 && (
               <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
                 <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>2026 Primary — Who Showed Up</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>2026 Primary: Who Showed Up</p>
                   <div className="grid grid-cols-3 gap-2 mb-4">
                     {[
                       { label: "Ballots Cast", value: agg.total.toLocaleString() },

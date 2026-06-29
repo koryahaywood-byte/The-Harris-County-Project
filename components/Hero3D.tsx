@@ -1,6 +1,6 @@
 "use client";
 
-// Client-side loader for the 3D hero map — keeps three.js out of SSR and
+// Client-side loader for the 3D hero map: keeps three.js out of SSR and
 // out of the initial bundle.
 
 import dynamic from "next/dynamic";

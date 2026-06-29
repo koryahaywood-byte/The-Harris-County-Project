@@ -57,7 +57,7 @@ function lookupPrec<T>(map: Record<string, T>, raw: string): T | undefined {
   return map[raw] ?? map[n] ?? map[n.padStart(4, "0")];
 }
 
-// Pure function — compute precinct data for any cycle/race
+// Pure function. Compute precinct data for any cycle/race
 function computeLookup(
   history: PrecinctHistory | null, cycle: string, race: string | null
 ): Record<string, PrecinctData> {
@@ -394,7 +394,7 @@ export default function HeatCheckHistoryMap() {
               { label: "R", value: `${100 - overallDemPct}%` },
               { label: "Votes", value: totalVotes.toLocaleString() },
             ] : undefined}
-            summary={`Heat Check — Harris County precinct-level election map · ${curCycleLabel} · via The Harris County Project`}
+            summary={`Heat Check. Harris County precinct-level election map · ${curCycleLabel} · via The Harris County Project`}
             light={false}
           />
         </div>
@@ -489,7 +489,7 @@ export default function HeatCheckHistoryMap() {
         )}
       </div>
 
-      {/* Controls row 2 — swing compare */}
+      {/* Controls row 2: swing compare */}
       {viewMode === "swing" && !showIframe && (
         <div className="flex flex-wrap items-center gap-3 px-5 py-2.5 border-b border-black/8"
           style={{ background: "rgba(254,243,199,0.5)" }}>
@@ -539,12 +539,12 @@ export default function HeatCheckHistoryMap() {
           src="/heat-check.html"
           className="w-full border-0"
           style={{ height: "calc(100dvh - 41px - 112px)" }}
-          title="Heat Check — Harris County 2026 Primary Race Detail"
+          title="Heat Check. Harris County 2026 Primary Race Detail"
           allowFullScreen
         />
       )}
 
-      {/* Map + table + footer — hidden when iframe is shown */}
+      {/* Map + table + footer. Hidden when iframe is shown */}
       {!showIframe && (<><div className="relative" style={{ height: 520 }}>
         <div ref={mapRef} style={{ height: "100%", width: "100%" }} />
 
@@ -735,7 +735,7 @@ export default function HeatCheckHistoryMap() {
                           style={{ color: row.swing != null ? (row.swing > 0 ? "#1d4ed8" : "#dc2626") : "#9ca3af" }}>
                           {row.swing != null
                             ? `${row.swing > 0 ? "+" : ""}${(row.swing * 100).toFixed(1)}%`
-                            : "—"}
+                            : "–"}
                         </td>
                       ) : (
                         <td className="px-3 py-1.5">

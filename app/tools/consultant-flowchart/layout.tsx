@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Consultant Network · The Harris County Project",
-  description: "The political consulting firms behind every Harris County candidate — who shares the same playbook.",
+  description: "The political consulting firms behind every Harris County candidate. Who shares the same playbook.",
   openGraph: {
     title: "Consultant Network",
     description: "The political consulting firms behind every Harris County candidate.",

@@ -5,7 +5,7 @@ import type { NextRequest } from "next/server";
 // Layer 0 = 119th Congressional Districts  (field: CD119)
 // Layer 1 = TX State Senate                (field: SLDU)
 // Layer 2 = TX State House                 (field: SLDL)
-// City Council and JP districts not available in Census — no boundary returned
+// City Council and JP districts not available in Census: no boundary returned
 
 const BASE = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer";
 
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
 
   const cfg = LAYER_MAP[type];
   if (!cfg) {
-    // City Council / JP — no Census boundary available
+    // City Council / JP. No Census boundary available
     return NextResponse.json({ features: [] }, { status: 200 });
   }
 

@@ -1,21 +1,21 @@
-// The Accountability Score — a single published 0–100 number per official,
+// The Accountability Score. A single published 0–100 number per official,
 // built to be cited. Every component is computable from public data, the
 // formula is fixed and documented at /methodology, and missing data is
 // handled by reweighting (never by guessing).
 //
 // Components (default weights):
-//   Fundraising strength  30%  — percentile of cash on hand within chamber,
+//   Fundraising strength  30% . Percentile of cash on hand within chamber,
 //                                from the official's latest campaign filing
-//   Legislative output    30%  — bills passed into law ÷ bills filed (when
+//   Legislative output    30% . Bills passed into law ÷ bills filed (when
 //                                LegiScan data is loaded); non-legislators
 //                                and unloaded states use an office-scope
 //                                baseline, flagged in the breakdown
-//   Peer standing         20%  — percentile of OVR rating within chamber
-//   Experience            20%  — years in elected office, capped at 25
+//   Peer standing         20% . Percentile of OVR rating within chamber
+//   Experience            20% . Years in elected office, capped at 25
 //
 // When a component has no data (e.g. no filing on record), it is dropped and
 // the remaining weights are renormalized. The score never penalizes an
-// official for our missing data — but the breakdown says exactly what was used.
+// official for our missing data. But the breakdown says exactly what was used.
 
 import { POLITICIANS, type Politician } from "./politicians";
 import { getFinanceByName } from "./campaign-finance";
@@ -66,11 +66,11 @@ export function computeAccountability(
     legislationBasis = `${opts.lawCount ?? 0} of ${opts.billCount} bills became law (TX 89th, LegiScan)`;
   } else if (pol.legiscanName) {
     legislation = null;
-    legislationBasis = "Bill data not loaded in this view — open the profile for the live figure";
+    legislationBasis = "Bill data not loaded in this view. Open the profile for the live figure";
   } else {
     // Non-legislators: office-scope baseline, explicitly labeled.
     legislation = pol.chamber === "County" ? 65 : pol.chamber === "City" ? 60 : 55;
-    legislationBasis = "Executive/administrative office — office-scope baseline, not a pass rate";
+    legislationBasis = "Executive/administrative office. Office-scope baseline, not a pass rate";
   }
 
   // ── Peer standing: OVR percentile within chamber (uniform inputs) ──
@@ -88,7 +88,7 @@ export function computeAccountability(
       key: "fundraising", label: "Fundraising strength", value: fundraising, weight: 0.30,
       basis: finance && finance.cash > 0
         ? `Cash on hand percentile among ${pol.chamber} officials (filing as of ${finance.asOf})`
-        : "No campaign filing on record — component dropped, weights renormalized",
+        : "No campaign filing on record. Component dropped, weights renormalized",
     },
     { key: "legislation", label: "Legislative output", value: legislation, weight: 0.30, basis: legislationBasis },
     {
@@ -99,7 +99,7 @@ export function computeAccountability(
       key: "experience", label: "Experience", value: experience, weight: 0.20,
       basis: pol.termStart
         ? `${2026 - pol.termStart} years since first elected (${pol.termStart}), capped at 25`
-        : "First-elected year not on record — component dropped, weights renormalized",
+        : "First-elected year not on record. Component dropped, weights renormalized",
     },
   ];
 

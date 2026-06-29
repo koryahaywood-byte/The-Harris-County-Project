@@ -254,12 +254,12 @@ export default function BillTracker() {
             Bill Tracker
           </h1>
           <p className="text-white/70 text-sm max-w-xl">
-            Bills filed, passed committee, passed chamber, and signed into law — for every Harris County state rep. 89th Texas Legislature.
+            Bills filed, passed committee, passed chamber, and signed into law. For every Harris County state rep. 89th Texas Legislature.
           </p>
           <ShareButton
             toolName="Bill Tracker"
             section="Legislative"
-            description="Bills filed, passed committee, passed chamber, and signed into law — every Harris County state rep. 89th TX Legislature."
+            description="Bills filed, passed committee, passed chamber, and signed into law. Every Harris County state rep. 89th TX Legislature."
             stats={[{ label: "Reps Tracked", value: "23" }, { label: "Legislature", value: "89th TX" }]}
           />
           {preloading && <p className="text-sky-300/60 text-xs mt-3 animate-pulse">Loading counts for all reps…</p>}
@@ -271,7 +271,7 @@ export default function BillTracker() {
         <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
           <span className="text-lg leading-none mt-0.5">📋</span>
           <div>
-            <p className="text-sm font-semibold text-amber-900">89th Texas Legislature — Session Archived</p>
+            <p className="text-sm font-semibold text-amber-900">89th Texas Legislature: Session Archived</p>
             <p className="text-xs text-amber-700 mt-0.5">
               The regular session adjourned June 2, 2025. All bills shown reflect final passage status.
               The 90th Legislature convenes January 2027.

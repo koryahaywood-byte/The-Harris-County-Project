@@ -9,11 +9,11 @@ interface Tool {
   name: string;
   description: string;
   gradient: string;
-  photo?: string;        // Unsplash URL — shown behind gradient overlay
+  photo?: string;        // Unsplash URL. Shown behind gradient overlay
   status?: "coming";
 }
 
-// Curated Unsplash photos — each dark enough to work under a semi-opaque gradient
+// Curated Unsplash photos. Each dark enough to work under a semi-opaque gradient
 const PX = "?auto=format&fit=crop&w=600&q=75";
 const U  = (id: string) => `https://images.unsplash.com/photo-${id}${PX}`;
 
@@ -22,12 +22,12 @@ const ROWS: { section: string; tools: Tool[] }[] = [
     section: "Money",
     tools: [
       { href: "/tools/where-is-the-dough", name: "Where the Money Resides",
-        description: "Campaign finance for every Harris County elected official — live from FEC, TEC, and county filings.",
+        description: "Campaign finance for every Harris County elected official. Live from FEC, TEC, and county filings.",
         gradient: "linear-gradient(135deg,#92400e 0%,#b45309 60%,#d97706 100%)",
-        // Magnifying glass over $100 bill — investigative finance look
+        // Magnifying glass over $100 bill: investigative finance look
         photo: U("1554672408-b55a5c0cc4b7") },
       { href: "/tools/county-budget", name: "Harris County Budget",
-        description: "FY2027 proposed spending — departments, contractors, story format.",
+        description: "FY2027 proposed spending. Departments, contractors, story format.",
         gradient: "linear-gradient(135deg,#1e3a5f 0%,#2563a8 100%)",
         photo: U("1575470021395-45dca7d3e3d0") },
       { href: "/tools/city-budget", name: "Houston City Budget",
@@ -35,7 +35,7 @@ const ROWS: { section: string; tools: Tool[] }[] = [
         gradient: "linear-gradient(135deg,#065f46 0%,#059669 100%)",
         photo: U("1527631746610-bca00a040d60") },
       { href: "/tools/tirz", name: "TIRZ Tool",
-        description: "27+ tax increment zones — what they collect and who governs them.",
+        description: "27+ tax increment zones. What they collect and who governs them.",
         gradient: "linear-gradient(135deg,#1e40af 0%,#2563a8 100%)",
         photo: U("1486325212027-8081e485255e") },
       { href: "/tools/discretionary-funds", name: "Discretionary Funds",
@@ -43,7 +43,7 @@ const ROWS: { section: string; tools: Tool[] }[] = [
         gradient: "linear-gradient(135deg,#0e7490 0%,#0891b2 100%)",
         photo: U("1529156069898-49953e39b3ac") },
       { href: "/tools/infrastructure-funding", name: "Infrastructure Funding",
-        description: "Federal grants and construction projects flowing into Harris County — where the dollars land.",
+        description: "Federal grants and construction projects flowing into Harris County. Where the dollars land.",
         gradient: "linear-gradient(135deg,#0f2540 0%,#1e3a5c 100%)",
         photo: U("1558618666-fcd25c85cd64") },
     ],
@@ -52,11 +52,11 @@ const ROWS: { section: string; tools: Tool[] }[] = [
     section: "Elections",
     tools: [
       { href: "/my-officials", name: "Who Represents Me?",
-        description: "Enter your address — every official who answers to you, JP to Congress.",
+        description: "Enter your address. Every official who answers to you, JP to Congress.",
         gradient: "linear-gradient(135deg,#92400e 0%,#d97706 100%)",
         photo: U("1449157291145-7efd050a4d0e") },
       { href: "/tools/ballot-2026", name: "2026 Ballot",
-        description: "Every race on your November 2026 ballot — Governor to JP. D vs. R matchup, money on hand, and competitiveness rating.",
+        description: "Every race on your November 2026 ballot: Governor to JP. D vs. R matchup, money on hand, and competitiveness rating.",
         gradient: "linear-gradient(135deg,#1e3a5f 0%,#2563a8 100%)",
         photo: U("1554224155-8d04cb9a382a") },
       { href: "/tools/pac-tracker", name: "Outside Money",
@@ -68,23 +68,23 @@ const ROWS: { section: string; tools: Tool[] }[] = [
         gradient: "linear-gradient(135deg,#991b1b 0%,#dc2626 100%)",
         photo: U("1524661135-1165ef7b63f4") },
       { href: "/tools/precinct-lookup", name: "Precinct History",
-        description: "Enter any precinct number — see how it voted in 2020, 2022, 2024, and 2026.",
+        description: "Enter any precinct number. See how it voted in 2020, 2022, 2024, and 2026.",
         gradient: "linear-gradient(135deg,#1e3a8a 0%,#2563a8 100%)",
         photo: U("1507041957456-9c397ce39c97") },
       { href: "/tools/voter-search", name: "Voter Search",
-        description: "Search Harris County's 2.4M registered voters — see who voted, when, and how.",
+        description: "Search Harris County's 2.4M registered voters. See who voted, when, and how.",
         gradient: "linear-gradient(135deg,#1e3a5c 0%,#0f766e 100%)",
         photo: U("1540910419892-4a036eb0ebc1") },
       { href: "/tools/districts", name: "Districts",
-        description: "Portrait of a seat — demographics, vote history, 2026 matchup, and win number target.",
+        description: "Portrait of a seat. Demographics, vote history, 2026 matchup, and win number target.",
         gradient: "linear-gradient(135deg,#0f2540 0%,#1a3a5c 100%)",
         photo: U("1569091791842-7cfb64e04797") },
       { href: "/tools/early-vote", name: "Early Vote Tracker",
-        description: "Dem vs. Rep universe turnout by precinct — who is showing up.",
+        description: "Dem vs. Rep universe turnout by precinct. Who is showing up.",
         gradient: "linear-gradient(135deg,#3730a3 0%,#4f46e5 100%)",
         photo: U("1541872703-74c5e44368f9") },
       { href: "/tools/field-sweep", name: "Field Sweep",
-        description: "All 1,000+ precincts ranked by GOTV opportunity — surge targets, battlegrounds, and R base.",
+        description: "All 1,000+ precincts ranked by GOTV opportunity. Surge targets, battlegrounds, and R base.",
         gradient: "linear-gradient(135deg,#064e3b 0%,#059669 100%)",
         photo: U("1596495577886-d920f1fb7238") },
       { href: "/tools/civic-calendar", name: "Civic Calendar",
@@ -97,11 +97,11 @@ const ROWS: { section: string; tools: Tool[] }[] = [
     section: "Legislation",
     tools: [
       { href: "/tools/bill-tracker", name: "Bill Tracker",
-        description: "TX 89th Legislature — bills filed by Harris County reps, ranked by laws passed.",
+        description: "TX 89th Legislature. Bills filed by Harris County reps, ranked by laws passed.",
         gradient: "linear-gradient(135deg,#4c1d95 0%,#6d28d9 100%)",
         photo: U("1585952406519-9d8b8c3ba4b4") },
       { href: "/tools/congressional-bills", name: "Congress Bills",
-        description: "119th Congress — what Harris County's US reps actually signed into law.",
+        description: "119th Congress. What Harris County's US reps actually signed into law.",
         gradient: "linear-gradient(135deg,#1d4ed8 0%,#2563a8 100%)",
         photo: U("1523348837708-15d4a09cfac2") },
     ],
@@ -110,19 +110,19 @@ const ROWS: { section: string; tools: Tool[] }[] = [
     section: "The Beat",
     tools: [
       { href: "/tools/city-hall", name: "City Hall Beat",
-        description: "Emily Takes Notes — City Council and HISD hearings AI-summarized and cross-referenced with politician profiles.",
+        description: "Emily Takes Notes. City Council and HISD hearings AI-summarized and cross-referenced with politician profiles.",
         gradient: "linear-gradient(135deg,#0f766e 0%,#0d9488 60%,#0891b2 100%)",
         photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Houston_City_Hall_2019.jpg/800px-Houston_City_Hall_2019.jpg" },
       { href: "/tools/harris-county-beat", name: "Harris County Beat",
-        description: "Commissioners Court, JPD, and county agencies — hearings tracked with full context.",
+        description: "Commissioners Court, JPD, and county agencies. Hearings tracked with full context.",
         gradient: "linear-gradient(135deg,#1a3a5c 0%,#2563a8 100%)",
         photo: U("1589829545856-d10d557cf95f") },
       { href: "/tools/state-beat", name: "State House Beat",
-        description: "TX 89th Legislature — floor votes, committee hearings, and lobbyist filings from Austin.",
+        description: "TX 89th Legislature. Floor votes, committee hearings, and lobbyist filings from Austin.",
         gradient: "linear-gradient(135deg,#4c1d95 0%,#7c3aed 100%)",
         photo: U("1569949382669-ecf63b8c2c9f") },
       { href: "/tools/congress-beat", name: "Congressional Beat",
-        description: "Harris County's US representatives — floor speeches, votes, and committee work in Washington.",
+        description: "Harris County's US representatives. Floor speeches, votes, and committee work in Washington.",
         gradient: "linear-gradient(135deg,#991b1b 0%,#b91c1c 60%,#dc2626 100%)",
         photo: U("1503198515498-d0bd9ed16902") },
     ],
@@ -131,15 +131,15 @@ const ROWS: { section: string; tools: Tool[] }[] = [
     section: "Networks",
     tools: [
       { href: "/tools/endorsement-flowchart", name: "Endorsement Map",
-        description: "Who endorsed whom across every major Harris County race — unions, officials, party orgs.",
+        description: "Who endorsed whom across every major Harris County race. Unions, officials, party orgs.",
         gradient: "linear-gradient(135deg,#1e3a5c 0%,#4f46e5 100%)",
         photo: U("1521737604-43416ae6b50a") },
       { href: "/tools/consultant-flowchart", name: "Consultant Network",
-        description: "The political consulting firms behind every candidate — who shares the same playbook.",
+        description: "The political consulting firms behind every candidate. Who shares the same playbook.",
         gradient: "linear-gradient(135deg,#1e3a5c 0%,#0f766e 100%)",
         photo: U("1519389950473-47ba0277781c") },
       { href: "/tools/donor-network", name: "Donor Network",
-        description: "876 cross-official donors — see who funds multiple candidates and how money flows between Rs and Ds.",
+        description: "876 cross-official donors. See who funds multiple candidates and how money flows between Rs and Ds.",
         gradient: "linear-gradient(135deg,#78350f 0%,#d97706 100%)",
         photo: U("1604594849809-dfedbc827105") },
     ],
@@ -148,15 +148,15 @@ const ROWS: { section: string; tools: Tool[] }[] = [
     section: "Media",
     tools: [
       { href: "/tools/tv-station", name: "TV Station",
-        description: "Commissioners Court, City Council, HISD, TX Legislature — all live.",
+        description: "Commissioners Court, City Council, HISD, TX Legislature: all live.",
         gradient: "linear-gradient(135deg,#111827 0%,#1f2937 100%)",
         photo: U("1585771724684-38269d6639fd") },
       { href: "/blogs", name: "Journalists & Voices",
-        description: "The best journalists and civic accounts — X, Instagram, Threads, newsletters — covering Harris County.",
+        description: "The best journalists and civic accounts. X, Instagram, Threads, newsletters: covering Harris County.",
         gradient: "linear-gradient(135deg,#78350f 0%,#b45309 100%)",
         photo: U("1504711434969-e33886168f5c") },
       { href: "/politicians", name: "Politicians",
-        description: "Harris County elected officials — stats, finance, bills, and social feeds.",
+        description: "Harris County elected officials. Stats, finance, bills, and social feeds.",
         gradient: "linear-gradient(135deg,#1a3a5c 0%,#2563a8 100%)",
         photo: U("1560472354-b33ff0c44a43") },
       { href: "/contact", name: "Contact & Feedback",
@@ -167,16 +167,16 @@ const ROWS: { section: string; tools: Tool[] }[] = [
   },
 ];
 
-/* ── Start Here — the 4 tools to master first ───────────────────────────── */
+/* ── Start Here. The 4 tools to master first ───────────────────────────── */
 /* tint/accent are a refined cool palette (blue, emerald, indigo, cyan) used for the
-   light Synex cards — not the raw warm tool gradients. */
+   light Synex cards. Not the raw warm tool gradients. */
 const START_HERE = [
   {
     href:        "/tools/heat-check",
     name:        "Heat Check",
     eyebrow:     "Elections",
     headline:    "See how every\nprecinct voted.",
-    description: "1,011 precincts. Every election cycle back to 2012 — primaries, runoffs, and generals. Zoom into any neighborhood and see exactly how it voted.",
+    description: "1,011 precincts. Every election cycle back to 2012. Primaries, runoffs, and generals. Zoom into any neighborhood and see exactly how it voted.",
     proof:       ["1,011 precincts mapped", "2012 – 2026 · all cycles", "Precinct-level detail"],
     accent:      "#2563a8",
     tint:        "linear-gradient(135deg,rgba(37,99,168,0.10),rgba(37,99,168,0.02))",
@@ -212,7 +212,7 @@ const START_HERE = [
     name:        "Who Represents Me?",
     eyebrow:     "Officials",
     headline:    "Enter your\naddress.",
-    description: "Every official who answers to you — JP to Congress — with contact info, money raised, and record.",
+    description: "Every official who answers to you: JP to Congress. With contact info, money raised, and record.",
     proof:       ["JP to Congress", "Real contact info"],
     accent:      "#0891b2",
     tint:        "linear-gradient(135deg,rgba(8,145,178,0.09),rgba(8,145,178,0.02))",
@@ -236,7 +236,7 @@ function FeaturedSection() {
 
         <div className="flex flex-col gap-5">
 
-          {/* Hero — Heat Check (light Synex) */}
+          {/* Hero. Heat Check (light Synex) */}
           <Link href={hero.href} className="group block relative rounded-[2rem] overflow-hidden hcp-card card-lift"
             style={{ minHeight: 340 }}>
             <div className="absolute inset-0" style={{ background: hero.tint }} />
@@ -308,7 +308,7 @@ function BrowseCard({ tool }: { tool: Tool }) {
     <div
       className={`group hcp-card card-lift flex-shrink-0 w-[230px] p-4 ${tool.status === "coming" ? "opacity-40 pointer-events-none" : ""}`}
     >
-      {/* Fully-visible color chip — app-icon style */}
+      {/* Fully-visible color chip: app-icon style */}
       <div className="w-11 h-11 rounded-2xl mb-3.5 relative overflow-hidden"
         style={{ background: tool.gradient, boxShadow: "0 7px 18px rgba(15,37,64,0.20)" }}>
         <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent" />
@@ -347,7 +347,7 @@ function BrowseRow({ section, tools }: { section: string; tools: Tool[] }) {
         </h2>
         <span className="text-[11px] text-[#9ca3af]">{tools.length} tool{tools.length !== 1 ? "s" : ""}</span>
       </div>
-      {/* Scrollable strip — no scrollbar, drag to scroll on mobile */}
+      {/* Scrollable strip. No scrollbar, drag to scroll on mobile */}
       <div
         className="flex gap-3 overflow-x-auto pl-6 pr-6"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
@@ -393,7 +393,7 @@ export default function Home() {
           reaches the very top (no cream seam from the body background). */}
       <section className="relative overflow-hidden topo-hero -mt-16 px-6 pt-32 pb-20 md:pt-36 md:pb-28 min-h-[94dvh] flex items-center"
         style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 55%,#f2f5f9 100%)" }}>
-        {/* Soft organic glows — the "terrain" light */}
+        {/* Soft organic glows. The "terrain" light */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_78%_32%,rgba(37,99,168,0.10),transparent_70%)]" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_45%_at_88%_70%,rgba(52,160,110,0.045),transparent_70%)]" />
 
@@ -412,7 +412,7 @@ export default function Home() {
             </h1>
 
             <p className="text-base md:text-lg max-w-md leading-relaxed mb-9" style={{ color: "#5b6470", lineHeight: 1.7 }}>
-              A free toolbox for Harris County residents — see how your government
+              A free toolbox for Harris County residents. See how your government
               votes, where it spends, and who answers to you.
             </p>
 
@@ -498,14 +498,14 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Floating stat chip — top */}
+            {/* Floating stat chip: top */}
             <div className="hero-float-2 absolute -top-5 -left-3 rounded-2xl px-4 py-3"
               style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.9)", boxShadow: "0 18px 40px rgba(15,37,64,0.16)" }}>
               <p className="text-[8px] font-bold uppercase tracking-[0.16em]" style={{ color: "#94a3b8" }}>Turnout · Nov &apos;24</p>
               <p className="text-2xl font-bold leading-none tnum mt-0.5" style={{ color: "#0f2540", fontFamily: "var(--font-playfair), serif" }}>1.49M</p>
             </div>
 
-            {/* Floating stat chip — bottom */}
+            {/* Floating stat chip: bottom */}
             <div className="hero-float-3 absolute -bottom-4 -right-2 rounded-2xl px-4 py-3"
               style={{ background: "rgba(15,37,64,0.92)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.12)", boxShadow: "0 18px 40px rgba(15,37,64,0.28)" }}>
               <p className="text-[8px] font-bold uppercase tracking-[0.16em]" style={{ color: "#7aaee8" }}>Biggest war chest</p>
@@ -530,7 +530,7 @@ export default function Home() {
               <span style={{ color: "#0f2540" }}>every part of your county.</span>
             </h2>
             <p className="text-sm md:text-[15px] leading-relaxed" style={{ color: "#5b6470" }}>
-              A clear, structured view of local power — from how each precinct votes to where the
+              A clear, structured view of local power. From how each precinct votes to where the
               money flows and who, exactly, answers to you.
             </p>
           </div>
@@ -540,7 +540,7 @@ export default function Home() {
             {[
               {
                 n: "1", title: "See every vote",
-                desc: "Precinct-level results for every cycle back to 2012 — primaries, runoffs, and generals.",
+                desc: "Precinct-level results for every cycle back to 2012. Primaries, runoffs, and generals.",
                 href: "/tools/heat-check",
                 card: (
                   <div>
@@ -559,7 +559,7 @@ export default function Home() {
               },
               {
                 n: "2", title: "Follow every dollar",
-                desc: "Live FEC, TEC, and county filings — cash on hand for every official and challenger.",
+                desc: "Live FEC, TEC, and county filings. Cash on hand for every official and challenger.",
                 href: "/tools/where-is-the-dough",
                 card: (
                   <div>
@@ -579,7 +579,7 @@ export default function Home() {
               },
               {
                 n: "3", title: "Know who answers",
-                desc: "Type your address or share your location — every official from your JP to Congress.",
+                desc: "Type your address or share your location. Every official from your JP to Congress.",
                 href: "/my-officials",
                 card: (
                   <div>

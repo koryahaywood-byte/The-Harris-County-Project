@@ -88,7 +88,7 @@ const STREAMS: Stream[] = [
     livePageUrl: "https://live.house.gov",
     scheduleUrl: "https://www.house.gov/legislative-activity",
     schedule: "When in session",
-    description: "C-SPAN live feed — U.S. House floor proceedings",
+    description: "C-SPAN live feed: U.S. House floor proceedings",
     category: "Federal",
   },
   {
@@ -99,7 +99,7 @@ const STREAMS: Stream[] = [
     livePageUrl: "https://www.senate.gov/general/streaming.htm",
     scheduleUrl: "https://www.senate.gov/legislative/LIS/floor_activity/CurrentActivity.htm",
     schedule: "When in session",
-    description: "C-SPAN 2 live feed — U.S. Senate floor proceedings",
+    description: "C-SPAN 2 live feed: U.S. Senate floor proceedings",
     category: "Federal",
   },
 ];
@@ -417,7 +417,7 @@ function RemoteControl({
           </div>
         </div>
 
-        {/* Channel list — compact rows */}
+        {/* Channel list: compact rows */}
         <div className="space-y-1.5">
           {streams.map((s, i) => {
             const col = CAT_COLOR[s.category];
@@ -487,7 +487,7 @@ export default function TVStation() {
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-2" style={{ fontFamily: "var(--font-playfair), serif" }}>
             TV Station
           </h1>
-          <p className="text-white/50 text-sm">Live public meeting streams — Harris County, Houston, HISD, Austin, and D.C.</p>
+          <p className="text-white/50 text-sm">Live public meeting streams. Harris County, Houston, HISD, Austin, and D.C.</p>
         </div>
       </section>
 

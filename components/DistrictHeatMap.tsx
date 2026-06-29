@@ -318,7 +318,7 @@ export default function DistrictHeatMap({ districtField, districtValue, district
             <div className="flex items-center gap-2">
               <p className="text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>
                 {districtData.total > 0
-                  ? `${districtLabel} · ${districtData.dPct}% D — ${cycleLabel}`
+                  ? `${districtLabel} · ${districtData.dPct}% D: ${cycleLabel}`
                   : "Partisan History"}
               </p>
               <Link href="/tools/heat-check" className="text-[9px] font-semibold hover:underline" style={{ color: "#2563a8" }}>
@@ -379,7 +379,7 @@ export default function DistrictHeatMap({ districtField, districtValue, district
         {/* D% trend sparkline */}
         {trendData.length >= 2 && (
           <div className="px-4 pt-3 pb-1 border-t border-black/8">
-            <p className="text-[9px] font-bold uppercase tracking-[0.16em] mb-2" style={{ color: "#9ca3af" }}>D% — General Elections</p>
+            <p className="text-[9px] font-bold uppercase tracking-[0.16em] mb-2" style={{ color: "#9ca3af" }}>D%: General Elections</p>
             <div className="flex items-end gap-1.5">
               {trendData.map(t => {
                 const isD = t.dPct >= 50;
@@ -409,7 +409,7 @@ export default function DistrictHeatMap({ districtField, districtValue, district
           </p>
           {districtField === "cd" && (
             <p className="text-[9px]" style={{ color: "#d97706" }}>
-              ⚠ CD boundaries changed under the 2025 PLANC2333 redistricting. Precinct assignments on this map use the 2022 plan — 2026 results will reflect the new lines.
+              ⚠ CD boundaries changed under the 2025 PLANC2333 redistricting. Precinct assignments on this map use the 2022 plan. 2026 results will reflect the new lines.
             </p>
           )}
           {districtField && ["hd","sd","pct"].includes(districtField) && parseInt(cycle) < 2022 && (

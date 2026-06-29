@@ -1,4 +1,4 @@
-// Standalone shareable official card — dark page, liquid-glass flip card,
+// Standalone shareable official card. Dark page, liquid-glass flip card,
 // per-official Open Graph meta for clean unfurls.
 
 import type { Metadata } from "next";
@@ -16,8 +16,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const pol = POLITICIANS.find(p => p.slug === slug);
   if (!pol) return {};
-  const title = `${pol.name} — Official Card`;
-  const desc = `${pol.office}, ${pol.district}. Stats, money, and record — via The Harris County Project.`;
+  const title = `${pol.name}. Official Card`;
+  const desc = `${pol.office}, ${pol.district}. Stats, money, and record. Via The Harris County Project.`;
   const og = `/api/og/card/${pol.slug}`;
   return {
     title: `${title} · The Harris County Project`,

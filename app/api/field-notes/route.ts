@@ -1,4 +1,4 @@
-// Field Notes — verified-annotator context layer + community flags.
+// Field Notes. Verified-annotator context layer + community flags.
 //   GET  ?target=<id>           notes + open flag count for a data point
 //   POST { key, target, note }  add a Field Note (verified annotators only)
 //   POST { flag: true, target, reason, contact? }  community flag (any user)
@@ -31,7 +31,7 @@ async function mirror(record: unknown) {
   try {
     await fetch(process.env.EMAIL_WEBHOOK_URL, {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...(record as object), source: "The Harris County Project — Field Notes" }),
+      body: JSON.stringify({ ...(record as object), source: "The Harris County Project. Field Notes" }),
     });
   } catch { /* non-blocking */ }
 }
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
   const target = String(body.target ?? "").slice(0, 120);
   if (!target) return NextResponse.json({ error: "Missing target" }, { status: 400 });
 
-  // Community flag — open to anyone
+  // Community flag: open to anyone
   if (body.flag) {
     const reason = String(body.reason ?? "").trim().slice(0, 600);
     if (reason.length < 10) return NextResponse.json({ error: "Tell us what looks wrong (10+ characters)." }, { status: 400 });
@@ -60,10 +60,10 @@ export async function POST(req: NextRequest) {
     mkdirSync(DIR, { recursive: true });
     appendFileSync(FLAGS, JSON.stringify(record) + "\n");
     await mirror({ type: "flag", ...record });
-    return NextResponse.json({ ok: true, queued: "Review queue — verified annotators triage flags at /admin/review." });
+    return NextResponse.json({ ok: true, queued: "Review queue. Verified annotators triage flags at /admin/review." });
   }
 
-  // Field Note — verified annotators only
+  // Field Note: verified annotators only
   const who = annotators().find(a => a.key === body.key);
   if (!who) return NextResponse.json({ error: "Not a verified annotator key. Media, academic, and community-org credentials are issued via the contact page." }, { status: 403 });
   const note = String(body.note ?? "").trim().slice(0, 1200);

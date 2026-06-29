@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import ShareButton from "@/components/ShareButton";
 
-/* ─── TIRZ Data — City of Houston ───────────────────────────────────────── */
+/* ─── TIRZ Data. City of Houston ───────────────────────────────────────── */
 interface BoardAppointer {
   appointer: string;      // e.g. "Mayor", "District H Council Member"
   seats: number;
@@ -280,7 +280,7 @@ export default function TIRZTool() {
           <ShareButton
             toolName="TIRZ Tool"
             section="Money"
-            description="Tax Increment Reinvestment Zones — Houston's 16 active TIRZs mapped and ranked by revenue captured."
+            description="Tax Increment Reinvestment Zones. Houston's 16 active TIRZs mapped and ranked by revenue captured."
             stats={[{ label: "Active TIRZs", value: "16" }, { label: "Focus", value: "Houston" }]}
           />
           <div className="flex gap-4 flex-wrap">
@@ -300,7 +300,7 @@ export default function TIRZTool() {
       <div className="bg-amber-50 border-b border-amber-200 px-6 py-4">
         <div className="max-w-6xl mx-auto">
           <p className="text-xs text-amber-800 leading-relaxed max-w-3xl">
-            <strong>What is a TIRZ?</strong> When a TIRZ is created, the tax base is frozen. As property values rise, the additional tax revenue (the &ldquo;increment&rdquo;) goes into the TIRZ fund instead of the general budget — funding local improvements like streets, parks, and drainage. Critics argue TIRZs can divert money from schools and city services.
+            <strong>What is a TIRZ?</strong> When a TIRZ is created, the tax base is frozen. As property values rise, the additional tax revenue (the &ldquo;increment&rdquo;) goes into the TIRZ fund instead of the general budget. Funding local improvements like streets, parks, and drainage. Critics argue TIRZs can divert money from schools and city services.
           </p>
         </div>
       </div>

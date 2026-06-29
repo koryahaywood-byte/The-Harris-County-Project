@@ -5,7 +5,7 @@ import ThreadsFeed from "@/components/ThreadsFeed";
 
 /* ─── Data ───────────────────────────────────────────────────────────────────── */
 const COMMISSIONERS = [
-  { name: "Lina Hidalgo",    title: "County Judge (lame duck — open seat Nov. 2026)", district: "At-Large", party: "D", slug: "lina-hidalgo",    photo: "/politicians/lina-hidalgo.jpg" },
+  { name: "Lina Hidalgo",    title: "County Judge (lame duck: open seat Nov. 2026)", district: "At-Large", party: "D", slug: "lina-hidalgo",    photo: "/politicians/lina-hidalgo.jpg" },
   { name: "Rodney Ellis",    title: "Commissioner",        district: "Pct 1",    party: "D", slug: "rodney-ellis",    photo: "/politicians/rodney-ellis.jpg" },
   { name: "Adrian Garcia",   title: "Commissioner",        district: "Pct 2",    party: "D", slug: "adrian-garcia",   photo: "/politicians/adrian-garcia.jpg" },
   { name: "Tom Ramsey",      title: "Commissioner",        district: "Pct 3",    party: "R", slug: "tom-ramsey",      photo: "/politicians/tom-ramsey.jpg" },
@@ -19,9 +19,9 @@ const COUNTY_JUDGE_RACE_2026 = {
 };
 
 const TRACKS = [
-  { label: "Commissioners Court",  desc: "Full court meets biweekly — Tuesdays at 10am. Votes on budget, contracts, flood control, and county policy.", color: "#1a3a5c" },
+  { label: "Commissioners Court",  desc: "Full court meets biweekly: Tuesdays at 10am. Votes on budget, contracts, flood control, and county policy.", color: "#1a3a5c" },
   { label: "Justice & Policing",   desc: "JPD oversight, constable offices, and the DA's office. Reform progress and critical incidents tracked here.", color: "#b91c1c" },
-  { label: "Flood Control",        desc: "Harris County Flood Control District — bond projects, buyouts, detention ponds. Updated after each board meeting.", color: "#0891b2" },
+  { label: "Flood Control",        desc: "Harris County Flood Control District. Bond projects, buyouts, detention ponds. Updated after each board meeting.", color: "#0891b2" },
   { label: "Budget & Contracts",   desc: "FY2027 county budget, major vendor contracts, and discretionary spending by precinct.", color: "#059669" },
 ];
 
@@ -49,8 +49,8 @@ const SOCIAL: SocialPost[] = [
   { platform: "Twitter/X", author: "Mike Morris",         handle: "@mmorrisHC",       content: "Commissioners Court approved the revised JPD oversight policy 3-2 today. Precincts 3 and 4 dissenting. Full story up now.",                                           url: "https://x.com/mmorrisHC",         time: "3h ago" },
   { platform: "Threads",   author: "Rodney Ellis",        handle: "@rodellis",         verified: true, image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=800&q=70", content: "Pct 1 secured $12M for Sims Bayou improvements in today's court vote. Flood protection for 40,000+ residents. This is what investing in our communities looks like.", url: "https://www.threads.net/@rodellis", time: "5h ago" },
   { platform: "Twitter/X", author: "Jasper Scherer",      handle: "@jaspscherer",      content: "Commissioners Court deferred the third Ward road improvement contract again. Advocates say it's been tabled 6 times this year.",                                        url: "https://x.com/jaspscherer",       time: "6h ago" },
-  { platform: "Twitter/X", author: "Paul Cobler",         handle: "@paulcobler",       content: "Commissioners Court 4-1 to expand the county public defender's office — largest expansion in Harris County history. Full roll call in the story.",                      url: "https://x.com/paulcobler",        time: "8h ago" },
-  { platform: "Facebook",  author: "Harris County Dems",  handle: "fb/harriscountydems", content: "Flood control bond projects on track — 87 buyouts completed this quarter, 340 more pending. Real progress for our most vulnerable neighborhoods.",                  url: "https://www.facebook.com/groups/search/results/?q=harris+county+politics", time: "1d ago" },
+  { platform: "Twitter/X", author: "Paul Cobler",         handle: "@paulcobler",       content: "Commissioners Court 4-1 to expand the county public defender's office. Largest expansion in Harris County history. Full roll call in the story.",                      url: "https://x.com/paulcobler",        time: "8h ago" },
+  { platform: "Facebook",  author: "Harris County Dems",  handle: "fb/harriscountydems", content: "Flood control bond projects on track. 87 buyouts completed this quarter, 340 more pending. Real progress for our most vulnerable neighborhoods.",                  url: "https://www.facebook.com/groups/search/results/?q=harris+county+politics", time: "1d ago" },
   { platform: "Facebook",  author: "HC GOP Watch",        handle: "fb/hcgopwatch",     content: "Commissioner Ramsey calls out contract transparency failures at today's court session. Where is the accountability for Pct 2's construction overruns?",              url: "https://www.facebook.com/groups/search/results/?q=harris+county+republican", time: "1d ago" },
 ];
 
@@ -73,7 +73,7 @@ export default function HarrisCountyBeatPage() {
             Harris County Beat
           </h1>
           <p className="text-white/55 text-sm max-w-md mb-6">
-            Commissioners Court, JPD, flood control, and county agencies — every meeting, every vote.
+            Commissioners Court, JPD, flood control, and county agencies. Every meeting, every vote.
           </p>
 
           {/* Meeting info strip */}
@@ -118,7 +118,7 @@ export default function HarrisCountyBeatPage() {
                   <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "var(--accent)" }}>Open Seat · November 3, 2026</p>
                   <p className="text-xs font-semibold text-[var(--fg)] mb-0.5">Harris County Judge</p>
                   <p className="text-[11px] text-[var(--muted)]">
-                    <span className="text-blue-700 font-bold">Letitia Plummer</span> (D) vs. <span className="text-red-700 font-bold">Orlando Sanchez</span> (R) — Lina Hidalgo did not seek reelection.
+                    <span className="text-blue-700 font-bold">Letitia Plummer</span> (D) vs. <span className="text-red-700 font-bold">Orlando Sanchez</span> (R). Lina Hidalgo did not seek reelection.
                   </p>
                 </div>
               </div>
@@ -185,7 +185,7 @@ export default function HarrisCountyBeatPage() {
               </div>
               <div className="rounded-[1.5rem] p-5 text-center" style={{ background: "linear-gradient(135deg,#1a3a5c,#2563a8)" }}>
                 <p className="text-xs font-bold text-white mb-1" style={{ fontFamily: "var(--font-playfair), serif" }}>Live Recap Coming</p>
-                <p className="text-[10px] text-white/60 mb-3">AI-summarized Commissioners Court hearings — same pipeline as City Hall Beat.</p>
+                <p className="text-[10px] text-white/60 mb-3">AI-summarized Commissioners Court hearings. Same pipeline as City Hall Beat.</p>
                 <span className="inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.15em] text-sky-300">
                   <span className="relative flex h-2 w-2"><span className="alive-halo absolute inline-flex h-full w-full rounded-full bg-sky-400" /><span className="alive-pulse relative inline-flex h-2 w-2 rounded-full bg-sky-400" /></span>
                   In Development

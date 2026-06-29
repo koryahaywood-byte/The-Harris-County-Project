@@ -39,7 +39,7 @@ const STATUS_STYLES: Record<BillStatus, { label: string; bg: string; text: strin
 
 type Counts = { total: number; committee: number; passed: number; law: number; pct: number };
 
-// Harris County US Representatives — 119th Congress (2025-2027)
+// Harris County US Representatives: 119th Congress (2025-2027)
 // CD-18 is vacant since SJL's death Jul 2024; Menefee is the 2026 D nominee, not current rep.
 const REPS: Rep[] = [
   { name: "Sylvia Garcia",       district: "TX-29", chamber: "House",  party: "D", role: "U.S. Representative" },
@@ -214,7 +214,7 @@ function BillList({ rep }: { rep: Rep }) {
     <div className="px-5 pb-5 flex flex-col gap-2">
       <div className="border-t border-[var(--border)] pt-4 mb-2">
         <p className="text-xs font-bold uppercase tracking-[0.12em] text-[var(--muted)]">
-          {bills.length} bill{bills.length !== 1 ? "s" : ""} — 119th Congress
+          {bills.length} bill{bills.length !== 1 ? "s" : ""}: 119th Congress
         </p>
       </div>
       {sorted.map((bill) => {
@@ -340,12 +340,12 @@ export default function CongressionalBillTracker() {
             Congressional Bill Tracker
           </h1>
           <p className="text-white/70 text-sm max-w-lg">
-            What did Harris County&apos;s U.S. Representatives and Senators actually pass in Congress? Ranked by bills signed into law — 119th Congress (2025–2027).
+            What did Harris County&apos;s U.S. Representatives and Senators actually pass in Congress? Ranked by bills signed into law: 119th Congress (2025–2027).
           </p>
           <ShareButton
             toolName="Congressional Bill Tracker"
             section="Legislative"
-            description="What did Harris County's US reps actually pass in Congress? Ranked by bills signed into law — 119th Congress."
+            description="What did Harris County's US reps actually pass in Congress? Ranked by bills signed into law: 119th Congress."
             stats={[{ label: "Congress", value: "119th" }, { label: "Reps Tracked", value: "7" }]}
           />
         </div>
@@ -356,7 +356,7 @@ export default function CongressionalBillTracker() {
         <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl p-4">
           <span className="text-lg leading-none mt-0.5">📋</span>
           <div>
-            <p className="text-sm font-semibold text-amber-900">119th Congress — Session in Progress</p>
+            <p className="text-sm font-semibold text-amber-900">119th Congress: Session in Progress</p>
             <p className="text-xs text-amber-700 mt-0.5">
               The 119th Congress runs January 2025 – January 2027. Bills shown reflect current status as of last sync.
               Final tallies available after adjournment.

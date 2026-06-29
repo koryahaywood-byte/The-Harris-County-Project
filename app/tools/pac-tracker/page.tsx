@@ -74,7 +74,7 @@ export default function PACTracker() {
       <div className="mb-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Outside Money — Texas 2026</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Outside Money: Texas 2026</h1>
             <p className="text-sm text-gray-500 mt-1">
               Independent expenditures by PACs, Super PACs, and outside groups in Texas 2026 federal races.
               Data from FEC Schedule E filings.
@@ -225,19 +225,19 @@ export default function PACTracker() {
         </>
       )}
 
-      {/* Static context — always shown */}
+      {/* Static context: always shown */}
       <div className="mt-8 rounded-xl bg-gray-50 border border-gray-200 p-4">
-        <div className="text-sm font-semibold text-gray-700 mb-2">Key PACs to Watch — Texas 2026</div>
+        <div className="text-sm font-semibold text-gray-700 mb-2">Key PACs to Watch: Texas 2026</div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-gray-600">
           {[
-            { name: "DCCC (Democratic Congressional Campaign Committee)", side: "D", focus: "Competitive House races — TX-07, TX-38" },
-            { name: "NRCC (National Republican Congressional Committee)", side: "R", focus: "Defending House seats — TX-02, TX-08, TX-22, TX-36" },
-            { name: "DSCC (Democratic Senatorial Campaign Committee)", side: "D", focus: "TX Senate race — Talarico vs Paxton" },
-            { name: "NRSC (National Republican Senatorial Committee)", side: "R", focus: "TX Senate race — Paxton vs Talarico" },
+            { name: "DCCC (Democratic Congressional Campaign Committee)", side: "D", focus: "Competitive House races. TX-07, TX-38" },
+            { name: "NRCC (National Republican Congressional Committee)", side: "R", focus: "Defending House seats. TX-02, TX-08, TX-22, TX-36" },
+            { name: "DSCC (Democratic Senatorial Campaign Committee)", side: "D", focus: "TX Senate race. Talarico vs Paxton" },
+            { name: "NRSC (National Republican Senatorial Committee)", side: "R", focus: "TX Senate race. Paxton vs Talarico" },
             { name: "Club for Growth Action", side: "R", focus: "Primary spending, conservative challengers" },
-            { name: "Senate Majority PAC", side: "D", focus: "Super PAC — Dem Senate majority play" },
-            { name: "Congressional Leadership Fund", side: "R", focus: "Super PAC — House majority defense" },
-            { name: "House Majority PAC", side: "D", focus: "Super PAC — House competitive races" },
+            { name: "Senate Majority PAC", side: "D", focus: "Super PAC. Dem Senate majority play" },
+            { name: "Congressional Leadership Fund", side: "R", focus: "Super PAC. House majority defense" },
+            { name: "House Majority PAC", side: "D", focus: "Super PAC. House competitive races" },
           ].map(p => (
             <div key={p.name} className="flex gap-2">
               <span
@@ -256,7 +256,7 @@ export default function PACTracker() {
           ))}
         </div>
         <p className="text-xs text-gray-400 mt-3">
-          TEC-registered state PAC activity (for state legislative races) is tracked separately — check{" "}
+          TEC-registered state PAC activity (for state legislative races) is tracked separately: check{" "}
           <a href="https://www.ethics.state.tx.us/search/cf/" target="_blank" rel="noopener noreferrer" className="underline">ethics.state.tx.us</a>.
         </p>
       </div>

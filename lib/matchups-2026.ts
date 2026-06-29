@@ -57,7 +57,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Nathan Johnson",  party: "D", incumbent: false, gender: "M", note: "State Senator SD-16 (Dallas); won May D runoff over Joe Jaworski" },
       { name: "Mayes Middleton", party: "R", incumbent: false, gender: "M", note: "Won May R runoff (56%) over U.S. Rep. Chip Roy; former State Senator SD-11" },
     ],
-    detail: "Open seat — Ken Paxton vacated to run for U.S. Senate. Middleton beat Chip Roy in the R runoff; Nathan Johnson (Dallas state senator) won the D runoff over Joe Jaworski. A nationalized race: Middleton ran as 'MAGA Mayes,' Roy as the Trump-skeptic establishment pick.",
+    detail: "Open seat. Ken Paxton vacated to run for U.S. Senate. Middleton beat Chip Roy in the R runoff; Nathan Johnson (Dallas state senator) won the D runoff over Joe Jaworski. A nationalized race: Middleton ran as 'MAGA Mayes,' Roy as the Trump-skeptic establishment pick.",
   },
   "TX-Comptroller": {
     office: "Texas Comptroller",
@@ -67,7 +67,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Sarah Eckhardt", party: "D", incumbent: false, gender: "F", note: "Won March D primary with 60%+; former Travis County Judge" },
       { name: "Don Huffines",   party: "R", incumbent: false, gender: "M", note: "Won R primary with 58% after Trump endorsement; former Dallas state senator" },
     ],
-    detail: "Open seat — Glenn Hegar left office in July 2026 to become Chancellor of Texas A&M. Don Huffines won the R primary with 58% after Trump endorsed him over Abbott-backed Kelly Hancock. Sarah Eckhardt (former Travis County Judge) won the D primary with 60%.",
+    detail: "Open seat. Glenn Hegar left office in July 2026 to become Chancellor of Texas A&M. Don Huffines won the R primary with 58% after Trump endorsed him over Abbott-backed Kelly Hancock. Sarah Eckhardt (former Travis County Judge) won the D primary with 60%.",
   },
   // ── Top of Ticket ──────────────────────────────────────────────────────────
   "US-Senate": {
@@ -88,7 +88,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Letitia Plummer",  party: "D", incumbent: false, gender: "F", note: "Won May runoff over Annise Parker" },
       { name: "Orlando Sanchez",  party: "R", incumbent: false, gender: "M", note: "Won May runoff over Warren Howell" },
     ],
-    detail: "Open seat — Lina Hidalgo did not seek reelection. Plummer beat Parker 57,893–55,395 in the Democratic runoff; Sanchez beat Howell 85,304–49,367 in the Republican runoff.",
+    detail: "Open seat. Lina Hidalgo did not seek reelection. Plummer beat Parker 57,893–55,395 in the Democratic runoff; Sanchez beat Howell 85,304–49,367 in the Republican runoff.",
   },
   "CD-18": {
     office: "U.S. Representative, District 18",
@@ -108,7 +108,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Shaun Finnie",  party: "D", incumbent: false, gender: "M", note: "Won D primary unopposed; businessman/entrepreneur" },
       { name: "Steve Toth",    party: "R", incumbent: false, gender: "M", note: "TX state rep; beat Crenshaw by 15 pts in March primary; Cruz-endorsed MAGA challenger" },
     ],
-    detail: "Open seat — Dan Crenshaw (R, inc) lost his primary to state Rep. Steve Toth, becoming the first incumbent House member defeated in the 2026 cycle. Toth beat Crenshaw by 15 points, fueled by a Ted Cruz endorsement and criticism that Crenshaw wasn't sufficiently pro-Trump. CD-2 covers NW Harris County into Montgomery Co. — safe Republican.",
+    detail: "Open seat. Dan Crenshaw (R, inc) lost his primary to state Rep. Steve Toth, becoming the first incumbent House member defeated in the 2026 cycle. Toth beat Crenshaw by 15 points, fueled by a Ted Cruz endorsement and criticism that Crenshaw wasn't sufficiently pro-Trump. CD-2 covers NW Harris County into Montgomery Co.: safe Republican.",
   },
   "CD-7": {
     office: "U.S. Representative, District 7",
@@ -118,7 +118,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Lizzie Fletcher", party: "D", incumbent: true,  gender: "F" },
       { name: "Alexander Hale",  party: "R", incumbent: false, gender: "M", note: "Won May runoff" },
     ],
-    detail: "CD-7 (West Houston — Bellaire, River Oaks, Memorial, Katy) is the most competitive congressional seat in Harris County. Fletcher flipped it D in 2018 and has held on every cycle; Hale won the R runoff and is backed by national Republican money.",
+    detail: "CD-7 (West Houston. Bellaire, River Oaks, Memorial, Katy) is the most competitive congressional seat in Harris County. Fletcher flipped it D in 2018 and has held on every cycle; Hale won the R runoff and is backed by national Republican money.",
   },
   "CD-8": {
     office: "U.S. Representative, District 8",
@@ -128,7 +128,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Laura Jones",        party: "D", incumbent: false, gender: "F", note: "Won March D primary" },
       { name: "Jessica Steinmann",  party: "R", incumbent: false, gender: "F", note: "Former DOJ official (America First Policy Institute); won March R primary with 70% over Brett Jensen and 4 others; endorsed by Cruz, Luttrell, Dan Patrick" },
     ],
-    detail: "Open seat — Morgan Luttrell (R) announced Sept 2025 he would not seek re-election. CD-8 covers NE Harris County (Kingwood, Lake Houston, Atascocita) into Montgomery and east Texas. Safe Republican territory. All-women general election matchup.",
+    detail: "Open seat. Morgan Luttrell (R) announced Sept 2025 he would not seek re-election. CD-8 covers NE Harris County (Kingwood, Lake Houston, Atascocita) into Montgomery and east Texas. Safe Republican territory. All-women general election matchup.",
   },
   "CD-9": {
     office: "U.S. Representative, District 9",
@@ -138,7 +138,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Leticia Gutierrez", party: "D", incumbent: false, gender: "F", note: "Community organizer with Air Alliance Houston; won March D primary" },
       { name: "Alex Mealer",       party: "R", incumbent: false, gender: "F", note: "West Point grad, Army EOD officer; lost 2022 County Judge race to Hidalgo by 0.9 pts; won May runoff over Briscoe Cain" },
     ],
-    detail: "Open seat — Al Green (D) vacated to run in CD-18 and lost. The district was redrawn by Republicans after the 2024 cycle to favor the GOP, adding deep-red Liberty County and drawing out many D-leaning voters. The new map makes this lean-R despite its majority-Hispanic CVAP. All-women general election matchup.",
+    detail: "Open seat. Al Green (D) vacated to run in CD-18 and lost. The district was redrawn by Republicans after the 2024 cycle to favor the GOP, adding deep-red Liberty County and drawing out many D-leaning voters. The new map makes this lean-R despite its majority-Hispanic CVAP. All-women general election matchup.",
   },
   "CD-22": {
     office: "U.S. Representative, District 22",
@@ -148,7 +148,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Marquette Greene-Scott", party: "D", incumbent: false, gender: "F", note: "Won March D primary" },
       { name: "Trever Nehls",           party: "R", incumbent: false, gender: "M", note: "Won March R primary; identical twin of outgoing Rep. Troy Nehls; Trump-endorsed" },
     ],
-    detail: "Open seat — Troy Nehls announced Nov 2025 he would not seek re-election. His identical twin Trever Nehls (R) won the R primary with Trump's endorsement over Rebecca Clark. CD-22 covers south Harris County (Pearland, Friendswood, Missouri City) into Fort Bend and Brazoria counties — safe Republican territory.",
+    detail: "Open seat. Troy Nehls announced Nov 2025 he would not seek re-election. His identical twin Trever Nehls (R) won the R primary with Trump's endorsement over Rebecca Clark. CD-22 covers south Harris County (Pearland, Friendswood, Missouri City) into Fort Bend and Brazoria counties: safe Republican territory.",
   },
   "CD-29": {
     office: "U.S. Representative, District 29",
@@ -166,7 +166,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     lean: "safe-r",
     sides: [
       { name: "Rhonda Hart",  party: "D", incumbent: false, gender: "F", note: "Won March primary" },
-      { name: "Brian Babin",  party: "R", incumbent: true,  gender: "M", note: "Won March primary 81% — seeking 7th term" },
+      { name: "Brian Babin",  party: "R", incumbent: true,  gender: "M", note: "Won March primary 81%. Seeking 7th term" },
     ],
     detail: "Brian Babin (R) has held CD-36 (far SE Harris into Chambers, Hardin, Jefferson, Orange counties) since 2015. Won his March primary with 81% over Jonathan Mitchell. Safe Republican district.",
   },
@@ -178,7 +178,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Melissa McDonough", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
       { name: "Jon Bonck",         party: "R", incumbent: false, gender: "M", note: "Won May runoff" },
     ],
-    detail: "Open seat — incumbent Wesley Hunt ran for U.S. Senate and lost the Republican primary.",
+    detail: "Open seat. Incumbent Wesley Hunt ran for U.S. Senate and lost the Republican primary.",
   },
   "SD-11": {
     office: "State Senator, District 11",
@@ -188,7 +188,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Shannon Dicely", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
       { name: "Dennis Paul",    party: "R", incumbent: false, gender: "M", note: "Won R primary; incumbent Mayes Middleton ran for AG" },
     ],
-    detail: "Open seat — incumbent Mayes Middleton vacated to run for Attorney General. Dennis Paul won the R primary. Shannon Dicely is the D nominee. District covers Clear Lake, Friendswood, Pearland — Republican-leaning suburb SE of Houston.",
+    detail: "Open seat. Incumbent Mayes Middleton vacated to run for Attorney General. Dennis Paul won the R primary. Shannon Dicely is the D nominee. District covers Clear Lake, Friendswood, Pearland. Republican-leaning suburb SE of Houston.",
   },
   "SD-15": {
     office: "State Senator, District 15",
@@ -198,7 +198,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Molly Cook",       party: "D", incumbent: true,  gender: "F", note: "Won 2024 special election; seeking first full 4-year term" },
       { name: "Joseph L. Trahan", party: "R", incumbent: false, gender: "M", note: "Lost to Cook in 2024; running again" },
     ],
-    detail: "Molly Cook won the 2024 special election replacing John Whitmire (now Houston Mayor). SD-15 must be won by Cook again in 2026 for a full 4-year term. Joseph Trahan, who lost to Cook 55-42 in 2024, is the R challenger. Heights, Montrose, Galleria, Midtown — safe Democratic territory.",
+    detail: "Molly Cook won the 2024 special election replacing John Whitmire (now Houston Mayor). SD-15 must be won by Cook again in 2026 for a full 4-year term. Joseph Trahan, who lost to Cook 55-42 in 2024, is the R challenger. Heights, Montrose, Galleria, Midtown: safe Democratic territory.",
   },
   "SD-4": {
     office: "State Senator, District 4",
@@ -214,9 +214,9 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "uncontested-d",
     sides: [
-      { name: "Borris Miles", party: "D", incumbent: true, gender: "M", note: "Running unopposed — no R nominee emerged from primary" },
+      { name: "Borris Miles", party: "D", incumbent: true, gender: "M", note: "Running unopposed. No R nominee emerged from primary" },
     ],
-    detail: "Borris Miles has served SD-13 since 2006. The district covers Third Ward, Sunnyside, Hiram Clarke, Missouri City — a majority-Black district that is among the most heavily Democratic in Texas. No Republican filed, so Miles runs unopposed.",
+    detail: "Borris Miles has served SD-13 since 2006. The district covers Third Ward, Sunnyside, Hiram Clarke, Missouri City. A majority-Black district that is among the most heavily Democratic in Texas. No Republican filed, so Miles runs unopposed.",
   },
   "SD-18": {
     office: "State Senator, District 18",
@@ -236,7 +236,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Stefanie Bord", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
       { name: "Stan Stanart",  party: "R", incumbent: false, gender: "M", note: "Won May runoff" },
     ],
-    detail: "Open seat — incumbent Sam Harless (R) did not seek reelection. District covers NW Houston (FM 1960, Willowbrook, Copperfield). R-leaning suburb but Stanart is a controversial figure (former Harris County Tax Assessor); Bord could overperform in an anti-MAGA environment.",
+    detail: "Open seat. Incumbent Sam Harless (R) did not seek reelection. District covers NW Houston (FM 1960, Willowbrook, Copperfield). R-leaning suburb but Stanart is a controversial figure (former Harris County Tax Assessor); Bord could overperform in an anti-MAGA environment.",
   },
   "HD-131": {
     office: "State Representative, District 131",
@@ -245,7 +245,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     sides: [
       { name: "Staci Childs", party: "D", incumbent: false, gender: "F", note: "Won May runoff over Lawrence Allen Jr." },
     ],
-    detail: "Open seat — Alma Allen (D) retired after holding HD-131 since 2003. Childs won the Democratic runoff; district covers SW Houston (Fondren/Southwest area) and is overwhelmingly Democratic. No Republican filed.",
+    detail: "Open seat. Alma Allen (D) retired after holding HD-131 since 2003. Childs won the Democratic runoff; district covers SW Houston (Fondren/Southwest area) and is overwhelmingly Democratic. No Republican filed.",
   },
   "HD-139": {
     office: "State Representative, District 139",
@@ -255,7 +255,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Charlene Ward Johnson", party: "D", incumbent: true,  gender: "F", note: "Won March primary" },
       { name: "Kyle Harding",          party: "R", incumbent: false, gender: "M", note: "Won R primary" },
     ],
-    detail: "Charlene Ward Johnson (HD-139, Fifth Ward / Trinity Gardens) has served since 2017. Heavily Democratic majority-Black district — one of the safest D seats in Harris County. R challenger Kyle Harding.",
+    detail: "Charlene Ward Johnson (HD-139, Fifth Ward / Trinity Gardens) has served since 2017. Heavily Democratic majority-Black district. One of the safest D seats in Harris County. R challenger Kyle Harding.",
   },
   "HD-142": {
     office: "State Representative, District 142",
@@ -265,7 +265,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Harold Dutton Jr.", party: "D", incumbent: true,  gender: "M", note: "Won March primary outright; serving since 1985" },
       { name: "Heidi Hall",        party: "R", incumbent: false, gender: "F", note: "Won R primary" },
     ],
-    detail: "Harold Dutton Jr. (HD-142, Kashmere Gardens / Trinity Gardens / NE Houston) has served since 1985 — one of the longest-serving members of the Texas House. Heavily Democratic majority-Black district. R challenger Heidi Hall.",
+    detail: "Harold Dutton Jr. (HD-142, Kashmere Gardens / Trinity Gardens / NE Houston) has served since 1985. One of the longest-serving members of the Texas House. Heavily Democratic majority-Black district. R challenger Heidi Hall.",
   },
   "HD-144": {
     office: "State Representative, District 144",
@@ -275,7 +275,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Mary Ann Perez", party: "D", incumbent: true,  gender: "F", note: "Won March primary (over Emmanuel Guerrero and Michael Montemayor)" },
       { name: "David Flores",   party: "R", incumbent: false, gender: "M", note: "Won R primary" },
     ],
-    detail: "Mary Ann Perez (HD-144, Galena Park / Pasadena / east Harris County) has served since 2017. Majority-Latino district on the Ship Channel's east side — lean-D but historically competitive. R challenger David Flores.",
+    detail: "Mary Ann Perez (HD-144, Galena Park / Pasadena / east Harris County) has served since 2017. Majority-Latino district on the Ship Channel's east side. Lean-D but historically competitive. R challenger David Flores.",
   },
   "HD-149": {
     office: "State Representative, District 149",
@@ -315,7 +315,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Desiree Klaus", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
       { name: "Tom Butler",    party: "R", incumbent: false, gender: "M", note: "Won March primary" },
     ],
-    detail: "Open seat — incumbent Briscoe Cain ran for CD-9 (lost May runoff to Alex Mealer). Deep-red Deer Park / La Porte / East Pasadena / Southeast Harris County district.",
+    detail: "Open seat. Incumbent Briscoe Cain ran for CD-9 (lost May runoff to Alex Mealer). Deep-red Deer Park / La Porte / East Pasadena / Southeast Harris County district.",
   },
   "HD-129": {
     office: "State Representative, District 129",
@@ -325,16 +325,16 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Albert Wittliff", party: "D", incumbent: false, gender: "M", note: "D nominee; uncontested in D primary" },
       { name: "Scott Bowen",     party: "R", incumbent: false, gender: "M", note: "Won R primary with 71.6% over Bob Mitchell" },
     ],
-    detail: "Open seat — Dennis Paul vacated to run for SD-11. Scott Bowen won the R primary decisively (71.6%). Albert Wittliff is the D nominee. Clear Lake / Bay Area — solidly Republican.",
+    detail: "Open seat. Dennis Paul vacated to run for SD-11. Scott Bowen won the R primary decisively (71.6%). Albert Wittliff is the D nominee. Clear Lake / Bay Area: solidly Republican.",
   },
   "HD-133": {
     office: "State Representative, District 133",
     status: "set",
     lean: "uncontested-r",
     sides: [
-      { name: "Mano DeAyala", party: "R", incumbent: true, gender: "M", note: "Running unopposed — no D filed" },
+      { name: "Mano DeAyala", party: "R", incumbent: true, gender: "M", note: "Running unopposed. No D filed" },
     ],
-    detail: "Mano DeAyala has held HD-133 (Memorial / Briargrove / West Houston) since 2021. No Democrat filed for 2026 — DeAyala runs unopposed.",
+    detail: "Mano DeAyala has held HD-133 (Memorial / Briargrove / West Houston) since 2021. No Democrat filed for 2026: DeAyala runs unopposed.",
   },
   "HD-130": {
     office: "State Representative, District 130",
@@ -354,7 +354,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Sara McGee",     party: "D", incumbent: false, gender: "F", note: "Won March primary" },
       { name: "Mike Schofield", party: "R", incumbent: true,  gender: "M", note: "Seeking reelection" },
     ],
-    detail: "Mike Schofield holds HD-132 (NW Harris County / Cypress). The district is competitive at the suburban margins — D challenger Sara McGee is the nominee.",
+    detail: "Mike Schofield holds HD-132 (NW Harris County / Cypress). The district is competitive at the suburban margins. D challenger Sara McGee is the nominee.",
   },
   "HD-134": {
     office: "State Representative, District 134",
@@ -374,7 +374,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Odus Evbagharu", party: "D", incumbent: false, gender: "M", note: "Former Chair Harris County Democrats; Rosenthal's former chief of staff" },
       { name: "Liz Ramos",      party: "R", incumbent: false, gender: "F", note: "Won March primary" },
     ],
-    detail: "Open seat — Jon Rosenthal vacated to run for Texas Railroad Commissioner. Odus Evbagharu (D), former Chair of the Harris County Democratic Party and Rosenthal's chief of staff, won the March primary. First Black HCD chair. After 2021 redistricting, district (northwest Houston / Cypress / Jersey Village) is now considered safe Democratic.",
+    detail: "Open seat. Jon Rosenthal vacated to run for Texas Railroad Commissioner. Odus Evbagharu (D), former Chair of the Harris County Democratic Party and Rosenthal's chief of staff, won the March primary. First Black HCD chair. After 2021 redistricting, district (northwest Houston / Cypress / Jersey Village) is now considered safe Democratic.",
   },
   "HD-137": {
     office: "State Representative, District 137",
@@ -384,7 +384,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Gene Wu",    party: "D", incumbent: true,  gender: "M", note: "Seeking reelection" },
       { name: "Helen Zhou", party: "R", incumbent: false, gender: "F", note: "R nominee" },
     ],
-    detail: "Gene Wu (HD-137, Bellaire/Westbury area) has served since 2013. D+ district with diverse demographics — Asian American, Latino, and Black communities. R challenger Helen Zhou.",
+    detail: "Gene Wu (HD-137, Bellaire/Westbury area) has served since 2013. D+ district with diverse demographics. Asian American, Latino, and Black communities. R challenger Helen Zhou.",
   },
   "HD-138": {
     office: "State Representative, District 138",
@@ -404,17 +404,17 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Armando Walle",       party: "D", incumbent: true,  gender: "M", note: "Seeking reelection" },
       { name: "Laura Garcia DeLeon", party: "R", incumbent: false, gender: "F", note: "R nominee" },
     ],
-    detail: "Armando Walle (HD-140, North Houston / Northside) has served since 2009. Heavily Latino district — safe D despite R challenger Laura Garcia DeLeon.",
+    detail: "Armando Walle (HD-140, North Houston / Northside) has served since 2009. Heavily Latino district. Safe D despite R challenger Laura Garcia DeLeon.",
   },
   "HD-141": {
     office: "State Representative, District 141",
     status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Senfronia Thompson", party: "D", incumbent: true,  gender: "F", note: "Dean of the Texas House — longest serving member" },
+      { name: "Senfronia Thompson", party: "D", incumbent: true,  gender: "F", note: "Dean of the Texas House. Longest serving member" },
       { name: "Julie Hunt",         party: "R", incumbent: false, gender: "F", note: "R nominee" },
     ],
-    detail: "Senfronia Thompson (HD-141, Sunnyside / Third Ward) has served continuously since 1973 — the longest-serving member of the Texas House. Heavily Democratic majority-Black district. R challenger Julie Hunt. All-women matchup.",
+    detail: "Senfronia Thompson (HD-141, Sunnyside / Third Ward) has served continuously since 1973. The longest-serving member of the Texas House. Heavily Democratic majority-Black district. R challenger Julie Hunt. All-women matchup.",
   },
   "HD-143": {
     office: "State Representative, District 143",
@@ -424,7 +424,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Ana Hernandez",  party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
       { name: "Frank Salazar",  party: "R", incumbent: false, gender: "M", note: "R nominee" },
     ],
-    detail: "Ana Hernandez (HD-143, East End / Galena Park) has served since 2006. Majority-Latino district along the Ship Channel — heavily Democratic.",
+    detail: "Ana Hernandez (HD-143, East End / Galena Park) has served since 2006. Majority-Latino district along the Ship Channel: heavily Democratic.",
   },
   "HD-145": {
     office: "State Representative, District 145",
@@ -483,7 +483,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "uncontested-d",
     sides: [
-      { name: "Rodney Ellis", party: "D", incumbent: true, gender: "M", note: "Incumbent — no R challenger filed" },
+      { name: "Rodney Ellis", party: "D", incumbent: true, gender: "M", note: "Incumbent. No R challenger filed" },
     ],
     detail: "Rodney Ellis has held PCT 1 since 2016. No Republican challenger filed by the filing deadline.",
   },
@@ -497,7 +497,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     ],
     detail: "Contested general election. Garcia has held PCT 2 since 2016.",
   },
-  // PCT-3: Tom Ramsey won November 2024 — term through December 2028. NOT on 2026 ballot.
+  // PCT-3: Tom Ramsey won November 2024. Term through December 2028. NOT on 2026 ballot.
   "PCT-4": {
     office: "Commissioner Precinct 4",
     status: "set",
@@ -506,27 +506,27 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Lesley Briones",  party: "D", incumbent: true,  gender: "F", note: "Incumbent; won PCT 4 in 2022 special" },
       { name: "Steve Radack",    party: "R", incumbent: false, gender: "M", note: "Former Commissioner PCT 3 (2003–2021); won 2026 R primary" },
     ],
-    detail: "Lesley Briones (D) won the 2022 special election for PCT 4, which leans Democratic. Former PCT 3 Commissioner Steve Radack (R) won the Republican primary for this seat — a rematch of sorts as he previously served in a neighboring precinct.",
+    detail: "Lesley Briones (D) won the 2022 special election for PCT 4, which leans Democratic. Former PCT 3 Commissioner Steve Radack (R) won the Republican primary for this seat. A rematch of sorts as he previously served in a neighboring precinct.",
   },
 
-  // Countywide offices — law enforcement & admin
+  // Countywide offices. Law enforcement & admin
   "HC-Sheriff": {
     office: "Harris County Sheriff",
     status: "set",
     lean: "uncontested-d",
     sides: [
-      { name: "Ed Gonzalez", party: "D", incumbent: true, gender: "M", note: "Incumbent — no R opponent filed" },
+      { name: "Ed Gonzalez", party: "D", incumbent: true, gender: "M", note: "Incumbent. No R opponent filed" },
     ],
-    detail: "Ed Gonzalez has held the Sheriff's office since 2017. No Republican filed for the general election — running uncontested.",
+    detail: "Ed Gonzalez has held the Sheriff's office since 2017. No Republican filed for the general election: running uncontested.",
   },
   "HC-DA": {
     office: "District Attorney",
     status: "set",
     lean: "uncontested-d",
     sides: [
-      { name: "Sean Teare", party: "D", incumbent: true, gender: "M", note: "Incumbent — no R opponent filed" },
+      { name: "Sean Teare", party: "D", incumbent: true, gender: "M", note: "Incumbent. No R opponent filed" },
     ],
-    detail: "Sean Teare has served as DA since 2022. No Republican filed for the general election — running uncontested.",
+    detail: "Sean Teare has served as DA since 2022. No Republican filed for the general election: running uncontested.",
   },
   "HC-County-Attorney": {
     office: "County Attorney",
@@ -536,7 +536,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Abbie Kamin",              party: "D", incumbent: true,  gender: "F", note: "Won D primary; appointed interim County Attorney by Commissioners Court Apr 2026" },
       { name: "Jacqueline Lucci Smith",   party: "R", incumbent: false, gender: "F", note: "Narrowly lost to Menefee in 2024; won R primary unopposed" },
     ],
-    detail: "Christian Menefee vacated to run for CD-18. Abbie Kamin (former Houston City Council Member H) won the D primary and was appointed interim County Attorney by a 3-2 Commissioners Court vote in April 2026 — making her the first woman in the role. R challenger Jacqueline Lucci Smith narrowly lost to Menefee in 2024. All-women matchup.",
+    detail: "Christian Menefee vacated to run for CD-18. Abbie Kamin (former Houston City Council Member H) won the D primary and was appointed interim County Attorney by a 3-2 Commissioners Court vote in April 2026. Making her the first woman in the role. R challenger Jacqueline Lucci Smith narrowly lost to Menefee in 2024. All-women matchup.",
   },
   "HC-District-Clerk": {
     office: "District Clerk",
@@ -546,7 +546,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Jose Maldonado",  party: "D", incumbent: false, gender: "M", note: "Won May D primary runoff over Darrell William Jordan" },
       { name: "Chris Daniel",    party: "R", incumbent: false, gender: "M", note: "Won R primary" },
     ],
-    detail: "Open seat — Marilyn Burgess announced she would not seek reelection after commissioners denied her raise request. Jose Maldonado won the May Democratic runoff. Chris Daniel is the R nominee.",
+    detail: "Open seat. Marilyn Burgess announced she would not seek reelection after commissioners denied her raise request. Jose Maldonado won the May Democratic runoff. Chris Daniel is the R nominee.",
   },
   "HC-County-Clerk": {
     office: "County Clerk",
@@ -556,9 +556,9 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Teneshia Hudspeth", party: "D", incumbent: true,  gender: "F", note: "Incumbent; first Black woman to hold office" },
       { name: "Mike Wolfe",        party: "R", incumbent: false, gender: "M", note: "Won May runoff over Lynda Sanchez" },
     ],
-    detail: "Teneshia Hudspeth has served as County Clerk since 2018 — the first Black woman to hold the office. R challenger Mike Wolfe defeated Lynda Sanchez in the Republican runoff.",
+    detail: "Teneshia Hudspeth has served as County Clerk since 2018. The first Black woman to hold the office. R challenger Mike Wolfe defeated Lynda Sanchez in the Republican runoff.",
   },
-  // HC-Tax-Assessor: Annette Ramirez won November 2024; term runs through December 2028 — NOT on 2026 ballot.
+  // HC-Tax-Assessor: Annette Ramirez won November 2024; term runs through December 2028. NOT on 2026 ballot.
   "HC-County-Treasurer": {
     office: "County Treasurer",
     status: "set",
@@ -573,7 +573,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   // NOTE: All 8 Harris County constables (PCT 1-8) were elected in November 2024
   // with 4-year terms running through December 2028. None are on the 2026 ballot.
 
-  // JP races with full matchups (others are partial — D only, R nominee TBD)
+  // JP races with full matchups (others are partial. D only, R nominee TBD)
   "JP-5-PL2": {
     office: "Justice of the Peace PCT 5 PL 2",
     status: "set",
@@ -582,16 +582,16 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Lisa Jefferson", party: "D", incumbent: false, gender: "F", note: "Won March primary" },
       { name: "Mark Fury",      party: "R", incumbent: false, gender: "M", note: "Won March primary over incumbent Bob Wolfe" },
     ],
-    detail: "Open competitive race — incumbent Bob Wolfe (R) lost his primary to Mark Fury.",
+    detail: "Open competitive race. Incumbent Bob Wolfe (R) lost his primary to Mark Fury.",
   },
   "JP-7-PL2": {
     office: "Justice of the Peace PCT 7 PL 2",
     status: "set",
     lean: "uncontested-d",
     sides: [
-      { name: "Melanie Miles", party: "D", incumbent: false, gender: "F", note: "Won May runoff over incumbent Sharon Burney; R primary canceled — no R nominee" },
+      { name: "Melanie Miles", party: "D", incumbent: false, gender: "F", note: "Won May runoff over incumbent Sharon Burney; R primary canceled. No R nominee" },
     ],
-    detail: "Melanie Miles beat incumbent Sharon Burney in the Democratic primary runoff. No Republican filed for the general election — Miles runs uncontested.",
+    detail: "Melanie Miles beat incumbent Sharon Burney in the Democratic primary runoff. No Republican filed for the general election: Miles runs uncontested.",
   },
   "TX-RailroadCommission": {
     office: "Texas Railroad Commissioner",
@@ -601,7 +601,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Jon Rosenthal", party: "D", incumbent: false, gender: "M", note: "Former State Rep HD-135; won March primary" },
       { name: "Bo French",     party: "R", incumbent: false, gender: "M", note: "Won May runoff over incumbent Jim Wright" },
     ],
-    detail: "Commissioner Jim Wright lost the May runoff to Bo French, who was backed by oil billionaires Tim Dunn and Farris Wilks — they funneled ~$1M through the Texas Freedom Fund PAC. Jon Rosenthal (4-term HD-135 rep, oilfield engineer) is the first credible Democratic challenger for a Railroad Commission seat since 1994. The RRC regulates Texas oil, gas, and pipeline safety.",
+    detail: "Commissioner Jim Wright lost the May runoff to Bo French, who was backed by oil billionaires Tim Dunn and Farris Wilks. They funneled ~$1M through the Texas Freedom Fund PAC. Jon Rosenthal (4-term HD-135 rep, oilfield engineer) is the first credible Democratic challenger for a Railroad Commission seat since 1994. The RRC regulates Texas oil, gas, and pipeline safety.",
   },
 
   // Harris County Probate Courts (all 4 on 2026 ballot)
@@ -633,7 +633,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Jason Cox",        party: "D", incumbent: true,  gender: "M", note: "Seeking reelection; openly LGBTQ+" },
       { name: "Ronald Schramm",   party: "R", incumbent: false, gender: "M", note: "R nominee; endorsed by HRBC" },
     ],
-    detail: "Jason Cox (D) has held Probate Court No. 3 since 2019 — one of the few openly LGBTQ+ judges in Harris County. He won reelection in 2022 and faces R challenger Ronald Schramm in 2026.",
+    detail: "Jason Cox (D) has held Probate Court No. 3 since 2019. One of the few openly LGBTQ+ judges in Harris County. He won reelection in 2022 and faces R challenger Ronald Schramm in 2026.",
   },
   "Probate-4": {
     office: "Probate Court No. 4",
@@ -646,7 +646,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     detail: "James Horwitz (D) has held Probate Court No. 4 since 2019. He defeated a D primary challenger (Lema Mousilli) before facing Fulton in the general.",
   },
 
-  // Harris County Criminal Courts at Law (countywide misdemeanor courts — all 15 on 2026 ballot)
+  // Harris County Criminal Courts at Law (countywide misdemeanor courts. All 15 on 2026 ballot)
   "CCL-1": {
     office: "County Criminal Court at Law No. 1",
     status: "set",
@@ -655,7 +655,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Alex Salgado",  party: "D", incumbent: true,  gender: "M", note: "Seeking reelection" },
       { name: "Erin Swanson",  party: "R", incumbent: false, gender: "F", note: "R nominee" },
     ],
-    detail: "Salgado has held CCL #1 since 2019. All 15 Harris County Criminal Courts at Law are countywide races — making them bellwethers for county-level partisan lean. Democrats swept all these seats in 2018 and have held most since.",
+    detail: "Salgado has held CCL #1 since 2019. All 15 Harris County Criminal Courts at Law are countywide races. Making them bellwethers for county-level partisan lean. Democrats swept all these seats in 2018 and have held most since.",
   },
   "CCL-2": {
     office: "County Criminal Court at Law No. 2",
@@ -665,7 +665,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Matthew Ruben Perez", party: "D", incumbent: false, gender: "M", note: "Won March primary; open seat" },
       { name: "Matt Alford",         party: "R", incumbent: false, gender: "M", note: "R nominee" },
     ],
-    detail: "Open seat — Judge Paula Goodhart is not seeking reelection. Both nominees are newcomers to the bench in this D-leaning countywide race.",
+    detail: "Open seat. Judge Paula Goodhart is not seeking reelection. Both nominees are newcomers to the bench in this D-leaning countywide race.",
   },
   "CCL-3": {
     office: "County Criminal Court at Law No. 3",
@@ -675,7 +675,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Allison Mathis",    party: "D", incumbent: false, gender: "F", note: "Criminal defense attorney; won March primary" },
       { name: "Leslie R. Johnson", party: "R", incumbent: true,  gender: "F", note: "Seeking reelection" },
     ],
-    detail: "Leslie Johnson holds CCL #3 as a Republican — one of the few R-held misdemeanor court seats in Harris County. D challenger Allison Mathis is a criminal defense attorney. All-women matchup in a county with a structural D lean.",
+    detail: "Leslie Johnson holds CCL #3 as a Republican. One of the few R-held misdemeanor court seats in Harris County. D challenger Allison Mathis is a criminal defense attorney. All-women matchup in a county with a structural D lean.",
   },
   "CCL-4": {
     office: "County Criminal Court at Law No. 4",
@@ -785,7 +785,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Yahaira Quezada",  party: "D", incumbent: false, gender: "F", note: "Won March D primary with 54.6% over James Hu" },
       { name: "Jessica N. Padilla", party: "R", incumbent: true,  gender: "F", note: "Republican incumbent seeking reelection" },
     ],
-    detail: "One of the most interesting judicial matchups of 2026 — a D challenger faces a R incumbent judge in a county-level race where Democrats have structural advantage. Padilla assumed office Jan 1, 2023; Quezada defeated James Hu in the D primary with 55% of the vote. All-women matchup.",
+    detail: "One of the most interesting judicial matchups of 2026. A D challenger faces a R incumbent judge in a county-level race where Democrats have structural advantage. Padilla assumed office Jan 1, 2023; Quezada defeated James Hu in the D primary with 55% of the vote. All-women matchup.",
   },
   "CCL-15": {
     office: "County Criminal Court at Law No. 15",
@@ -807,7 +807,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Stephanie Morales", party: "D", incumbent: false, gender: "F", note: "D nominee; incumbent DaSean Jones not seeking reelection" },
       { name: "Tami Pierce",       party: "R", incumbent: false, gender: "F", note: "R nominee" },
     ],
-    detail: "Open seat — incumbent DaSean Jones did not seek reelection. All-women matchup in a county that has trended decisively D since 2018.",
+    detail: "Open seat. Incumbent DaSean Jones did not seek reelection. All-women matchup in a county that has trended decisively D since 2018.",
   },
   "DC-182nd": {
     office: "182nd District Court",
@@ -837,7 +837,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Katherine Thomas", party: "D", incumbent: false, gender: "F", note: "D nominee; incumbent Anastasio not seeking reelection" },
       { name: "Heather Hudson",   party: "R", incumbent: false, gender: "F", note: "R nominee" },
     ],
-    detail: "Open seat — incumbent Abigail Anastasio did not seek reelection. All-women matchup.",
+    detail: "Open seat. Incumbent Abigail Anastasio did not seek reelection. All-women matchup.",
   },
   "DC-185th": {
     office: "185th District Court",
@@ -867,7 +867,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Robert Johnson", party: "D", incumbent: false, gender: "M", note: "Won D primary over Ysidra Kyles and Brian Warren" },
       { name: "Tony Coveny",    party: "R", incumbent: false, gender: "M", note: "R nominee" },
     ],
-    detail: "209th District Court. D primary had three candidates — Robert Johnson, Ysidra Kyles, and Brian Warren — with Johnson prevailing.",
+    detail: "209th District Court. D primary had three candidates. Robert Johnson, Ysidra Kyles, and Brian Warren: with Johnson prevailing.",
   },
   "DC-228th": {
     office: "228th District Court",
@@ -877,7 +877,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Alyson Almaguer", party: "D", incumbent: false, gender: "F", note: "Harris County ADA, Felony District Court Chief" },
       { name: "Caroline Dozier", party: "R", incumbent: true,  gender: "F", note: "Appointed by Gov. Abbott after Judge Frank Aguilar died" },
     ],
-    detail: "R incumbent Caroline Dozier was appointed by Gov. Abbott after Judge Frank Aguilar died in office. D challenger Alyson Almaguer is a Felony District Court Chief at the HC DA's office. All-women matchup — competitive given the name recognition that comes with an Abbott appointment.",
+    detail: "R incumbent Caroline Dozier was appointed by Gov. Abbott after Judge Frank Aguilar died in office. D challenger Alyson Almaguer is a Felony District Court Chief at the HC DA's office. All-women matchup. Competitive given the name recognition that comes with an Abbott appointment.",
   },
   "DC-230th": {
     office: "230th District Court",
@@ -887,7 +887,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Chris Morton", party: "D", incumbent: true,  gender: "M", note: "Seeking reelection" },
       { name: "Megan Long",   party: "R", incumbent: false, gender: "F", note: "Harris County ADA, Felony District Court Chief" },
     ],
-    detail: "Chris Morton holds the 230th as a Democratic incumbent. R challenger Megan Long is a Felony District Court Chief at the HC DA's office — a formidable opponent.",
+    detail: "Chris Morton holds the 230th as a Democratic incumbent. R challenger Megan Long is a Felony District Court Chief at the HC DA's office: a formidable opponent.",
   },
   "DC-232nd": {
     office: "232nd District Court",
@@ -927,7 +927,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Melissa Morris", party: "D", incumbent: true,  gender: "F", note: "Seeking reelection" },
       { name: "Jason Campo",    party: "R", incumbent: false, gender: "M", note: "Harris County ADA, Homicide Bureau Felony Chief" },
     ],
-    detail: "Melissa Morris holds the 263rd as a Democratic incumbent. R challenger Jason Campo is a Felony Chief in the HC DA's Homicide Bureau — among the most high-profile judicial matchups on the Harris County ballot.",
+    detail: "Melissa Morris holds the 263rd as a Democratic incumbent. R challenger Jason Campo is a Felony Chief in the HC DA's Homicide Bureau. Among the most high-profile judicial matchups on the Harris County ballot.",
   },
   "DC-482nd": {
     office: "482nd District Court",
@@ -947,7 +947,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Tiffany Hill",   party: "D", incumbent: false, gender: "F", note: "Criminal defense attorney; former Associate Judge" },
       { name: "Lori DeAngelo", party: "R", incumbent: true,  gender: "F", note: "Appointed by Gov. Abbott to newly-created court" },
     ],
-    detail: "R incumbent Lori DeAngelo was appointed by Gov. Abbott when this court was newly created. D challenger Tiffany Hill is a criminal defense attorney and former Associate Judge. All-women matchup — competitive given the Abbott appointment factor.",
+    detail: "R incumbent Lori DeAngelo was appointed by Gov. Abbott when this court was newly created. D challenger Tiffany Hill is a criminal defense attorney and former Associate Judge. All-women matchup. Competitive given the Abbott appointment factor.",
   },
   "DC-496th": {
     office: "496th District Court",
@@ -967,7 +967,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Breanna Schwartz", party: "D", incumbent: false, gender: "F", note: "D nominee" },
       { name: "Peyton Peebles",   party: "R", incumbent: false, gender: "M", note: "R nominee" },
     ],
-    detail: "Newly created court — open seat with no incumbent. Schwartz is the D nominee in a county race with a strong D structural lean.",
+    detail: "Newly created court. Open seat with no incumbent. Schwartz is the D nominee in a county race with a strong D structural lean.",
   },
 };
 

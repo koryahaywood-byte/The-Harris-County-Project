@@ -30,7 +30,7 @@ export async function POST(req: Request) {
   try {
     await readFile(filePath);
     return NextResponse.json({ status: "exists", path: `data/finance-history/${period}-${level}.json` });
-  } catch { /* doesn't exist — write it */ }
+  } catch { /* doesn't exist. Write it */ }
 
   const payload = {
     period,
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
   });
 }
 
-// GET /api/archive/finance?level=houston — list archived periods for a level
+// GET /api/archive/finance?level=houston. List archived periods for a level
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const level = searchParams.get("level");

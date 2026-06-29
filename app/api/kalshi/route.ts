@@ -4,7 +4,7 @@ export const revalidate = 300; // cache 5 minutes
 
 /* Kalshi prediction-market odds for November 2026 races.
    Uses the public elections API (no key needed). For each race we read the
-   "margin of victory 1+ pts" market on each party's event — its YES price is
+   "margin of victory 1+ pts" market on each party's event. Its YES price is
    the market's implied probability that side wins at all.
    GET /api/kalshi?race=CD-18 | US-Senate | TX-Gov */
 

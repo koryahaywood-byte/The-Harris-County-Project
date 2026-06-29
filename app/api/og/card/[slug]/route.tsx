@@ -27,7 +27,7 @@ export async function GET(
 
   const photoUrl = pol.photo ? `${origin}${pol.photo}` : null;
 
-  // Stat bar helper — returns a row of filled + empty blocks
+  // Stat bar helper. Returns a row of filled + empty blocks
   function StatBar({ value, label }: { value: number; label: string }) {
     const filled = Math.round((value / 99) * 10);
     return (
@@ -168,9 +168,9 @@ export async function GET(
           {/* three stat cells */}
           <div style={{ display: "flex", gap: 6, marginTop: 14 }}>
             {[
-              { v: pol.termStart ? String(pol.termStart) : "—", l: "First elected" },
-              { v: yearsIn !== null ? `${yearsIn} yrs` : "—", l: "In office" },
-              { v: cash ?? "—", l: "Cash on hand" },
+              { v: pol.termStart ? String(pol.termStart) : "–", l: "First elected" },
+              { v: yearsIn !== null ? `${yearsIn} yrs` : "–", l: "In office" },
+              { v: cash ?? "–", l: "Cash on hand" },
             ].map(({ v, l }) => (
               <div key={l} style={{
                 flex: 1,
@@ -195,7 +195,7 @@ export async function GET(
           </div>
         </div>
 
-        {/* ── RIGHT PANEL — big name + stat bars ── */}
+        {/* ── RIGHT PANEL. Big name + stat bars ── */}
         <div style={{
           display: "flex",
           flexDirection: "column",
@@ -248,7 +248,7 @@ export async function GET(
           </div>
         </div>
 
-        {/* party accent stripe — right edge */}
+        {/* party accent stripe: right edge */}
         <div style={{
           position: "absolute",
           right: 0,

@@ -1,20 +1,20 @@
-// Field Position — the directional performance score per precinct.
+// Field Position. The directional performance score per precinct.
 // Built ONLY from the four-cycle historical layer; methodology published in
 // full below and at /methodology. It answers one question: if November looked
 // like the recent past, which way does this precinct lean and how firmly?
 //
 //   Field Position = 100 × tanh( 2.2 × margin ) , displayed −100…+100
 //   where margin is a weighted blend of:
-//     55%  baseline   — average two-party D margin across 2020/2022/2024
-//     25%  trajectory — per-cycle D-margin trend, projected one cycle ahead
-//     12%  turnout    — turnout-trend adjustment: a precinct bleeding turnout
+//     55%  baseline  . Average two-party D margin across 2020/2022/2024
+//     25%  trajectory. Per-cycle D-margin trend, projected one cycle ahead
+//     12%  turnout   . Turnout-trend adjustment: a precinct bleeding turnout
 //                        weakens whichever side it favors (signal dampening)
-//      8%  composition— SSVR-share interaction with the countywide
+//      8%  composition– SSVR-share interaction with the countywide
 //                        same-ballot surname differential (descriptive only)
 //
 // Positive = Democratic field position, negative = Republican.
 // Confidence: high (3 cycles ≥25 votes), medium (2), low (1 or sparse).
-// This is a DIRECTIONAL SIGNAL from past behavior — not a forecast, not a
+// This is a DIRECTIONAL SIGNAL from past behavior. Not a forecast, not a
 // poll, and it knows nothing about candidates, money, or 2026 conditions.
 
 import {
@@ -31,7 +31,7 @@ export interface FieldPosition {
 }
 
 export const FIELD_POSITION_METHOD =
-  "Field Position = 100·tanh(2.2·m), m = 0.55·baseline margin (avg two-party D margin, 2020/2022/2024 top-of-ticket) + 0.25·trajectory (per-cycle margin trend projected one cycle) + 0.12·turnout adjustment (a precinct losing turnout has its lean dampened) + 0.08·composition (SSVR share × the countywide same-ballot surname differential, descriptive). Inputs: TLC certified returns on current precinct lines, TX SOS registration + Spanish-surname registration, 2020 Census VAP. It is a directional read of past behavior — not a forecast.";
+  "Field Position = 100·tanh(2.2·m), m = 0.55·baseline margin (avg two-party D margin, 2020/2022/2024 top-of-ticket) + 0.25·trajectory (per-cycle margin trend projected one cycle) + 0.12·turnout adjustment (a precinct losing turnout has its lean dampened) + 0.08·composition (SSVR share × the countywide same-ballot surname differential, descriptive). Inputs: TLC certified returns on current precinct lines, TX SOS registration + Spanish-surname registration, 2020 Census VAP. It is a directional read of past behavior: not a forecast.";
 
 function bucket(score: number): FieldPosition["label"] {
   if (score >= 40) return "Firm D";
@@ -42,7 +42,7 @@ function bucket(score: number): FieldPosition["label"] {
 }
 
 export function computeFieldPositions(h: PrecinctHistory, precincts: Set<string> | null): FieldPosition[] {
-  // Countywide surname differential (Cruz−Trump per SSVR bucket) — one number:
+  // Countywide surname differential (Cruz−Trump per SSVR bucket): one number:
   // the slope of differential vs bucket midpoint, used as a tiny composition term.
   const buckets = surnameAnalysis(h, null);
   const mids = [0.05, 0.175, 0.35, 0.6];

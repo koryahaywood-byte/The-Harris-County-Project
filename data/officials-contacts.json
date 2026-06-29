@@ -1,6 +1,6 @@
 {
   "_version": "2026-06-24",
-  "_note": "Contact pipeline for elected officials. Run `node scripts/scrape-contacts.mjs` weekly. Never overwrite confirmed data with blank — treat missing scraped data as a scrape failure. Phones verified from official .gov pages unless noted 'pending-scrape'.",
+  "_note": "Contact pipeline for elected officials. Run `node scripts/scrape-contacts.mjs` weekly. Never overwrite confirmed data with blank. Treat missing scraped data as a scrape failure. Phones verified from official .gov pages unless noted 'pending-scrape'.",
   "officials": [
     {
       "slug": "john-whitmire",
@@ -35,7 +35,7 @@
     {
       "slug": "amy-peck",
       "name": "Amy Peck",
-      "office": "City Council Member — District A",
+      "office": "City Council Member, District A",
       "jurisdiction": "city",
       "roleCategory": "legislative",
       "district": "District A",
@@ -50,7 +50,7 @@
     {
       "slug": "tarsha-jackson",
       "name": "Tarsha Jackson",
-      "office": "City Council Member — District B",
+      "office": "City Council Member, District B",
       "jurisdiction": "city",
       "roleCategory": "legislative",
       "district": "District B",
@@ -65,7 +65,7 @@
     {
       "slug": "joe-panzarella",
       "name": "Joe Panzarella",
-      "office": "City Council Member — District C",
+      "office": "City Council Member, District C",
       "jurisdiction": "city",
       "roleCategory": "legislative",
       "district": "District C",
@@ -80,7 +80,7 @@
     {
       "slug": "carolyn-evans-shabazz",
       "name": "Carolyn Evans-Shabazz",
-      "office": "City Council Member — District D",
+      "office": "City Council Member, District D",
       "jurisdiction": "city",
       "roleCategory": "legislative",
       "district": "District D",
@@ -95,7 +95,7 @@
     {
       "slug": "fred-flickinger",
       "name": "Fred Flickinger",
-      "office": "City Council Member — District E",
+      "office": "City Council Member, District E",
       "jurisdiction": "city",
       "roleCategory": "legislative",
       "district": "District E",
@@ -110,7 +110,7 @@
     {
       "slug": "tiffany-thomas",
       "name": "Tiffany Thomas",
-      "office": "City Council Member — District F",
+      "office": "City Council Member, District F",
       "jurisdiction": "city",
       "roleCategory": "legislative",
       "district": "District F",
@@ -125,7 +125,7 @@
     {
       "slug": "mary-nan-huffman",
       "name": "Mary Nan Huffman",
-      "office": "City Council Member — District G",
+      "office": "City Council Member, District G",
       "jurisdiction": "city",
       "roleCategory": "legislative",
       "district": "District G",
@@ -140,7 +140,7 @@
     {
       "slug": "mario-castillo",
       "name": "Mario Castillo",
-      "office": "City Council Member — District H",
+      "office": "City Council Member, District H",
       "jurisdiction": "city",
       "roleCategory": "legislative",
       "district": "District H",
@@ -155,7 +155,7 @@
     {
       "slug": "joaquin-martinez",
       "name": "Joaquin Martinez",
-      "office": "City Council Member — District I",
+      "office": "City Council Member, District I",
       "jurisdiction": "city",
       "roleCategory": "legislative",
       "district": "District I",
@@ -170,7 +170,7 @@
     {
       "slug": "ed-pollard",
       "name": "Ed Pollard",
-      "office": "City Council Member — District J",
+      "office": "City Council Member, District J",
       "jurisdiction": "city",
       "roleCategory": "legislative",
       "district": "District J",
@@ -185,7 +185,7 @@
     {
       "slug": "martha-castex-tatum",
       "name": "Martha Castex-Tatum",
-      "office": "City Council Member — District K",
+      "office": "City Council Member, District K",
       "jurisdiction": "city",
       "roleCategory": "legislative",
       "district": "District K",
@@ -200,7 +200,7 @@
     {
       "slug": "julian-ramirez",
       "name": "Julian Ramirez",
-      "office": "City Council Member — At-Large 1",
+      "office": "City Council Member, At-Large 1",
       "jurisdiction": "city",
       "roleCategory": "legislative",
       "district": "At-Large 1",
@@ -215,7 +215,7 @@
     {
       "slug": "willie-davis",
       "name": "Willie Davis",
-      "office": "City Council Member — At-Large 2",
+      "office": "City Council Member, At-Large 2",
       "jurisdiction": "city",
       "roleCategory": "legislative",
       "district": "At-Large 2",
@@ -230,7 +230,7 @@
     {
       "slug": "twila-carter",
       "name": "Twila Carter",
-      "office": "City Council Member — At-Large 3",
+      "office": "City Council Member, At-Large 3",
       "jurisdiction": "city",
       "roleCategory": "legislative",
       "district": "At-Large 3",
@@ -245,7 +245,7 @@
     {
       "slug": "alejandra-salinas",
       "name": "Alejandra Salinas",
-      "office": "City Council Member — At-Large 4",
+      "office": "City Council Member, At-Large 4",
       "jurisdiction": "city",
       "roleCategory": "legislative",
       "district": "At-Large 4",
@@ -260,7 +260,7 @@
     {
       "slug": "sallie-alcorn",
       "name": "Sallie Alcorn",
-      "office": "City Council Member — At-Large 5",
+      "office": "City Council Member, At-Large 5",
       "jurisdiction": "city",
       "roleCategory": "legislative",
       "district": "At-Large 5",
@@ -289,7 +289,7 @@
     {
       "name": "Rodney Ellis",
       "slug": "rodney-ellis",
-      "office": "Harris County Commissioner — Precinct 1",
+      "office": "Harris County Commissioner, Precinct 1",
       "jurisdiction": "county",
       "roleCategory": "legislative",
       "district": "Precinct 1",
@@ -303,7 +303,7 @@
     {
       "name": "Adrian Garcia",
       "slug": "adrian-garcia",
-      "office": "Harris County Commissioner — Precinct 2",
+      "office": "Harris County Commissioner, Precinct 2",
       "jurisdiction": "county",
       "roleCategory": "legislative",
       "district": "Precinct 2",
@@ -317,7 +317,7 @@
     {
       "name": "Tom Ramsey",
       "slug": "tom-ramsey",
-      "office": "Harris County Commissioner — Precinct 3",
+      "office": "Harris County Commissioner, Precinct 3",
       "jurisdiction": "county",
       "roleCategory": "legislative",
       "district": "Precinct 3",
@@ -331,7 +331,7 @@
     {
       "name": "Lesley Briones",
       "slug": "lesley-briones",
-      "office": "Harris County Commissioner — Precinct 4",
+      "office": "Harris County Commissioner, Precinct 4",
       "jurisdiction": "county",
       "roleCategory": "legislative",
       "district": "Precinct 4",
@@ -358,7 +358,7 @@
     },
     {
       "name": "Alan Rosen",
-      "office": "Constable — Precinct 1",
+      "office": "Constable, Precinct 1",
       "jurisdiction": "county",
       "roleCategory": "law-enforcement",
       "district": "Precinct 1",
@@ -371,7 +371,7 @@
     },
     {
       "name": "Isabel G Garcia",
-      "office": "Constable — Precinct 2",
+      "office": "Constable, Precinct 2",
       "jurisdiction": "county",
       "roleCategory": "law-enforcement",
       "district": "Precinct 2",
@@ -384,7 +384,7 @@
     },
     {
       "name": "Sherman Eagleton",
-      "office": "Constable — Precinct 3",
+      "office": "Constable, Precinct 3",
       "jurisdiction": "county",
       "roleCategory": "law-enforcement",
       "district": "Precinct 3",
@@ -397,7 +397,7 @@
     },
     {
       "name": "Mark Herman",
-      "office": "Constable — Precinct 4",
+      "office": "Constable, Precinct 4",
       "jurisdiction": "county",
       "roleCategory": "law-enforcement",
       "district": "Precinct 4",
@@ -410,7 +410,7 @@
     },
     {
       "name": "Terry Allbritton",
-      "office": "Constable — Precinct 5",
+      "office": "Constable, Precinct 5",
       "jurisdiction": "county",
       "roleCategory": "law-enforcement",
       "district": "Precinct 5",
@@ -423,7 +423,7 @@
     },
     {
       "name": "Silvia Trevino",
-      "office": "Constable — Precinct 6",
+      "office": "Constable, Precinct 6",
       "jurisdiction": "county",
       "roleCategory": "law-enforcement",
       "district": "Precinct 6",
@@ -436,7 +436,7 @@
     },
     {
       "name": "James Phillips",
-      "office": "Constable — Precinct 7",
+      "office": "Constable, Precinct 7",
       "jurisdiction": "county",
       "roleCategory": "law-enforcement",
       "district": "Precinct 7",
@@ -449,7 +449,7 @@
     },
     {
       "name": "Phil Sandlin",
-      "office": "Constable — Precinct 8",
+      "office": "Constable, Precinct 8",
       "jurisdiction": "county",
       "roleCategory": "law-enforcement",
       "district": "Precinct 8",
@@ -860,7 +860,7 @@
       "address": "4400 W 18th St, Houston TX 77092",
       "dataSource": "https://www.houstonisd.org/boardoftrustees",
       "lastVerified": "pending-scrape",
-      "_note": "Individual trustee records below — this is the board office"
+      "_note": "Individual trustee records below. This is the board office"
     },
     {
       "name": "Alief ISD Board of Trustees",
@@ -1044,7 +1044,7 @@
       "address": "4544 I-10 East, Baytown TX 77521",
       "dataSource": "https://www.gccisd.net",
       "lastVerified": "pending-scrape",
-      "_note": "Baytown area — parts of Harris County east"
+      "_note": "Baytown area. Parts of Harris County east"
     }
   ]
 }

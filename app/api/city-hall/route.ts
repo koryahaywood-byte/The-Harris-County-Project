@@ -7,7 +7,7 @@ async function archiveMeeting(date: string, data: CouncilMeetingData) {
   const dir = path.join(process.cwd(), "data", "council-meetings");
   const filePath = path.join(dir, `${date}.json`);
   await mkdir(dir, { recursive: true });
-  try { await readFile(filePath); return; } catch { /* doesn't exist — write it */ }
+  try { await readFile(filePath); return; } catch { /* doesn't exist. Write it */ }
   await writeFile(filePath, JSON.stringify({ ...data, archivedAt: new Date().toISOString() }, null, 2), "utf-8");
 }
 
@@ -123,7 +123,7 @@ async function generateTimeline(postContent: string, postTitle: string): Promise
 
   const client = new Anthropic({ apiKey });
 
-  const prompt = `You are analyzing a blog post from "Emily Takes Notes" — a civic journalist who covers Houston City Council meetings.
+  const prompt = `You are analyzing a blog post from "Emily Takes Notes". A civic journalist who covers Houston City Council meetings.
 
 Post title: "${postTitle}"
 
@@ -147,7 +147,7 @@ Respond with a JSON array of objects with these exact fields:
   "category": string
 }
 
-Each summary must be ONE sentence — punchy, plain English, no jargon. Under 20 words. What happened and why it matters.
+Each summary must be ONE sentence. Punchy, plain English, no jargon. Under 20 words. What happened and why it matters.
 
 Return ONLY the JSON array, no markdown, no other text. Extract 4-8 items.`;
 
@@ -180,7 +180,7 @@ Top items: ${topItems}
 Rules:
 - Sentence 1: the most important thing that happened. Specific. No fluff.
 - Sentence 2: the stakes or what it means for Houston residents.
-- No "Houston City Council" as the subject — start with the action or the issue.
+- No "Houston City Council" as the subject. Start with the action or the issue.
 - No quotes, no attribution, no hedging. Write it as confident fact.
 - Total: under 40 words.
 

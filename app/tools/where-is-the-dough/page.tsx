@@ -50,7 +50,7 @@ interface ScanResult {
 }
 
 function fmt$( n: number | null | undefined) {
-  if (n == null) return "—";
+  if (n == null) return "–";
   return "$" + n.toLocaleString();
 }
 
@@ -88,7 +88,7 @@ function FinanceScanner() {
           Finance File Scanner
         </h2>
         <p className="text-sm" style={{ color: "var(--muted)" }}>
-          Paste a TEC or Harris County C/OH PDF URL — Claude reads it and extracts totals, top donors, and top expenses instantly.
+          Paste a TEC or Harris County C/OH PDF URL. Claude reads it and extracts totals, top donors, and top expenses instantly.
         </p>
       </div>
 
@@ -273,7 +273,7 @@ function PortalSearch() {
           Portal Search
         </h2>
         <p className="text-sm" style={{ color: "var(--muted)" }}>
-          Search the Harris County or Houston COH campaign finance portals by name — no TEC number needed. Finds filings for any candidate, incumbent or challenger.
+          Search the Harris County or Houston COH campaign finance portals by name. No TEC number needed. Finds filings for any candidate, incumbent or challenger.
         </p>
       </div>
 
@@ -284,7 +284,7 @@ function PortalSearch() {
             type="text"
             value={name}
             onChange={e => setName(e.target.value)}
-            placeholder="Last, First  — e.g. Ellis, Rodney  or  Letitia Plummer"
+            placeholder="Last, First : e.g. Ellis, Rodney  or  Letitia Plummer"
             className="flex-1 px-4 py-2.5 rounded-full text-sm bg-white ring-1 ring-[var(--border)] focus:ring-[var(--accent)] focus:outline-none"
             required
           />
@@ -506,7 +506,7 @@ export default function WhereIsTheDough() {
   }, []);
 
   // Base is the pipeline-merged static data. Layer FEC + TEC live on top (both are
-  // clean JSON APIs with no PDF scraping — fast and reliable).
+  // clean JSON APIs with no PDF scraping: fast and reliable).
   const DATA: Candidate[] = FINANCE_DATA_MERGED.map(d => {
     if (d.level === "federal") {
       const live = fecData.find(l => l.name === d.name);
@@ -555,7 +555,7 @@ export default function WhereIsTheDough() {
   return (
     <div className="bg-[var(--background)] min-h-screen">
 
-      {/* ── Hero — Synex-style light, topo terrain ─────────────────────── */}
+      {/* ── Hero. Synex-style light, topo terrain ─────────────────────── */}
       <div className="px-6 py-14 md:py-20 relative overflow-hidden topo-hero" style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 60%,#f2f5f9 100%)" }}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_60%_at_85%_40%,rgba(37,99,168,0.10),transparent_70%)]"/>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_38%_45%_at_92%_80%,rgba(52,160,110,0.04),transparent_70%)]"/>
@@ -576,10 +576,10 @@ export default function WhereIsTheDough() {
             description="Cash-on-hand for every Harris County official, candidate, and challenger. TEC & FEC filings."
             summary={(() => {
               const scope = level === "all" ? "All levels"
-                : level === "county" && countyGroup !== "all" ? `Harris County — ${COUNTY_GROUPS[countyGroup]}`
+                : level === "county" && countyGroup !== "all" ? `Harris County: ${COUNTY_GROUPS[countyGroup]}`
                 : LEVEL_LABELS[level];
               const cash = filtered.reduce((s, d) => s + d.cash, 0);
-              return `${scope}: ${filtered.length} filers, ${fmt(cash)} cash on hand — via The Harris County Project`;
+              return `${scope}: ${filtered.length} filers, ${fmt(cash)} cash on hand. Via The Harris County Project`;
             })()}
             stats={[
               { label: "Filers", value: String(filtered.length) },
@@ -594,7 +594,7 @@ export default function WhereIsTheDough() {
               {[
                 fecData.length > 0 ? "Federal: FEC" : null,
                 tecData.length > 0 ? "State: TEC" : null,
-              ].filter(Boolean).join(" · ")} &mdash; live data
+              ].filter(Boolean).join(" · ")}: live data
               {fecFetchedAt && <span className="ml-1" style={{ color: "#94a3b8" }}>as of {new Date(fecFetchedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>}
             </p>
           )}
@@ -602,7 +602,7 @@ export default function WhereIsTheDough() {
             {[
               { label: "Democrat Total",    val: fmt(demTotal),         color: "#2563a8", sub: null },
               { label: "Republican Total",  val: fmt(repTotal),         color: "#dc2626", sub: null },
-              { label: "Biggest War Chest", val: biggest ? fmt(biggest.cash) : "—", color: "#b45309", sub: biggest?.name ?? null },
+              { label: "Biggest War Chest", val: biggest ? fmt(biggest.cash) : "–", color: "#b45309", sub: biggest?.name ?? null },
             ].map(({ label, val, color, sub }) => (
               <div key={label} className="hcp-card rounded-2xl px-5 py-3">
                 <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: "#94a3b8" }}>{label}</p>
@@ -626,7 +626,7 @@ export default function WhereIsTheDough() {
                 </div>
                 {biggest && (biggest.level === "state" || biggest.level === "federal") && (
                   <p className="text-[9px] mt-1.5 leading-snug" style={{ color: "#9ca3af" }}>
-                    Statewide filings — {biggest.name}&rsquo;s {fmt(biggest.cash)} alone — inflate this split; county-level cash runs far closer.
+                    Statewide filings: {biggest.name}&rsquo;s {fmt(biggest.cash)} alone. Inflate this split; county-level cash runs far closer.
                   </p>
                 )}
               </div>
@@ -705,10 +705,10 @@ export default function WhereIsTheDough() {
                 eyebrow: "County Power",
                 color: "#2563eb",
                 border: "#3b82f6",
-                stat: ellis ? fmt(ellis.cash) : "—",
+                stat: ellis ? fmt(ellis.cash) : "–",
                 statLabel: "Rodney Ellis · PCT 1",
                 headline: "Rodney Ellis has more cash than every other commissioner combined.",
-                body: `Commissioner Ellis's ${ellis ? fmt(ellis.cash) : "—"} war chest dwarfs his colleagues — Briones has ${briones ? fmt(briones.cash) : "—"}, Garcia ${garcia ? fmt(garcia.cash) : "—"}, Ramsey ${ramsey ? fmt(ramsey.cash) : "—"}. Ellis is up in 2026, and that pile signals to any challenger: this seat won't be cheap.`,
+                body: `Commissioner Ellis's ${ellis ? fmt(ellis.cash) : "–"} war chest dwarfs his colleagues: Briones has ${briones ? fmt(briones.cash) : "–"}, Garcia ${garcia ? fmt(garcia.cash) : "–"}, Ramsey ${ramsey ? fmt(ramsey.cash) : "–"}. Ellis is up in 2026, and that pile signals to any challenger: this seat won't be cheap.`,
                 links: [
                   { label: "Ellis finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=Rodney+Ellis" },
                   { label: "PCT 1 ballot →", href: "/tools/ballot-2026?q=Rodney+Ellis" },
@@ -718,10 +718,10 @@ export default function WhereIsTheDough() {
                 eyebrow: "Senate Race",
                 color: "#7c3aed",
                 border: "#a78bfa",
-                stat: talarico ? fmt(talarico.cash) : "—",
+                stat: talarico ? fmt(talarico.cash) : "–",
                 statLabel: "Talarico · D nominee",
                 headline: "Talarico enters November with a near 4-to-1 cash lead over Paxton.",
-                body: `James Talarico (D) holds ${talarico ? fmt(talarico.cash) : "—"} cash on hand to Ken Paxton's ${paxton ? fmt(paxton.cash) : "—"} for Texas's first open Senate seat in 24 years. Paxton got here by beating four-term incumbent John Cornyn — who burned ${cornyn ? fmt(cornyn.spent ?? 0) : "—"} defending the seat and still lost the May runoff.`,
+                body: `James Talarico (D) holds ${talarico ? fmt(talarico.cash) : "–"} cash on hand to Ken Paxton's ${paxton ? fmt(paxton.cash) : "–"} for Texas's first open Senate seat in 24 years. Paxton got here by beating four-term incumbent John Cornyn: who burned ${cornyn ? fmt(cornyn.spent ?? 0) : "–"} defending the seat and still lost the May runoff.`,
                 links: [
                   { label: "Talarico finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=James+Talarico" },
                   { label: "Paxton finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=Ken+Paxton" },
@@ -732,10 +732,10 @@ export default function WhereIsTheDough() {
                 eyebrow: "City Hall",
                 color: "#059669",
                 border: "#10b981",
-                stat: whitmire ? fmt(whitmire.cash) : "—",
+                stat: whitmire ? fmt(whitmire.cash) : "–",
                 statLabel: "Mayor Whitmire",
-                headline: "The Mayor isn't up until 2027 — and he's sitting on nearly $3M.",
-                body: `John Whitmire holds ${whitmire ? fmt(whitmire.cash) : "—"} with no election until 2027. City Controller Chris Hollins — widely viewed as a likely mayoral candidate — has banked ${hollins ? fmt(hollins.cash) : "—"}. Council member Ed Pollard holds ${pollard ? fmt(pollard.cash) : "—"}, the most of any council seat, and is also seen as a future citywide contender.`,
+                headline: "The Mayor isn't up until 2027. And he's sitting on nearly $3M.",
+                body: `John Whitmire holds ${whitmire ? fmt(whitmire.cash) : "–"} with no election until 2027. City Controller Chris Hollins. Widely viewed as a likely mayoral candidate: has banked ${hollins ? fmt(hollins.cash) : "–"}. Council member Ed Pollard holds ${pollard ? fmt(pollard.cash) : "–"}, the most of any council seat, and is also seen as a future citywide contender.`,
                 links: [
                   { label: "Whitmire finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=John+Whitmire" },
                   { label: "Hollins finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=Chris+Hollins" },
@@ -745,10 +745,10 @@ export default function WhereIsTheDough() {
                 eyebrow: "Commissioner PCT 4",
                 color: "#b45309",
                 border: "#d97706",
-                stat: briones ? fmt(briones.cash) : "—",
+                stat: briones ? fmt(briones.cash) : "–",
                 statLabel: "Briones · PCT 4 incumbent",
                 headline: `Briones leads the county's only contested commissioner race with a 10-to-1 cash edge over Radack.`,
-                body: `Commissioner Lesley Briones is sitting on ${briones ? fmt(briones.cash) : "—"} as she heads into her first reelection bid. Her Republican challenger, Steve Radack, ran neighboring Precinct 3 from 2003 to 2021 and won the 2026 primary for this seat — he reports ${radack ? fmt(radack.cash) : "—"}. Money alone won't decide it, but the gap signals the institutional backing Radack lost when he left office.`,
+                body: `Commissioner Lesley Briones is sitting on ${briones ? fmt(briones.cash) : "–"} as she heads into her first reelection bid. Her Republican challenger, Steve Radack, ran neighboring Precinct 3 from 2003 to 2021 and won the 2026 primary for this seat: he reports ${radack ? fmt(radack.cash) : "–"}. Money alone won't decide it, but the gap signals the institutional backing Radack lost when he left office.`,
                 links: [
                   { label: "Briones finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=Lesley+Briones" },
                   { label: "PCT 4 ballot →", href: "/tools/ballot-2026?q=Lesley+Briones" },
@@ -841,7 +841,7 @@ export default function WhereIsTheDough() {
         {/* ── LEADERBOARD ───────────────────────────────────────────── */}
         {tab === "leaderboard" && (
           <div>
-            {/* Head-to-head duel bars — only when level filter would show both parties */}
+            {/* Head-to-head duel bars. Only when level filter would show both parties */}
             {party === "all" && !search && (() => {
               const levelData = DATA.filter(d => level === "all" || d.level === level)
                 .filter(d => level !== "county" || countyGroup === "all" || countyGroupOf(d.office) === countyGroup);
@@ -870,7 +870,7 @@ export default function WhereIsTheDough() {
               return (
                 <div className="mb-6 rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
                   <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
-                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-4" style={{ color: "#9ca3af" }}>Head-to-head — cash on hand</p>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-4" style={{ color: "#9ca3af" }}>Head-to-head: cash on hand</p>
                     <div className="space-y-3">
                       {pairs.slice(0, 8).map((p, i) => {
                         const d = p.d!, r = p.r!;
@@ -938,7 +938,7 @@ export default function WhereIsTheDough() {
                     <div key={`${c.name}-${i}`}
                       className="flex items-center gap-4 px-5 py-4 border-b border-[var(--border)] last:border-0 hover:bg-black/[0.018] transition-colors duration-200">
                       {/* Rank */}
-                      <span className={`w-6 flex-shrink-0 text-center text-xs font-bold ${rankColor}`}>{c.cash > 0 ? i + 1 : "—"}</span>
+                      <span className={`w-6 flex-shrink-0 text-center text-xs font-bold ${rankColor}`}>{c.cash > 0 ? i + 1 : "–"}</span>
                       {/* Avatar */}
                       <div
                         className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-white text-[11px] font-bold"

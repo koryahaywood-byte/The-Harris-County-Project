@@ -1,10 +1,10 @@
-// Follow an Official — email-only v1.
+// Follow an Official: email-only v1.
 // POST { email, slug }  → subscribe   |  GET → subscriber list (alert queue)
 //
 // Storage: append-only JSONL at data/follows/follows.jsonl (the repo's
 // archive-first pattern). On Vercel the filesystem is ephemeral, so every
 // follow is ALSO forwarded to EMAIL_WEBHOOK_URL (same channel as the email
-// gate) — the webhook sheet is the durable subscriber store until a KV is
+// gate). The webhook sheet is the durable subscriber store until a KV is
 // wired. The alert worker (scripts/send-follow-alerts.mjs) consumes the
 // local file when run on a machine with the repo.
 
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     if (!existsSync(DIR)) mkdirSync(DIR, { recursive: true });
     appendFileSync(FILE, JSON.stringify(record) + "\n");
   } catch {
-    // Ephemeral FS (Vercel) — webhook below is the durable copy
+    // Ephemeral FS (Vercel). Webhook below is the durable copy
   }
 
   // Durable forward
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
       await fetch(webhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...record, source: "The Harris County Project — Follow an Official" }),
+        body: JSON.stringify({ ...record, source: "The Harris County Project. Follow an Official" }),
       });
     } catch { /* don't block the user */ }
   }

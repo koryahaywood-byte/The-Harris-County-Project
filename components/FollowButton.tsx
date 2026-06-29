@@ -1,6 +1,6 @@
 "use client";
 
-// Follow an Official — email capture on the profile hero.
+// Follow an Official. Email capture on the profile hero.
 // Alerts on: new finance filings, significant fundraising moves, bill movement.
 
 import { useState } from "react";
@@ -24,7 +24,7 @@ export default function FollowButton({ slug, name }: { slug: string; name: strin
       if (!res.ok) { setError(data.error ?? "Something went wrong."); setState("error"); return; }
       setState("done");
     } catch {
-      setError("Network error — try again."); setState("error");
+      setError("Network error: try again."); setState("error");
     }
   }
 
@@ -32,7 +32,7 @@ export default function FollowButton({ slug, name }: { slug: string; name: strin
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
         style={{ background: "rgba(74,222,128,0.12)", color: "#4ade80", border: "1px solid rgba(74,222,128,0.3)" }}>
-        ✓ Following {name.split(" ")[0]} — alerts on new filings & bill movement
+        ✓ Following {name.split(" ")[0]}. Alerts on new filings & bill movement
       </span>
     );
   }

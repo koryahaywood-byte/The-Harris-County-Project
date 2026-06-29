@@ -26,7 +26,7 @@
   },
   "harris_county": {
     "source": "https://ethics.harrisvotes.com/CampaignFinanceReports/COR.aspx",
-    "note": "Follows TEC schedule — same Jan 15 and Jul 15 semi-annual deadlines",
+    "note": "Follows TEC schedule. Same Jan 15 and Jul 15 semi-annual deadlines",
     "deadlines": [
       { "type": "Semi-annual (Jan)", "due": "2026-01-15", "period": "Jul–Dec 2025" },
       { "type": "Semi-annual (Jul)", "due": "2026-07-15", "period": "Jan–Jun 2026" }
@@ -34,7 +34,7 @@
   },
   "houston_coh": {
     "source": "https://cohweb.houstontx.gov/CampaignFinanceWeb/CFRwebsiteSearch.aspx",
-    "note": "City of Houston has its own schedule — roughly mirrors TEC semi-annual but check annually",
+    "note": "City of Houston has its own schedule. Roughly mirrors TEC semi-annual but check annually",
     "deadlines": [
       { "type": "Semi-annual (Jan)", "due": "2026-01-15", "period": "Jul–Dec 2025" },
       { "type": "Semi-annual (Jul)", "due": "2026-07-15", "period": "Jan–Jun 2026" }

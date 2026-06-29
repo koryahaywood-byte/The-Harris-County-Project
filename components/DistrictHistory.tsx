@@ -1,6 +1,6 @@
 "use client";
 
-// The historical depth layer — four cycles of precinct-level data in one
+// The historical depth layer. Four cycles of precinct-level data in one
 // panel: partisan trend with linear projection, a combined
 // demographics × turnout × performance view, and the surname-origin
 // performance module (research-grade, caveat embedded in the viz).
@@ -87,7 +87,7 @@ function TrendChart({ h, precincts }: { h: PrecinctHistory; precincts: Set<strin
       </p>
       <p className="text-[10px] mt-1" style={{ color: MUTED }}>
         2020–2024 statewide top-of-ticket results re-tabulated on current precinct lines (Texas
-        Legislative Council). The dashed projection is a least-squares line on three points —
+        Legislative Council). The dashed projection is a least-squares line on three points –
         a trajectory, not a forecast. The 2026 primary point measures participation, not a
         head-to-head result, so it is reported separately.
       </p>
@@ -141,7 +141,7 @@ function CombinedView({ h, precincts }: { h: PrecinctHistory; precincts: Set<str
             r={2 + p.turnout24 * 5}
             fill={p.trendSlope > 0.002 ? D_BLUE : p.trendSlope < -0.002 ? R_RED : "#6b7280"}
             opacity="0.45">
-            <title>{`Precinct ${p.prec} — ${pct(p[axis])} ${axis === "hispShare" ? "Hispanic" : "Black"} VAP · ${pct(p.dShare24, 1)} D 2024 · ${pct(p.turnout24)} turnout · trend ${p.trendSlope > 0 ? "+" : ""}${(p.trendSlope * 100).toFixed(1)}pp/cycle`}</title>
+            <title>{`Precinct ${p.prec}. ${pct(p[axis])} ${axis === "hispShare" ? "Hispanic" : "Black"} VAP · ${pct(p.dShare24, 1)} D 2024 · ${pct(p.turnout24)} turnout · trend ${p.trendSlope > 0 ? "+" : ""}${(p.trendSlope * 100).toFixed(1)}pp/cycle`}</title>
           </circle>
         ))}
         <text x={W - padR} y={H - 10} textAnchor="end" fontSize="9" fill={MUTED}>→ {axis === "hispShare" ? "Hispanic" : "Black"} share of voting-age population</text>
@@ -157,7 +157,7 @@ function CombinedView({ h, precincts }: { h: PrecinctHistory; precincts: Set<str
   );
 }
 
-/* ── 3. Field Position — directional precinct model ─────────────────────── */
+/* ── 3. Field Position. Directional precinct model ─────────────────────── */
 function FieldPositionModule({ h, precincts }: { h: PrecinctHistory; precincts: Set<string> | null }) {
   const [showMethod, setShowMethod] = useState(false);
   const fps = useMemo(() => computeFieldPositions(h, precincts), [h, precincts]);
@@ -178,7 +178,7 @@ function FieldPositionModule({ h, precincts }: { h: PrecinctHistory; precincts: 
       <p className="text-xs leading-relaxed mb-3" style={{ color: "#374151" }}>
         Average Field Position here: <strong style={{ color: sum.avg >= 0 ? D_BLUE : R_RED }}>
         {sum.avg > 0 ? "+" : ""}{sum.avg}</strong> on a −100 (firm Republican) to +100 (firm Democratic)
-        scale, from four cycles of certified results. A signal from past behavior — not a forecast.
+        scale, from four cycles of certified results. A signal from past behavior: not a forecast.
       </p>
       <div className="flex h-[18px] rounded-full overflow-hidden mb-2" style={{ background: "#00000008" }}>
         {ORDER.map(k => sum.counts[k] > 0 && (
@@ -223,7 +223,7 @@ function SurnameModule({ h, precincts }: { h: PrecinctHistory; precincts: Set<st
   return (
     <div>
       <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: MUTED }}>
-        Cruz vs Trump in 2024 — the surname effect
+        Cruz vs Trump in 2024: the surname effect
       </p>
       <p className="text-[10px] mb-3 leading-relaxed" style={{ color: MUTED }}>
         Both appeared on the same ballot. Any gap between them is a <em>candidate</em> effect, not a party one.
@@ -272,7 +272,7 @@ function SurnameModule({ h, precincts }: { h: PrecinctHistory; precincts: Set<st
 
       <p className="text-[9px] mt-3 leading-relaxed" style={{ color: MUTED }}>
         Republican vote share within R+D two-way total. Buckets by Spanish-surname voter registration (SSVR) share.
-        Party held constant — isolates candidate effect only. Data: 2024 TX SOS returns.
+        Party held constant. Isolates candidate effect only. Data: 2024 TX SOS returns.
       </p>
     </div>
   );

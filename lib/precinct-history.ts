@@ -1,5 +1,5 @@
 // Client-side helpers for the historical precinct layer (the moat).
-// Data: public/data/precinct-history.json — four cycles of precinct-level
+// Data: public/data/precinct-history.json. Four cycles of precinct-level
 // returns (2020/2022/2024 general + 2026 primary), voter registration,
 // turnout, Spanish-surname voter registration (SSVR), and 2020 Census VAP
 // demographics, all keyed to current Harris County precinct numbers.
@@ -113,7 +113,7 @@ export function combinedPoints(h: PrecinctHistory, precincts: Set<string> | null
     const v24 = h.cycles["2024G"].voter![prec];
     if (!demo || !demo.vap || !v24?.reg) continue;
     const d = votes[i24.d] ?? 0, r = votes[i24.r] ?? 0;
-    if (d + r < 25) continue; // skip tiny precincts — share is noise
+    if (d + r < 25) continue; // skip tiny precincts: share is noise
 
     const series = perCycle.map(({ key, race, idx }) => {
       const vv = race.votes[prec];

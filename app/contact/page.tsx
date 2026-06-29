@@ -11,7 +11,7 @@ const TYPES: { value: FeedbackType; label: string; description: string }[] = [
   { value: "general",      label: "General",        description: "Something else" },
 ];
 
-// Formspree endpoint — free tier, no backend needed
+// Formspree endpoint. Free tier, no backend needed
 const FORMSPREE_URL = "https://formspree.io/f/xwpkgqvj";
 
 export default function ContactPage() {
@@ -42,7 +42,7 @@ export default function ContactPage() {
         setError("Something went wrong. Please email us directly at koryahaywood@gmail.com");
       }
     } catch {
-      setError("Could not send — please email koryahaywood@gmail.com directly.");
+      setError("Could not send: please email koryahaywood@gmail.com directly.");
     } finally {
       setLoading(false);
     }
@@ -75,7 +75,7 @@ export default function ContactPage() {
                 </svg>
               </div>
               <h2 className="text-xl font-bold text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair), serif" }}>
-                Message received — thank you
+                Message received: thank you
               </h2>
               <p className="text-[var(--muted)] text-sm max-w-xs leading-relaxed">
                 We read every submission and use them to improve the site.

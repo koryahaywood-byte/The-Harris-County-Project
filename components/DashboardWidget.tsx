@@ -17,7 +17,7 @@ const TIER_META = {
   federal: { label: "D.C.",    color: "#2563a8", desc: "Congress & the White House" },
 };
 
-// ── Notable days lookup — MM-DD keyed ───────────────────────────────────────
+// ── Notable days lookup: MM-DD keyed ───────────────────────────────────────
 // Covers federal holidays, national/international observances, Texas-specific
 // days, and standing civic deadlines. Shown in the Agenda card.
 const NOTABLE_DAYS: Record<string, { label: string; emoji: string; type: "holiday" | "civic" | "observance" | "fun" }[]> = {
@@ -43,7 +43,7 @@ const NOTABLE_DAYS: Record<string, { label: string; emoji: string; type: "holida
 
   // April
   "04-01": [{ label: "April Fools' Day", emoji: "🃏", type: "fun" }],
-  "04-15": [{ label: "Tax Day — federal returns due", emoji: "📋", type: "civic" }],
+  "04-15": [{ label: "Tax Day. Federal returns due", emoji: "📋", type: "civic" }],
   "04-22": [{ label: "Earth Day", emoji: "🌎", type: "observance" }],
 
   // May
@@ -55,7 +55,7 @@ const NOTABLE_DAYS: Record<string, { label: string; emoji: string; type: "holida
   // June
   "06-01": [{ label: "Pride Month begins", emoji: "🏳️‍🌈", type: "observance" }],
   "06-10": [{ label: "National Iced Tea Day", emoji: "🧋", type: "fun" }],
-  "06-19": [{ label: "Juneteenth — Federal Holiday", emoji: "✊", type: "holiday" }],
+  "06-19": [{ label: "Juneteenth. Federal Holiday", emoji: "✊", type: "holiday" }],
   "06-20": [{ label: "Juneteenth (observed)", emoji: "✊", type: "holiday" }],
   "06-21": [{ label: "Summer Solstice", emoji: "☀️", type: "fun" }],
 
@@ -74,14 +74,14 @@ const NOTABLE_DAYS: Record<string, { label: string; emoji: string; type: "holida
 
   // October
   "10-02": [{ label: "World Habitat Day", emoji: "🏘️", type: "observance" }],
-  "10-06": [{ label: "Voter Registration Deadline — November 2026 Election", emoji: "🗳️", type: "civic" }],
+  "10-06": [{ label: "Voter Registration Deadline. November 2026 Election", emoji: "🗳️", type: "civic" }],
   "10-09": [{ label: "Indigenous Peoples' Day", emoji: "🪶", type: "observance" }],
   "10-13": [{ label: "Columbus Day (federal)", emoji: "🚢", type: "holiday" }],
   "10-15": [{ label: "Hispanic Heritage Month ends", emoji: "🌮", type: "observance" }],
   "10-31": [{ label: "Halloween", emoji: "🎃", type: "fun" }],
 
   // November
-  "11-03": [{ label: "Election Day — Harris County General Election 2026", emoji: "🗳️", type: "civic" }],
+  "11-03": [{ label: "Election Day. Harris County General Election 2026", emoji: "🗳️", type: "civic" }],
   "11-11": [{ label: "Veterans Day", emoji: "🎖️", type: "holiday" }],
   "11-26": [{ label: "Thanksgiving Day", emoji: "🦃", type: "holiday" }],
 
@@ -98,16 +98,16 @@ function getNotableDays(todayStr: string) {
   return NOTABLE_DAYS[mmdd] ?? [];
 }
 
-// ── Political quotes — rotates daily ────────────────────────────────────────
+// ── Political quotes: rotates daily ────────────────────────────────────────
 const QUOTES = [
   { text: "Nearly all men can stand adversity, but if you want to test a man's character, give him power.", author: "Abraham Lincoln", title: "16th President" },
   { text: "The most terrifying words in the English language are: I'm from the government and I'm here to help.", author: "Ronald Reagan", title: "40th President" },
-  { text: "Ask not what your country can do for you — ask what you can do for your country.", author: "John F. Kennedy", title: "35th President" },
+  { text: "Ask not what your country can do for you. Ask what you can do for your country.", author: "John F. Kennedy", title: "35th President" },
   { text: "Democracy is not a spectator sport.", author: "Lyndon B. Johnson", title: "36th President" },
   { text: "The price of apathy towards public affairs is to be ruled by evil men.", author: "Plato", title: "Philosopher" },
   { text: "In politics, nothing happens by accident. If it happens, you can bet it was planned that way.", author: "Franklin D. Roosevelt", title: "32nd President" },
   { text: "The basis of our political system is the right of the people to make and to alter their constitutions of government.", author: "George Washington", title: "1st President" },
-  { text: "Politics is the art of the possible, the attainable — the art of the next best.", author: "Otto von Bismarck", title: "German Chancellor" },
+  { text: "Politics is the art of the possible, the attainable. The art of the next best.", author: "Otto von Bismarck", title: "German Chancellor" },
   { text: "One of the penalties for refusing to participate in politics is that you end up being governed by your inferiors.", author: "Plato", title: "Philosopher" },
   { text: "Change will not come if we wait for some other person or some other time.", author: "Barack Obama", title: "44th President" },
   { text: "The only thing necessary for the triumph of evil is for good men to do nothing.", author: "Edmund Burke", title: "Statesman" },
@@ -146,21 +146,21 @@ const MOMENTS: { m: number; d: number; year: number; text: string }[] = [
   { m: 2, d: 1,  year: 2003, text: "Space Shuttle Columbia was lost on reentry; Mission Control in Houston led the nation's mourning and the program's reckoning." },
   { m: 2, d: 20, year: 1962, text: "From Mission Control's predecessor era, Houston tracked John Glenn as he became the first American to orbit the Earth." },
   { m: 3, d: 2,  year: 1836, text: "Texas declared independence at Washington-on-the-Brazos; within months the new republic's seat of government would be Harris County." },
-  { m: 3, d: 22, year: 1967, text: "Muhammad Ali was stripped of his title after refusing induction at the Houston induction center — a case that began in Harris County and ended at the Supreme Court." },
-  { m: 4, d: 9,  year: 1965, text: "The Astrodome opened — the world's first domed stadium, billed as the Eighth Wonder of the World." },
-  { m: 4, d: 21, year: 1836, text: "The Battle of San Jacinto was fought in present-day Harris County — 18 minutes that won Texas its independence." },
+  { m: 3, d: 22, year: 1967, text: "Muhammad Ali was stripped of his title after refusing induction at the Houston induction center. A case that began in Harris County and ended at the Supreme Court." },
+  { m: 4, d: 9,  year: 1965, text: "The Astrodome opened. The world's first domed stadium, billed as the Eighth Wonder of the World." },
+  { m: 4, d: 21, year: 1836, text: "The Battle of San Jacinto was fought in present-day Harris County. 18 minutes that won Texas its independence." },
   { m: 5, d: 11, year: 1969, text: "Mission Control in Houston cleared Apollo 10 for its lunar dress rehearsal, the final test before the Moon landing." },
-  { m: 6, d: 5,  year: 1837, text: "Houston was incorporated as a city — and briefly served as capital of the Republic of Texas." },
+  { m: 6, d: 5,  year: 1837, text: "Houston was incorporated as a city. And briefly served as capital of the Republic of Texas." },
   { m: 6, d: 19, year: 1865, text: "Juneteenth: Union troops in Galveston announced emancipation. Freed Houstonians later pooled $800 to buy Emancipation Park, the city's oldest." },
   { m: 7, d: 20, year: 1969, text: "“Houston, Tranquility Base here. The Eagle has landed.” The first word spoken from the Moon was this county's name." },
-  { m: 8, d: 25, year: 2017, text: "Hurricane Harvey made landfall — over 50 inches of rain on parts of Harris County, the heaviest tropical rainfall in U.S. history." },
-  { m: 8, d: 30, year: 1836, text: "The Allen brothers advertised lots in a new town on Buffalo Bayou named for Sam Houston — the city's founding day." },
-  { m: 9, d: 8,  year: 1900, text: "The Great Galveston Hurricane killed thousands and shifted Texas commerce inland — the disaster that made Houston the region's port and metropolis." },
-  { m: 9, d: 12, year: 1962, text: "At Rice University, President Kennedy declared “we choose to go to the Moon” — and Houston became Space City." },
+  { m: 8, d: 25, year: 2017, text: "Hurricane Harvey made landfall. Over 50 inches of rain on parts of Harris County, the heaviest tropical rainfall in U.S. history." },
+  { m: 8, d: 30, year: 1836, text: "The Allen brothers advertised lots in a new town on Buffalo Bayou named for Sam Houston. The city's founding day." },
+  { m: 9, d: 8,  year: 1900, text: "The Great Galveston Hurricane killed thousands and shifted Texas commerce inland. The disaster that made Houston the region's port and metropolis." },
+  { m: 9, d: 12, year: 1962, text: "At Rice University, President Kennedy declared “we choose to go to the Moon”. And Houston became Space City." },
   { m: 10, d: 14, year: 1947, text: "Chuck Yeager broke the sound barrier in an aircraft program with deep Houston-area aerospace roots to follow." },
   { m: 11, d: 7,  year: 1972, text: "Houston's Barbara Jordan became the first Black woman elected to Congress from the South." },
-  { m: 11, d: 10, year: 1914, text: "The deep-water Houston Ship Channel formally opened — President Wilson fired the opening cannon by remote telegraph." },
-  { m: 12, d: 4,  year: 1998, text: "The Unity module launched — the first U.S.-built piece of the International Space Station, run from Johnson Space Center." },
+  { m: 11, d: 10, year: 1914, text: "The deep-water Houston Ship Channel formally opened. President Wilson fired the opening cannon by remote telegraph." },
+  { m: 12, d: 4,  year: 1998, text: "The Unity module launched: the first U.S.-built piece of the International Space Station, run from Johnson Space Center." },
   { m: 12, d: 31, year: 1981, text: "Kathy Whitmire took office days later as Houston's first woman mayor, after winning the December 1981 runoff." },
 ];
 
@@ -298,7 +298,7 @@ function AgendaCard({ todayEvents, upcomingEvent, notableDays }: {
 
       {hasAnything ? (
         <ul className="flex flex-col gap-3 flex-1">
-          {/* Notable days — holidays, observances, civic deadlines */}
+          {/* Notable days. Holidays, observances, civic deadlines */}
           {notableDays.map((nd, i) => (
             <li key={`nd-${i}`} className="flex items-center gap-2.5">
               <span className="text-base leading-none flex-shrink-0">{nd.emoji}</span>
@@ -335,7 +335,7 @@ function AgendaCard({ todayEvents, upcomingEvent, notableDays }: {
             <p className="text-[11px] text-[var(--muted)] mt-2 leading-relaxed">
               Next up in{" "}
               <span className="font-semibold text-[var(--accent)]">{upcomingEvent.daysAway} day{upcomingEvent.daysAway !== 1 ? "s" : ""}</span>
-              {" "}—{" "}{upcomingEvent.title}
+              {" "}–{" "}{upcomingEvent.title}
             </p>
           )}
         </div>
@@ -349,7 +349,7 @@ function AgendaCard({ todayEvents, upcomingEvent, notableDays }: {
   );
 }
 
-// ── Election countdown — center, dominant ────────────────────────────────────
+// ── Election countdown. Center, dominant ────────────────────────────────────
 function CountdownCard({ nextElection, nextFiling }: {
   nextElection: DashboardData["nextElection"];
   nextFiling:   DashboardData["nextFiling"];
@@ -391,7 +391,7 @@ function CountdownCard({ nextElection, nextFiling }: {
             {nextFiling.daysAway} day{nextFiling.daysAway !== 1 ? "s" : ""}
           </p>
           <p className="text-[10px] text-white/35 mt-0.5 leading-snug max-w-[160px] mx-auto">
-            {nextFiling.title.replace(" — ", " · ").replace("Candidate Filing Deadline", "").trim().replace(/^·\s*/, "")}
+            {nextFiling.title.replace(". ", " · ").replace("Candidate Filing Deadline", "").trim().replace(/^·\s*/, "")}
           </p>
         </div>
       )}
@@ -431,7 +431,7 @@ function QuoteCard() {
         <p className="text-[10px] text-[var(--muted)] mt-0.5">{q.title}</p>
       </div>
 
-      {/* Moment in time — Houston / Harris County history */}
+      {/* Moment in time. Houston / Harris County history */}
       {(() => {
         const mo = getDailyMoment();
         return (
@@ -462,14 +462,14 @@ export default async function DashboardWidget() {
 
         <BriefingHeader />
 
-        {/* Row 1 — Three news tiers */}
+        {/* Row 1. Three news tiers */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <NewsCard story={data?.local   ?? null} tier="local"   />
           <NewsCard story={data?.state   ?? null} tier="state"   />
           <NewsCard story={data?.federal ?? null} tier="federal" />
         </div>
 
-        {/* Row 2 — Agenda · Countdown · Quote */}
+        {/* Row 2. Agenda · Countdown · Quote */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <AgendaCard
             todayEvents={data?.todayEvents ?? []}

@@ -63,24 +63,24 @@ const ENDORSEMENTS: Endorsement[] = [
   { id: "e29", endorser: "Sylvia Garcia",           endorserType: "Elected Official", candidate: "Lina Hidalgo",     race: "Harris County Judge 2022",  year: 2022 },
   { id: "e30", endorser: "SEIU Texas",              endorserType: "Union",            candidate: "Lina Hidalgo",     race: "Harris County Judge 2022",  year: 2022 },
 
-  // ── 2026 TX US Senate — additional endorsers ─────────────────────────────
+  // ── 2026 TX US Senate: additional endorsers ─────────────────────────────
   { id: "e31", endorser: "Texas Democratic Party",   endorserType: "Party Org",       candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",          year: 2026 },
   { id: "e32", endorser: "Texas NAACP",              endorserType: "Civic Org",       candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",          year: 2026 },
   { id: "e33", endorser: "Planned Parenthood Action", endorserType: "Civic Org",      candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",          year: 2026 },
   { id: "e34", endorser: "CWA Texas",                endorserType: "Union",           candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",          year: 2026, notes: "Communications Workers of America" },
   { id: "e35", endorser: "Lizzie Fletcher",          endorserType: "Elected Official", candidate: "Jasmine Crockett", race: "U.S. Senate 2026 (D Primary)",          year: 2026 },
 
-  // ── 2026 TX US Senate — Ken Paxton (R nominee) ──────────────────────────
+  // ── 2026 TX US Senate. Ken Paxton (R nominee) ──────────────────────────
   { id: "e36", endorser: "Donald Trump",             endorserType: "Elected Official", candidate: "Ken Paxton",       race: "U.S. Senate 2026",          year: 2026, notes: "Trump backed Paxton over Cornyn in the R primary" },
   { id: "e37", endorser: "Texas Republican Party",   endorserType: "Party Org",       candidate: "Ken Paxton",       race: "U.S. Senate 2026",          year: 2026 },
   { id: "e38", endorser: "NRA Political Victory Fund", endorserType: "Civic Org",     candidate: "Ken Paxton",       race: "U.S. Senate 2026",          year: 2026 },
   { id: "e39", endorser: "Club for Growth",          endorserType: "Civic Org",       candidate: "Ken Paxton",       race: "U.S. Senate 2026",          year: 2026 },
 
-  // ── 2026 Harris County Judge — Republican primary ────────────────────────
+  // ── 2026 Harris County Judge: Republican primary ────────────────────────
   { id: "e40", endorser: "Texas Republican Party",   endorserType: "Party Org",       candidate: "Orlando Sanchez",  race: "Harris County Judge 2026",  year: 2026, notes: "Won May 2026 GOP runoff over Warren Howell 85,304–49,367" },
   { id: "e41", endorser: "Harris County Republicans", endorserType: "Party Org",      candidate: "Orlando Sanchez",  race: "Harris County Judge 2026",  year: 2026 },
 
-  // ── 2026 Harris County Judge — Democratic nominee ────────────────────────
+  // ── 2026 Harris County Judge: Democratic nominee ────────────────────────
   { id: "e42", endorser: "AFL-CIO Texas",            endorserType: "Union",           candidate: "Letitia Plummer",  race: "Harris County Judge 2026",  year: 2026 },
   { id: "e43", endorser: "Texas AFT",                endorserType: "Union",           candidate: "Letitia Plummer",  race: "Harris County Judge 2026",  year: 2026 },
   { id: "e44", endorser: "SEIU Texas",               endorserType: "Union",           candidate: "Letitia Plummer",  race: "Harris County Judge 2026",  year: 2026 },
@@ -348,7 +348,7 @@ export default function EndorsementFlowchart() {
               onClick={() => setSelectedEndorser(null)}
               className="text-xs font-semibold text-[var(--accent-light)] underline underline-offset-2"
             >
-              Clear selection — show all
+              Clear selection: show all
             </button>
           </div>
         )}

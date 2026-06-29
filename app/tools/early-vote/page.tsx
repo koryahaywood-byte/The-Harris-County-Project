@@ -47,7 +47,7 @@ const RACES: Race[] = [
   // State Senate
   { id: "sd-15", label: "State Senator SD-15", category: "State",
     candidates: [{ name: "Molly Cook", party: "D" }] },
-  // State House — contested
+  // State House: contested
   { id: "hd-126", label: "State Rep HD-126", category: "State",
     candidates: [{ name: "Stefanie Bord", party: "D" }, { name: "Stan Stanart", party: "R" }] },
   { id: "hd-134", label: "State Rep HD-134", category: "State",
@@ -144,13 +144,13 @@ export default function EarlyVotePage() {
             Early Vote Tracker
           </h1>
           <p className="text-white/50 text-sm max-w-lg">
-            Track who is voting early across Harris County precincts, cross-referenced against Democratic and Republican primary history — to gauge which side is turning out.
+            Track who is voting early across Harris County precincts, cross-referenced against Democratic and Republican primary history. To gauge which side is turning out.
           </p>
           {/* Live demo banner */}
           <div className="mt-4 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold"
             style={{ background: "rgba(245,158,11,0.15)", border: "1px solid rgba(245,158,11,0.35)", color: "#fcd34d" }}>
             <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: "#fcd34d" }} />
-            Demo mode — no active election. Data is illustrative.
+            Demo mode: no active election. Data is illustrative.
           </div>
         </div>
       </section>
@@ -276,7 +276,7 @@ export default function EarlyVotePage() {
             <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
               <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-4" style={{ color: "#6b7280" }}>
-                  County-Wide Turnout — Day {daysPassed}
+                  County-Wide Turnout: Day {daysPassed}
                 </p>
                 <TurnoutGauge
                   label="Dem Primary Universe"
@@ -298,11 +298,11 @@ export default function EarlyVotePage() {
                   </p>
                   {demOverallPct > repOverallPct ? (
                     <p className="text-[11px] font-semibold mt-1" style={{ color: "#2563a8" }}>
-                      Dem universe turning out at a higher rate — favorable indicator
+                      Dem universe turning out at a higher rate: favorable indicator
                     </p>
                   ) : (
                     <p className="text-[11px] font-semibold mt-1" style={{ color: "#dc2626" }}>
-                      Rep universe turning out at a higher rate — watch closely
+                      Rep universe turning out at a higher rate: watch closely
                     </p>
                   )}
                 </div>
@@ -321,7 +321,7 @@ export default function EarlyVotePage() {
                     "Rep Primary Universe: voters who cast a Republican ballot in any of the last 4 primaries",
                     "Turnout %: how many from each universe have already voted early",
                     "Higher Dem turnout % = more Dem-leaning ballots already cast = favorable for Dem candidates",
-                    "Gaps widen or close as election day approaches — watch daily trend",
+                    "Gaps widen or close as election day approaches. Watch daily trend",
                   ].map((item, i) => (
                     <li key={i} className="flex gap-2">
                       <span className="shrink-0 w-1 h-1 rounded-full mt-1.5" style={{ background: "#9ca3af" }} />
@@ -342,7 +342,7 @@ export default function EarlyVotePage() {
                   {[
                     "Daily EV file auto-ingested from harrisvotes.com",
                     "Real precinct-level turnout by universe",
-                    "Daily delta — who jumped overnight",
+                    "Daily delta. Who jumped overnight",
                     "Trend line: is the Dem universe accelerating or stalling?",
                     "Split by race (each contest on the ballot)",
                   ].map((item, i) => (

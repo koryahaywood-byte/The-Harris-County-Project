@@ -1,5 +1,5 @@
 /**
- * Known women in Harris County politics — covers current officeholders,
+ * Known women in Harris County politics. Covers current officeholders,
  * 2026 ballot candidates, and tracked campaign finance filers.
  * Used for the "W" badge across ballot, officials, and finance tools.
  */

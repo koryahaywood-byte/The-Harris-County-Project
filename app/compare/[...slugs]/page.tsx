@@ -1,4 +1,4 @@
-// Head to Head — /compare/[slugA]/[slugB]
+// Head to Head: /compare/[slugA]/[slugB]
 // Two official cards side by side with direct stat comparison.
 // Shareable standalone URL with OG meta.
 
@@ -24,8 +24,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slugs: st
   const pair = resolve(slugs);
   if (!pair) return {};
   const [a, b] = pair;
-  const title = `${a.name} vs ${b.name} — Head to Head`;
-  const desc = `${a.office} vs ${b.office}. Money, record, and stats compared — via The Harris County Project.`;
+  const title = `${a.name} vs ${b.name}. Head to Head`;
+  const desc = `${a.office} vs ${b.office}. Money, record, and stats compared. Via The Harris County Project.`;
   const og = `/api/og?tool=${encodeURIComponent(`${a.name} vs ${b.name}`)}&section=Head+to+Head&desc=${encodeURIComponent(desc)}`;
   return {
     title: `${title} · The Harris County Project`,
@@ -79,7 +79,7 @@ export default async function ComparePage({ params }: { params: Promise<{ slugs:
           {a.name} <span style={{ color: GOLD }}>vs</span> {b.name}
         </h1>
         <p className="text-center text-xs text-white/40 mb-10">
-          Leading {winsA > winsB ? a.name : winsB > winsA ? b.name : "— tied"} ·
+          Leading {winsA > winsB ? a.name : winsB > winsA ? b.name : "– tied"} ·
           {" "}{Math.max(winsA, winsB)} of {rows.length} categories
         </p>
 

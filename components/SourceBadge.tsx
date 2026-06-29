@@ -17,7 +17,7 @@ const TYPE_CONFIG: Record<SourceType, { icon: string; color: string; bg: string 
   law:        { icon: "L", color: "#3a1a5c", bg: "#eae0f4" },
 };
 
-/* ── Inline pill badge — use on individual beats/cards ──────────────────── */
+/* ── Inline pill badge. Use on individual beats/cards ──────────────────── */
 export function SourceBadge({ source }: { source: Source }) {
   const cfg = TYPE_CONFIG[source.type];
   const content = (
@@ -46,7 +46,7 @@ export function SourceBadge({ source }: { source: Source }) {
   return content;
 }
 
-/* ── Full evidence panel — use at the bottom of story tabs ──────────────── */
+/* ── Full evidence panel. Use at the bottom of story tabs ──────────────── */
 export function EvidencePanel({ sources, className }: { sources: Source[]; className?: string }) {
   return (
     <div className={`rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[5px] ${className ?? ""}`}>

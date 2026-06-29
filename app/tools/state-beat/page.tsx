@@ -22,7 +22,7 @@ const SESSION = {
 };
 
 const TRACKS = [
-  { label: "Floor Votes",         desc: "Every vote by Harris County reps — sorted by party-line splits and bipartisan wins.", color: "#4c1d95" },
+  { label: "Floor Votes",         desc: "Every vote by Harris County reps. Sorted by party-line splits and bipartisan wins.", color: "#4c1d95" },
   { label: "Committee Hearings",  desc: "Key hearings tracked with AI summary and bill status. Lobbyist filings cross-referenced.", color: "#7c3aed" },
   { label: "Property Tax & Schools", desc: "HB 2, SB 4, and school finance bills directly impacting Harris County homeowners.", color: "#0891b2" },
   { label: "Lobbyist Map",        desc: "Who is paying whom to lobby in Austin on Harris County-related issues.", color: "#b45309" },
@@ -38,22 +38,22 @@ const JOURNALISTS = [
 ];
 
 const HASHTAGS = [
-  { tag: "#txlege",          desc: "Main hashtag for the Texas Legislature — live floor votes, hearings, bills" },
+  { tag: "#txlege",          desc: "Main hashtag for the Texas Legislature. Live floor votes, hearings, bills" },
   { tag: "#HarrisCounty",    desc: "County-level coverage, used alongside #txlege for local impact stories" },
   { tag: "#txedu",           desc: "Texas school voucher, HISD, and education policy debates" },
-  { tag: "#txpolitics",      desc: "Broader Texas political conversation — primaries, candidates, polling" },
+  { tag: "#txpolitics",      desc: "Broader Texas political conversation. Primaries, candidates, polling" },
   { tag: "#HoustonChron",    desc: "Houston Chronicle breaking news and investigations" },
   { tag: "#texastribune",    desc: "Texas Tribune non-partisan accountability journalism" },
 ];
 
 interface SocialPost { platform: "Threads"|"Facebook"|"Twitter/X"; author: string; handle: string; content: string; url: string; time: string; image?: string; verified?: boolean; }
 const SOCIAL: SocialPost[] = [
-  { platform: "Twitter/X", author: "Texas Tribune",     handle: "@texastribune",    verified: true, image: "https://images.unsplash.com/photo-1531218150217-54595bc2b934?auto=format&fit=crop&w=800&q=70", content: "Final day of the 89th Legislature: Here's everything that passed, failed, or got left on the table — with a Harris County filter. Big thread.",                        url: "https://twitter.com/TexasTribune",       time: "2h ago" },
+  { platform: "Twitter/X", author: "Texas Tribune",     handle: "@texastribune",    verified: true, image: "https://images.unsplash.com/photo-1531218150217-54595bc2b934?auto=format&fit=crop&w=800&q=70", content: "Final day of the 89th Legislature: Here's everything that passed, failed, or got left on the table. With a Harris County filter. Big thread.",                        url: "https://twitter.com/TexasTribune",       time: "2h ago" },
   { platform: "Twitter/X", author: "Jeremy Wallace",    handle: "@JeremySWallace",  content: "#txlege: Harris County delegation split on property tax bill final passage. Alvarado, Miles voted no. Bettencourt, Huffman yes. Bill goes to governor.",              url: "https://twitter.com/JeremySWallace",     time: "4h ago" },
-  { platform: "Threads",   author: "Texas Tribune",     handle: "@texastribune",    content: "The school voucher bill is heading to the governor's desk. Every Harris County Senate Democrat voted against it. What it means for HISD — our explainer is live.", url: "https://www.threads.net/@texastribune",   time: "5h ago" },
-  { platform: "Threads",   author: "Texas Signal",      handle: "@texassignal",     content: "#txlege wrap: Session ended with property tax relief smaller than promised. Harris County homeowners will see relief — but far less than what was advertised in January.", url: "https://www.threads.net/@texassignal",    time: "6h ago" },
+  { platform: "Threads",   author: "Texas Tribune",     handle: "@texastribune",    content: "The school voucher bill is heading to the governor's desk. Every Harris County Senate Democrat voted against it. What it means for HISD. Our explainer is live.", url: "https://www.threads.net/@texastribune",   time: "5h ago" },
+  { platform: "Threads",   author: "Texas Signal",      handle: "@texassignal",     content: "#txlege wrap: Session ended with property tax relief smaller than promised. Harris County homeowners will see relief. But far less than what was advertised in January.", url: "https://www.threads.net/@texassignal",    time: "6h ago" },
   { platform: "Twitter/X", author: "Zach Despart",      handle: "@zachdespart",     content: "What the 89th Legislature actually delivered for Houston: flood relief funded, school choice passed, Harris County home rule blocked again.", url: "https://twitter.com/zachdespart",         time: "8h ago" },
-  { platform: "Facebook",  author: "Texas Dems",        handle: "fb/txdemocrats",   content: "89th Legislature adjourned. Democrats fought hard on every front — property taxes, public education, and voting rights. The fight continues in 2026.",                  url: "https://www.facebook.com/groups/search/results/?q=texas+democrats", time: "1d ago" },
+  { platform: "Facebook",  author: "Texas Dems",        handle: "fb/txdemocrats",   content: "89th Legislature adjourned. Democrats fought hard on every front. Property taxes, public education, and voting rights. The fight continues in 2026.",                  url: "https://www.facebook.com/groups/search/results/?q=texas+democrats", time: "1d ago" },
   { platform: "Facebook",  author: "Texas GOP",         handle: "fb/texasgop",      content: "The 89th Legislature delivered: property tax relief, school choice, and border security. A historic session for Texas conservatives. Full recap on txgop.org",            url: "https://www.facebook.com/groups/search/results/?q=texas+republican", time: "1d ago" },
 ];
 
@@ -76,7 +76,7 @@ export default function StateBeatPage() {
             State House Beat
           </h1>
           <p className="text-white/55 text-sm max-w-md mb-6">
-            The Texas Legislature through a Harris County lens — bills, votes, hearings, and who's lobbying whom.
+            The Texas Legislature through a Harris County lens. Bills, votes, hearings, and who's lobbying whom.
           </p>
 
           {/* Session status */}
@@ -185,7 +185,7 @@ export default function StateBeatPage() {
               </div>
               <div className="rounded-[1.5rem] p-5 text-center" style={{ background: "linear-gradient(135deg,#4c1d95,#7c3aed)" }}>
                 <p className="text-xs font-bold text-white mb-1" style={{ fontFamily: "var(--font-playfair), serif" }}>Live Bill Tracking</p>
-                <p className="text-[10px] text-white/60 mb-3">Vote-by-vote coverage of the 90th Legislature — launches January 2027.</p>
+                <p className="text-[10px] text-white/60 mb-3">Vote-by-vote coverage of the 90th Legislature: launches January 2027.</p>
                 <span className="inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.15em] text-violet-300">
                   <span className="relative flex h-2 w-2"><span className="alive-halo absolute inline-flex h-full w-full rounded-full bg-violet-400" /><span className="alive-pulse relative inline-flex h-2 w-2 rounded-full bg-violet-400" /></span>
                   In Development

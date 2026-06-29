@@ -32,7 +32,7 @@ function PolCard({ p, score }: { p: Politician; score: number }) {
           </div>
         </div>
         {/* Accountability score */}
-        <div className="flex-shrink-0 text-center" title="Accountability Score — see /methodology">
+        <div className="flex-shrink-0 text-center" title="Accountability Score: see /methodology">
           <p className="tnum text-xl font-bold leading-none" style={{ color: scoreColor(score), fontFamily: "var(--font-playfair), serif" }}>{score}</p>
           <p className="text-[8px] font-bold uppercase tracking-[0.12em] text-[var(--muted)] mt-1">Acct.</p>
         </div>
@@ -66,7 +66,7 @@ export default function PoliticiansIndex() {
             Your Elected Officials
           </h1>
           <p className="text-white/70 text-sm max-w-xl">
-            Money, bills, salary, district, and more — for every Harris County elected official.
+            Money, bills, salary, district, and more. For every Harris County elected official.
           </p>
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <Link

@@ -1,6 +1,6 @@
 "use client";
 
-// The Terrain Report — the AI/statistical signals feed.
+// The Terrain Report. The AI/statistical signals feed.
 // Reads public/data/terrain-report.json (built by scripts/detect-anomalies.mjs
 // after every pipeline run). Every signal shows its sources and confidence
 // inline and is framed as a signal to chase, never a conclusion.
@@ -118,7 +118,7 @@ export default function TerrainReport({ types, limit, compact = false }: {
       </div>
       {!compact && (
         <p className="text-xs leading-relaxed mb-4 max-w-2xl" style={{ color: "#6b7280" }}>
-          Automated statistical screens across every data pipe — turnout shifts, money movement,
+          Automated statistical screens across every data pipe. Turnout shifts, money movement,
           legislative motion. Each signal shows exactly what it&apos;s built on and how much to trust it.
           The judgment is yours.
         </p>

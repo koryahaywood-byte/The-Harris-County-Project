@@ -30,11 +30,11 @@ export default function DonorGraph3D({ net }: { net: DonorNetwork }) {
     const nodes = [
       ...net.officials.filter(o => officialNames.has(o.name)).map(o => ({
         id: o.name, kind: "official" as const,
-        label: `${o.name} — ${o.office}`, color: partyColor(o.party), val: 14,
+        label: `${o.name}: ${o.office}`, color: partyColor(o.party), val: 14,
       })),
       ...donors.map(d => ({
         id: `donor:${d.name}`, kind: "donor" as const,
-        label: `${d.name}${d.employer ? ` (${d.employer})` : ""} — $${d.total.toLocaleString()} across ${d.recipients.length} official(s)`,
+        label: `${d.name}${d.employer ? ` (${d.employer})` : ""}: $${d.total.toLocaleString()} across ${d.recipients.length} official(s)`,
         color: d.recipients.length >= 2 ? "#d97706" : "#9ca3af",
         val: 2 + Math.sqrt(d.total) / 40,
       })),

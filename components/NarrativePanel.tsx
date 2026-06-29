@@ -1,6 +1,6 @@
 "use client";
 
-// The Field Briefing — auto-updating plain-English narrative on every
+// The Field Briefing. Auto-updating plain-English narrative on every
 // official profile. Recomputed from live data on each render; sources and
 // confidence shown inline.
 
@@ -78,7 +78,7 @@ export default function NarrativePanel({ pol, billCount, lawCount }: { pol: Poli
           </div>
         )}
         <p className="text-[9.5px] mt-2.5" style={{ color: "#9ca3af" }}>
-          Written by arithmetic, not by a model — rebuilt from the records each time data updates.
+          Written by arithmetic, not by a model. Rebuilt from the records each time data updates.
           Formulas: <Link href="/methodology" className="underline">methodology</Link>.
         </p>
         <FieldNotes target={`official:${pol.slug}`} />

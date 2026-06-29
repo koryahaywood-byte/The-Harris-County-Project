@@ -68,7 +68,7 @@ interface LookupResult {
 const LEVEL_DESC: Record<string, string> = {
   "Congress": "Your voice in Washington",
   "Texas Legislature": "Your voice in Austin",
-  "Harris County": "Runs the county — budget, roads, health, courts",
+  "Harris County": "Runs the county. Budget, roads, health, courts",
   "Justice Court": "Small claims, evictions, and your local constable",
   "City of Houston": "City services, police, fire, trash, streets",
 };
@@ -82,17 +82,17 @@ function districtLink(rep: RepEntry): string | null {
   // Congress + Legislature carry an explicit prefix: CD-7, SD-15, HD-134
   const prefixed = district.match(/^(CD|SD|HD)-(\d+)/i);
   if (prefixed) return `/tools/districts?type=${prefixed[1].toLowerCase()}&district=${prefixed[2]}`;
-  // Justice Court — both JPs ("JP Precinct 4") and constables ("Precinct 4") use the 8 JP/constable precincts.
+  // Justice Court. Both JPs ("JP Precinct 4") and constables ("Precinct 4") use the 8 JP/constable precincts.
   if (level === "Justice Court") {
     const n = district.match(/(\d+)/)?.[1];
     return n ? `/tools/districts?type=jp&district=${n}` : null;
   }
-  // Harris County — only commissioners map to a precinct ("Precinct 4"); the County Judge is countywide.
+  // Harris County. Only commissioners map to a precinct ("Precinct 4"); the County Judge is countywide.
   if (level === "Harris County") {
     const n = office.toLowerCase().includes("commissioner") ? district.match(/(\d+)/)?.[1] : null;
     return n ? `/tools/districts?type=pct&district=${n}` : null;
   }
-  // City of Houston — only district council members map ("District A"); mayor/controller/at-large are citywide.
+  // City of Houston. Only district council members map ("District A"); mayor/controller/at-large are citywide.
   if (level === "City of Houston") {
     const m = district.match(/^District\s+(\w+)/i);
     return m ? `/tools/districts?type=council&district=${m[1]}` : null;
@@ -225,7 +225,7 @@ export default function MyOfficialsPage() {
       if (!res.ok) { setError(data.error ?? "Lookup failed."); return; }
       setResult(data);
     } catch {
-      setError("Something went wrong — try again.");
+      setError("Something went wrong: try again.");
     } finally {
       setLoading(false);
     }
@@ -239,7 +239,7 @@ export default function MyOfficialsPage() {
 
   function useMyLocation() {
     if (typeof navigator === "undefined" || !navigator.geolocation) {
-      setError("Your browser can't share location — enter your address instead.");
+      setError("Your browser can't share location. Enter your address instead.");
       return;
     }
     setLoading(true); setError(null); setResult(null);
@@ -249,8 +249,8 @@ export default function MyOfficialsPage() {
         setLoading(false);
         setError(
           err.code === err.PERMISSION_DENIED
-            ? "Location permission denied — enter your address instead."
-            : "Couldn't get your location — enter your address instead."
+            ? "Location permission denied. Enter your address instead."
+            : "Couldn't get your location. Enter your address instead."
         );
       },
       { enableHighAccuracy: true, timeout: 10_000, maximumAge: 60_000 }
@@ -273,7 +273,7 @@ export default function MyOfficialsPage() {
 
   return (
     <div style={{ background: "#f2f5f9", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
-      {/* Hero — Synex-style light, with the topo terrain motif */}
+      {/* Hero. Synex-style light, with the topo terrain motif */}
       <section className="relative overflow-hidden topo-hero"
         style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 60%,#f2f5f9 100%)", paddingTop: "3.75rem", paddingBottom: "3.5rem" }}>
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(37,99,168,0.10),transparent_70%)]" />
@@ -287,7 +287,7 @@ export default function MyOfficialsPage() {
             <span style={{ color: "#aab4c0" }}>Who represents </span><span style={{ color: "#0f2540" }}>me?</span>
           </h1>
           <p className="text-sm md:text-[15px] max-w-lg mb-7" style={{ color: "#5b6470" }}>
-            Enter your Harris County address. Get every elected official who answers to you —
+            Enter your Harris County address. Get every elected official who answers to you –
             from your Justice of the Peace to your member of Congress.
           </p>
 
@@ -339,7 +339,7 @@ export default function MyOfficialsPage() {
           <div className="text-center py-10">
             <p className="text-sm text-[#6b7280] max-w-md mx-auto leading-relaxed">
               Most people can name their member of Congress. Almost nobody can name their
-              Justice of the Peace — the judge who handles evictions and small claims in
+              Justice of the Peace. The judge who handles evictions and small claims in
               their neighborhood. This fixes that.
             </p>
           </div>
@@ -358,7 +358,7 @@ export default function MyOfficialsPage() {
                     { label: "Officials", value: result.officials.length.toString() },
                     { label: "Levels", value: grouped.length.toString() },
                   ]}
-                  summary={`${result.officials.length} elected officials representing ${result.matched} — via The Harris County Project`}
+                  summary={`${result.officials.length} elected officials representing ${result.matched}. Via The Harris County Project`}
                   light={false}
                 />
               </div>
