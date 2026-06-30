@@ -1061,9 +1061,10 @@ export default function PoliticianProfile() {
                 {pol.note && (
                   <p className="text-xs mt-1.5 font-medium px-2 py-1 rounded" style={{ color: "#fbbf24", background: "rgba(251,191,36,0.12)" }}>{pol.note}</p>
                 )}
-                {pol.salary && (
+                {(pol.birthYear || pol.salary) && (
                   <p className="text-xs mt-1 font-semibold" style={{ color: "rgba(255,255,255,0.3)" }}>
-                    ${pol.salary.toLocaleString()} / yr
+                    {pol.birthYear && <span>Age {new Date().getFullYear() - pol.birthYear}{pol.salary ? " · " : ""}</span>}
+                    {pol.salary && <span>${pol.salary.toLocaleString()} / yr</span>}
                   </p>
                 )}
               </div>

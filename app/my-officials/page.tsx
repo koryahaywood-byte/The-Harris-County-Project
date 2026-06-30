@@ -162,7 +162,10 @@ function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupRes
             {rep.party === "NP" ? "Nonpartisan" : rep.party === "D" ? "Dem" : "Rep"}
           </span>
         </div>
-        <p className="text-xs text-[#6b7280] truncate">{rep.office} · {rep.district}</p>
+        <p className="text-xs text-[#6b7280] truncate">
+          {rep.office} · {rep.district}
+          {rep.birthYear && <span className="ml-1.5 text-[10px] font-semibold" style={{ color: "#9ca3af" }}>Age {new Date().getFullYear() - rep.birthYear}</span>}
+        </p>
         {rep.note && (
           <p className="text-[10px] mt-0.5"
             style={{ color: /term ends|not seeking|lost|leaving|retir|did not|vacat/i.test(rep.note) ? "#dc2626" : "#d97706" }}>

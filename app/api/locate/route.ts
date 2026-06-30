@@ -27,6 +27,7 @@ function enrich(rep: RepEntry) {
     note: rep.note,
     slug: rep.slug ?? pol?.slug,
     photo: pol?.photo,
+    birthYear: pol?.birthYear ?? rep.birthYear,
     phone: contact?.phone,
     districtPhone: contact?.districtPhone,
     email: contact?.email,

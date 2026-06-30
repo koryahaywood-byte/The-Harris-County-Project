@@ -13,6 +13,7 @@ export interface RepEntry {
   slug?: string;        // present when a /politicians/[slug] profile exists
   url?: string;         // external official website (used when no internal slug)
   photo?: string;       // headshot URL when one exists in the politicians dataset
+  birthYear?: number;   // for age display; public record
   note?: string;
 }
 
@@ -49,7 +50,7 @@ const JP_BENCH: Record<string, { jps: { name: string; place: number; party: "D" 
 };
 
 function fromPol(p: Politician, level: RepEntry["level"]): RepEntry {
-  return { name: p.name, office: p.office, district: p.district, party: p.party, level, slug: p.slug, ...(p.photo ? { photo: p.photo } : {}), ...(p.note ? { note: p.note } : {}) };
+  return { name: p.name, office: p.office, district: p.district, party: p.party, level, slug: p.slug, ...(p.photo ? { photo: p.photo } : {}), ...(p.birthYear ? { birthYear: p.birthYear } : {}), ...(p.note ? { note: p.note } : {}) };
 }
 
 export interface CrosswalkEntry {

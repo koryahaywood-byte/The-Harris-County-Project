@@ -1,6 +1,6 @@
 {
   "period": "2026-06",
-  "capturedAt": "2026-06-20T05:38:49.497Z",
+  "capturedAt": "2026-06-30T04:06:41.782Z",
   "source": "pipeline:merge-finance-data",
   "candidates": [
     {
@@ -28,13 +28,13 @@
     {
       "name": "James Talarico",
       "office": "U.S. Senate (D nominee)",
-      "level": "state",
+      "level": "federal",
       "party": "D",
-      "cash": 1135151.57,
-      "raised": 0,
-      "spent": 0,
+      "cash": 9858865,
+      "raised": 40284109,
+      "spent": 30425243,
       "loans": 0,
-      "asOf": "Jan 2026"
+      "asOf": "Apr 2026"
     },
     {
       "name": "Senfronia Thompson",
