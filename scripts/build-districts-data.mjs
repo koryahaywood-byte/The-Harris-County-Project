@@ -116,6 +116,31 @@ const centroids = GEO.features.map(f => ({ prec: f.properties.PREC, pt: centroid
 const crosswalk = {}; // prec -> { hd, sd, cd, jp?, council? }
 for (const { prec } of centroids) crosswalk[prec] = {};
 
+// TLC PLANC2333 — Texas 2026 congressional district boundaries.
+// Endpoint: Texas Legislative Council GIS service for the enacted 2025 redistricting plan.
+async function assignFromTLC() {
+  const url = "https://services.tlc.state.tx.us/arcgis/rest/services/Plans/PLANC2333/MapServer/0/query?where=1%3D1&outFields=DISTRICT&f=geojson&outSR=4326&geometryPrecision=4";
+  let polys;
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(30000) });
+    if (!res.ok) throw new Error(`TLC PLANC2333 HTTP ${res.status}`);
+    const data = await res.json();
+    polys = (data.features ?? []).map(f => ({ id: String(parseInt(f.properties.DISTRICT, 10)), geom: f.geometry }));
+    console.log(`TLC PLANC2333 (cd): ${polys.length} district polygons`);
+  } catch (e) {
+    console.error(`TLC PLANC2333 fetch failed: ${e.message} — falling back to TIGERweb CD119 (WRONG for 2026)`);
+    const polys2 = await fetchDistrictPolys(0, "CD119");
+    polys = polys2;
+  }
+  let assigned = 0;
+  for (const { prec, pt } of centroids) {
+    for (const { id, geom } of polys) {
+      if (geom && pointInGeom(pt, geom)) { crosswalk[prec].cd = id; assigned++; break; }
+    }
+  }
+  console.log(`  assigned ${assigned}/${centroids.length} precincts`);
+}
+
 async function assign(layer, field, key, transform = v => v) {
   const polys = await fetchDistrictPolys(layer, field);
   console.log(`Layer ${layer} (${key}): ${polys.length} district polygons`);
@@ -130,7 +155,10 @@ async function assign(layer, field, key, transform = v => v) {
 
 await assign(2, "SLDL", "hd", v => String(parseInt(v, 10)));
 await assign(1, "SLDU", "sd", v => String(parseInt(v, 10)));
-await assign(0, "CD119", "cd", v => String(parseInt(v, 10)));
+// CD: use TLC PLANC2333 (2026 Texas redistricting), NOT TIGERweb CD119.
+// TIGERweb reflects 2022-drawn 119th Congress lines; PLANC2333 changed 574 precincts for 2026.
+// When the 120th Congress lines land in TIGERweb (late 2027), this can revert to assign().
+await assignFromTLC();
 
 /* JP / Constable precincts — Harris County ArcGIS (best-effort) */
 const jpUrls = [
@@ -210,7 +238,7 @@ if (!ccDone) console.log("Council district boundaries: NO SERVICE RESPONDED — 
 
 writeFileSync(`${ROOT}lib/precinct-crosswalk.json`, JSON.stringify({
   builtAt: new Date().toISOString(),
-  method: "precinct centroid point-in-polygon vs TIGERweb 2024 boundaries",
+  method: "precinct centroid PIP: HD/SD/JP from TIGERweb; CD from TLC PLANC2333 (2026 redistricting); pct from Harris County ArcGIS direct PIP",
   precincts: crosswalk,
 }));
 console.log("Wrote lib/precinct-crosswalk.json");
