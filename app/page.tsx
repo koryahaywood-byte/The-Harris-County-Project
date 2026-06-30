@@ -46,6 +46,10 @@ const ROWS: { section: string; tools: Tool[] }[] = [
         description: "Every race on your November 2026 ballot: Governor to JP. D vs. R matchup, money on hand, and competitiveness rating.",
         gradient: "linear-gradient(135deg,#1e3a5f 0%,#2563a8 100%)",
         photo: U("1554224155-8d04cb9a382a") },
+      { href: "/tools/tx-house", name: "Texas House Board",
+        description: "Harris County's 24 state-house seats, ranked by competitiveness. Last general result, candidate cash, and the 6 swing seats that decide the majority.",
+        gradient: "linear-gradient(135deg,#1a3a5c 0%,#dc2626 100%)",
+        photo: U("1529107386315-e1a2ed48a620") },
       { href: "/tools/pac-tracker", name: "Outside Money",
         description: "PAC and Super PAC independent expenditures in Texas 2026 federal races. Who's buying air time?",
         gradient: "linear-gradient(135deg,#4c1d95 0%,#7c3aed 100%)",
@@ -393,14 +397,14 @@ export default function Home() {
               <a href="#toolbox"
                 className="inline-flex items-center gap-2 font-semibold text-sm px-3 py-3.5 transition-colors duration-300"
                 style={{ color: "#5b6470" }}>
-                Browse all 21 tools →
+                Browse all 22 tools →
               </a>
             </div>
 
             <div className="mt-12 flex flex-wrap gap-10">
               {[
                 { value: "1,011", label: "Precincts mapped" },
-                { value: "21", label: "Civic tools" },
+                { value: "22", label: "Civic tools" },
                 { value: "100%", label: "Public data" },
               ].map(({ value, label }) => (
                 <div key={label}>
