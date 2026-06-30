@@ -31,6 +31,8 @@ interface DistrictRaces {
   jp: Record<string, Record<string, Record<string, DistRace>>>;
   pct: Record<string, Record<string, Record<string, DistRace>>>;
   county: Record<string, Record<string, DistRace>>;
+  council?: Record<string, Record<string, Record<string, DistRace>>>;
+  houston?: Record<string, Record<string, DistRace>>;
 }
 
 const CROSSWALK = (crosswalkRaw as { precincts: Record<string, Record<string, string>> }).precincts;
@@ -39,6 +41,7 @@ const CYCLES = [
   { key: "2026P", label: "2026 Primary" },
   { key: "2024G", label: "2024 General" },
   { key: "2024P", label: "2024 Primary" },
+  { key: "2023G", label: "2023 City Election" },
   { key: "2022G", label: "2022 General" },
   { key: "2022P", label: "2022 Primary" },
   { key: "2020G", label: "2020 General" },
@@ -69,9 +72,17 @@ function computeFromRace(
   raceData: HistRace
 ): Record<string, { pct: number | null; d: number; r: number; total: number }> {
   const result: Record<string, { pct: number | null; d: number; r: number; total: number }> = {};
-  const dIdx = raceData.candidates.findIndex(c => c.party === "D");
-  const rIdx = raceData.candidates.findIndex(c => c.party === "R");
-  if (dIdx === -1 || rIdx === -1) return {};
+  let dIdx = raceData.candidates.findIndex(c => c.party === "D");
+  let rIdx = raceData.candidates.findIndex(c => c.party === "R");
+  // Non-partisan races: use top-2 candidates by total votes across all precincts
+  if (dIdx === -1 || rIdx === -1) {
+    const totals = raceData.candidates.map((_, i) =>
+      Object.values(raceData.votes).reduce((s, v) => s + (v[i] ?? 0), 0)
+    );
+    const sorted = totals.map((t, i) => ({ t, i })).sort((a, b) => b.t - a.t);
+    dIdx = sorted[0]?.i ?? 0;
+    rIdx = sorted[1]?.i ?? 1;
+  }
   for (const [prec, votes] of Object.entries(raceData.votes)) {
     const d = votes[dIdx] ?? 0, r = votes[rIdx] ?? 0, total = d + r;
     result[prec] = { pct: total ? d / total : null, d, r, total };
@@ -83,10 +94,12 @@ export default function DistrictHeatMap({ districtField, districtValue, district
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMap = useRef<L.Map | null>(null);
   const geoLayerRef = useRef<L.GeoJSON | null>(null);
+  const councilBoundaryRef = useRef<L.GeoJSON | null>(null);
 
   const [history, setHistory] = useState<PrecinctHistory | null>(null);
   const [districtRaces, setDistrictRaces] = useState<DistrictRaces | null>(null);
   const [geojson, setGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [councilGeo, setCouncilGeo] = useState<GeoJSON.FeatureCollection | null>(null);
   const [cycle, setCycle] = useState("2024G");
   // race key: "hist:president" | "dist:state_rep_134" | "county:harris_da"
   const [raceKey, setRaceKey] = useState<string | null>(null);
@@ -100,6 +113,21 @@ export default function DistrictHeatMap({ districtField, districtValue, district
       .catch(console.error);
   }, []);
 
+  // Load Houston city council district boundaries when viewing a council district
+  useEffect(() => {
+    if (districtField !== "council" || councilGeo) return;
+    fetch("/data/houston-council-districts.geojson").then(r => r.json()).then(setCouncilGeo).catch(console.error);
+  }, [districtField, councilGeo]);
+
+  // Auto-switch cycle when entering/leaving council view
+  useEffect(() => {
+    if (districtField === "council") {
+      setCycle("2023G");
+    } else if (cycle === "2023G") {
+      setCycle("2024G");
+    }
+  }, [districtField]); // eslint-disable-line
+
   // Build available race options for current cycle + district
   // County slugs that are already covered by precinct-history (avoid dupe in dropdown)
   const HIST_COVERED = new Set(["president", "u_s_senate", "governor"]);
@@ -107,14 +135,22 @@ export default function DistrictHeatMap({ districtField, districtValue, district
   const availableRaces = useMemo<Array<{ key: string; label: string; group: string }>>(() => {
     const races: Array<{ key: string; label: string; group: string }> = [];
 
-    // 1. District-specific races (e.g., State Rep 134 in HD 134)
-    if (districtRaces && districtField && districtValue && districtField !== "council") {
-      const field = districtField as keyof Omit<DistrictRaces, "county">;
+    // 1. District-specific races (e.g., State Rep 134 in HD 134; Council District A 2023 race)
+    if (districtRaces && districtField && districtValue) {
+      const field = districtField as keyof Omit<DistrictRaces, "county" | "houston">;
       const distCycles = districtRaces[field]?.[districtValue];
       if (distCycles?.[cycle]) {
         for (const [slug, r] of Object.entries(distCycles[cycle])) {
           races.push({ key: `dist:${slug}`, label: r.label, group: "This District" });
         }
+      }
+    }
+
+    // 1b. Houston citywide races (Mayor, Controller) when viewing a council district
+    if (districtRaces && districtField === "council") {
+      for (const [slug, cycleMap] of Object.entries(districtRaces.houston ?? {})) {
+        const r = cycleMap[cycle];
+        if (r) races.push({ key: `houston:${slug}`, label: r.label, group: "Houston Citywide" });
       }
     }
 
@@ -164,10 +200,15 @@ export default function DistrictHeatMap({ districtField, districtValue, district
 
     if (raceKey === "primary") return null; // handled separately
 
-    if (raceKey.startsWith("dist:") && districtRaces && districtField && districtValue && districtField !== "council") {
+    if (raceKey.startsWith("dist:") && districtRaces && districtField && districtValue) {
       const slug = raceKey.slice(5);
-      const field = districtField as keyof Omit<DistrictRaces, "county">;
+      const field = districtField as keyof Omit<DistrictRaces, "county" | "houston">;
       return districtRaces[field]?.[districtValue]?.[cycle]?.[slug] ?? null;
+    }
+
+    if (raceKey.startsWith("houston:") && districtRaces) {
+      const slug = raceKey.slice(8);
+      return districtRaces.houston?.[slug]?.[cycle] ?? null;
     }
 
     if (raceKey.startsWith("county:") && districtRaces) {
@@ -268,6 +309,26 @@ export default function DistrictHeatMap({ districtField, districtValue, district
       }
     });
   }, [geojson, lookup, districtPrecs]); // eslint-disable-line
+
+  // Council district boundary overlay — thick outline showing the true district shape
+  useEffect(() => {
+    if (!leafletMap.current) return;
+    import("leaflet").then(L => {
+      if (councilBoundaryRef.current) { councilBoundaryRef.current.remove(); councilBoundaryRef.current = null; }
+      if (districtField !== "council" || !districtValue || !councilGeo) return;
+      const feature = councilGeo.features.find(
+        (f: GeoJSON.Feature) => (f.properties as { DISTRICT: string }).DISTRICT === districtValue
+      );
+      if (!feature) return;
+      const layer = L.geoJSON(
+        { type: "FeatureCollection", features: [feature] } as GeoJSON.GeoJsonObject,
+        { style: { color: "#1a3a5c", weight: 2.5, opacity: 0.7, fill: false } }
+      ).addTo(leafletMap.current!);
+      councilBoundaryRef.current = layer;
+      const bounds = layer.getBounds();
+      if (bounds.isValid()) leafletMap.current!.fitBounds(bounds, { padding: [16, 16] });
+    });
+  }, [councilGeo, districtField, districtValue]); // eslint-disable-line
 
   const districtData = useMemo(() => {
     const entries = Object.entries(lookup).filter(([prec]) => inDistrict(prec));
