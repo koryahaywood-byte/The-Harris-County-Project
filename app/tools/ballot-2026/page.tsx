@@ -564,6 +564,11 @@ function Ballot2026Inner() {
                     {secDPct > 55 ? `D leads money ${secDPct}–${100-secDPct}` : secDPct < 45 ? `R leads money ${100-secDPct}–${secDPct}` : `money even`}
                   </span>
                 )}
+                {grp === "statelegis" && (
+                  <Link href="/tools/tx-house" className="text-[9px] font-bold px-2 py-0.5 rounded-full hover:opacity-80" style={{ background: "#1a3a5c", color: "#fff" }}>
+                    House board →
+                  </Link>
+                )}
               </div>
               <div className="space-y-3">
                 {section.map(r => {

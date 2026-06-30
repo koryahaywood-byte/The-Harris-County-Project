@@ -9,6 +9,7 @@ const TOOLS = [
   { href: "/my-officials",              label: "Who represents me →" },
   { href: "/tools/who-do-i-call",       label: "Who do I call? →" },
   { href: "/tools/ballot-2026",         label: "2026 ballot →" },
+  { href: "/tools/tx-house",            label: "TX House board →" },
   { href: "/tools/opportunity-map",     label: "Opportunity map →" },
   { href: "/tools/the-brief",           label: "The Brief →" },
   { href: "/tools/public-money",        label: "Public money →" },
