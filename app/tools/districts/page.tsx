@@ -11,6 +11,7 @@ import { getMatchup } from "@/lib/matchups-2026";
 import { getFinanceByName, fmt } from "@/lib/campaign-finance";
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
 import ShareButton from "@/components/ShareButton";
+import RelatedTools from "@/components/RelatedTools";
 import DistrictHistory from "@/components/DistrictHistory";
 import TerrainReport from "@/components/TerrainReport";
 import DistrictHeatMap from "@/components/DistrictHeatMap";
@@ -940,25 +941,7 @@ export default function DistrictsPage() {
               Turnout by race/age/gender requires the Harris County voter file (harrisvotes.com → Voter Registration Data Request).
             </div>
 
-            {/* See also */}
-            <div className="pt-4 border-t border-black/8">
-              <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "#9ca3af" }}>Go deeper</p>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  { href: "/tools/heat-check",          label: "Precinct heat map →" },
-                  { href: "/tools/where-is-the-dough",  label: "Campaign finance →" },
-                  { href: "/my-officials",               label: "Who represents me →" },
-                  { href: "/tools/who-do-i-call",        label: "Who do I call? →" },
-                  { href: "/tools/ballot-2026",          label: "2026 ballot →" },
-                ].map(l => (
-                  <Link key={l.href} href={l.href}
-                    className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#1a3a5c] hover:text-white hover:border-[#1a3a5c]"
-                    style={{ color: "#374151", borderColor: "#e5e7eb", background: "#fff" }}>
-                    {l.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
+            <RelatedTools current="/tools/districts" className="pt-4 border-t border-black/8" />
           </div>
         </div>
       </div>

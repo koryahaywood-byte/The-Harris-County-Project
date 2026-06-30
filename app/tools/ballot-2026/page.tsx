@@ -7,6 +7,7 @@ import { MATCHUPS_2026, type RaceLean } from "@/lib/matchups-2026";
 import { FINANCE_DATA_MERGED, fmt, type CandidateFinance } from "@/lib/campaign-finance";
 import type { CvapData } from "@/app/tools/districts/page";
 import ShareButton from "@/components/ShareButton";
+import RelatedTools from "@/components/RelatedTools";
 
 type RaceGroup = "statewide" | "top" | "congress" | "statelegis" | "countywide" | "courts" | "local";
 
@@ -664,24 +665,7 @@ function Ballot2026Inner() {
           );
         })}
 
-        {/* Related tools */}
-        <div className="mt-8 pt-6 border-t border-black/8">
-          <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "#9ca3af" }}>Go deeper</p>
-          <div className="flex flex-wrap gap-2">
-            {[
-              { href: "/tools/where-is-the-dough", label: "Full campaign finance →" },
-              { href: "/tools/districts",           label: "District-by-district breakdown →" },
-              { href: "/tools/heat-check",          label: "Precinct vote history →" },
-              { href: "/tools/who-do-i-call",       label: "Who do I call? →" },
-            ].map(l => (
-              <Link key={l.href} href={l.href}
-                className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#1a3a5c] hover:text-white hover:border-[#1a3a5c]"
-                style={{ color: "#374151", borderColor: "#e5e7eb", background: "#fff" }}>
-                {l.label}
-              </Link>
-            ))}
-          </div>
-        </div>
+        <RelatedTools current="/tools/ballot-2026" className="mt-8 pt-6 border-t border-black/8" />
 
         <p className="text-[10px] mt-6 leading-relaxed" style={{ color: "#b0b8c4" }}>
           Last election bars show Harris County totals from TED (Texas Legislative Council). Court cards, which have no per-race history, instead show a &ldquo;County judicial avg&rdquo;. The average two-party result across contested countywide judicial races (Supreme Court, district judges, CCL 16) in the last cycle. Money is cash on hand from most recent FEC/TEC filing. Competitiveness ratings reflect Harris County presidential lean adjusted for district composition: not statewide outcomes.

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { FINANCE_DATA_MERGED, fmt, type CandidateFinance } from "@/lib/campaign-finance";
 import ShareButton from "@/components/ShareButton";
+import RelatedTools from "@/components/RelatedTools";
 import { MoneyTrailView } from "@/components/MoneyTrail";
 import TerrainReport from "@/components/TerrainReport";
 import { useUrlState, readUrlParams } from "@/lib/useUrlState";
@@ -1027,25 +1028,7 @@ export default function WhereIsTheDough() {
           </div>
         )}
 
-        {/* See also */}
-        <div className="mt-10 pt-6 border-t border-black/8">
-          <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "#9ca3af" }}>Go deeper</p>
-          <div className="flex flex-wrap gap-2">
-            {[
-              { href: "/tools/districts",    label: "District vote history →" },
-              { href: "/tools/heat-check",   label: "Precinct heat map →" },
-              { href: "/my-officials",       label: "Who represents me →" },
-              { href: "/tools/who-do-i-call", label: "Who do I call? →" },
-              { href: "/tools/ballot-2026",  label: "2026 ballot →" },
-            ].map(l => (
-              <Link key={l.href} href={l.href}
-                className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#1a3a5c] hover:text-white hover:border-[#1a3a5c]"
-                style={{ color: "#374151", borderColor: "#e5e7eb", background: "#fff" }}>
-                {l.label}
-              </Link>
-            ))}
-          </div>
-        </div>
+        <RelatedTools current="/tools/where-is-the-dough" />
 
       </div>
     </div>
