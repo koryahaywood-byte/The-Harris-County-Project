@@ -55,6 +55,10 @@ const ROWS: { section: string; tools: Tool[] }[] = [
         description: "Enter your address. Every official who answers to you, JP to Congress.",
         gradient: "linear-gradient(135deg,#92400e 0%,#d97706 100%)",
         photo: U("1449157291145-7efd050a4d0e") },
+      { href: "/tools/who-do-i-call", name: "Who Do I Call?",
+        description: "Pothole, flooding, trash, noise. Pick your issue — get the right phone number and official.",
+        gradient: "linear-gradient(135deg,#0c4a6e 0%,#0284c7 100%)",
+        photo: U("1516156008802-094adcff9a72") },
       { href: "/tools/ballot-2026", name: "2026 Ballot",
         description: "Every race on your November 2026 ballot: Governor to JP. D vs. R matchup, money on hand, and competitiveness rating.",
         gradient: "linear-gradient(135deg,#1e3a5f 0%,#2563a8 100%)",
@@ -87,6 +91,10 @@ const ROWS: { section: string; tools: Tool[] }[] = [
         description: "All 1,000+ precincts ranked by GOTV opportunity. Surge targets, battlegrounds, and R base.",
         gradient: "linear-gradient(135deg,#064e3b 0%,#059669 100%)",
         photo: U("1596495577886-d920f1fb7238") },
+      { href: "/tools/opportunity-map", name: "Opportunity Map",
+        description: "Turnout vs. registered voters by district. Where D votes are being left on the table and which candidates lost the most.",
+        gradient: "linear-gradient(135deg,#1e3a5c 0%,#7c3aed 100%)",
+        photo: U("1551288049-bebda4e38f71") },
       { href: "/tools/civic-calendar", name: "Civic Calendar",
         description: "Every election date, filing deadline, and public meeting.",
         gradient: "linear-gradient(135deg,#14532d 0%,#16a34a 100%)",
@@ -433,7 +441,7 @@ export default function Home() {
             <div className="mt-12 flex flex-wrap gap-10">
               {[
                 { value: "1,011", label: "Precincts mapped" },
-                { value: "25", label: "Civic tools" },
+                { value: "27", label: "Civic tools" },
                 { value: "100%", label: "Public data" },
               ].map(({ value, label }) => (
                 <div key={label}>

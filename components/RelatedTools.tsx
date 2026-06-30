@@ -9,6 +9,7 @@ const TOOLS = [
   { href: "/my-officials",         label: "Who represents me →" },
   { href: "/tools/who-do-i-call",  label: "Who do I call? →" },
   { href: "/tools/ballot-2026",    label: "2026 ballot →" },
+  { href: "/tools/opportunity-map", label: "Opportunity map →" },
 ];
 
 export default function RelatedTools({ current, className }: { current?: string; className?: string }) {
