@@ -24,28 +24,11 @@ const ROWS: { section: string; tools: Tool[] }[] = [
       { href: "/tools/where-is-the-dough", name: "Where the Money Resides",
         description: "Campaign finance for every Harris County elected official. Live from FEC, TEC, and county filings.",
         gradient: "linear-gradient(135deg,#92400e 0%,#b45309 60%,#d97706 100%)",
-        // Magnifying glass over $100 bill: investigative finance look
         photo: U("1554672408-b55a5c0cc4b7") },
-      { href: "/tools/county-budget", name: "Harris County Budget",
-        description: "FY2027 proposed spending. Departments, contractors, story format.",
-        gradient: "linear-gradient(135deg,#1e3a5f 0%,#2563a8 100%)",
+      { href: "/tools/public-money", name: "Public Money",
+        description: "County budget, city budget, TIRZ zones, infrastructure funding, and discretionary funds — in one place.",
+        gradient: "linear-gradient(135deg,#0f2540 0%,#1a3a5c 100%)",
         photo: U("1575470021395-45dca7d3e3d0") },
-      { href: "/tools/city-budget", name: "Houston City Budget",
-        description: "The city's $6.5B budget broken down with the Three Moves explainer.",
-        gradient: "linear-gradient(135deg,#065f46 0%,#059669 100%)",
-        photo: U("1527631746610-bca00a040d60") },
-      { href: "/tools/tirz", name: "TIRZ Tool",
-        description: "27+ tax increment zones. What they collect and who governs them.",
-        gradient: "linear-gradient(135deg,#1e40af 0%,#2563a8 100%)",
-        photo: U("1486325212027-8081e485255e") },
-      { href: "/tools/discretionary-funds", name: "Discretionary Funds",
-        description: "How each council member spends their district improvement dollars.",
-        gradient: "linear-gradient(135deg,#0e7490 0%,#0891b2 100%)",
-        photo: U("1529156069898-49953e39b3ac") },
-      { href: "/tools/infrastructure-funding", name: "Infrastructure Funding",
-        description: "Federal grants and construction projects flowing into Harris County. Where the dollars land.",
-        gradient: "linear-gradient(135deg,#0f2540 0%,#1e3a5c 100%)",
-        photo: U("1558618666-fcd25c85cd64") },
     ],
   },
   {
@@ -87,10 +70,6 @@ const ROWS: { section: string; tools: Tool[] }[] = [
         description: "Dem vs. Rep universe turnout by precinct. Who is showing up.",
         gradient: "linear-gradient(135deg,#3730a3 0%,#4f46e5 100%)",
         photo: U("1541872703-74c5e44368f9") },
-      { href: "/tools/field-sweep", name: "Field Sweep",
-        description: "All 1,000+ precincts ranked by GOTV opportunity. Surge targets, battlegrounds, and R base.",
-        gradient: "linear-gradient(135deg,#064e3b 0%,#059669 100%)",
-        photo: U("1596495577886-d920f1fb7238") },
       { href: "/tools/opportunity-map", name: "Opportunity Map",
         description: "Turnout vs. registered voters by district. Where D votes are being left on the table and which candidates lost the most.",
         gradient: "linear-gradient(135deg,#1e3a5c 0%,#7c3aed 100%)",
@@ -115,41 +94,21 @@ const ROWS: { section: string; tools: Tool[] }[] = [
     ],
   },
   {
-    section: "The Beat",
+    section: "The Brief",
     tools: [
-      { href: "/tools/city-hall", name: "City Hall Beat",
-        description: "Emily Takes Notes. City Council and HISD hearings AI-summarized and cross-referenced with politician profiles.",
-        gradient: "linear-gradient(135deg,#0f766e 0%,#0d9488 60%,#0891b2 100%)",
-        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Houston_City_Hall_2019.jpg/800px-Houston_City_Hall_2019.jpg" },
-      { href: "/tools/harris-county-beat", name: "Harris County Beat",
-        description: "Commissioners Court, JPD, and county agencies. Hearings tracked with full context.",
-        gradient: "linear-gradient(135deg,#1a3a5c 0%,#2563a8 100%)",
-        photo: U("1589829545856-d10d557cf95f") },
-      { href: "/tools/state-beat", name: "State House Beat",
-        description: "TX 89th Legislature. Floor votes, committee hearings, and lobbyist filings from Austin.",
-        gradient: "linear-gradient(135deg,#4c1d95 0%,#7c3aed 100%)",
-        photo: U("1569949382669-ecf63b8c2c9f") },
-      { href: "/tools/congress-beat", name: "Congressional Beat",
-        description: "Harris County's US representatives. Floor speeches, votes, and committee work in Washington.",
-        gradient: "linear-gradient(135deg,#991b1b 0%,#b91c1c 60%,#dc2626 100%)",
+      { href: "/tools/the-brief", name: "The Brief",
+        description: "County · State · Congress · City — every level of government, one place. Delegates, social feeds, and who covers it.",
+        gradient: "linear-gradient(135deg,#0f2540 0%,#1a3a5c 50%,#7c3aed 100%)",
         photo: U("1503198515498-d0bd9ed16902") },
     ],
   },
   {
-    section: "Networks",
+    section: "The Network",
     tools: [
-      { href: "/tools/endorsement-flowchart", name: "Endorsement Map",
-        description: "Who endorsed whom across every major Harris County race. Unions, officials, party orgs.",
-        gradient: "linear-gradient(135deg,#1e3a5c 0%,#4f46e5 100%)",
+      { href: "/tools/the-network", name: "The Network",
+        description: "Endorsements, consultant relationships, and major donors across every Harris County race.",
+        gradient: "linear-gradient(135deg,#1a3a5c 0%,#7c3aed 100%)",
         photo: U("1521737604-43416ae6b50a") },
-      { href: "/tools/consultant-flowchart", name: "Consultant Network",
-        description: "The political consulting firms behind every candidate. Who shares the same playbook.",
-        gradient: "linear-gradient(135deg,#1e3a5c 0%,#0f766e 100%)",
-        photo: U("1519389950473-47ba0277781c") },
-      { href: "/tools/donor-network", name: "Donor Network",
-        description: "876 cross-official donors. See who funds multiple candidates and how money flows between Rs and Ds.",
-        gradient: "linear-gradient(135deg,#78350f 0%,#d97706 100%)",
-        photo: U("1604594849809-dfedbc827105") },
     ],
   },
   {
@@ -434,14 +393,14 @@ export default function Home() {
               <a href="#toolbox"
                 className="inline-flex items-center gap-2 font-semibold text-sm px-3 py-3.5 transition-colors duration-300"
                 style={{ color: "#5b6470" }}>
-                Browse all 25 tools →
+                Browse all 21 tools →
               </a>
             </div>
 
             <div className="mt-12 flex flex-wrap gap-10">
               {[
                 { value: "1,011", label: "Precincts mapped" },
-                { value: "27", label: "Civic tools" },
+                { value: "21", label: "Civic tools" },
                 { value: "100%", label: "Public data" },
               ].map(({ value, label }) => (
                 <div key={label}>
