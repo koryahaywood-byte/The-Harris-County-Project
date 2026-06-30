@@ -240,14 +240,17 @@ export default function DistrictHeatMap({ districtField, districtValue, district
   }, [resolvedRace, raceKey, history, cycle]);
 
   // Precincts that belong to this district
+  // For CDs: 2026+ uses PLANC2333 (cd); 2024 and earlier uses TIGERweb pre-redistricting (cd_legacy)
   const districtPrecs = useMemo<Set<string> | null>(() => {
     if (!districtField || !districtValue) return null;
     const s = new Set<string>();
+    const useLegacyCd = districtField === "cd" && cycle !== "2026P";
+    const lookupField = useLegacyCd ? "cd_legacy" : districtField;
     for (const [prec, vals] of Object.entries(CROSSWALK)) {
-      if (vals[districtField] === districtValue) s.add(prec);
+      if ((vals as Record<string, string>)[lookupField] === districtValue) s.add(prec);
     }
     return s;
-  }, [districtField, districtValue]);
+  }, [districtField, districtValue, cycle]);
 
   function inDistrict(raw: string): boolean {
     if (!districtPrecs) return true;
