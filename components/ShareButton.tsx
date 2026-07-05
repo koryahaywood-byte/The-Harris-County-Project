@@ -13,13 +13,18 @@ interface ShareButtonProps {
   stats?: ShareStat[];    // up to 3, reflect the CURRENT view
   summary?: string;       // dynamic one-line summary of the current view state
   light?: boolean;        // light style for dark hero backgrounds (default true)
+  /* Live-data card extras. The OG image renders these as real charts so the
+     link preview shows the numbers on screen (see /api/og). */
+  bar?: { dLabel: string; dPct: number; rLabel: string; rPct: number };   // D-vs-R result bar
+  duel?: { dName: string; dCash: number; rName: string; rCash: number };  // cash duel bar
+  badge?: string;                                                          // e.g. "Lean D"
 }
 
 /* True dynamic share: no screenshots.
    Shares the current URL (filter state lives in the query string via useUrlState),
    a live text summary of what the user is looking at, and the OG image is
    generated server-side at /api/og from the same view state. */
-export default function ShareButton({ toolName, section, description, stats, summary, light = true }: ShareButtonProps) {
+export default function ShareButton({ toolName, section, description, stats, summary, light = true, bar, duel, badge }: ShareButtonProps) {
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -34,6 +39,9 @@ export default function ShareButton({ toolName, section, description, stats, sum
     p.set("tool", toolName);
     p.set("section", section);
     p.set("desc", summary ?? description);
+    if (badge) p.set("badge", badge);
+    if (bar) p.set("bar", `${bar.dLabel}|${bar.dPct}|${bar.rLabel}|${bar.rPct}`);
+    if (duel) p.set("duel", `${duel.dName}|${duel.dCash}|${duel.rName}|${duel.rCash}`);
     (stats ?? []).slice(0, 3).forEach(s => p.append("s", `${s.label}|${s.value}`));
     return `/api/og?${p.toString()}`;
   };
