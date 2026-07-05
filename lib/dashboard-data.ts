@@ -4,6 +4,7 @@
 // Stories are always the most recent. Never show "no story" for active publications.
 
 import { EVENTS } from "@/lib/civic-events";
+import { MATCHUPS_2026, type RaceLean } from "@/lib/matchups-2026";
 
 export interface NewsStory {
   title: string;
@@ -233,15 +234,40 @@ const FEDERAL_FEEDS = [
   { url: "https://www.bing.com/news/search?q=Congress+Senate+White+House+federal+politics+2026&format=rss" },
 ];
 
-// November 2026 Harris County ballot. Lean ratings sync'd with matchups-2026.ts
-const NOVEMBER_2026_BALLOT: BallotRace[] = [
-  { office: "Harris County Judge",     incumbent: "Plummer (D) vs Sanchez (R). Open", party: "D", competitive: "Lean D",  href: "/tools/ballot-2026" },
-  { office: "U.S. Senate (TX)",        incumbent: "Talarico (D) vs Paxton (R)",         party: "D", competitive: "Lean D",  href: "/tools/ballot-2026" },
-  { office: "U.S. House TX-07",        incumbent: "Fletcher (D) vs Hale (R)",           party: "D", competitive: "Toss-up", href: "/tools/ballot-2026" },
-  { office: "U.S. House TX-09",        incumbent: "Open. Gutierrez (D) vs Mealer (R)", party: "D", competitive: "Toss-up", href: "/tools/ballot-2026" },
-  { office: "U.S. House TX-38",        incumbent: "McDonough (D) vs Bonck (R). Open",  party: "R", competitive: "Lean R",  href: "/tools/ballot-2026" },
-  { office: "TX Governor",             incumbent: "Hinojosa (D) vs Abbott (R)",         party: "R", competitive: "Safe R",  href: "/tools/ballot-2026" },
+// November 2026 marquee races, derived from lib/matchups-2026.ts — the single
+// ratings source. Never hand-enter a lean here; edit the matchup instead.
+const MARQUEE_RACES: { key: string; office: string }[] = [
+  { key: "HC-Countywide", office: "Harris County Judge" },
+  { key: "US-Senate",     office: "U.S. Senate (TX)" },
+  { key: "CD-7",          office: "U.S. House TX-07" },
+  { key: "CD-9",          office: "U.S. House TX-09" },
+  { key: "CD-38",         office: "U.S. House TX-38" },
+  { key: "TX-Governor",   office: "TX Governor" },
 ];
+
+const LEAN_TO_COMPETITIVE: Record<RaceLean, BallotRace["competitive"]> = {
+  "safe-d": "Safe D", "likely-d": "Lean D", "lean-d": "Lean D",
+  "toss-up": "Toss-up",
+  "lean-r": "Lean R", "likely-r": "Lean R", "safe-r": "Safe R",
+  "uncontested-d": "Safe D", "uncontested-r": "Safe R",
+};
+
+const NOVEMBER_2026_BALLOT: BallotRace[] = MARQUEE_RACES.flatMap(({ key, office }) => {
+  const m = MATCHUPS_2026[key];
+  if (!m) return [];
+  const d = m.sides.find(s => s.party === "D");
+  const r = m.sides.find(s => s.party === "R");
+  const last = (n?: string) => n ? n.split(" ").slice(-1)[0] : "TBD";
+  const open = m.sides.length > 0 && !m.sides.some(s => s.incumbent);
+  const holder = m.sides.find(s => s.incumbent);
+  return [{
+    office,
+    incumbent: `${last(d?.name)} (D) vs ${last(r?.name)} (R)${open ? ". Open" : ""}`,
+    party: (holder?.party ?? (m.lean?.endsWith("-d") ? "D" : m.lean?.endsWith("-r") ? "R" : "?")) as BallotRace["party"],
+    competitive: LEAN_TO_COMPETITIVE[m.lean ?? "toss-up"],
+    href: "/tools/ballot-2026",
+  }];
+});
 
 export async function getDashboardData(): Promise<DashboardData> {
   const todayStr = new Date().toISOString().slice(0, 10);
