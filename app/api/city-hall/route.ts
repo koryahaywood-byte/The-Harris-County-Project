@@ -105,6 +105,27 @@ async function fetchGoogleNewsForTerm(term: string): Promise<{ title: string; ur
   }
 }
 
+// LLM output that leaks first-person refusals must never reach users. Anything
+// matching these markers (or absurd lengths) falls back to deterministic copy.
+const REFUSAL_MARKERS = /\b(i don'?t (have|see)|i'?d (need|be happy)|i cannot|i can'?t|i'?m unable|as an ai|i apologize|happy to help|without (more|the) (information|context)|no information (about|on))\b/i;
+// The lede prompt forbids first person, so any standalone "I"/"I'd"/"I'm" is a
+// refusal leaking through ("I-45" and other highway names don't match).
+const FIRST_PERSON = /(^|[\s"(])I(['’]\w+)?[\s,.:;!?]/;
+
+function isUsableModelText(text: string, minLen = 40, maxLen = 400): boolean {
+  const t = text.trim();
+  return t.length >= minLen && t.length <= maxLen &&
+    !REFUSAL_MARKERS.test(t) && !FIRST_PERSON.test(t);
+}
+
+function fallbackLede(postTitle: string, postDate: string): string {
+  const d = new Date(postDate + "T12:00:00");
+  const nice = isNaN(d.getTime())
+    ? postTitle
+    : d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  return `Houston City Council met on ${nice}. Read Emily Takes Notes' full recap for the agenda-by-agenda breakdown.`;
+}
+
 async function generateTimeline(postContent: string, postTitle: string): Promise<AgendaItem[]> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
@@ -158,16 +179,24 @@ Return ONLY the JSON array, no markdown, no other text. Extract 4-8 items.`;
       messages: [{ role: "user", content: prompt }],
     });
     const text = (msg.content[0] as { type: string; text: string }).text;
-    const parsed = JSON.parse(text);
-    return parsed as AgendaItem[];
+    const parsed = JSON.parse(text) as AgendaItem[];
+    // Drop any item whose title or summary leaked a refusal instead of content.
+    return parsed.filter(
+      it => it && typeof it.title === "string" && typeof it.summary === "string" &&
+        !REFUSAL_MARKERS.test(it.title) && !REFUSAL_MARKERS.test(it.summary)
+    );
   } catch {
     return [];
   }
 }
 
-async function generateLede(postContent: string, postTitle: string, items: AgendaItem[]): Promise<string> {
+async function generateLede(postContent: string, postTitle: string, postDate: string, items: AgendaItem[]): Promise<string> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return postTitle;
+  // Nothing to summarize (thin post, no extracted items) → don't ask the model
+  // to invent a lede; it will refuse and the refusal would render as content.
+  if (!apiKey || (postContent.trim().length < 200 && items.length === 0)) {
+    return fallbackLede(postTitle, postDate);
+  }
 
   const client = new Anthropic({ apiKey });
   const topItems = items.slice(0, 3).map((i) => i.title).join(", ");
@@ -192,9 +221,10 @@ Return ONLY the two sentences, nothing else.`;
       max_tokens: 120,
       messages: [{ role: "user", content: prompt }],
     });
-    return (msg.content[0] as { type: string; text: string }).text.trim();
+    const lede = (msg.content[0] as { type: string; text: string }).text.trim();
+    return isUsableModelText(lede) ? lede : fallbackLede(postTitle, postDate);
   } catch {
-    return postTitle;
+    return fallbackLede(postTitle, postDate);
   }
 }
 
@@ -233,10 +263,8 @@ export async function GET() {
     // 3. Generate AI timeline + lede (parallel)
     const rawItems = await generateTimeline(content, latest.title);
 
-    // 4. Generate lede + fetch Google News in parallel
-    const [lede] = await Promise.all([
-      generateLede(content, latest.title, rawItems),
-    ]);
+    // 4. Generate lede (validated; falls back to deterministic copy on refusal)
+    const lede = await generateLede(content, latest.title, postDate, rawItems);
 
     // 5. Fetch Google News for each significant item (limit to top 4)
     const topItems = rawItems.slice(0, 4);
