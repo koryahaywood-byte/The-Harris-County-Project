@@ -41,12 +41,15 @@ export default function PACTracker() {
   const [search, setSearch] = useState("");
   const [filterSupport, setFilterSupport] = useState<"all" | "S" | "O">("all");
 
+  const [retryKey, setRetryKey] = useState(0);
+
   useEffect(() => {
+    setLoading(true); setError("");
     fetch("/api/finance/pac")
       .then(r => r.json())
       .then(d => { setData(d); setLoading(false); })
       .catch(e => { setError(String(e)); setLoading(false); });
-  }, []);
+  }, [retryKey]);
 
   const visible: PACRollup[] = useMemo(() => {
     if (!data) return [];
@@ -95,6 +98,11 @@ export default function PACTracker() {
               The FEC API requires a key for full access. Set <code className="bg-amber-100 px-1 rounded">FEC_API_KEY</code> in Vercel to enable live outside-money tracking.
               In the meantime, check <a href="https://www.fec.gov/data/independent-expenditures/?state=TX&cycle=2026" target="_blank" rel="noopener noreferrer" className="underline">FEC.gov directly</a>.
             </p>
+            <button
+              onClick={() => setRetryKey(k => k + 1)}
+              className="mt-2 text-xs font-semibold text-amber-800 border border-amber-300 rounded-lg px-3 py-1 hover:bg-amber-100 transition-colors">
+              Retry
+            </button>
           </div>
         )}
       </div>

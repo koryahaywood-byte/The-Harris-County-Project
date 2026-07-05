@@ -37,15 +37,19 @@ export interface PACResponse {
 }
 
 async function fetchScheduleE(page = 1): Promise<{ results: Record<string, unknown>[]; pagination?: { count: number } }> {
+  // schedule_e filters per the FEC OpenAPI spec: candidate_office_state (TX)
+  // and repeated candidate_office letters. The previous `state`/`office` params
+  // aren't recognized by this endpoint and silently returned nationwide data.
   const params = new URLSearchParams({
-    state: "TX",
     cycle: String(CYCLE),
     api_key: FEC_KEY,
     per_page: "100",
     sort: "-expenditure_amount",
     page: String(page),
-    office: "senate,house",
+    candidate_office_state: "TX",
   });
+  params.append("candidate_office", "S");
+  params.append("candidate_office", "H");
   const url = `https://api.fec.gov/v1/schedules/schedule_e/?${params}`;
   const res = await fetch(url, { next: { revalidate: 3600 * 6 } });
   if (!res.ok) throw new Error(`FEC API ${res.status}`);
