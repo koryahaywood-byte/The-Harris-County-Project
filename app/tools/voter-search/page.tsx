@@ -545,7 +545,7 @@ export default function VoterSearch() {
             {[
               { title: "2.4M voters", sub: "Harris County registered voters" },
               { title: "10+ elections", sub: "History from 2014 forward when loaded" },
-              { title: "Public record", sub: "Voter roll is public data per TX law" },
+              { title: "Public record", sub: "Public data under TX Election Code §18.008. Shows participation and primary pulled — never ballot choices" },
             ].map(card => (
               <div key={card.title} className="rounded-xl p-5"
                 style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)" }}>
