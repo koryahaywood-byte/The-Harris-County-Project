@@ -77,6 +77,7 @@ const REPS: Rep[] = [
 async function fetchRepCounts(rep: Rep): Promise<Counts> {
   const res = await fetch(`/api/bills?action=summary&rep=${encodeURIComponent(rep.name)}`);
   const data = await res.json();
+  if (data.available === false || data.error) throw new Error("unavailable");
   const bills: Bill[] = data.bills ?? [];
   const counts: Counts = { total: data.total ?? bills.length, committee: 0, passed: 0, law: 0 };
   for (const b of bills) {
@@ -106,16 +107,19 @@ export default function BillTracker() {
   useEffect(() => {
     async function preload() {
       const BATCH = 5;
+      let anyFulfilled = false;
       for (let i = 0; i < REPS.length; i += BATCH) {
         const batch = REPS.slice(i, i + BATCH);
         const results = await Promise.allSettled(batch.map(r => fetchRepCounts(r)));
         setRepCounts(prev => {
           const next = { ...prev };
           results.forEach((r, idx) => {
-            if (r.status === "fulfilled") next[batch[idx].name] = r.value;
+            if (r.status === "fulfilled") { anyFulfilled = true; next[batch[idx].name] = r.value; }
           });
           return next;
         });
+        // First batch all failed → no key configured; stop hammering the API.
+        if (i === 0 && !anyFulfilled) { setApiMissing(true); break; }
       }
       setPreloading(false);
     }
@@ -149,7 +153,7 @@ export default function BillTracker() {
     try {
       const res = await fetch(`/api/bills?action=search&rep=${encodeURIComponent(rep.name)}`);
       const data = await res.json();
-      if (data.error?.includes("not set")) { setApiMissing(true); setLoading(false); return; }
+      if (data.available === false || data.error?.includes("not set")) { setApiMissing(true); setLoading(false); return; }
       const results: Bill[] = data.bills ?? [];
       setAllBills(results);
       const counts: Counts = { total: data.total ?? results.length, committee: 0, passed: 0, law: 0 };

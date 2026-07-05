@@ -57,6 +57,7 @@ const REPS: Rep[] = [
 async function fetchSummary(rep: Rep): Promise<Counts> {
   const res = await fetch(`/api/congress-bills?action=summary&rep=${encodeURIComponent(rep.name)}`);
   const data = await res.json();
+  if (data.available === false || data.error) throw new Error("unavailable");
   const bills: Bill[] = data.bills ?? [];
   const counts: Counts = { total: data.total ?? bills.length, committee: 0, passed: 0, law: 0, pct: 0 };
   for (const b of bills) {
@@ -268,6 +269,7 @@ export default function CongressionalBillTracker() {
   const [activeRep, setActiveRep] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>("law");
   const [chamberFilter, setChamberFilter] = useState<"All" | "House" | "Senate">("All");
+  const [apiMissing, setApiMissing] = useState(false);
 
   // Pre-load all summaries
   useEffect(() => {
@@ -287,11 +289,15 @@ export default function CongressionalBillTracker() {
       })
     ).then((results) => {
       const newCounts: Record<string, Counts> = {};
+      let anyFulfilled = false;
       for (const r of results) {
         if (r.status === "fulfilled") {
+          anyFulfilled = true;
           newCounts[r.value.name] = r.value.counts;
         }
       }
+      // Every summary failed → live bill data isn't configured; show notice, not zeros.
+      if (!anyFulfilled && results.length > 0) setApiMissing(true);
       setCountsMap((prev) => ({ ...prev, ...newCounts }));
       setLoadingSet((prev) => {
         const next = new Set(prev);
@@ -364,6 +370,20 @@ export default function CongressionalBillTracker() {
           </div>
         </div>
       </div>
+
+      {apiMissing && (
+        <div className="max-w-4xl mx-auto px-6 pt-4">
+          <div className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3">
+            <p className="text-sm font-semibold text-amber-900">Live bill data requires configuration</p>
+            <p className="text-xs text-amber-700 mt-1">
+              This deployment has no <code className="bg-amber-100 px-1 rounded">LEGISCAN_API_KEY</code>, so per-member bill
+              counts can&apos;t load. Track the delegation directly at{" "}
+              <a href="https://www.congress.gov/members?q=%7B%22congress%22%3A119%2C%22member-state%22%3A%22Texas%22%7D"
+                target="_blank" rel="noopener noreferrer" className="underline">congress.gov</a>.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* ── Controls ──────────────────────────────────────────────────── */}
       <div className="sticky top-0 z-20 bg-[var(--background)]/90 backdrop-blur border-b border-[var(--border)] px-6 py-3">

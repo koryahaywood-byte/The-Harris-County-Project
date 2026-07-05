@@ -53,7 +53,8 @@ export async function GET(req: NextRequest) {
   const repName = searchParams.get("rep") || "";
 
   if (!LEGISCAN_KEY) {
-    return NextResponse.json({ error: "LEGISCAN_API_KEY not set" }, { status: 500 });
+    // 200 with an explicit flag: tools render a configuration notice, not an error.
+    return NextResponse.json({ available: false, reason: "key", bills: [], total: 0 });
   }
 
   try {
