@@ -67,7 +67,7 @@ const ROWS: { section: string; tools: Tool[] }[] = [
         gradient: "linear-gradient(135deg,#1e3a8a 0%,#2563a8 100%)",
         photo: U("1507041957456-9c397ce39c97") },
       { href: "/tools/voter-search", name: "Voter Search",
-        description: "Search Harris County's 2.4M registered voters. See who voted, when, and how.",
+        description: "Search Harris County's 2.4M registered voters. See who voted, in which elections, and which primary they pulled.",
         gradient: "linear-gradient(135deg,#1e3a5c 0%,#0f766e 100%)",
         photo: U("1540910419892-4a036eb0ebc1") },
       { href: "/tools/districts", name: "Districts",
