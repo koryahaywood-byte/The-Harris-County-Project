@@ -159,7 +159,8 @@ export default function OfficialCard({ pol, defaultSide = "front" }: { pol: Poli
               style={{ border: `2px solid ${GOLD}80`, boxShadow: `0 0 32px ${GOLD}30` }}>
               {pol.photo ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={pol.photo} alt={pol.name} className="w-full h-full object-cover object-top" style={{ filter: "url('#hcp-cel')" }} />
+                <img src={pol.photo} alt={pol.name} className="w-full h-full object-cover object-top" style={{ filter: "url('#hcp-cel')" }}
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-2xl font-bold"
                   style={{ background: "rgba(255,255,255,0.08)", color: GOLD_BRIGHT }}>

@@ -406,6 +406,7 @@ function VitruvianFigure({ slug, photo, party, name, legiscanName }: {
               alt={name}
               className="w-full h-full object-cover object-center"
               style={{ display: "block" }}
+              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
             />
           </div>
         </div>

@@ -15,7 +15,8 @@
     "filing-day": "node scripts/fetch-finance-pdfs.mjs && node scripts/ingest-finance-pdfs.mjs && node scripts/merge-finance-data.mjs --confirm && node scripts/save-finance-history.mjs",
     "save-history": "node scripts/save-finance-history.mjs",
     "check-freshness": "node scripts/check-data-freshness.js",
-    "finance-save": "node scripts/save-finance-history.mjs"
+    "finance-save": "node scripts/save-finance-history.mjs",
+    "check-photos": "node scripts/check-photos.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.100.1",

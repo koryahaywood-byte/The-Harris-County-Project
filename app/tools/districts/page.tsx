@@ -191,7 +191,8 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
                 <div className="flex items-center gap-3" style={{ flexDirection: i === 0 ? "row" : "row-reverse" }}>
                   {s.photo ? (
                     <img src={s.photo} alt={s.name} className="w-14 h-14 rounded-full object-cover shrink-0"
-                      style={{ outline: `2.5px solid ${accent}`, outlineOffset: 2 }} />
+                      style={{ outline: `2.5px solid ${accent}`, outlineOffset: 2 }}
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                   ) : (
                     <div className="w-14 h-14 rounded-full shrink-0 flex items-center justify-center text-white font-bold text-sm"
                       style={{ background: s.name === "Challenger" ? "rgba(255,255,255,0.2)" : `${accent}33`, border: `1.5px solid ${accent}40`, color: accent }}>
@@ -853,7 +854,8 @@ export default function DistrictsPage() {
                     {currentRep.photo && (
                       <img src={currentRep.photo} alt={currentRep.name}
                         className="w-14 h-14 rounded-full object-cover shrink-0"
-                        style={{ outline: `2px solid ${currentRep.party === "D" ? "#2563a8" : "#dc2626"}`, outlineOffset: 2 }} />
+                        style={{ outline: `2px solid ${currentRep.party === "D" ? "#2563a8" : "#dc2626"}`, outlineOffset: 2 }}
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="font-bold text-sm group-hover:underline" style={{ color: "#1a3a5c" }}>{currentRep.name}</p>

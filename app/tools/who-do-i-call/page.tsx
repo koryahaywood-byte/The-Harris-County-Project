@@ -3,6 +3,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import ShareButton from "@/components/ShareButton";
+import Headshot from "@/components/Headshot";
 import { ALL_CONTACTS, type OfficialContact } from "@/lib/officials-contact";
 
 const LocationMap = dynamic(() => import("@/components/LocationMap"), { ssr: false });
@@ -389,16 +390,11 @@ function OfficialPersonCard({ o }: { o: EnrichedOfficial }) {
   const phone = o.phone || o.districtPhone;
   return (
     <div className="hcp-card card-lift p-4 flex items-start gap-3 h-full">
-      {o.photo ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={o.photo} alt={o.name} className="w-12 h-12 rounded-full object-cover flex-shrink-0"
-          style={{ outline: `2px solid ${accent}`, outlineOffset: 1 }} />
-      ) : (
-        <div className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
-          style={{ background: `linear-gradient(135deg, ${accent}29, ${accent}0d)`, color: accent, border: `1.5px solid ${accent}33` }}>
-          {initials}
-        </div>
-      )}
+      <Headshot src={o.photo} name={o.name}
+        className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+        style={{ outline: `2px solid ${accent}`, outlineOffset: 1 }}
+        fallbackClassName="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+        fallbackStyle={{ background: `linear-gradient(135deg, ${accent}29, ${accent}0d)`, color: accent, border: `1.5px solid ${accent}33` }} />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
           {o.slug ? (
