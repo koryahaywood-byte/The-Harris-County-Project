@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { LEVEL_ORDER, type RepEntry } from "@/lib/representatives";
-import { getFinanceByName } from "@/lib/campaign-finance";
+import { getFinanceByName, fmt } from "@/lib/campaign-finance";
 import { WOMEN_IN_POLITICS } from "@/lib/women-names";
 import { MATCHUPS_2026 } from "@/lib/matchups-2026";
 import ShareButton from "@/components/ShareButton";
 import RelatedTools from "@/components/RelatedTools";
 import Headshot from "@/components/Headshot";
+import NovemberBallot, { selectBallotRaces, LEAN_2026_META } from "@/components/NovemberBallot";
 
 interface CvapEntry { total: number; black: number; hispanic: number; white: number; asian: number }
 interface CvapData { cvap: { cd: Record<string, CvapEntry>; sd: Record<string, CvapEntry>; hd: Record<string, CvapEntry> } }
@@ -116,18 +117,6 @@ const LEAN_2026_BY_NAME: Record<string, string> = (() => {
   return out;
 })();
 
-const LEAN_2026_META: Record<string, { label: string; color: string }> = {
-  "safe-d":        { label: "Safe D",    color: "#1d4ed8" },
-  "likely-d":      { label: "Likely D",  color: "#2563a8" },
-  "lean-d":        { label: "Lean D",    color: "#3b82f6" },
-  "toss-up":       { label: "Toss-up",   color: "#7c3aed" },
-  "lean-r":        { label: "Lean R",    color: "#dc2626" },
-  "likely-r":      { label: "Likely R",  color: "#dc2626" },
-  "safe-r":        { label: "Safe R",    color: "#b91c1c" },
-  "uncontested-d": { label: "Unopposed", color: "#1d4ed8" },
-  "uncontested-r": { label: "Unopposed", color: "#b91c1c" },
-};
-
 function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupResult["districts"] }) {
   const accent = partyColor(rep.party);
   const initials = rep.name.split(" ").map(w => w[0]).slice(0, 2).join("");
@@ -168,7 +157,7 @@ function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupRes
             {rep.note}
           </p>
         )}
-        <div className="flex gap-3 mt-2 flex-wrap">
+        <div className="flex items-center gap-3 mt-2 flex-wrap">
           {rep.slug ? (
             <Link href={`/politicians/${rep.slug}`}
               className="text-[10px] font-bold hover:underline" style={{ color: "#2563a8" }}>
@@ -186,12 +175,19 @@ function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupRes
               District map →
             </Link>
           )}
-          {finance && (
+          {finance && finance.cash > 0 ? (
+            <Link href={`/tools/where-is-the-dough?tab=leaderboard&q=${encodeURIComponent(rep.name)}`}
+              title={`Cash on hand as of ${finance.asOf}`}
+              className="text-[9px] font-bold px-2 py-0.5 rounded-full hover:opacity-80 tnum"
+              style={{ background: "rgba(124,58,237,0.08)", color: "#7c3aed" }}>
+              {fmt(finance.cash)} CoH · {finance.asOf}
+            </Link>
+          ) : finance ? (
             <Link href={`/tools/where-is-the-dough?tab=leaderboard&q=${encodeURIComponent(rep.name)}`}
               className="text-[10px] font-bold hover:underline" style={{ color: "#7c3aed" }}>
               Finance →
             </Link>
-          )}
+          ) : null}
           {onBallot2026 && (
             <Link href={`/tools/ballot-2026?q=${encodeURIComponent(rep.name)}`}
               className="text-[10px] font-bold hover:underline" style={{ color: leanMeta?.color ?? "#d97706" }}>
@@ -260,6 +256,17 @@ export default function MyOfficialsPage() {
   const grouped = result
     ? LEVEL_ORDER.map(level => ({ level, reps: result.officials.filter(o => o.level === level) })).filter(g => g.reps.length)
     : [];
+
+  // Share identity: the district set only ("CD-18 · SD-13 · HD-147"), never the
+  // street address the user typed or the geocoder matched.
+  const districtStr = result
+    ? [
+        result.districts.cd && `CD-${result.districts.cd}`,
+        result.districts.sd && `SD-${result.districts.sd}`,
+        result.districts.hd && `HD-${result.districts.hd}`,
+      ].filter((s): s is string => !!s).join(" · ")
+    : "";
+  const ballotCount = result ? selectBallotRaces(result.districts).length : 0;
 
   // Which district's demographics to show in the matched-address card. Clicking a CD/SD/HD
   // chip switches this inline (no navigation); defaults to the most-local available district.
@@ -353,12 +360,17 @@ export default function MyOfficialsPage() {
                 <ShareButton
                   toolName="Who Represents Me?"
                   section="Government"
-                  description={`${result.officials.length} elected officials · ${result.matched}`}
+                  description={districtStr
+                    ? `${result.officials.length} elected officials · ${districtStr}`
+                    : `${result.officials.length} elected officials in Harris County`}
                   stats={[
                     { label: "Officials", value: result.officials.length.toString() },
-                    { label: "Levels", value: grouped.length.toString() },
+                    ...(ballotCount ? [{ label: "Nov 3 races", value: ballotCount.toString() }] : []),
+                    ...(districtStr ? [{ label: "Districts", value: districtStr }] : []),
                   ]}
-                  summary={`${result.officials.length} elected officials representing ${result.matched}. Via The Harris County Project`}
+                  summary={districtStr
+                    ? `My Harris County delegation: ${districtStr}. ${result.officials.length} elected officials, ${ballotCount} races on my November 3, 2026 ballot. Via The Harris County Project`
+                    : `${result.officials.length} elected officials and ${ballotCount} races on the November 3, 2026 ballot in Harris County. Via The Harris County Project`}
                   light={false}
                 />
               </div>
@@ -416,6 +428,8 @@ export default function MyOfficialsPage() {
                 </p>
               ) : null}
             </div>
+
+            <NovemberBallot districts={result.districts} />
 
             {grouped.map(({ level, reps }) => (
 
