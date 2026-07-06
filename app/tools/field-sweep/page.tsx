@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { SkeletonRows } from "@/components/Skeleton";
 
 type FieldClass = "surge" | "hold" | "persuasion" | "strongR" | "unknown";
 
@@ -96,7 +97,7 @@ export default function FieldSweepPage() {
     </th>
   );
 
-  if (loading) return <div className="p-8 text-gray-500">Loading precinct data…</div>;
+  if (loading) return <div className="p-8"><SkeletonRows n={8} rowClassName="h-10 rounded-xl" /></div>;
   if (error) return <div className="p-8 text-red-600">Error: {error}</div>;
 
   return (

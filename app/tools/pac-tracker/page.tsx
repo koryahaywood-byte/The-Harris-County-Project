@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import type { PACResponse, PACRollup } from "@/app/api/finance/pac/route";
+import { SkeletonRows } from "@/components/Skeleton";
 
 const fmt = (n: number) => {
   if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
@@ -66,7 +67,7 @@ export default function PACTracker() {
     return rows;
   }, [data, search, filterSupport]);
 
-  if (loading) return <div className="p-8 text-gray-500">Loading outside money data…</div>;
+  if (loading) return <div className="max-w-4xl mx-auto px-4 py-8"><SkeletonRows n={6} rowClassName="h-16 rounded-2xl" /></div>;
   if (error) return <div className="p-8 text-red-600">Error: {error}</div>;
 
   const unavailable = data?.source === "unavailable";
