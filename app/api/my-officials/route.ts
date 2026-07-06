@@ -66,8 +66,12 @@ function pointInFeature(x: number, y: number, f: GeoFeature): boolean {
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const address = searchParams.get("address")?.trim();
-  const latParam = Number(searchParams.get("lat"));
-  const lngParam = Number(searchParams.get("lng"));
+  // Number(null) is 0, so guard for param presence before parsing. Otherwise
+  // every address-only request "has coords" at (0,0) and 404s as outside Harris.
+  const latRaw = searchParams.get("lat");
+  const lngRaw = searchParams.get("lng");
+  const latParam = latRaw === null ? NaN : Number(latRaw);
+  const lngParam = lngRaw === null ? NaN : Number(lngRaw);
   const hasCoords = Number.isFinite(latParam) && Number.isFinite(lngParam);
   if (!address && !hasCoords) return NextResponse.json({ error: "Missing address" }, { status: 400 });
 
