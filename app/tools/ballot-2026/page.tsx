@@ -5,6 +5,8 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { MATCHUPS_2026, type RaceLean } from "@/lib/matchups-2026";
 import { FINANCE_DATA_MERGED, fmt, type CandidateFinance } from "@/lib/campaign-finance";
+import { STAKES } from "@/lib/race-stakes";
+import financeHistoryIndex from "@/data/finance-history/index.json";
 import type { CvapData } from "@/app/tools/districts/page";
 import ShareButton from "@/components/ShareButton";
 import RelatedTools from "@/components/RelatedTools";
@@ -144,13 +146,13 @@ function toDistrictInfo(key: string): { href: string; label: string } {
   if (key === "US-Senate" || key.startsWith("TX-")) return { href: "/tools/districts?type=countywide", label: "Harris County results →" };
   if (key === "HC-Countywide") return { href: "/tools/districts?type=countywide", label: "County breakdown →" };
   const n = key.replace(/^[A-Z]+-/, "");
-  if (key.startsWith("CD-")) return { href: `/tools/districts?type=cd&district=${n}`, label: `CD ${n} results →` };
-  if (key.startsWith("SD-")) return { href: `/tools/districts?type=sd&district=${n}`, label: `SD ${n} results →` };
-  if (key.startsWith("HD-")) return { href: `/tools/districts?type=hd&district=${n}`, label: `HD ${n} results →` };
-  if (key.startsWith("PCT-")) return { href: `/tools/districts?type=pct&district=${n}`, label: `Pct ${n} results →` };
+  if (key.startsWith("CD-")) return { href: `/tools/districts?type=cd&district=${n}`, label: `CD ${n} portrait →` };
+  if (key.startsWith("SD-")) return { href: `/tools/districts?type=sd&district=${n}`, label: `SD ${n} portrait →` };
+  if (key.startsWith("HD-")) return { href: `/tools/districts?type=hd&district=${n}`, label: `HD ${n} portrait →` };
+  if (key.startsWith("PCT-")) return { href: `/tools/districts?type=pct&district=${n}`, label: `Pct ${n} portrait →` };
   if (key.startsWith("HC-JP") || key.startsWith("JP-")) {
     const jp = key.replace(/.*?(\d+).*/, "$1");
-    return { href: `/tools/districts?type=jp&district=${jp}`, label: `JP ${jp} results →` };
+    return { href: `/tools/districts?type=jp&district=${jp}`, label: `JP ${jp} portrait →` };
   }
   // Remaining keys (CCL/DC/Probate courts, HC-* countywide admin) are all countywide races –
   // send them to the countywide view rather than the districts tool's default CD-18 landing.
@@ -311,6 +313,83 @@ function MoneyBar({ dName, rName }: { dName: string | null; rName: string | null
   );
 }
 
+// ── Money swings (filing-to-filing cash movement) ─────────────────────────────
+// Requires at least two archived filing periods in data/finance-history. With a
+// single period (the current state) there is no delta to show, so the strip
+// renders nothing at all.
+const FINANCE_PERIODS: string[] = Array.isArray((financeHistoryIndex as { periods?: string[] }).periods)
+  ? [...(financeHistoryIndex as { periods: string[] }).periods].sort()
+  : [];
+
+type SnapshotCandidate = { name: string; office?: string; party?: string; cash?: number };
+type Mover = { name: string; office: string; party: string; prev: number; now: number; delta: number };
+
+function periodLabel(p: string): string {
+  const [y, m] = p.split("-").map(Number);
+  if (!y || !m) return p;
+  return new Date(y, m - 1, 1).toLocaleDateString("en-US", { month: "short", year: "numeric" });
+}
+
+function MoneySwings() {
+  const [movers, setMovers] = useState<Mover[] | null>(null);
+  const enough = FINANCE_PERIODS.length >= 2;
+
+  useEffect(() => {
+    if (!enough) return;
+    const [prevP, curP] = FINANCE_PERIODS.slice(-2);
+    Promise.all([
+      import(`../../../data/finance-history/${prevP}.json`),
+      import(`../../../data/finance-history/${curP}.json`),
+    ]).then(([a, b]) => {
+      const prev = (a.default ?? a) as { candidates?: SnapshotCandidate[] };
+      const cur = (b.default ?? b) as { candidates?: SnapshotCandidate[] };
+      const prevBy = new Map((prev.candidates ?? []).map(c => [c.name.toLowerCase(), c]));
+      const rows: Mover[] = [];
+      for (const c of cur.candidates ?? []) {
+        const p = prevBy.get(c.name.toLowerCase());
+        if (!p) continue;
+        const delta = (c.cash ?? 0) - (p.cash ?? 0);
+        if (!delta) continue;
+        rows.push({ name: c.name, office: c.office ?? "", party: c.party ?? "", prev: p.cash ?? 0, now: c.cash ?? 0, delta });
+      }
+      rows.sort((x, y) => Math.abs(y.delta) - Math.abs(x.delta));
+      setMovers(rows.slice(0, 5));
+    }).catch(() => setMovers([]));
+  }, [enough]);
+
+  if (!enough || !movers?.length) return null;
+  const [prevP, curP] = FINANCE_PERIODS.slice(-2);
+
+  return (
+    <div className="mb-6 rounded-2xl bg-white ring-1 ring-black/8 px-4 py-3">
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-2" style={{ color: "#9ca3af" }}>
+        Biggest cash swings, {periodLabel(prevP)} to {periodLabel(curP)}
+      </p>
+      <div className="space-y-1.5">
+        {movers.map(m => {
+          const partyColor = m.party === "D" ? "#2563a8" : m.party === "R" ? "#dc2626" : "#6b7280";
+          const up = m.delta > 0;
+          return (
+            <div key={`${m.name}-${m.office}`} className="flex items-baseline gap-2 flex-wrap">
+              {(m.party === "D" || m.party === "R") && (
+                <span className="text-[9px] font-black px-1.5 py-0.5 rounded text-white leading-none" style={{ background: partyColor }}>{m.party}</span>
+              )}
+              <span className="text-xs font-bold" style={{ color: "#111827" }}>{m.name}</span>
+              {m.office && <span className="text-[10px]" style={{ color: "#9ca3af" }}>{m.office}</span>}
+              <span className="ml-auto text-[10px] tabular-nums" style={{ color: "#9ca3af" }}>
+                {fmt(m.prev)} → {fmt(m.now)}
+              </span>
+              <span className="text-xs font-bold tabular-nums w-20 text-right" style={{ color: up ? "#059669" : "#b91c1c" }}>
+                {up ? "+" : "−"}{fmt(Math.abs(m.delta))}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 const RACE_COLORS: Record<string, string> = {
   black: "#7c3aed", hispanic: "#ea580c", white: "#2563a8", asian: "#0891b2",
@@ -464,6 +543,9 @@ function Ballot2026Inner() {
 
       <div className="max-w-5xl mx-auto px-5 py-6">
 
+        {/* Filing-to-filing money movement. Renders nothing until a second archived period exists */}
+        <MoneySwings />
+
         {/* Search + Filters */}
         <div className="mb-3 relative max-w-sm">
           <input
@@ -549,7 +631,7 @@ function Ballot2026Inner() {
           const secDPct = secTotal ? Math.round(secD / secTotal * 100) : 0;
           return (
             <div key={grp} className="mb-10">
-              <div className="flex items-center gap-2 mb-4 flex-wrap">
+              <div className={`flex items-center gap-2 ${STAKES[grp] ? "mb-1.5" : "mb-4"} flex-wrap`}>
                 <h2 className="text-[10px] font-bold uppercase tracking-[0.22em]" style={{ color: "#9ca3af" }}>
                   {section[0].groupLabel}
                 </h2>
@@ -570,6 +652,11 @@ function Ballot2026Inner() {
                   </Link>
                 )}
               </div>
+              {STAKES[grp] && (
+                <p className="mb-4 text-[13px] leading-snug max-w-2xl" style={{ color: "#475569", fontFamily: "var(--font-playfair,serif)", fontStyle: "italic" }}>
+                  {STAKES[grp]}
+                </p>
+              )}
               <div className="space-y-3">
                 {section.map(r => {
                   // Court cards have no per-race history; fall back to the labeled countywide judicial baseline.
@@ -580,6 +667,7 @@ function Ballot2026Inner() {
                   const leanAccent = r.lean
                     ? (LEAN_LANE[r.lean] < 45 ? "#2563eb" : LEAN_LANE[r.lean] > 55 ? "#dc2626" : "#7c3aed")
                     : "#e5e7eb";
+                  const stake = STAKES[r.key];
                   return (
                     <div key={r.key} className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
                       <div className="rounded-[1rem] bg-white overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]"
@@ -605,11 +693,23 @@ function Ballot2026Inner() {
                             {r.status === "runoff-pending" && (
                               <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "#dbeafe", color: "#1d4ed8" }}>Runoff pending</span>
                             )}
+                            {r.key.startsWith("HD-") && (
+                              <Link href="/tools/tx-house" className="text-[9px] font-semibold hover:underline" style={{ color: "#9ca3af" }}>
+                                House board →
+                              </Link>
+                            )}
                             <Link href={r.districtHref} className="text-[9px] font-semibold hover:underline" style={{ color: "#9ca3af" }}>
                               {r.districtLabel}
                             </Link>
                           </div>
                         </div>
+
+                        {/* Stakes lede. One factual line, only for marquee races */}
+                        {stake && (
+                          <div className="px-4 py-2 border-b text-[11.5px] leading-snug" style={{ borderColor: "#f3f4f6", color: "#334155", fontFamily: "var(--font-playfair,serif)", fontStyle: "italic" }}>
+                            {stake}
+                          </div>
+                        )}
 
                         {/* Candidates row */}
                         <div className="flex items-stretch">
