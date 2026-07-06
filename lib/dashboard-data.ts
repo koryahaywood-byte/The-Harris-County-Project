@@ -67,26 +67,39 @@ function parseRssItems(xml: string): Array<{
       .trim();
 
     // Link. Google News wraps in <a>, Bing uses redirect URL
-    const rawLink = item.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.trim()
-      ?? item.match(/<guid[^>]*>([\s\S]*?)<\/guid>/)?.[1]?.trim() ?? "";
+    const deent = (u: string) => u.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+    const rawLink = deent(item.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.trim()
+      ?? item.match(/<guid[^>]*>([\s\S]*?)<\/guid>/)?.[1]?.trim() ?? "");
     const bingUrl  = rawLink.match(/[?&]url=([^&]+)/)?.[1];
-    const link = bingUrl ? decodeURIComponent(bingUrl) : rawLink;
+    // Google News base64 blobs no longer carry the URL; the item description
+    // links straight to the publisher — use it as the real link when present.
+    const descRaw = deent(item.match(/<description>([\s\S]*?)<\/description>/)?.[1] ?? "");
+    const descHref = descRaw.match(/href=["']?(https?:\/\/(?!news\.google)[^"'\s>]+)/)?.[1];
+    const link = bingUrl ? decodeURIComponent(bingUrl)
+      : (rawLink.includes("news.google.com") && descHref) ? deent(descHref)
+      : rawLink;
 
     // Pub date
     const pubDate = item.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1]?.trim() ?? "";
 
     // Source. Google News puts it in <source>, Bing in <News:Source>
-    const source =
+    const source = (
       item.match(/<source[^>]*>([\s\S]*?)<\/source>/)?.[1]?.replace(/<!\[CDATA\[|\]\]>/g, "").trim()
       ?? item.match(/<News:Source>([\s\S]*?)<\/News:Source>/)?.[1]?.trim()
-      ?? "";
+      ?? ""
+    ).replace(/\s+on MSN$/i, "").replace(/^MSN$/i, "MSN News");
 
     // Image: Bing <News:Image>, or og:image in enclosure, or media:content
-    const image =
+    let image =
       item.match(/<News:Image>([\s\S]*?)<\/News:Image>/)?.[1]?.trim()
       ?? item.match(/<media:content[^>]+url="([^"]+)"/)?.[1]
       ?? item.match(/<enclosure[^>]+url="([^"]+)"/)?.[1]
       ?? null;
+    if (image) {
+      image = deent(image);
+      // Bing serves tiny thumbs by default; ask for card size
+      if (image.includes("bing.com/th?id=")) image += "&w=640&h=360&qlt=90&c=7";
+    }
 
     if (title && link) items.push({ title, link, source, pubDate, image });
   }
@@ -196,7 +209,15 @@ const GN = "https://news.google.com/rss/search?hl=en-US&gl=US&ceid=US:en&q=";
 async function fetchTier(feeds: Array<{ url: string; source?: string }>, todayStr: string) {
   // Try all feeds in parallel. Prefer today's story from any source
   const results = await Promise.all(feeds.map(f => fetchFromFeed(f.url, todayStr, f.source)));
-  return results.find(r => r?.isToday) ?? results.find(r => r !== null) ?? null;
+  // Google News links are JS interstitials we can't resolve server-side, so a
+  // direct-feed story (Chronicle/Tribune RSS, Bing) beats a GN one at equal
+  // freshness: real link for readers, scrapeable og:image for the card.
+  const direct = (r: { link: string } | null) => !!r && !r.link.includes("news.google.com");
+  return results.find(r => r?.isToday && direct(r))
+    ?? results.find(r => r?.isToday)
+    ?? results.find(direct)
+    ?? results.find(r => r !== null)
+    ?? null;
 }
 
 // ── Feed definitions ──────────────────────────────────────────────────────────
@@ -281,9 +302,9 @@ export async function getDashboardData(): Promise<DashboardData> {
   // Scrape og:image from actual article pages in parallel.
   // If the RSS already has an image, use it directly (skip scrape).
   const [localImg, stateImg, federalImg] = await Promise.all([
-    localRaw?.image   ? Promise.resolve(localRaw.image)   : localRaw   ? scrapeOgImage(localRaw.link)   : Promise.resolve(null),
-    stateRaw?.image   ? Promise.resolve(stateRaw.image)   : stateRaw   ? scrapeOgImage(stateRaw.link)   : Promise.resolve(null),
-    federalRaw?.image ? Promise.resolve(federalRaw.image) : federalRaw ? scrapeOgImage(federalRaw.link) : Promise.resolve(null),
+    localRaw   ? scrapeOgImage(localRaw.link).then(og => og ?? localRaw.image)     : Promise.resolve(null),
+    stateRaw   ? scrapeOgImage(stateRaw.link).then(og => og ?? stateRaw.image)     : Promise.resolve(null),
+    federalRaw ? scrapeOgImage(federalRaw.link).then(og => og ?? federalRaw.image) : Promise.resolve(null),
   ]);
 
   const local   = localRaw   ? { ...localRaw,   image: localImg   ?? FALLBACK_IMAGES.local   } : null;
