@@ -3,7 +3,6 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { POLITICIANS, type Politician } from "@/lib/politicians";
 import { computeAccountability } from "@/lib/accountability";
-import PlayerModel2D from "@/components/PlayerModel2D";
 
 function scoreColor(s: number) {
   if (s >= 75) return "#16a34a";
@@ -16,8 +15,11 @@ function PolCard({ p, score }: { p: Politician; score: number }) {
     <Link href={`/politicians/${p.slug}`}
       className="group rounded-[1.5rem] bg-white/60 ring-1 ring-black/8 p-[5px] transition-all duration-500 hover:shadow-lg hover:ring-[var(--accent-light)]">
       <div className="rounded-[1.15rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-5 flex items-center gap-4">
-        <div className="flex-shrink-0 rounded-xl overflow-hidden transition-transform duration-500 group-hover:scale-[1.06]">
-          <PlayerModel2D slug={p.slug} name={p.name} photo={p.photo} party={p.party} size={72} />
+        <div className="w-14 h-14 rounded-full bg-[var(--accent)]/10 flex items-center justify-center text-xl flex-shrink-0 overflow-hidden">
+          {p.photo
+            ? <img src={p.photo} alt={p.name} className="w-full h-full object-cover object-top" onError={(e) => { const t = e.target as HTMLImageElement; t.style.display="none"; }} />
+            : <span>{p.name.split(" ").map(n => n[0]).slice(0,2).join("")}</span>
+          }
         </div>
         <div className="min-w-0 flex-1">
           <div className="font-bold text-[var(--accent)] text-sm truncate group-hover:text-[var(--accent-light)] transition-colors" style={{ fontFamily: "var(--font-playfair), serif" }}>

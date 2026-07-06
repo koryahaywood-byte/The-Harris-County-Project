@@ -12,7 +12,7 @@ import { computeStats, STAT_LABELS, type PoliticianStats } from "@/lib/politicia
 import { computeBadges } from "@/lib/badges";
 import { DISTRICT_INFO } from "@/lib/districts-data";
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
-import PlayerModel2D from "@/components/PlayerModel2D";
+import PlayerFigure from "@/components/PlayerFigure";
 
 const GOLD = "#d4af37";
 const GOLD_BRIGHT = "#fbbf24";
@@ -154,11 +154,11 @@ export default function OfficialCard({ pol, defaultSide = "front" }: { pol: Poli
             </span>
           </div>
 
-          {/* 2K player render */}
-          <div className="mt-4 mb-3 mx-auto relative">
+          {/* 3D NBA2K-style figure */}
+          <div className="mt-4 mb-3 mx-auto relative w-full max-w-[240px]" onClick={e => e.stopPropagation()}>
             <div className="rounded-2xl overflow-hidden"
               style={{ border: `1.5px solid ${GOLD}50`, boxShadow: `0 0 32px ${GOLD}26` }}>
-              <PlayerModel2D slug={pol.slug} name={pol.name} photo={pol.photo} party={pol.party} size={158} />
+              <PlayerFigure slug={pol.slug} photo={pol.photo} party={pol.party} name={pol.name} />
             </div>
             {/* OVR chip */}
             <div className="absolute -bottom-2 -right-3 w-12 h-12 rounded-full flex flex-col items-center justify-center"

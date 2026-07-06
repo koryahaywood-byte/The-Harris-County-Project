@@ -29,9 +29,11 @@ function usePhotoTexture(url?: string) {
   const [tex, setTex] = useState<THREE.Texture | null>(null);
   useEffect(() => {
     if (!url) return;
+    // Route through the same-origin proxy: most photo hosts send no CORS
+    // headers, so loading them directly fails silently and the head goes blank.
+    const src = url.startsWith("/") ? url : `/api/img-proxy?u=${encodeURIComponent(url)}`;
     const loader = new THREE.TextureLoader();
-    loader.crossOrigin = "anonymous";
-    loader.load(url, (t) => { t.needsUpdate = true; setTex(t); }, undefined, () => setTex(null));
+    loader.load(src, (t) => { t.needsUpdate = true; setTex(t); }, undefined, () => setTex(null));
   }, [url]);
   return tex;
 }
@@ -54,9 +56,13 @@ function SuitCharacter({ photo, party }: { photo?: string; party: string }) {
   const mShirt = useMemo(() => toon("#f0f0ef", grad), [grad]);
   const mShoe  = useMemo(() => toon("#0b0b0b", grad), [grad]);
   const mSkin  = useMemo(() => toon("#c8956c", grad), [grad]);
-  const mHead  = useMemo(() =>
-    photoTex ? new THREE.MeshBasicMaterial({ map: photoTex }) : toon("#c8956c", grad),
-    [photoTex, grad]);
+  const mHead  = useMemo(() => {
+    if (!photoTex) return toon("#c8956c", grad);
+    photoTex.wrapS = THREE.ClampToEdgeWrapping;
+    photoTex.wrapT = THREE.ClampToEdgeWrapping;
+    photoTex.colorSpace = THREE.SRGBColorSpace;
+    return new THREE.MeshBasicMaterial({ map: photoTex, side: THREE.DoubleSide });
+  }, [photoTex, grad]);
 
   useFrame(({ clock }) => {
     const e = clock.elapsedTime;
@@ -68,11 +74,19 @@ function SuitCharacter({ photo, party }: { photo?: string; party: string }) {
     <group ref={root}>
       <group ref={body}>
 
-        {/* HEAD */}
+        {/* HEAD: toon skull + photo mapped onto the front face cap only,
+            so the portrait reads as a face instead of wrapping the sphere */}
         <mesh position={[0, 1.67, 0]} castShadow>
           <sphereGeometry args={[0.178, 32, 32]} />
-          <primitive attach="material" object={mHead} />
+          <primitive attach="material" object={photoTex ? mDark : mHead} />
         </mesh>
+        {photoTex && (
+          <mesh position={[0, 1.67, 0]}>
+            {/* phi window ~78° centered on +Z (camera side), theta ~86°: face cap */}
+            <sphereGeometry args={[0.181, 32, 32, Math.PI / 2 - 0.68, 1.36, 0.72, 1.5]} />
+            <primitive attach="material" object={mHead} />
+          </mesh>
+        )}
 
         {/* NECK */}
         <mesh position={[0, 1.5, 0]} castShadow>
@@ -252,7 +266,7 @@ function SceneSetup() {
   const { scene, gl } = useThree();
   useMemo(() => {
     scene.background = new THREE.Color("#060d1c");
-    scene.fog = new THREE.FogExp2("#060d1c", 0.5);
+    scene.fog = new THREE.FogExp2("#060d1c", 0.055); // subtle depth haze; 0.5 fogged the figure to black at camera distance
     gl.shadowMap.enabled = true;
     gl.shadowMap.type = THREE.PCFShadowMap;
   }, [scene, gl]);
@@ -304,7 +318,10 @@ export default function PlayerFigure3D({
         {/* FLOOR GLOW. Accent from below */}
         <pointLight position={[0, 0.15, 0.5]} intensity={0.7} color={th.accent} distance={3.5} />
         {/* AMBIENT */}
-        <ambientLight intensity={0.22} color="#8898b0" />
+        <ambientLight intensity={0.75} color="#93a3ba" />
+        {/* FRONT + BACK FILL: autoRotate orbits the camera, so light both sides */}
+        <directionalLight position={[0, 1.6, 4]} intensity={1.6} color="#dbe6f5" />
+        <directionalLight position={[0, 1.6, -4]} intensity={1.1} color="#c2d0e4" />
         {/* SPOT from above */}
         <spotLight
           position={[0, 5.5, 1.2]} angle={0.38} penumbra={0.35}
@@ -318,8 +335,6 @@ export default function PlayerFigure3D({
         <OrbitControls
           enableZoom={false}
           enablePan={false}
-          autoRotate
-          autoRotateSpeed={1.2}
           minPolarAngle={Math.PI / 3.5}
           maxPolarAngle={Math.PI / 2.2}
           target={[0, 1.0, 0]}
