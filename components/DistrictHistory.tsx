@@ -203,76 +203,63 @@ function FieldPositionModule({ h, precincts }: { h: PrecinctHistory; precincts: 
   );
 }
 
-/* ── 4. Surname-origin performance ───────────────────────────────────────── */
+/* ── 4. Surname-origin performance, plain-English edition ─────────────────
+   One takeaway per neighborhood type: did Cruz run ahead of or behind Trump?
+   Same ballot, same party, so the gap is about the candidate. */
 function SurnameModule({ h, precincts }: { h: PrecinctHistory; precincts: Set<string> | null }) {
   const buckets = useMemo(() => surnameAnalysis(h, precincts), [h, precincts]);
   if (buckets.length < 2) return null;
 
-  const biggest = buckets.reduce((a, b) => Math.abs(b.differential) > Math.abs(a.differential) ? b : a, buckets[0]);
-  const pp = (Math.abs(biggest.differential) * 100).toFixed(1);
-  const isPos = biggest.differential >= 0;
-
-  // Short human-readable label for each SSVR bucket
   const shortLabel: Record<string, string> = {
-    "Under 10% SSVR": "Mostly non-Hispanic",
+    "Under 10% SSVR": "Mostly non-Hispanic areas",
     "10–25% SSVR":    "Mixed areas",
-    "25–45% SSVR":    "Hispanic-leaning",
-    "45%+ SSVR":      "Heavily Hispanic",
+    "25–45% SSVR":    "Hispanic-leaning areas",
+    "45%+ SSVR":      "Heavily Hispanic areas",
   };
+  const maxGap = Math.max(...buckets.map(b => Math.abs(b.differential)), 0.04);
 
   return (
     <div>
       <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: MUTED }}>
-        Cruz vs Trump in 2024: the surname effect
+        Same ballot, two Republicans: Cruz vs. Trump in 2024
       </p>
-      <p className="text-[10px] mb-3 leading-relaxed" style={{ color: MUTED }}>
-        Both appeared on the same ballot. Any gap between them is a <em>candidate</em> effect, not a party one.
-        In the most Hispanic precincts, Cruz {isPos ? "ran" : "ran"} <strong style={{ color: isPos ? R_RED : D_BLUE }}>{isPos ? `+${pp} pts ahead of` : `${pp} pts behind`}</strong> Trump.
+      <p className="text-[11px] mb-4 leading-relaxed" style={{ color: "#4b5563" }}>
+        Ted Cruz and Donald Trump ran on the same 2024 ballot. Where their results differ,
+        voters were reacting to the candidate, not the party. Here is that gap by neighborhood type:
       </p>
 
-      {/* Side-by-side vote share per SSVR bucket */}
-      <div className="space-y-3">
+      <div className="space-y-3.5">
         {buckets.map(b => {
-          const cruzPct  = Math.round(b.cruzShare  * 100);
-          const trumpPct = Math.round(b.trumpShare * 100);
-          const diffPp   = Math.round(b.differential * 100);
-          const diffPos  = diffPp >= 0;
-          const barMax   = Math.max(cruzPct, trumpPct, 1);
+          const gapPp = b.differential * 100;                 // + means Cruz ahead of Trump
+          const ahead = gapPp >= 0;
+          const w = Math.min(50, (Math.abs(b.differential) / maxGap) * 50);
           return (
             <div key={b.label}>
               <div className="flex justify-between items-baseline mb-1">
-                <span className="text-[11px] font-semibold" style={{ color: NAVY }}>
-                  {shortLabel[b.label] ?? b.label}
-                  <span className="font-normal text-[9px] ml-1" style={{ color: MUTED }}>({b.precincts} precincts)</span>
-                </span>
-                <span className="text-[10px] font-bold tnum" style={{ color: diffPos ? R_RED : D_BLUE }}>
-                  Cruz {diffPos ? "+" : ""}{diffPp}pp vs Trump
+                <span className="text-[11px] font-semibold" style={{ color: NAVY }}>{shortLabel[b.label] ?? b.label}</span>
+                <span className="text-[11px] font-bold tnum" style={{ color: ahead ? R_RED : D_BLUE }}>
+                  Cruz {ahead ? "ahead" : "behind"} by {Math.abs(gapPp).toFixed(1)}
                 </span>
               </div>
-              {/* Cruz row */}
-              <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-[9px] w-[34px] text-right font-medium tnum" style={{ color: R_RED }}>Cruz</span>
-                <div className="flex-1 relative h-[7px] rounded-full overflow-hidden" style={{ background: "#fee2e2" }}>
-                  <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${(cruzPct / barMax) * 100}%`, background: R_RED, opacity: 0.8 }} />
-                </div>
-                <span className="text-[10px] font-bold tnum w-[28px]" style={{ color: R_RED }}>{cruzPct}%</span>
+              {/* One diverging bar from center: right = Cruz ahead, left = behind */}
+              <div className="relative h-[10px] rounded-full overflow-hidden" style={{ background: "#f3f4f6" }}>
+                <div className="absolute inset-y-0 left-1/2 w-px" style={{ background: "#d1d5db" }} />
+                <div className="absolute inset-y-0 rounded-full"
+                  style={ahead
+                    ? { left: "50%", width: `${w}%`, background: R_RED, opacity: 0.85 }
+                    : { right: "50%", width: `${w}%`, background: D_BLUE, opacity: 0.85 }} />
               </div>
-              {/* Trump row */}
-              <div className="flex items-center gap-2">
-                <span className="text-[9px] w-[34px] text-right font-medium tnum" style={{ color: "#6b7280" }}>Trump</span>
-                <div className="flex-1 relative h-[7px] rounded-full overflow-hidden" style={{ background: "#f3f4f6" }}>
-                  <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${(trumpPct / barMax) * 100}%`, background: "#9ca3af", opacity: 0.9 }} />
-                </div>
-                <span className="text-[10px] font-bold tnum w-[28px]" style={{ color: "#6b7280" }}>{trumpPct}%</span>
-              </div>
+              <p className="text-[9px] mt-0.5" style={{ color: MUTED }}>
+                {b.precincts} precincts · Cruz {Math.round(b.cruzShare * 100)}% · Trump {Math.round(b.trumpShare * 100)}%
+              </p>
             </div>
           );
         })}
       </div>
 
       <p className="text-[9px] mt-3 leading-relaxed" style={{ color: MUTED }}>
-        Republican vote share within R+D two-way total. Buckets by Spanish-surname voter registration (SSVR) share.
-        Party held constant. Isolates candidate effect only. Data: 2024 TX SOS returns.
+        Method: Republican share of the two-party vote, grouped by each precinct&apos;s share of
+        Spanish-surname voter registration (TX SOS). Same-ballot comparison holds party constant.
       </p>
     </div>
   );

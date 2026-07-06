@@ -438,14 +438,14 @@ export default function Home() {
                   <span className="text-[9px] font-bold uppercase tracking-[0.16em]" style={{ color: "#94a3b8" }}>Harris County · 2024 General</span>
                 </div>
                 <div className="flex items-end gap-2 mb-3">
-                  <span className="text-4xl font-bold leading-none tnum" style={{ color: "#0f2540", fontFamily: "var(--font-playfair), serif" }}>61%</span>
+                  <span className="text-4xl font-bold leading-none tnum" style={{ color: "#0f2540", fontFamily: "var(--font-playfair), serif" }}>52%</span>
                   <span className="text-sm font-bold mb-0.5" style={{ color: "#2563a8" }}>Dem</span>
-                  <span className="text-[10px] font-semibold mb-1 ml-auto px-1.5 py-0.5 rounded-full" style={{ background: "rgba(37,160,110,0.12)", color: "#15803d" }}>+4 vs &apos;20</span>
+                  <span className="text-[10px] font-semibold mb-1 ml-auto px-1.5 py-0.5 rounded-full" style={{ background: "rgba(220,38,38,0.10)", color: "#b91c1c" }}>&minus;4 vs &apos;20</span>
                 </div>
                 {/* D/R bar */}
                 <div className="h-2.5 rounded-full overflow-hidden flex mb-4">
-                  <div style={{ width: "61%", background: "#2563a8" }} />
-                  <div style={{ width: "39%", background: "#dc2626" }} />
+                  <div style={{ width: "52%", background: "#2563a8" }} />
+                  <div style={{ width: "48%", background: "#dc2626" }} />
                 </div>
                 {/* mini area chart */}
                 <svg viewBox="0 0 240 64" className="w-full" style={{ height: 56 }} preserveAspectRatio="none">
@@ -477,15 +477,15 @@ export default function Home() {
             <div className="hero-float-2 absolute -top-5 -left-3 rounded-2xl px-4 py-3"
               style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.9)", boxShadow: "0 18px 40px rgba(15,37,64,0.16)" }}>
               <p className="text-[8px] font-bold uppercase tracking-[0.16em]" style={{ color: "#94a3b8" }}>Turnout · Nov &apos;24</p>
-              <p className="text-2xl font-bold leading-none tnum mt-0.5" style={{ color: "#0f2540", fontFamily: "var(--font-playfair), serif" }}>1.49M</p>
+              <p className="text-2xl font-bold leading-none tnum mt-0.5" style={{ color: "#0f2540", fontFamily: "var(--font-playfair), serif" }}>1.5M</p>
             </div>
 
             {/* Floating stat chip: bottom */}
             <div className="hero-float-3 absolute -bottom-9 -right-3 rounded-2xl px-4 py-3"
               style={{ background: "rgba(15,37,64,0.92)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.12)", boxShadow: "0 18px 40px rgba(15,37,64,0.28)" }}>
               <p className="text-[8px] font-bold uppercase tracking-[0.16em]" style={{ color: "#7aaee8" }}>Biggest local war chest</p>
-              <p className="text-2xl font-bold leading-none tnum mt-0.5 text-white" style={{ fontFamily: "var(--font-playfair), serif" }}>$2.7M</p>
-              <p className="text-[9px] font-semibold mt-1" style={{ color: "#9fc1e8" }}>Whitmire · Houston Mayor</p>
+              <p className="text-2xl font-bold leading-none tnum mt-0.5 text-white" style={{ fontFamily: "var(--font-playfair), serif" }}>$7.8M</p>
+              <p className="text-[9px] font-semibold mt-1" style={{ color: "#9fc1e8" }}>Rodney Ellis · Commissioner Pct 1</p>
             </div>
           </div>
         </div>

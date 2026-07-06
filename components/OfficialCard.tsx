@@ -12,7 +12,6 @@ import { computeStats, STAT_LABELS, type PoliticianStats } from "@/lib/politicia
 import { computeBadges } from "@/lib/badges";
 import { DISTRICT_INFO } from "@/lib/districts-data";
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
-import PlayerFigure from "@/components/PlayerFigure";
 
 const GOLD = "#d4af37";
 const GOLD_BRIGHT = "#fbbf24";
@@ -154,11 +153,20 @@ export default function OfficialCard({ pol, defaultSide = "front" }: { pol: Poli
             </span>
           </div>
 
-          {/* 3D NBA2K-style figure */}
-          <div className="mt-4 mb-3 mx-auto relative w-full max-w-[240px]" onClick={e => e.stopPropagation()}>
-            <div className="rounded-2xl overflow-hidden"
-              style={{ border: `1.5px solid ${GOLD}50`, boxShadow: `0 0 32px ${GOLD}26` }}>
-              <PlayerFigure slug={pol.slug} photo={pol.photo} party={pol.party} name={pol.name} />
+          {/* Photo */}
+          <div className="mt-4 mb-3 mx-auto relative">
+            <div className="w-28 h-28 rounded-full overflow-hidden"
+              style={{ border: `2px solid ${GOLD}80`, boxShadow: `0 0 32px ${GOLD}30` }}>
+              {pol.photo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={pol.photo} alt={pol.name} className="w-full h-full object-cover object-top"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-2xl font-bold"
+                  style={{ background: "rgba(255,255,255,0.08)", color: GOLD_BRIGHT }}>
+                  {pol.name.split(" ").map(w => w[0]).slice(0, 2).join("")}
+                </div>
+              )}
             </div>
             {/* OVR chip */}
             <div className="absolute -bottom-2 -right-3 w-12 h-12 rounded-full flex flex-col items-center justify-center"

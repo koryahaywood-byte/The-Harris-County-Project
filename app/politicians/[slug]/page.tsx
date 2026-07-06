@@ -11,7 +11,6 @@ import FollowButton from "@/components/FollowButton";
 import DistrictHistory from "@/components/DistrictHistory";
 import { SharedDonors } from "@/components/MoneyTrail";
 import NarrativePanel from "@/components/NarrativePanel";
-import PlayerFigure from "@/components/PlayerFigure";
 import Link from "next/link";
 
 // ── Accountability Score panel (hero) ────────────────────────────────────────
@@ -1019,12 +1018,31 @@ export default function PoliticianProfile() {
                 <ellipse cx="100" cy="30" rx="62" ry="16" fill="none" stroke={accentColor} strokeWidth="0.6" opacity="0.3" />
               </svg>
             </div>
-            <PlayerFigure
-              slug={pol.slug}
-              photo={pol.photo}
-              party={pol.party}
-              name={pol.name}
-            />
+            {/* Portrait: large photo card (replaces the 3D figure) */}
+            <div className="relative rounded-2xl overflow-hidden select-none"
+              style={{ width: "100%", aspectRatio: "560/600", background: "linear-gradient(180deg,#0a1626 0%,#0f2540 100%)" }}>
+              {pol.photo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={pol.photo} alt={pol.name} className="w-full h-full object-cover object-top"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-6xl font-bold text-white/25"
+                  style={{ fontFamily: "var(--font-playfair), serif" }}>
+                  {pol.name.split(" ").map(w => w[0]).slice(0, 2).join("")}
+                </div>
+              )}
+              <div className="absolute bottom-0 left-0 right-0 pointer-events-none"
+                style={{ background: "linear-gradient(to top, rgba(4,10,22,0.95) 0%, rgba(4,10,22,0.55) 55%, transparent 100%)", paddingBottom: "0.6rem", paddingTop: "2.5rem" }}>
+                <p className="text-center font-black tracking-[0.32em] leading-none"
+                  style={{ color: pol.party === "D" ? "#60a5fa" : pol.party === "R" ? "#f87171" : "#cbd5e1", fontSize: "clamp(14px, 3vw, 20px)", textShadow: "0 0 18px rgba(37,99,168,0.5)" }}>
+                  {(pol.name.split(" ").at(-1) ?? pol.name).toUpperCase()}
+                </p>
+                <p className="text-center font-bold tracking-[0.22em] mt-0.5 opacity-55 text-white"
+                  style={{ fontSize: "clamp(8px, 1.5vw, 10px)" }}>
+                  {pol.name.split(" ").slice(0, -1).join(" ").toUpperCase()}
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Stats column */}

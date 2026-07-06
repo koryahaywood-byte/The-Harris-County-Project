@@ -15,21 +15,11 @@ function PolCard({ p, score }: { p: Politician; score: number }) {
     <Link href={`/politicians/${p.slug}`}
       className="group rounded-[1.5rem] bg-white/60 ring-1 ring-black/8 p-[5px] transition-all duration-500 hover:shadow-lg hover:ring-[var(--accent-light)]">
       <div className="rounded-[1.15rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] p-5 flex items-center gap-4">
-        {/* Pre-rendered 3D figure (public/renders, built at /admin/render-figures);
-            falls back to the headshot circle until a render exists. */}
-        <div className="w-16 h-[4.5rem] rounded-xl flex-shrink-0 overflow-hidden relative" style={{ background: "#0a1626" }}>
-          <img src={`/renders/${p.slug}.png`} alt="" className="w-full h-full object-cover object-top"
-            onError={(e) => {
-              const t = e.target as HTMLImageElement;
-              t.style.display = "none";
-              (t.nextElementSibling as HTMLElement | null)?.style.removeProperty("display");
-            }} />
-          <div className="absolute inset-0 w-full h-full items-center justify-center text-xl" style={{ display: "none", background: "rgba(37,99,168,0.08)" }}>
-            {p.photo
-              ? <img src={p.photo} alt={p.name} className="w-full h-full object-cover object-top" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-              : <span className="flex w-full h-full items-center justify-center">{p.name.split(" ").map(n => n[0]).slice(0,2).join("")}</span>
-            }
-          </div>
+        <div className="w-14 h-14 rounded-full bg-[var(--accent)]/10 flex items-center justify-center text-xl flex-shrink-0 overflow-hidden">
+          {p.photo
+            ? <img src={p.photo} alt={p.name} className="w-full h-full object-cover object-top" onError={(e) => { const t = e.target as HTMLImageElement; t.style.display="none"; }} />
+            : <span>{p.name.split(" ").map(n => n[0]).slice(0,2).join("")}</span>
+          }
         </div>
         <div className="min-w-0 flex-1">
           <div className="font-bold text-[var(--accent)] text-sm truncate group-hover:text-[var(--accent-light)] transition-colors" style={{ fontFamily: "var(--font-playfair), serif" }}>
