@@ -12,6 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { MATCHUPS_2026, type RaceLean, type Matchup } from "@/lib/matchups-2026";
 import { FINANCE_DATA_MERGED, fmt } from "@/lib/campaign-finance";
+import { useUrlState, readUrlParams } from "@/lib/useUrlState";
 import RelatedTools from "@/components/RelatedTools";
 
 const LEAN_LABEL: Record<RaceLean, string> = {
@@ -48,8 +49,11 @@ function leanSide(lean: RaceLean): "D" | "R" | "T" {
 type RaceData = { label: string; candidates: { name: string; party: string }[]; votes: Record<string, number[]> };
 type DistrictRaces = { hd?: Record<string, Record<string, Record<string, RaceData>>> };
 interface LastResult { dPct: number; rPct: number; cycle: string }
+interface SeriesPoint { year: number; dPct: number } // two-party D share, one decimal
+interface HdHistory { last: LastResult; series: SeriesPoint[] }
 
-function sumRace(race: RaceData): { dPct: number; rPct: number } | null {
+// Two-party D share of a race, one decimal; null when either major party is absent.
+function twoPartyD(race: RaceData): number | null {
   const dIdx = race.candidates.findIndex(c => c.party === "D");
   const rIdx = race.candidates.findIndex(c => c.party === "R");
   if (dIdx < 0 || rIdx < 0) return null;
@@ -57,17 +61,23 @@ function sumRace(race: RaceData): { dPct: number; rPct: number } | null {
   for (const v of Object.values(race.votes)) { d += v[dIdx] ?? 0; r += v[rIdx] ?? 0; }
   const total = d + r;
   if (!total) return null;
-  return { dPct: Math.round((d / total) * 100), rPct: Math.round((r / total) * 100) };
+  return Math.round((d / total) * 1000) / 10;
 }
-function buildHdResults(dr: DistrictRaces): Record<string, LastResult> {
-  const out: Record<string, LastResult> = {};
+// Every contested general on file for each HD, oldest→newest, plus the most
+// recent one broken out as the card's result bar.
+function buildHdHistory(dr: DistrictRaces): Record<string, HdHistory> {
+  const out: Record<string, HdHistory> = {};
   for (const [hd, cycles] of Object.entries(dr.hd ?? {})) {
-    for (const cy of ["2024G", "2022G", "2020G", "2018G", "2016G"]) {
-      const c = cycles[cy]; if (!c) continue;
-      const race = Object.values(c)[0]; if (!race) continue;
-      const r = sumRace(race); if (!r) continue;
-      out[`HD-${hd}`] = { ...r, cycle: cy.replace("G", "") }; break;
+    const series: SeriesPoint[] = [];
+    for (const cy of Object.keys(cycles).filter(c => c.endsWith("G")).sort()) {
+      const race = Object.values(cycles[cy])[0]; if (!race) continue;
+      const dPct = twoPartyD(race); if (dPct == null) continue;
+      series.push({ year: Number(cy.slice(0, 4)), dPct });
     }
+    if (!series.length) continue;
+    const newest = series[series.length - 1];
+    const dRound = Math.round(newest.dPct);
+    out[`HD-${hd}`] = { series, last: { dPct: dRound, rPct: 100 - dRound, cycle: String(newest.year) } };
   }
   return out;
 }
@@ -85,25 +95,41 @@ const localeOf = (m: Matchup): string => {
   }
   return "";
 };
-const cashOf = (name: string): number => {
+const financeOf = (name: string): { cash: number; asOf?: string } => {
   const f = FINANCE_DATA_MERGED.find(c => c.name === name);
-  return f?.cash ?? 0;
+  return { cash: f?.cash ?? 0, asOf: f?.asOf };
 };
 
-type Sort = "competitive" | "district";
-type Filter = "all" | "battleground";
+// Full-chamber split, 89th Legislature: 88 R, 62 D (Texas Legislative Reference
+// Library party list for the 89th; Ballotpedia still shows 88-62 as of Apr 2026).
+const CHAMBER_R = 88;
+const CHAMBER_D = 62;
+const MAJORITY = 76;
+const NET_FLIPS_FOR_CONTROL = MAJORITY - CHAMBER_D; // 14
+
+type Sort = "rating" | "margin" | "cash" | "district";
+const SORT_KEYS: Sort[] = ["rating", "margin", "cash", "district"];
+const URL_DEFAULTS = { sort: "rating", bg: "0" };
 
 export default function TxHouse2026() {
-  const [results, setResults] = useState<Record<string, LastResult>>({});
-  const [sort, setSort] = useState<Sort>("competitive");
-  const [filter, setFilter] = useState<Filter>("all");
+  const [history, setHistory] = useState<Record<string, HdHistory>>({});
+  const [sort, setSort] = useState<Sort>("rating");
+  const [bgOnly, setBgOnly] = useState(false);
 
   useEffect(() => {
     fetch("/data/district-races.json")
       .then(r => r.json())
-      .then((dr: DistrictRaces) => setResults(buildHdResults(dr)))
+      .then((dr: DistrictRaces) => setHistory(buildHdHistory(dr)))
       .catch(() => {});
   }, []);
+
+  // Restore ?sort= / ?bg=1 from a shared link, then mirror changes back out.
+  useEffect(() => {
+    const p = readUrlParams(["sort", "bg"]);
+    if (p.sort && (SORT_KEYS as string[]).includes(p.sort)) setSort(p.sort as Sort);
+    if (p.bg === "1") setBgOnly(true);
+  }, []);
+  useUrlState({ sort, bg: bgOnly ? "1" : "0" }, URL_DEFAULTS);
 
   const seats = useMemo(() => {
     const list = Object.entries(MATCHUPS_2026)
@@ -113,17 +139,21 @@ export default function TxHouse2026() {
         const num = key.replace("HD-", "");
         const d = m.sides.find(s => s.party === "D");
         const r = m.sides.find(s => s.party === "R");
+        const df = d ? financeOf(d.name) : undefined;
+        const rf = r ? financeOf(r.name) : undefined;
+        const h = history[key];
         return {
           key, num: Number(num), lean, matchup: m, locale: localeOf(m),
           d, r,
-          dCash: d ? cashOf(d.name) : 0,
-          rCash: r ? cashOf(r.name) : 0,
-          result: results[key],
+          dCash: df?.cash ?? 0, dAsOf: df?.asOf,
+          rCash: rf?.cash ?? 0, rAsOf: rf?.asOf,
+          result: h?.last,
+          series: h?.series ?? [],
           battleground: BATTLEGROUND.includes(lean),
         };
       });
     return list;
-  }, [results]);
+  }, [history]);
 
   const tally = useMemo(() => {
     const t = { d: 0, t: 0, r: 0, battleground: 0 };
@@ -137,14 +167,17 @@ export default function TxHouse2026() {
 
   const shown = useMemo(() => {
     let list = seats;
-    if (filter === "battleground") list = list.filter(s => s.battleground);
-    list = [...list].sort((a, b) =>
-      sort === "district"
-        ? a.num - b.num
-        : (LEAN_RANK[a.lean] - LEAN_RANK[b.lean]) || (a.num - b.num)
-    );
+    if (bgOnly) list = list.filter(s => s.battleground);
+    const dMargin = (s: Seat) => (s.result ? s.result.dPct - s.result.rPct : -Infinity);
+    const cashGap = (s: Seat) => Math.abs(s.dCash - s.rCash);
+    list = [...list].sort((a, b) => {
+      if (sort === "district") return a.num - b.num;
+      if (sort === "margin") return dMargin(b) - dMargin(a) || a.num - b.num;
+      if (sort === "cash") return cashGap(b) - cashGap(a) || a.num - b.num;
+      return (LEAN_RANK[a.lean] - LEAN_RANK[b.lean]) || (a.num - b.num);
+    });
     return list;
-  }, [seats, sort, filter]);
+  }, [seats, sort, bgOnly]);
 
   const decided = seats.length - tally.battleground;
 
@@ -160,8 +193,8 @@ export default function TxHouse2026() {
         </h1>
         <p className="text-[13px] sm:text-[15px] mt-1.5 max-w-2xl" style={{ color: "#475569" }}>
           Harris County anchors <b>{seats.length} of the 150</b> Texas House districts. {decided} are
-          already settled by partisan lean — <b>{tally.battleground}</b> swing seats will decide how much
-          weight the county throws behind a 76-seat majority.
+          already settled by partisan lean. The remaining <b>{tally.battleground}</b> swing seats decide
+          how much weight the county throws behind a 76-seat majority.
         </p>
 
         {/* Seat tally bar */}
@@ -191,15 +224,24 @@ export default function TxHouse2026() {
             <span><b style={{ color: "#dc2626" }}>{tally.r}</b> lean Republican</span>
             <span><b style={{ color: "#7c3aed" }}>{tally.battleground}</b> within reach either way</span>
           </div>
+          <p className="text-[11.5px] mt-3 pt-3 border-t" style={{ borderColor: "#f1f5f9", color: "#475569" }}>
+            Chamber today: <b style={{ color: "#dc2626" }}>R {CHAMBER_R}</b> – <b style={{ color: "#2563eb" }}>D {CHAMBER_D}</b>.
+            Flipping a net <b>{NET_FLIPS_FOR_CONTROL}</b> seats changes control of the 150-seat House.
+            Harris County alone holds <b style={{ color: "#7c3aed" }}>{tally.battleground}</b> of the battlegrounds.
+          </p>
         </div>
 
-        {/* Controls */}
+        {/* Controls: sort lane + battleground toggle, mirrored into ?sort= / ?bg=1 */}
         <div className="flex flex-wrap items-center gap-2 mt-6 mb-4">
-          <Pill active={sort === "competitive"} onClick={() => setSort("competitive")}>Closest first</Pill>
-          <Pill active={sort === "district"} onClick={() => setSort("district")}>By district #</Pill>
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em] mr-1" style={{ color: "#9ca3af" }}>Sort</span>
+          <Pill active={sort === "rating"} onClick={() => setSort("rating")}>Closest rating first</Pill>
+          <Pill active={sort === "margin"} onClick={() => setSort("margin")}>Best last D margin</Pill>
+          <Pill active={sort === "cash"} onClick={() => setSort("cash")}>Biggest cash gap</Pill>
+          <Pill active={sort === "district"} onClick={() => setSort("district")}>District #</Pill>
           <span className="w-px h-5 mx-1" style={{ background: "#e2e8f0" }} />
-          <Pill active={filter === "all"} onClick={() => setFilter("all")}>All {seats.length}</Pill>
-          <Pill active={filter === "battleground"} onClick={() => setFilter("battleground")}>Battlegrounds only</Pill>
+          <Pill active={bgOnly} onClick={() => setBgOnly(v => !v)}>
+            Battlegrounds only{bgOnly ? ` (${tally.battleground})` : ""}
+          </Pill>
         </div>
 
         {/* Cards */}
@@ -220,9 +262,47 @@ export default function TxHouse2026() {
           </div>
         </div>
 
+        {/* Methodology */}
+        <div className="mt-6 px-1">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1.5" style={{ color: "#9ca3af" }}>
+            Where the numbers come from
+          </p>
+          <p className="text-[11.5px] leading-relaxed max-w-2xl" style={{ color: "#6b7280" }}>
+            Ratings are editorial calls set by hand in our 2026 matchup file, not the output of a model.
+            Result bars and trend lines come from Harris County precinct returns, using each seat&apos;s most
+            recent contested two-party general election with the cycle labeled on the bar. Cash on hand comes
+            from campaign finance reports we track, current as of the filing date shown when you hover a figure.
+          </p>
+        </div>
+
         <RelatedTools current="/tools/tx-house" />
       </div>
     </main>
+  );
+}
+
+// ── Sparkline: two-party D share per contested general, oldest→newest ─────────
+function Sparkline({ series }: { series: SeriesPoint[] }) {
+  const W = 60, H = 18, PAD = 2.5;
+  const vals = series.map(p => p.dPct);
+  let lo = Math.min(...vals), hi = Math.max(...vals);
+  const pad = Math.max((10 - (hi - lo)) / 2, 1.5); // keep flat runs from filling the frame
+  lo -= pad; hi += pad;
+  const x = (i: number) => PAD + (i / (series.length - 1)) * (W - 2 * PAD);
+  const y = (v: number) => PAD + (1 - (v - lo) / (hi - lo)) * (H - 2 * PAD);
+  const pts = series.map((p, i) => `${x(i).toFixed(1)},${y(p.dPct).toFixed(1)}`).join(" ");
+  const first = series[0], last = series[series.length - 1];
+  const title = `Two-party D share. ${series.map(p => `${p.year}: ${p.dPct}%`).join(" · ")}`;
+  return (
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="shrink-0" role="img" aria-label={title}>
+      <title>{title}</title>
+      {lo < 50 && hi > 50 && (
+        <line x1={PAD} x2={W - PAD} y1={y(50)} y2={y(50)} stroke="#e2e8f0" strokeWidth={1} strokeDasharray="2 2" />
+      )}
+      <polyline points={pts} fill="none" stroke="#2563eb" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx={x(0)} cy={y(first.dPct)} r={1.7} fill="#93c5fd" />
+      <circle cx={x(series.length - 1)} cy={y(last.dPct)} r={2} fill="#2563eb" />
+    </svg>
   );
 }
 
@@ -253,7 +333,9 @@ interface Seat {
   d?: Matchup["sides"][number];
   r?: Matchup["sides"][number];
   dCash: number; rCash: number;
+  dAsOf?: string; rAsOf?: string;
   result?: LastResult;
+  series: SeriesPoint[];
   battleground: boolean;
 }
 
@@ -283,11 +365,11 @@ function SeatCard({ seat }: { seat: Seat }) {
 
       {/* Candidates */}
       <div className="space-y-1.5 mb-3">
-        <CandidateLine side={seat.d} cash={seat.dCash} accent="#2563eb" letter="D" />
-        <CandidateLine side={seat.r} cash={seat.rCash} accent="#dc2626" letter="R" />
+        <CandidateLine side={seat.d} cash={seat.dCash} asOf={seat.dAsOf} accent="#2563eb" letter="D" />
+        <CandidateLine side={seat.r} cash={seat.rCash} asOf={seat.rAsOf} accent="#dc2626" letter="R" />
       </div>
 
-      {/* Last general result */}
+      {/* Last contested general result */}
       {result ? (
         <div>
           <div className="flex items-center justify-between text-[9px] font-bold mb-1">
@@ -303,12 +385,28 @@ function SeatCard({ seat }: { seat: Seat }) {
       ) : (
         <div className="text-[9px]" style={{ color: "#cbd5e1" }}>No prior two-party result on file</div>
       )}
+
+      {/* D-share trend across every contested general on file */}
+      {seat.series.length >= 2 && (
+        <div className="flex items-center gap-2 mt-2.5">
+          <Sparkline series={seat.series} />
+          <span className="text-[9.5px] font-semibold" style={{ color: "#94a3b8" }}>
+            D share {seat.series[0].year}→{seat.series[seat.series.length - 1].year}:{" "}
+            <b style={{ color: trendDelta(seat.series) >= 0 ? "#2563eb" : "#dc2626" }}>
+              {trendDelta(seat.series) >= 0 ? "+" : ""}{trendDelta(seat.series).toFixed(1)} pts
+            </b>
+          </span>
+        </div>
+      )}
     </div>
   );
 }
 
-function CandidateLine({ side, cash, accent, letter }:
-  { side: Matchup["sides"][number] | undefined; cash: number; accent: string; letter: "D" | "R" }) {
+const trendDelta = (s: SeriesPoint[]): number =>
+  Math.round((s[s.length - 1].dPct - s[0].dPct) * 10) / 10;
+
+function CandidateLine({ side, cash, asOf, accent, letter }:
+  { side: Matchup["sides"][number] | undefined; cash: number; asOf?: string; accent: string; letter: "D" | "R" }) {
   if (!side) {
     return (
       <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#cbd5e1" }}>
@@ -327,6 +425,7 @@ function CandidateLine({ side, cash, accent, letter }:
       <span className="flex-1" />
       {cash > 0 ? (
         <Link href={`/tools/where-is-the-dough?tab=leaderboard&q=${encodeURIComponent(side.name)}`}
+          title={asOf ? `Cash on hand, filed ${asOf}` : undefined}
           className="text-[10.5px] font-bold hover:opacity-70 shrink-0" style={{ color: accent }}>
           {fmt(cash)}
         </Link>
