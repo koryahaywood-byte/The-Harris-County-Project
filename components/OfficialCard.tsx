@@ -12,6 +12,7 @@ import { computeStats, STAT_LABELS, type PoliticianStats } from "@/lib/politicia
 import { computeBadges } from "@/lib/badges";
 import { DISTRICT_INFO } from "@/lib/districts-data";
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
+import PlayerModel2D from "@/components/PlayerModel2D";
 
 const GOLD = "#d4af37";
 const GOLD_BRIGHT = "#fbbf24";
@@ -153,24 +154,15 @@ export default function OfficialCard({ pol, defaultSide = "front" }: { pol: Poli
             </span>
           </div>
 
-          {/* Photo */}
+          {/* 2K player render */}
           <div className="mt-4 mb-3 mx-auto relative">
-            <div className="w-28 h-28 rounded-full overflow-hidden"
-              style={{ border: `2px solid ${GOLD}80`, boxShadow: `0 0 32px ${GOLD}30` }}>
-              {pol.photo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={pol.photo} alt={pol.name} className="w-full h-full object-cover object-top" style={{ filter: "url('#hcp-cel')" }}
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-2xl font-bold"
-                  style={{ background: "rgba(255,255,255,0.08)", color: GOLD_BRIGHT }}>
-                  {pol.name.split(" ").map(w => w[0]).slice(0, 2).join("")}
-                </div>
-              )}
+            <div className="rounded-2xl overflow-hidden"
+              style={{ border: `1.5px solid ${GOLD}50`, boxShadow: `0 0 32px ${GOLD}26` }}>
+              <PlayerModel2D slug={pol.slug} name={pol.name} photo={pol.photo} party={pol.party} size={158} />
             </div>
             {/* OVR chip */}
-            <div className="absolute -bottom-1 -right-2 w-12 h-12 rounded-full flex flex-col items-center justify-center"
-              style={{ background: "rgba(10,20,35,0.9)", border: `1.5px solid ${GOLD_BRIGHT}` }}>
+            <div className="absolute -bottom-2 -right-3 w-12 h-12 rounded-full flex flex-col items-center justify-center"
+              style={{ background: "rgba(10,20,35,0.94)", border: `1.5px solid ${GOLD_BRIGHT}`, boxShadow: `0 0 18px ${GOLD}40` }}>
               <span className="text-base font-bold leading-none" style={{ color: GOLD_BRIGHT, fontFamily: "var(--font-playfair,serif)" }}>{stats.ovr}</span>
               <span className="text-[7px] font-bold tracking-[0.2em] text-white/50">OVR</span>
             </div>
