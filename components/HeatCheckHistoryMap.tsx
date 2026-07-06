@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
 import ShareButton from "@/components/ShareButton";
 import RelatedTools from "@/components/RelatedTools";
+import HeatCheckInsights from "@/components/HeatCheckInsights";
+import { useUrlState, readUrlParams } from "@/lib/useUrlState";
 import "leaflet/dist/leaflet.css";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -110,6 +111,9 @@ const SWING_LEGEND = [
   { color: "#991b1b", label: "Shifted R 10%+" },
 ];
 
+// General cycles used for the pinned-precinct trend sparkline, oldest first
+const GENERAL_TREND_CYCLES = ["2012G", "2014G", "2016G", "2018G", "2020G", "2022G", "2024G"];
+
 const CYCLES = [
   { key: "2026P", label: "2026 Primary" },
   { key: "2024G", label: "2024 General" },
@@ -144,7 +148,6 @@ function precinctDistricts(rawPrec: string): { hd?: string; sd?: string; cd?: st
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function HeatCheckHistoryMap() {
-  const router = useRouter();
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMap = useRef<L.Map | null>(null);
   const geoLayerRef = useRef<L.GeoJSON | null>(null);
@@ -167,10 +170,23 @@ export default function HeatCheckHistoryMap() {
   const [sortCol, setSortCol] = useState<SortCol>("prec");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
 
-  // Tooltip
+  // Tooltip (transient hover) + pinned precinct (click-to-pin, survives mouseout)
   const [hovered, setHovered] = useState<{
     prec: string; data: PrecinctData | null; baseData: PrecinctData | null; swing: number | null;
   } | null>(null);
+  const [pinned, setPinned] = useState<string | null>(null);
+
+  // ── URL round-trip ─────────────────────────────────────────────────────────
+  const pendingUrlRace = useRef<string | null>(null);
+  useEffect(() => {
+    const p = readUrlParams(["view", "cycle", "from", "race", "area", "prec"]);
+    if (p.view === "swing") setViewMode("swing");
+    if (p.cycle && CYCLES.some(c => c.key === p.cycle)) setCycle(p.cycle);
+    if (p.from && CYCLES.some(c => c.key === p.from)) setCompareCycle(p.from);
+    if (p.area === "houston") setJurisdiction("houston");
+    if (p.race) pendingUrlRace.current = p.race;
+    if (p.prec) setPinned(p.prec);
+  }, []);
 
   // ── Load data ──────────────────────────────────────────────────────────────
   const loadData = useCallback(() => {
@@ -193,11 +209,15 @@ export default function HeatCheckHistoryMap() {
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  // Auto-select race when cycle changes
+  // Auto-select race when cycle changes (honoring a race carried in the URL once)
   useEffect(() => {
     if (!history) return;
     const cd = history.cycles[cycle];
-    setRace(cd?.races ? Object.keys(cd.races)[0] : null);
+    if (!cd?.races) { setRace(null); return; }
+    const keys = Object.keys(cd.races);
+    const pending = pendingUrlRace.current;
+    pendingUrlRace.current = null;
+    setRace(pending && keys.includes(pending) ? pending : keys[0]);
   }, [cycle, history]);
 
   useEffect(() => {
@@ -301,15 +321,8 @@ export default function HeatCheckHistoryMap() {
           lyr.on("click", () => {
             const inJurisdiction = jurisdiction !== "houston" || filterPrec(raw);
             if (!inJurisdiction) return;
-            const d = precinctDistricts(raw);
-            const href = d.hd
-              ? `/tools/districts?type=hd&district=${d.hd}`
-              : d.sd
-              ? `/tools/districts?type=sd&district=${d.sd}`
-              : d.cd
-              ? `/tools/districts?type=cd&district=${d.cd}`
-              : null;
-            if (href) router.push(href);
+            // Pin the detail card (click again to unpin) so its links are clickable.
+            setPinned(prev => (prev != null && normPrec(prev) === normPrec(raw) ? null : raw));
           });
         },
       }).addTo(leafletMap.current!);
@@ -321,6 +334,56 @@ export default function HeatCheckHistoryMap() {
   // ── Derived display values ─────────────────────────────────────────────────
   const cycleData = history?.cycles[cycle];
   const availableRaces = cycleData?.races ? Object.entries(cycleData.races).map(([k, v]) => ({ key: k, label: v.label })) : [];
+
+  // Popup shows the pinned precinct if set, otherwise the hovered one.
+  // Pinned data is derived fresh so cycle/race changes update the card in place.
+  const popup = useMemo(() => {
+    if (pinned != null) {
+      return {
+        prec: normPrec(pinned).padStart(4, "0"),
+        data: lookupPrec(lookup, pinned) ?? null,
+        baseData: lookupPrec(baseLookup, pinned) ?? null,
+        swing: lookupPrec(swingMap, pinned) ?? null,
+        isPinned: true,
+      };
+    }
+    return hovered ? { ...hovered, isPinned: false } : null;
+  }, [pinned, hovered, lookup, baseLookup, swingMap]);
+
+  // D% across general cycles for the pinned precinct (top-of-ballot race each cycle)
+  const pinnedTrend = useMemo(() => {
+    if (pinned == null || !history) return [];
+    const pts: { year: string; pct: number }[] = [];
+    for (const key of GENERAL_TREND_CYCLES) {
+      const cd = history.cycles[key];
+      if (!cd?.races) continue;
+      const race0 = cd.races[Object.keys(cd.races)[0]];
+      const dr = findDR(race0.candidates);
+      if (!dr) continue;
+      const votes = lookupPrec(race0.votes, pinned);
+      if (!votes) continue;
+      const d = votes[dr.dIdx] ?? 0, r = votes[dr.rIdx] ?? 0;
+      if (d + r === 0) continue;
+      pts.push({ year: "'" + key.slice(2, 4), pct: d / (d + r) });
+    }
+    return pts;
+  }, [pinned, history]);
+
+  // Mirror the view into the query string so shared links reproduce it exactly
+  const defaultRace = cycleData?.races ? Object.keys(cycleData.races)[0] : "";
+  useUrlState(
+    {
+      view: viewMode,
+      cycle,
+      from: viewMode === "swing" ? compareCycle : null,
+      race,
+      area: jurisdiction,
+      prec: pinned != null ? normPrec(pinned).padStart(4, "0") : null,
+    },
+    { view: "partisan", cycle: "2026P", from: "2020G", race: defaultRace, area: "county", prec: "" }
+  );
+
+  const deltaPresetActive = viewMode === "swing" && cycle === "2024G" && compareCycle === "2020G";
 
   const compareCycleData = history?.cycles[compareCycle];
   const compareAvailableRaces = compareCycleData?.races ? Object.entries(compareCycleData.races).map(([k, v]) => ({ key: k, label: v.label })) : [];
@@ -447,6 +510,22 @@ export default function HeatCheckHistoryMap() {
           </select>
         </div>
 
+        {/* One-click Trump-era delta preset */}
+        <button
+          onClick={() => {
+            if (deltaPresetActive) { setViewMode("partisan"); return; }
+            setViewMode("swing"); setCycle("2024G"); setCompareCycle("2020G"); setShowIframe(false);
+          }}
+          title="Color precincts by change in presidential D share, 2020 to 2024"
+          className="px-3 py-1.5 rounded-lg text-[11px] font-bold border transition-colors"
+          style={{
+            background: deltaPresetActive ? "#0f2540" : "#fff",
+            color: deltaPresetActive ? "#fbbf24" : "#6b7280",
+            borderColor: deltaPresetActive ? "#0f2540" : "rgba(0,0,0,0.1)",
+          }}>
+          Δ 2020→2024
+        </button>
+
         {/* Race dropdown */}
         {availableRaces.length > 1 && (
           <div className="flex items-center gap-1.5">
@@ -564,76 +643,121 @@ export default function HeatCheckHistoryMap() {
           </div>
         )}
 
-        {/* Hover tooltip */}
-        {hovered && (
+        {/* Precinct card: transient on hover, pinned on click */}
+        {popup && (
           <div className="absolute bottom-4 left-4 rounded-xl p-3 z-[1000] min-w-[220px]"
-            style={{ background: "rgba(15,37,64,0.93)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.12)" }}>
-            <div className="flex items-center justify-between mb-2">
+            style={{ background: "rgba(15,37,64,0.93)", backdropFilter: "blur(12px)", border: popup.isPinned ? "1px solid rgba(251,191,36,0.45)" : "1px solid rgba(255,255,255,0.12)" }}>
+            <div className="flex items-center justify-between gap-2 mb-2">
               <p className="text-[9px] font-bold uppercase tracking-[0.16em]" style={{ color: "rgba(255,255,255,0.4)" }}>
-                Precinct {hovered.prec}
+                Precinct {popup.prec}
               </p>
               {/* District quick-links */}
-              {(() => {
-                const d = precinctDistricts(hovered.prec);
-                return (
-                  <div className="flex gap-1.5">
-                    {d.hd && <Link href={`/tools/districts?type=hd&district=${d.hd}`}
-                      className="text-[9px] font-bold px-1.5 py-0.5 rounded-md hover:opacity-80"
-                      style={{ background: "rgba(122,174,232,0.2)", color: "#7aaee8" }}>HD {d.hd} →</Link>}
-                    {d.sd && <Link href={`/tools/districts?type=sd&district=${d.sd}`}
-                      className="text-[9px] font-bold px-1.5 py-0.5 rounded-md hover:opacity-80"
-                      style={{ background: "rgba(122,174,232,0.12)", color: "#7aaee8" }}>SD {d.sd} →</Link>}
-                    {d.cd && <Link href={`/tools/districts?type=cd&district=${d.cd}`}
-                      className="text-[9px] font-bold px-1.5 py-0.5 rounded-md hover:opacity-80"
-                      style={{ background: "rgba(122,174,232,0.08)", color: "#7aaee8" }}>CD {d.cd} →</Link>}
-                  </div>
-                );
-              })()}
+              <div className="flex items-center gap-1.5">
+                {(() => {
+                  const d = precinctDistricts(popup.prec);
+                  return (
+                    <>
+                      {d.hd && <Link href={`/tools/districts?type=hd&district=${d.hd}`}
+                        className="text-[9px] font-bold px-1.5 py-0.5 rounded-md hover:opacity-80"
+                        style={{ background: "rgba(122,174,232,0.2)", color: "#7aaee8" }}>HD {d.hd} →</Link>}
+                      {d.sd && <Link href={`/tools/districts?type=sd&district=${d.sd}`}
+                        className="text-[9px] font-bold px-1.5 py-0.5 rounded-md hover:opacity-80"
+                        style={{ background: "rgba(122,174,232,0.12)", color: "#7aaee8" }}>SD {d.sd} →</Link>}
+                      {d.cd && <Link href={`/tools/districts?type=cd&district=${d.cd}`}
+                        className="text-[9px] font-bold px-1.5 py-0.5 rounded-md hover:opacity-80"
+                        style={{ background: "rgba(122,174,232,0.08)", color: "#7aaee8" }}>CD {d.cd} →</Link>}
+                    </>
+                  );
+                })()}
+                {popup.isPinned && (
+                  <button onClick={() => setPinned(null)} aria-label="Unpin precinct"
+                    className="text-[11px] leading-none font-bold hover:opacity-80"
+                    style={{ color: "rgba(255,255,255,0.55)" }}>
+                    ✕
+                  </button>
+                )}
+              </div>
             </div>
-            {hovered.data?.pct != null ? (
-              viewMode === "swing" && hovered.swing != null ? (
+            {popup.data?.pct != null ? (
+              viewMode === "swing" && popup.swing != null ? (
                 <>
                   <div className="flex justify-between mb-1">
                     <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.5)" }}>{cmpCycleLabel}</span>
-                    <span className="text-xs font-bold text-white">{Math.round((hovered.baseData?.pct ?? 0) * 100)}% D</span>
+                    <span className="text-xs font-bold text-white">{Math.round((popup.baseData?.pct ?? 0) * 100)}% D</span>
                   </div>
                   <div className="flex justify-between mb-1">
                     <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.5)" }}>{curCycleLabel}</span>
-                    <span className="text-xs font-bold text-white">{Math.round(hovered.data.pct * 100)}% D</span>
+                    <span className="text-xs font-bold text-white">{Math.round(popup.data.pct * 100)}% D</span>
                   </div>
                   <div className="flex justify-between mt-1.5 pt-1.5 border-t border-white/10">
                     <span className="text-[10px] font-bold uppercase tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.45)" }}>Swing</span>
-                    <span className="text-sm font-black" style={{ color: hovered.swing > 0 ? "#7aaee8" : "#f87171" }}>
-                      {hovered.swing > 0 ? "+" : ""}{(hovered.swing * 100).toFixed(1)}% {hovered.swing > 0 ? "D" : "R"}
+                    <span className="text-sm font-black" style={{ color: popup.swing > 0 ? "#7aaee8" : "#f87171" }}>
+                      {popup.swing > 0 ? "+" : ""}{(popup.swing * 100).toFixed(1)}% {popup.swing > 0 ? "D" : "R"}
                     </span>
                   </div>
                 </>
               ) : (
                 <>
                   <div className="flex justify-between gap-4 mb-1">
-                    <span className="text-xs font-bold" style={{ color: "#7aaee8" }}>{hovered.data.dName}</span>
-                    <span className="text-xs font-bold text-white">{Math.round(hovered.data.pct * 100)}%</span>
+                    <span className="text-xs font-bold" style={{ color: "#7aaee8" }}>{popup.data.dName}</span>
+                    <span className="text-xs font-bold text-white">{Math.round(popup.data.pct * 100)}%</span>
                   </div>
                   <div className="h-1.5 rounded-full mb-2 overflow-hidden" style={{ background: "#f87171" }}>
-                    <div className="h-full rounded-full" style={{ width: `${Math.round(hovered.data.pct * 100)}%`, background: "#2563a8" }} />
+                    <div className="h-full rounded-full" style={{ width: `${Math.round(popup.data.pct * 100)}%`, background: "#2563a8" }} />
                   </div>
                   <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.45)" }}>
-                    {hovered.data.d.toLocaleString()} D · {hovered.data.r.toLocaleString()} R · {hovered.data.total.toLocaleString()} total
+                    {popup.data.d.toLocaleString()} D · {popup.data.r.toLocaleString()} R · {popup.data.total.toLocaleString()} total
                   </p>
                 </>
               )
             ) : (
-              <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.4)" }}>No data</p>
+              <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.4)" }}>No data for {curCycleLabel}</p>
             )}
-            {(() => {
-              const d = precinctDistricts(hovered.prec);
-              const target = d.hd ? `HD ${d.hd}` : d.sd ? `SD ${d.sd}` : d.cd ? `CD ${d.cd}` : null;
-              return target ? (
-                <p className="text-[9px] mt-2 pt-2 border-t border-white/10" style={{ color: "rgba(255,255,255,0.5)" }}>
-                  Click precinct → {target} breakdown
+
+            {/* Trend sparkline: D% in the top-of-ballot general race, per cycle */}
+            {popup.isPinned && pinnedTrend.length >= 2 && (
+              <div className="mt-2 pt-2 border-t border-white/10">
+                <p className="text-[8px] font-bold uppercase tracking-[0.16em] mb-1" style={{ color: "rgba(255,255,255,0.4)" }}>
+                  D share in generals, {pinnedTrend[0].year} to {pinnedTrend[pinnedTrend.length - 1].year}
                 </p>
-              ) : null;
-            })()}
+                {(() => {
+                  const n = pinnedTrend.length;
+                  const x = (i: number) => 12 + (i * 176) / (n - 1);
+                  const y = (p: number) => 34 - Math.max(0, Math.min(1, p)) * 26;
+                  const first = pinnedTrend[0], last = pinnedTrend[n - 1];
+                  return (
+                    <svg width={200} height={48} viewBox="0 0 200 48" role="img"
+                      aria-label={`D share by cycle: ${pinnedTrend.map(t => `${t.year} ${Math.round(t.pct * 100)}%`).join(", ")}`}>
+                      <line x1={12} x2={188} y1={y(0.5)} y2={y(0.5)} stroke="rgba(255,255,255,0.2)" strokeDasharray="3 3" strokeWidth={1} />
+                      <polyline points={pinnedTrend.map((t, i) => `${x(i)},${y(t.pct)}`).join(" ")}
+                        fill="none" stroke="#7aaee8" strokeWidth={1.5} />
+                      {pinnedTrend.map((t, i) => (
+                        <g key={t.year}>
+                          <circle cx={x(i)} cy={y(t.pct)} r={2.2} fill={t.pct >= 0.5 ? "#7aaee8" : "#f87171"} />
+                          <text x={x(i)} y={45} textAnchor="middle" fontSize={7} fill="rgba(255,255,255,0.35)">{t.year}</text>
+                        </g>
+                      ))}
+                      <text x={x(0)} y={Math.max(9, y(first.pct) - 5)} textAnchor="start" fontSize={8} fontWeight={700}
+                        fill={first.pct >= 0.5 ? "#7aaee8" : "#f87171"}>{Math.round(first.pct * 100)}%</text>
+                      <text x={x(n - 1)} y={Math.max(9, y(last.pct) - 5)} textAnchor="end" fontSize={8} fontWeight={700}
+                        fill={last.pct >= 0.5 ? "#7aaee8" : "#f87171"}>{Math.round(last.pct * 100)}%</text>
+                    </svg>
+                  );
+                })()}
+              </div>
+            )}
+
+            {popup.isPinned ? (
+              <Link href={`/tools/precinct-lookup?p=${popup.prec}`}
+                className="block text-center text-[10px] font-bold rounded-lg px-3 py-1.5 mt-2 hover:opacity-90"
+                style={{ background: "#fbbf24", color: "#0f2540" }}>
+                Full history: Precinct {popup.prec} →
+              </Link>
+            ) : (
+              <p className="text-[9px] mt-2 pt-2 border-t border-white/10" style={{ color: "rgba(255,255,255,0.5)" }}>
+                Click the precinct to pin this card and open its full history
+              </p>
+            )}
           </div>
         )}
 
@@ -648,6 +772,9 @@ export default function HeatCheckHistoryMap() {
           ))}
         </div>
       </div>
+
+      {/* Insight rail: computed shift, turnout, and flippable rankings */}
+      <HeatCheckInsights history={history} />
 
       {/* Detail table */}
       {sortedRows.length > 0 && (
