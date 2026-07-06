@@ -481,10 +481,11 @@ export default function Home() {
             </div>
 
             {/* Floating stat chip: bottom */}
-            <div className="hero-float-3 absolute -bottom-4 -right-2 rounded-2xl px-4 py-3"
+            <div className="hero-float-3 absolute -bottom-9 -right-3 rounded-2xl px-4 py-3"
               style={{ background: "rgba(15,37,64,0.92)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.12)", boxShadow: "0 18px 40px rgba(15,37,64,0.28)" }}>
-              <p className="text-[8px] font-bold uppercase tracking-[0.16em]" style={{ color: "#7aaee8" }}>Biggest war chest</p>
-              <p className="text-2xl font-bold leading-none tnum mt-0.5 text-white" style={{ fontFamily: "var(--font-playfair), serif" }}>$105.7M</p>
+              <p className="text-[8px] font-bold uppercase tracking-[0.16em]" style={{ color: "#7aaee8" }}>Biggest local war chest</p>
+              <p className="text-2xl font-bold leading-none tnum mt-0.5 text-white" style={{ fontFamily: "var(--font-playfair), serif" }}>$2.7M</p>
+              <p className="text-[9px] font-semibold mt-1" style={{ color: "#9fc1e8" }}>Whitmire · Houston Mayor</p>
             </div>
           </div>
         </div>

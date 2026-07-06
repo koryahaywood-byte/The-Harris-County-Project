@@ -293,7 +293,7 @@ export default function PlayerFigure3D({
       <Canvas
         camera={{ position: [0, 1.05, 2.45], fov: 44 }}
         shadows
-        gl={{ antialias: true, alpha: false }}
+        gl={{ antialias: true, alpha: false, preserveDrawingBuffer: true }}
         style={{ display: "block" }}
       >
         <SceneSetup />
