@@ -12,6 +12,9 @@ import { getFinanceByName, fmt } from "@/lib/campaign-finance";
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
 import ShareButton from "@/components/ShareButton";
 import RelatedTools from "@/components/RelatedTools";
+import LeveragePrecincts from "@/components/LeveragePrecincts";
+import { buildPathToWinSentences, findLastContestedGeneral } from "@/lib/path-to-win";
+import type { DistrictRacesFile } from "@/lib/path-to-win";
 import DistrictHistory from "@/components/DistrictHistory";
 import TerrainReport from "@/components/TerrainReport";
 import DistrictHeatMap from "@/components/DistrictHeatMap";
@@ -308,19 +311,7 @@ interface WinNum {
   primary2026DemEdge: number;
 }
 
-function WinNumber({ dKey }: { dKey: string }) {
-  const [data, setData] = useState<WinNum | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setLoading(true);
-    setData(null);
-    fetch(`/api/districts/win-number?district=${encodeURIComponent(dKey)}`)
-      .then(r => r.ok ? r.json() : null)
-      .then(d => { setData(d); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, [dKey]);
-
+function WinNumber({ data, loading }: { data: WinNum | null; loading: boolean }) {
   if (loading) return (
     <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] mt-4">
       <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
@@ -447,6 +438,57 @@ function WinNumber({ dKey }: { dKey: string }) {
             </div>
           );
         })()}
+      </div>
+    </div>
+  );
+}
+
+/* ── Path to Win: synthesized briefing narrative for HD/SD/CD ─────────────── */
+function PathToWin({ dKey, level, district, win, demPrimary, seatParty }: {
+  dKey: string;
+  level: "hd" | "sd" | "cd";
+  district: string;
+  win: WinNum | null;
+  demPrimary: number;
+  seatParty: "D" | "R" | null;
+}) {
+  const [races, setRaces] = useState<DistrictRacesFile | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    fetch("/data/district-races.json")
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (alive && d) setRaces(d); })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, []);
+
+  const sentences = useMemo(() => {
+    const lastContested = races ? findLastContestedGeneral(races, level, district) : null;
+    return buildPathToWinSentences({
+      dKey,
+      level,
+      targetDVotes: win?.targetDVotes ?? null,
+      demPrimary2026: demPrimary > 0 ? demPrimary : null,
+      lastContested,
+      seatParty,
+    });
+  }, [races, level, district, dKey, win, demPrimary, seatParty]);
+
+  if (sentences.length === 0) return null;
+
+  return (
+    <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
+      <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-2" style={{ color: "#6b7280" }}>
+          Path to Win: November 2026
+        </p>
+        <p className="text-[13.5px] leading-relaxed" style={{ color: "#1f2937", fontFamily: "var(--font-playfair), serif" }}>
+          {sentences.join(" ")}
+        </p>
+        <p className="text-[9px] mt-2.5 leading-relaxed" style={{ color: "#b0b8c4" }}>
+          Win number: 50.5% of registration-adjusted turnout projection. Primary count: March 2026, Harris County Clerk. Margin: county canvass.
+        </p>
       </div>
     </div>
   );
@@ -595,6 +637,37 @@ export default function DistrictsPage() {
   const info = DISTRICT_INFO[dKey];
   const currentRep = POLITICIANS.find((p: Politician) => p.district === polLabel);
 
+  // Win-number model. Fetched once here, shared by the Win Number and Path to Win cards
+  const winKey = (type === "cd" || type === "sd" || type === "hd" || type === "pct" || type === "countywide")
+    ? (type === "countywide" ? "HC-Countywide" : dKey)
+    : null;
+  const [winData, setWinData] = useState<WinNum | null>(null);
+  const [winLoading, setWinLoading] = useState(true);
+  useEffect(() => {
+    if (!winKey) { setWinData(null); setWinLoading(false); return; }
+    let alive = true;
+    setWinLoading(true);
+    setWinData(null);
+    fetch(`/api/districts/win-number?district=${encodeURIComponent(winKey)}`)
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (alive) { setWinData(d); setWinLoading(false); } })
+      .catch(() => { if (alive) setWinLoading(false); });
+    return () => { alive = false; };
+  }, [winKey]);
+
+  // Who holds the seat now. Used to pick "Flipping" vs "Holding" in the narrative
+  const incumbentSide = getMatchup(dKey)?.sides.find(s => s.incumbent);
+  const seatParty: "D" | "R" | null =
+    currentRep?.party === "D" || currentRep?.party === "R"
+      ? currentRep.party
+      : incumbentSide?.party ?? null;
+
+  // Precinct ids inside the selected district (crosswalk membership)
+  const districtPrecincts = useMemo(() => {
+    if (!districtField || !district) return [];
+    return Object.keys(CROSSWALK).filter(p => CROSSWALK[p]?.[districtField] === district);
+  }, [districtField, district]);
+
   // Real turnout aggregates for the selected district
   const agg = useMemo(() => {
     let dem = 0, rep = 0, count = 0;
@@ -629,7 +702,7 @@ export default function DistrictsPage() {
   }
 
   return (
-    <div style={{ background: "#f2f5f9", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
+    <div className="districts-page" style={{ background: "#f2f5f9", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
       {/* Hero */}
       <section className="relative overflow-hidden topo-hero"
         style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 60%,#f2f5f9 100%)", paddingTop: "3.75rem", paddingBottom: "3.25rem" }}>
@@ -646,6 +719,7 @@ export default function DistrictsPage() {
           <p className="text-sm max-w-lg" style={{ color: "#5b6470" }}>
             Every Harris County voting precinct, mapped to its real districts. See who votes, who represents the seat, and the matchup for November.
           </p>
+          <div className="print-hide">
           <ShareButton
             toolName="Districts"
             section="Elections"
@@ -658,6 +732,7 @@ export default function DistrictsPage() {
             ]}
             light={false}
           />
+          </div>
         </div>
       </section>
 
@@ -668,7 +743,7 @@ export default function DistrictsPage() {
           <div className="flex-1 min-w-0">
 
             {/* Type pills */}
-            <div className="chip-row mb-3">
+            <div className="chip-row mb-3 print-hide">
               {TYPES.map(t => (
                 <button key={t.key} onClick={() => pickType(t.key)}
                   className="pressable rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-200"
@@ -684,7 +759,7 @@ export default function DistrictsPage() {
 
             {/* District chips */}
             {districtField && (
-              <div className="chip-row mb-4" style={{ gap: "0.375rem" }}>
+              <div className="chip-row mb-4 print-hide" style={{ gap: "0.375rem" }}>
                 {DISTRICT_LISTS[districtField].map(d => (
                   <button key={d} onClick={() => { setDistrict(d); setSelectedPrecinct(null); }}
                     className="pressable rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-150"
@@ -700,7 +775,7 @@ export default function DistrictsPage() {
             )}
 
             {/* Layer toggle */}
-            <div className="chip-row items-center mb-3">
+            <div className="chip-row items-center mb-3 print-hide">
               <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>Layer:</span>
               {([
                 { key: "votes",      label: "Who Votes. 2026 Primary", live: true },
@@ -723,7 +798,7 @@ export default function DistrictsPage() {
 
             {/* Layer-specific banners */}
             {layer === "results" && !results && (
-              <div className="rounded-xl px-4 py-3 mb-3 text-[11px] leading-relaxed flex items-center justify-between gap-3" style={{ background: "#eff6ff", border: "1px solid #bfdbfe", color: "#1e40af" }}>
+              <div className="rounded-xl px-4 py-3 mb-3 text-[11px] leading-relaxed flex items-center justify-between gap-3 print-hide" style={{ background: "#eff6ff", border: "1px solid #bfdbfe", color: "#1e40af" }}>
                 <span>
                   <strong>Election night mode.</strong> Upload precinct results as they come in: CSV with header
                   <code className="mx-1">precinct,Candidate A,Candidate B</code>. And the map colors each precinct by who&rsquo;s leading.
@@ -737,7 +812,7 @@ export default function DistrictsPage() {
               </div>
             )}
             {layer === "results" && results && (
-              <div className="flex items-center gap-3 mb-3 flex-wrap">
+              <div className="flex items-center gap-3 mb-3 flex-wrap print-hide">
                 {results.candidates.map((c, i) => (
                   <span key={c} className="flex items-center gap-1.5 text-[11px] font-semibold" style={{ color: "#374151" }}>
                     <span className="inline-block w-3 h-3 rounded-sm" style={{ background: ["#1d4ed8","#dc2626","#16a34a","#7c3aed","#ea580c","#0891b2","#be185d","#b45309"][i % 8] }} />
@@ -752,7 +827,7 @@ export default function DistrictsPage() {
               </div>
             )}
             {layer === "votes" && (
-              <div className="flex items-center gap-4 mb-3 text-[11px] flex-wrap" style={{ color: "#6b7280" }}>
+              <div className="flex items-center gap-4 mb-3 text-[11px] flex-wrap print-hide" style={{ color: "#6b7280" }}>
                 <span className="font-semibold uppercase tracking-wider text-[10px]">Primary ballots cast:</span>
                 {[
                   { color: "#1e3a8a", label: "Heavy Dem" },
@@ -771,7 +846,7 @@ export default function DistrictsPage() {
             )}
 
             {/* Map. Heat Check treatment */}
-            <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
+            <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] print-hide">
               <div className="rounded-[1rem] overflow-hidden bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]">
                 {mapError ? (
                   <div className="empty-state" style={{ height: 540, border: "none" }}>
@@ -797,7 +872,7 @@ export default function DistrictsPage() {
                 )}
               </div>
             </div>
-            <p className="mt-2 text-[11px]" style={{ color: "#9ca3af" }}>
+            <p className="mt-2 text-[11px] print-hide" style={{ color: "#9ca3af" }}>
               Precinct shapes: Harris County Clerk. Congressional districts: 2025 enacted plan PLANC2333 (Texas Legislative Council). State + local: Census TIGER 2024 + Harris County/Houston GIS.
               Ballots cast: March 2026 primary, top-of-ticket race.
             </p>
@@ -816,14 +891,21 @@ export default function DistrictsPage() {
             </div>
 
             {/* Partisan heatmap. Heat Check filtered to this district */}
-            <DistrictHeatMap
-              districtField={districtField}
-              districtValue={district}
-              districtLabel={headerLabel(type, district)}
-            />
+            <div className="print-hide">
+              <DistrictHeatMap
+                districtField={districtField}
+                districtValue={district}
+                districtLabel={headerLabel(type, district)}
+              />
+            </div>
+
+            {/* Battleground precincts, ranked by registration */}
+            {districtField && district && (
+              <LeveragePrecincts districtLabel={dKey} precincts={districtPrecincts} />
+            )}
 
             {/* Terrain Report: turnout signals */}
-            <div className="mt-4">
+            <div className="mt-4 print-hide">
               <TerrainReport types={["turnout"]} compact />
             </div>
           </div>
@@ -833,12 +915,22 @@ export default function DistrictsPage() {
             {/* Header */}
             <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
               <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-5">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "#2563a8" }}>
-                  {TYPES.find(t => t.key === type)?.label}
-                </p>
-                <h2 className="text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-playfair,serif)", color: "#1a3a5c" }}>
-                  {headerLabel(type, district)}
-                </h2>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "#2563a8" }}>
+                      {TYPES.find(t => t.key === type)?.label}
+                    </p>
+                    <h2 className="text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-playfair,serif)", color: "#1a3a5c" }}>
+                      {headerLabel(type, district)}
+                    </h2>
+                  </div>
+                  <button onClick={() => window.print()}
+                    className="print-hide pressable shrink-0 rounded-full px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white"
+                    style={{ background: "#1a3a5c" }}
+                    title="Print a one-pager for this seat">
+                    Print brief
+                  </button>
+                </div>
                 {info?.description && (
                   <p className="text-[12px] leading-relaxed" style={{ color: "#6b7280" }}>{info.description}</p>
                 )}
@@ -913,10 +1005,20 @@ export default function DistrictsPage() {
               </div>
             )}
 
-            {/* Win Number */}
-            {(type === "cd" || type === "sd" || type === "hd" || type === "pct" || type === "countywide") && (
-              <WinNumber dKey={type === "countywide" ? "HC-Countywide" : dKey} />
+            {/* Path to Win: the brief in three sentences */}
+            {(type === "cd" || type === "sd" || type === "hd") && district && (
+              <PathToWin
+                dKey={dKey}
+                level={type}
+                district={district}
+                win={winData}
+                demPrimary={agg.dem}
+                seatParty={seatParty}
+              />
             )}
+
+            {/* Win Number */}
+            {winKey && <WinNumber data={winData} loading={winLoading} />}
 
             {/* Seat history */}
             {info?.seatHistory && info.seatHistory.length > 0 && (
@@ -943,10 +1045,31 @@ export default function DistrictsPage() {
               Turnout by race/age/gender requires the Harris County voter file (harrisvotes.com → Voter Registration Data Request).
             </div>
 
-            <RelatedTools current="/tools/districts" className="pt-4 border-t border-black/8" />
+            <RelatedTools current="/tools/districts" className="pt-4 border-t border-black/8 print-hide" />
           </div>
         </div>
       </div>
+
+      {/* Print brief: hide chrome, keep the portrait cards on white */}
+      <style>{`
+        @media print {
+          header, footer, .fixed { display: none !important; }
+          .print-hide { display: none !important; }
+          body { background: #fff !important; }
+          .districts-page {
+            background: #fff !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          .districts-page .topo-hero {
+            background: #fff !important;
+            padding-top: 1rem !important;
+            padding-bottom: 0.75rem !important;
+          }
+          .districts-page .leaflet-container { display: none !important; }
+          .districts-page div[class*="ring-black"] { break-inside: avoid; }
+        }
+      `}</style>
     </div>
   );
 }
