@@ -9,6 +9,8 @@ import TerrainReport from "@/components/TerrainReport";
 import { useUrlState, readUrlParams } from "@/lib/useUrlState";
 import { WOMEN_IN_POLITICS } from "@/lib/women-names";
 import { MATCHUPS_2026 } from "@/lib/matchups-2026";
+import { buildMoneyRaces } from "@/lib/money-races";
+import MoneyDuel, { MoversStrip } from "@/components/MoneyDuel";
 
 const ON_BALLOT_2026 = new Set(
   Object.values(MATCHUPS_2026).flatMap(m => m.sides.map(s => s.name))
@@ -18,7 +20,7 @@ import type { TECCandidate } from "@/app/api/finance/tec/route";
 
 type Candidate = CandidateFinance;
 
-type Tab   = "story" | "leaderboard" | "trail" | "scanner" | "portal";
+type Tab   = "story" | "races" | "leaderboard" | "trail" | "scanner" | "portal";
 type Level = "all" | "federal" | "state" | "houston" | "county";
 type CountyGroup = "all" | "commissioners" | "jp" | "courts" | "law" | "admin";
 
@@ -473,18 +475,20 @@ export default function WhereIsTheDough() {
   const [fecFetchedAt, setFecFetchedAt] = useState<string>("");
   const [tecFetchedAt, setTecFetchedAt] = useState<string>("");
 
-  // Hydrate filters from the URL once, then mirror them back so shared links restore the view
+  // Hydrate filters from the URL once, then mirror them back so shared links restore the view.
+  // The races view lives on ?view=races; the other tabs keep ?tab= as before.
   useEffect(() => {
-    const p = readUrlParams(["tab", "level", "group", "party", "q"]);
-    if (p.tab === "story" || p.tab === "leaderboard" || p.tab === "trail" || p.tab === "scanner" || p.tab === "portal") setTab(p.tab as Tab);
+    const p = readUrlParams(["tab", "view", "level", "group", "party", "q"]);
+    if (p.view === "races" || p.tab === "races") setTab("races");
+    else if (p.tab === "story" || p.tab === "leaderboard" || p.tab === "trail" || p.tab === "scanner" || p.tab === "portal") setTab(p.tab as Tab);
     if (p.level && p.level in LEVEL_LABELS) setLevel(p.level as Level);
     if (p.group && p.group in COUNTY_GROUPS) setCountyGroup(p.group as CountyGroup);
     if (p.party === "D" || p.party === "R") setParty(p.party);
     if (p.q) setSearch(p.q);
   }, []);
   useUrlState(
-    { tab, level, group: countyGroup, party, q: search },
-    { tab: "story", level: "all", group: "all", party: "all", q: "" }
+    { tab: tab === "races" ? "story" : tab, view: tab === "races" ? "races" : "", level, group: countyGroup, party, q: search },
+    { tab: "story", view: "", level: "all", group: "all", party: "all", q: "" }
   );
 
   useEffect(() => {
@@ -521,6 +525,9 @@ export default function WhereIsTheDough() {
     }
     return d;
   });
+
+  // Race-centric duel model: MATCHUPS_2026 joined against the live-layered data
+  const moneyRaces = buildMoneyRaces(DATA);
 
   const withCash  = DATA.filter(d => d.cash > 0);
   const demTotal  = withCash.filter(d => d.party === "D").reduce((s, d) => s + d.cash, 0);
@@ -576,13 +583,21 @@ export default function WhereIsTheDough() {
             section="Money"
             description="Cash-on-hand for every Harris County official, candidate, and challenger. TEC & FEC filings."
             summary={(() => {
+              if (tab === "races") {
+                const top = moneyRaces.topDuel;
+                return `2026 cash duels: ${moneyRaces.raceCount} set races, ${fmt(moneyRaces.totalTracked)} combined cash.${top ? ` Top duel: ${top.office}, ${fmt(top.totalCash)}.` : ""} Via The Harris County Project`;
+              }
               const scope = level === "all" ? "All levels"
                 : level === "county" && countyGroup !== "all" ? `Harris County: ${COUNTY_GROUPS[countyGroup]}`
                 : LEVEL_LABELS[level];
               const cash = filtered.reduce((s, d) => s + d.cash, 0);
               return `${scope}: ${filtered.length} filers, ${fmt(cash)} cash on hand. Via The Harris County Project`;
             })()}
-            stats={[
+            stats={tab === "races" ? [
+              { label: "Races tracked", value: String(moneyRaces.raceCount) },
+              { label: "Combined cash", value: fmt(moneyRaces.totalTracked) },
+              ...(moneyRaces.topDuel ? [{ label: "Top duel", value: moneyRaces.topDuel.office }] : []),
+            ] : [
               { label: "Filers", value: String(filtered.length) },
               { label: "Cash on hand", value: fmt(filtered.reduce((s, d) => s + d.cash, 0)) },
               { label: "View", value: level === "county" && countyGroup !== "all" ? COUNTY_GROUPS[countyGroup] : LEVEL_LABELS[level] },
@@ -639,12 +654,12 @@ export default function WhereIsTheDough() {
       {/* ── Tab bar ───────────────────────────────────────────────────── */}
       <div className="sticky top-0 z-20 bg-[var(--background)]/90 backdrop-blur border-b border-[var(--border)] px-6 py-3">
         <div className="max-w-6xl mx-auto flex flex-wrap items-center gap-3">
-          {(["story","leaderboard","trail","portal","scanner"] as Tab[]).map(t => (
+          {(["story","races","leaderboard","trail","portal","scanner"] as Tab[]).map(t => (
             <button key={t} onClick={() => setTab(t)}
               className={`text-xs font-bold uppercase tracking-[0.12em] px-4 py-2 rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                 tab === t ? "bg-[var(--accent)] text-white" : "bg-white ring-1 ring-[var(--border)] text-[var(--muted)] hover:ring-[var(--accent-light)]"
               }`}>
-              {t === "story" ? "The Story" : t === "trail" ? "Money Trail" : t === "scanner" ? "File Scanner" : t === "portal" ? "Portal Search" : "Leaderboard"}
+              {t === "story" ? "The Story" : t === "races" ? "The Races" : t === "trail" ? "Money Trail" : t === "scanner" ? "File Scanner" : t === "portal" ? "Portal Search" : "Leaderboard"}
             </button>
           ))}
 
@@ -824,6 +839,56 @@ export default function WhereIsTheDough() {
               </button>
             </div>
             <p className="text-xs text-[var(--muted)] text-center">Source: Texas Ethics Commission (TEC) semi-annual reports · FEC filings. Data as of Jan–Apr 2026.</p>
+          </div>
+        )}
+
+        {/* ── THE RACES: cash duels per 2026 matchup ────────────────── */}
+        {tab === "races" && (
+          <div>
+            <div className="mb-8">
+              <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[var(--muted)] mb-2">2026 General: Cash Duels</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-[var(--accent)] leading-tight max-w-2xl"
+                style={{ fontFamily: "var(--font-playfair), serif" }}>
+                {moneyRaces.raceCount} set November matchups. {fmt(moneyRaces.totalTracked)} in combined cash.
+              </h2>
+              <p className="text-sm text-[var(--muted)] mt-2 max-w-xl">
+                Every 2026 race with both a Democratic and Republican nominee locked in, side by side by war chest. Burn rates come straight from each filing&rsquo;s raised and spent totals.
+              </p>
+            </div>
+
+            <MoversStrip />
+
+            <div className="space-y-10">
+              {moneyRaces.groups.map(({ group, races }) => {
+                const groupLabel =
+                  group === "Statewide" ? "Statewide Texas" :
+                  group === "Congress" ? "Congress" :
+                  group === "Legislature" ? "Texas Legislature" :
+                  group === "County" ? "Harris County" : "Justices of the Peace";
+                const groupCash = races.reduce((s, rc) => s + rc.totalCash, 0);
+                return (
+                  <div key={group}>
+                    <div className="flex items-baseline gap-3 mb-4">
+                      <h3 className="text-lg font-bold" style={{ color: "var(--accent)", fontFamily: "var(--font-playfair), serif" }}>
+                        {groupLabel}
+                      </h3>
+                      <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#9ca3af" }}>
+                        {races.length} duel{races.length !== 1 ? "s" : ""} · {fmt(groupCash)} combined
+                      </span>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {races.map(rc => <MoneyDuel key={rc.key} race={rc} />)}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <p className="text-xs text-[var(--muted)] mt-8 text-center">
+              {moneyRaces.noFilingCount > 0 && <>{moneyRaces.noFilingCount} set race{moneyRaces.noFilingCount !== 1 ? "s have" : " has"} no filings on record and {moneyRaces.noFilingCount !== 1 ? "are" : "is"} not shown. </>}
+              Cash on hand as of each candidate&rsquo;s most recent TEC, FEC, county, or city filing.{" "}
+              <a href="/contact" className="text-[var(--accent-light)] underline underline-offset-2">Report an error →</a>
+            </p>
           </div>
         )}
 
