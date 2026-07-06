@@ -2,6 +2,11 @@
 _Target: premium paid-product standard for commissioners' offices and top political consultants._
 _Written 2026-07-05 from a full codebase audit. Each session is a self-contained prompt: paste it into a fresh Claude Code session in `~/harris-county-project`._
 
+## STATUS (updated 2026-07-05, end of build day)
+- **SESSION 1: DONE.** All 9 items shipped and pushed (privacy copy, AI-refusal guard, PAC empty state + corrected FEC params, bill-tool degradation, .env.example, §18.008 note, single ratings source, data extraction, Headshot fallbacks + check-photos at 0 failures). Bonus: fixed the dead address path in my-officials (Number(null)===0 made hasCoords always true).
+- **SESSION 2: DONE.** All six tools shipped, functionally verified in the browser, committed per tool. Heat Check insight rail + delta mode; Money ?view=races duels with burn rates; Districts path-to-win + leverage precincts + print brief; My Officials personalized November ballot (verified: 16 races for a Rice Military address); Ballot stakes ledes + cross-links; TX House sortable console + sparklines + verified R88–D62 flip math.
+- **SESSION 3: CORE SHIPPED, POLISH REMAINING.** Shipped: OG engine (bar/duel/badge modes), ShareButton live props, server generateMetadata for districts/tx-house/ballot-2026 (verified: HD-134's og:image carries the real 61.3–38.7 bar, Lean D badge, $601K-vs-$748 duel), Skeleton primitive + adoption in PAC Tracker and Field Sweep. REMAINING (next session): typography rhythm audit across 23 tools; 380px mobile pass on the six core tools; print stylesheets for ballot-2026 + tx-house (districts done); Lighthouse 90+ with lazy-loaded heat-check payload and Hero3D; homepage data-true card previews; optional metadata split for heat-check + where-is-the-dough (my-officials stays static by design — address privacy).
+
 ---
 
 ## SESSION 1 — Critical fixes (trust + correctness)
