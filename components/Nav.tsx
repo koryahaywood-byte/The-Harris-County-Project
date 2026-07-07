@@ -121,7 +121,7 @@ export default function Nav() {
                 { href: "/#toolbox", label: "Toolbox" },
                 { href: "/politicians", label: "Officials" },
                 { href: "/blogs", label: "Media" },
-                { href: "/#about", label: "About" },
+                { href: "/about", label: "About" },
                 { href: "/contact", label: "Contact" },
               ].map(({ href, label }) => (
                 <Link
@@ -160,7 +160,7 @@ export default function Nav() {
           { href: "/#toolbox", label: "Toolbox",  delay: "0.08s" },
           { href: "/politicians", label: "Officials", delay: "0.14s" },
           { href: "/blogs",    label: "Media",     delay: "0.20s" },
-          { href: "/#about",   label: "About",     delay: "0.26s" },
+          { href: "/about",   label: "About",     delay: "0.26s" },
           { href: "/contact",  label: "Contact",   delay: "0.32s" },
         ].map(({ href, label, delay }) => (
           <Link

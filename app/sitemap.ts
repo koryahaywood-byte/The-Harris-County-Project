@@ -16,10 +16,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const tools = [
     "/", "/my-officials", "/politicians", "/politicians/leaderboard", "/blogs",
-    "/methodology", "/contact",
+    "/methodology", "/contact", "/about",
     "/tools/heat-check", "/tools/where-is-the-dough", "/tools/districts",
     "/tools/ballot-2026", "/tools/tx-house", "/tools/field-sweep",
-    "/tools/pac-tracker", "/tools/precinct-lookup", "/tools/voter-search",
+    "/tools/pac-tracker", "/tools/precinct-lookup",
     "/tools/early-vote", "/tools/opportunity-map", "/tools/civic-calendar",
     "/tools/bill-tracker", "/tools/congressional-bills", "/tools/the-brief",
     "/tools/public-money", "/tools/the-network", "/tools/tv-station",

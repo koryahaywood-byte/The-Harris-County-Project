@@ -262,6 +262,12 @@ export default function VoterSearch() {
 
         {/* Header */}
         <div className="mb-8">
+          <div className="mb-4 rounded-xl px-4 py-3 text-[11px] leading-relaxed"
+            style={{ background: "rgba(180,83,9,0.08)", border: "1px solid rgba(180,83,9,0.25)", color: "#92400e" }}>
+            <strong>Private research tool.</strong> Voter rolls are public records under TX Election
+            Code §18.008, but this search is intentionally unlisted and blocked from search engines:
+            it exists for the project&apos;s own research, not as a public lookup service.
+          </div>
           <p className="text-[10px] font-black uppercase tracking-[0.24em] mb-2" style={{ color: "var(--accent)" }}>
             Harris County Project
           </p>

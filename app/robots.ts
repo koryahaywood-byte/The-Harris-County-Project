@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         // Admin dashboards and JSON APIs aren't for crawlers; voter-search
         // results pages expose personal-record queries and shouldn't index.
-        disallow: ["/admin/", "/api/"],
+        disallow: ["/admin/", "/api/", "/tools/voter-search"],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
