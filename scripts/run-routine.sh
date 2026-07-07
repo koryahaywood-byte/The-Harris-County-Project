@@ -15,7 +15,7 @@ mkdir -p "$LOGDIR"
 
 export PATH="$HOME/.nvm/versions/node/v20.20.2/bin:/usr/local/bin:/opt/homebrew/bin:$PATH"
 
-if pgrep -xq "Claude"; then
+if pgrep -fq "/Applications/Claude.app/Contents/MacOS/Claude"; then
   echo "$(date '+%F %T') skip: Claude desktop app is running (its scheduler owns $TASK_ID)" >> "$LOG"
   exit 0
 fi
