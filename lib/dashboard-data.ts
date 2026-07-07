@@ -214,25 +214,40 @@ async function fetchFromFeed(url: string, todayStr: string, sourceName?: string)
 const GN = "https://news.google.com/rss/search?hl=en-US&gl=US&ceid=US:en&q=";
 
 async function fetchTier(feeds: Array<{ url: string; source?: string }>, todayStr: string) {
-  // Try all feeds in parallel. Prefer today's story from any source
+  // Try all feeds in parallel; return candidates BEST-FIRST so the picker can
+  // fall to a runner-up when another tier already claimed the top story.
   const results = await Promise.all(feeds.map(f => fetchFromFeed(f.url, todayStr, f.source)));
   // Google News links are JS interstitials we can't resolve server-side, so a
-  // direct-feed story (Chronicle/Tribune RSS, Bing) beats a GN one at equal
+  // direct-feed story (Tribune/HPM/NPR RSS, Bing) beats a GN one at equal
   // freshness: real link for readers, scrapeable og:image for the card.
-  const direct = (r: { link: string } | null) => !!r && !r.link.includes("news.google.com");
-  const ageDays = (r: { pubDate: string } | null) => {
-    const t = r ? new Date(r.pubDate).getTime() : NaN;
+  const direct = (r: { link: string }) => !r.link.includes("news.google.com");
+  const ageDays = (r: { pubDate: string }) => {
+    const t = new Date(r.pubDate).getTime();
     return Number.isFinite(t) ? (Date.now() - t) / 864e5 : Infinity;
   };
-  const fresh = (r: { pubDate: string } | null, days: number) => !!r && ageDays(r) <= days;
   // Never let an old direct story beat a fresh GN one: today+direct → today →
-  // direct ≤3 days → anything ≤3 days → whatever is newest overall.
-  return results.find(r => r?.isToday && direct(r))
-    ?? results.find(r => r?.isToday)
-    ?? results.find(r => direct(r) && fresh(r, 3))
-    ?? results.find(r => fresh(r, 3))
-    ?? results.filter(r => r !== null).sort((a, b) => ageDays(a) - ageDays(b))[0]
-    ?? null;
+  // direct ≤3 days → anything ≤3 days → newest overall. Ties break by age.
+  const band = (r: NonNullable<(typeof results)[number]>) =>
+    r.isToday && direct(r) ? 0
+    : r.isToday ? 1
+    : direct(r) && ageDays(r) <= 3 ? 2
+    : ageDays(r) <= 3 ? 3
+    : 4;
+  return results
+    .filter((r): r is NonNullable<typeof r> => r !== null)
+    .sort((a, b) => band(a) - band(b) || ageDays(a) - ageDays(b));
+}
+
+// Same story often lands in two tiers (e.g. Houston Public Media syndicates
+// Texas Tribune statehouse coverage via The Texas Newsroom). Claim order is
+// state → federal → local: a cross-tier duplicate is almost always a statewide
+// story echoed by a local outlet, so the state card keeps it and the local
+// card falls to its runner-up.
+function pickDistinct(ranked: Awaited<ReturnType<typeof fetchTier>>, taken: Set<string>) {
+  const norm = (t: string) => t.toLowerCase().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ").trim();
+  const pick = ranked.find(r => !taken.has(norm(r.title))) ?? ranked[0] ?? null;
+  if (pick) taken.add(norm(pick.title));
+  return pick;
 }
 
 // ── Feed definitions ──────────────────────────────────────────────────────────
@@ -307,11 +322,18 @@ const NOVEMBER_2026_BALLOT: BallotRace[] = MARQUEE_RACES.flatMap(({ key, office 
 export async function getDashboardData(): Promise<DashboardData> {
   const todayStr = new Date().toISOString().slice(0, 10);
 
-  const [localRaw, stateRaw, federalRaw] = await Promise.all([
+  const [localRanked, stateRanked, federalRanked] = await Promise.all([
     fetchTier(LOCAL_FEEDS,   todayStr),
     fetchTier(STATE_FEEDS,   todayStr),
     fetchTier(FEDERAL_FEEDS, todayStr),
   ]);
+
+  // Cross-tier dedup: state claims first, then federal, then local (see
+  // pickDistinct for why), so the same headline never shows on two cards.
+  const taken = new Set<string>();
+  const stateRaw   = pickDistinct(stateRanked,   taken);
+  const federalRaw = pickDistinct(federalRanked, taken);
+  const localRaw   = pickDistinct(localRanked,   taken);
 
   // Scrape og:image from actual article pages in parallel.
   // If the RSS already has an image, use it directly (skip scrape).
