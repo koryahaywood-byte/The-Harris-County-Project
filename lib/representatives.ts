@@ -25,7 +25,7 @@ const CONGRESS: Record<string, { name: string; party: "D" | "R"; url?: string; n
   "7":  { name: "Lizzie Fletcher",   party: "D", url: "https://fletcher.house.gov" },
   "8":  { name: "Morgan Luttrell",   party: "R", url: "https://luttrell.house.gov", note: "Not seeking reelection. Open seat 2026; term ends Jan 2027" },
   "9":  { name: "Al Green",          party: "D", url: "https://algreen.house.gov", note: "Retiring. Lost CD-18 runoff; term ends Jan 2027" },
-  "18": { name: "Christian Menefee", party: "D", note: "Sworn in after Sylvester Turner's death; won May 2026 Democratic runoff over Al Green 69–31%; seeking first full term" },
+  "18": { name: "Christian Menefee", party: "D", note: "Sworn in after Sylvester Turner's death; won May 2026 Democratic runoff over Al Green 71–29%; seeking first full term" },
   "22": { name: "Troy Nehls",        party: "R", url: "https://nehls.house.gov", note: "Not seeking reelection. Open seat 2026; term ends Jan 2027" },
   "29": { name: "Sylvia Garcia",     party: "D", url: "https://sylviagarcia.house.gov" },
   "36": { name: "Brian Babin",       party: "R", url: "https://babin.house.gov" },

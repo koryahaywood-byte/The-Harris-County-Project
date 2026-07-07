@@ -682,7 +682,7 @@ export const POLITICIANS: Politician[] = [
     website: "https://menefee.house.gov",
     twitter: "MenefeeForTexas",
     termStart: 2025,
-    note: "Sworn in as CD-18 congressman after Sylvester Turner's death; won May 2026 D runoff over Al Green 69–31%; seeking first full term",
+    note: "Sworn in as CD-18 congressman after Sylvester Turner's death; won May 2026 D runoff over Al Green 71–29%; seeking first full term",
   },
   {
     slug: "abbie-kamin",
