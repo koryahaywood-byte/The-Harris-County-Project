@@ -62,7 +62,8 @@ function parseRssItems(xml: string): Array<{
       .replace(/<!\[CDATA\[|\]\]>/g, "")
       .replace(/<[^>]+>/g, "")
       .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
-      .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+      .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&apos;/g, "'")
+      .replace(/&#(\d+);/g, (_, c) => String.fromCharCode(Number(c)))
       .replace(/\s[-|]\s[^-|]{3,60}$/, "")
       .trim();
 
@@ -101,7 +102,10 @@ function parseRssItems(xml: string): Array<{
       if (image.includes("bing.com/th?id=")) image += "&w=640&h=360&qlt=90&c=7";
     }
 
-    if (title && link) items.push({ title, link, source, pubDate, image });
+    // Aggregator feeds occasionally emit junk items whose "title" is just a
+    // hostname (e.g. "- preview-prod.w.houstonchronicle.com") — never card-worthy
+    const junkTitle = /^[\s\-–—·|]*(?:[a-z0-9-]+\.)+[a-z]{2,}[\s\-–—·|]*$/i.test(title);
+    if (title && link && !junkTitle) items.push({ title, link, source, pubDate, image });
   }
   return items;
 }
@@ -192,9 +196,12 @@ async function fetchFromFeed(url: string, todayStr: string, sourceName?: string)
     const items = parseRssItems(xml);
     if (!items.length) return null;
 
-    // Prefer today's story, fall back to most recent
-    const todayItems = items.filter(i => isTodayDate(i.pubDate, todayStr));
-    const candidate  = todayItems[0] ?? items[0];
+    // Prefer today's story, fall back to the newest by pubDate (feeds aren't
+    // always newest-first — a stale section feed can lead with an old item)
+    const byNewest = [...items].sort((a, b) =>
+      (new Date(b.pubDate).getTime() || 0) - (new Date(a.pubDate).getTime() || 0));
+    const todayItems = byNewest.filter(i => isTodayDate(i.pubDate, todayStr));
+    const candidate  = todayItems[0] ?? byNewest[0];
     return {
       ...candidate,
       source: sourceName ?? candidate.source,
@@ -213,20 +220,28 @@ async function fetchTier(feeds: Array<{ url: string; source?: string }>, todaySt
   // direct-feed story (Chronicle/Tribune RSS, Bing) beats a GN one at equal
   // freshness: real link for readers, scrapeable og:image for the card.
   const direct = (r: { link: string } | null) => !!r && !r.link.includes("news.google.com");
+  const ageDays = (r: { pubDate: string } | null) => {
+    const t = r ? new Date(r.pubDate).getTime() : NaN;
+    return Number.isFinite(t) ? (Date.now() - t) / 864e5 : Infinity;
+  };
+  const fresh = (r: { pubDate: string } | null, days: number) => !!r && ageDays(r) <= days;
+  // Never let an old direct story beat a fresh GN one: today+direct → today →
+  // direct ≤3 days → anything ≤3 days → whatever is newest overall.
   return results.find(r => r?.isToday && direct(r))
     ?? results.find(r => r?.isToday)
-    ?? results.find(direct)
-    ?? results.find(r => r !== null)
+    ?? results.find(r => direct(r) && fresh(r, 3))
+    ?? results.find(r => fresh(r, 3))
+    ?? results.filter(r => r !== null).sort((a, b) => ageDays(a) - ageDays(b))[0]
     ?? null;
 }
 
 // ── Feed definitions ──────────────────────────────────────────────────────────
 
-// LOCAL. Chronicle Houston Politics section only (city hall, Harris County, mayor, commissioners)
-// Explicitly exclude Texas/national Chronicle sections so we don't bleed tiers
+// LOCAL. City hall, Harris County, mayor, commissioners — exclude state/national
+// so we don't bleed tiers. Hearst killed all Chronicle RSS section feeds (404),
+// so Houston Public Media is the direct-feed anchor here.
 const LOCAL_FEEDS = [
-  // Chronicle's Houston Politics RSS (direct section feed)
-  { url: "https://www.houstonchronicle.com/rss/feed/Houston-Politics-2341346.php", source: "Houston Chronicle" },
+  { url: "https://www.houstonpublicmedia.org/articles/news/politics/feed/", source: "Houston Public Media" },
   // Google News targeting Chronicle Houston/Harris County stories specifically
   { url: `${GN}${encodeURIComponent('site:houstonchronicle.com "houston" OR "harris county" politics -texas -senate -governor')}`, source: "Houston Chronicle" },
   { url: `${GN}${encodeURIComponent("Houston mayor city council Harris County commissioner Whitmire politics")}`, source: "Houston Chronicle" },
@@ -234,21 +249,20 @@ const LOCAL_FEEDS = [
   { url: "https://www.bing.com/news/search?q=Houston+city+hall+mayor+Whitmire+Harris+County+commissioner&format=rss" },
 ];
 
-// STATE. Tribune primary + Chronicle Texas Politics section
+// STATE. Tribune primary. NOTE: texastribune.org/feeds/ is an HTML index page,
+// not RSS — the real feed lives at feeds.texastribune.org. Chronicle Texas
+// Politics RSS is dead (Hearst removed all section feeds).
 const STATE_FEEDS = [
-  // Texas Tribune direct RSS (always fresh TX-specific coverage)
-  { url: "https://www.texastribune.org/feeds/", source: "Texas Tribune" },
-  // Chronicle Texas Politics section RSS
-  { url: "https://www.houstonchronicle.com/rss/feed/Texas-Politics-2341355.php", source: "Houston Chronicle" },
+  { url: "https://feeds.texastribune.org/feeds/main/", source: "Texas Tribune" },
   { url: `${GN}${encodeURIComponent("Texas Tribune Texas legislature Austin politics 2026")}`, source: "Texas Tribune" },
   { url: `${GN}${encodeURIComponent('site:houstonchronicle.com Texas politics Austin legislature governor')}`, source: "Houston Chronicle" },
   { url: "https://www.bing.com/news/search?q=Texas+Tribune+Texas+politics+Austin+legislature&format=rss" },
 ];
 
-// FEDERAL. Chronicle US/World + WaPo/NYT
+// FEDERAL. NPR/Hill direct feeds (real links + og:images) + WaPo/NYT via GN
 const FEDERAL_FEEDS = [
-  // Chronicle US & World Politics section RSS
-  { url: "https://www.houstonchronicle.com/rss/feed/US-World-Politics-2341360.php", source: "Houston Chronicle" },
+  { url: "https://feeds.npr.org/1014/rss.xml", source: "NPR" },
+  { url: "https://thehill.com/homenews/feed/", source: "The Hill" },
   { url: `${GN}${encodeURIComponent("Washington Post Congress White House politics")}`, source: "Washington Post" },
   { url: `${GN}${encodeURIComponent("New York Times Congress Senate federal politics 2026")}`, source: "New York Times" },
   { url: `${GN}${encodeURIComponent('site:houstonchronicle.com Congress federal Washington politics')}`, source: "Houston Chronicle" },
