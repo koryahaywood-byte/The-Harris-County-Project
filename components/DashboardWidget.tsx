@@ -63,26 +63,49 @@ function getDailyQuote() {
 const MOMENTS: { m: number; d: number; year: number; text: string }[] = [
   { m: 1, d: 10, year: 1901, text: "The Lucas gusher blew at Spindletop, igniting the Texas oil boom that would build Houston's economy." },
   { m: 1, d: 17, year: 1839, text: "The Republic of Texas Congress voted to move the capital from Houston to the new town of Austin." },
+  { m: 1, d: 20, year: 1965, text: "Texan Lyndon B. Johnson was inaugurated for a full term, months after signing the Civil Rights Act and winning one of the largest landslides in American history." },
+  { m: 1, d: 28, year: 1986, text: "Space Shuttle Challenger broke apart 73 seconds after launch. Houston's Mission Control fell silent, then led the recovery of American spaceflight." },
   { m: 2, d: 1,  year: 2003, text: "Space Shuttle Columbia was lost on reentry; Mission Control in Houston led the nation's mourning and the program's reckoning." },
+  { m: 2, d: 15, year: 2021, text: "Winter Storm Uri collapsed the Texas power grid. Millions of households, including most of Harris County, went dark in single-digit cold." },
   { m: 2, d: 20, year: 1962, text: "From Mission Control's predecessor era, Houston tracked John Glenn as he became the first American to orbit the Earth." },
+  { m: 2, d: 24, year: 1836, text: "From the besieged Alamo, William Barret Travis wrote his letter to the people of Texas and all Americans in the world. Victory or Death." },
   { m: 3, d: 2,  year: 1836, text: "Texas declared independence at Washington-on-the-Brazos; within months the new republic's seat of government would be Harris County." },
+  { m: 3, d: 6,  year: 1836, text: "The Alamo fell after 13 days of siege. Remember the Alamo became the rallying cry that carried Texas to San Jacinto seven weeks later." },
   { m: 3, d: 22, year: 1967, text: "Muhammad Ali was stripped of his title after refusing induction at the Houston induction center. A case that began in Harris County and ended at the Supreme Court." },
+  { m: 3, d: 30, year: 1870, text: "Texas was readmitted to the Union, five years after the Civil War ended. Reconstruction politics would shape Harris County for a generation." },
   { m: 4, d: 9,  year: 1965, text: "The Astrodome opened. The world's first domed stadium, billed as the Eighth Wonder of the World." },
+  { m: 4, d: 13, year: 1970, text: "An oxygen tank exploded aboard Apollo 13. For four days the world listened to Houston, as Mission Control improvised the crew's way home." },
   { m: 4, d: 21, year: 1836, text: "The Battle of San Jacinto was fought in present-day Harris County. 18 minutes that won Texas its independence." },
+  { m: 5, d: 1,  year: 1718, text: "Mission San Antonio de Valero was founded, the settlement that grew into San Antonio. Its chapel would be remembered as the Alamo." },
   { m: 5, d: 11, year: 1969, text: "Mission Control in Houston cleared Apollo 10 for its lunar dress rehearsal, the final test before the Moon landing." },
+  { m: 5, d: 25, year: 1961, text: "President Kennedy asked Congress to land a man on the Moon within the decade. The program he launched would be run from Houston." },
   { m: 6, d: 5,  year: 1837, text: "Houston was incorporated as a city. And briefly served as capital of the Republic of Texas." },
   { m: 6, d: 19, year: 1865, text: "Juneteenth: Union troops in Galveston announced emancipation. Freed Houstonians later pooled $800 to buy Emancipation Park, the city's oldest." },
-  { m: 7, d: 4,  year: 1845, text: “Texas formally accepted U.S. annexation on July 4th, 1845 — ending a decade as an independent republic and making Houston part of the United States.” },
-  { m: 7, d: 11, year: 1979, text: “Skylab fell to Earth, scattering debris across Western Australia. Houston's Mission Control had tracked the station to its fiery end.” },
-  { m: 7, d: 20, year: 1969, text: “”Houston, Tranquility Base here. The Eagle has landed.” The first word spoken from the Moon was this county's name.” },
+  { m: 6, d: 26, year: 1928, text: "The Democratic National Convention opened in Houston, the first major-party convention held in the South since the Civil War." },
+  { m: 6, d: 28, year: 1919, text: "Texas became the first Southern state to ratify the 19th Amendment, putting women's suffrage on the path to becoming national law." },
+  { m: 7, d: 2,  year: 1964, text: "Texan Lyndon B. Johnson signed the Civil Rights Act of 1964, outlawing segregation in public accommodations across the country." },
+  { m: 7, d: 4,  year: 1845, text: "A convention in Austin voted to accept U.S. annexation on July 4th, ending Texas's decade as an independent republic." },
+  { m: 7, d: 11, year: 1979, text: "Skylab fell to Earth, scattering debris across Western Australia. Houston's Mission Control had tracked the station to its fiery end." },
+  { m: 7, d: 20, year: 1969, text: "Houston, Tranquility Base here. The Eagle has landed. The first word spoken from the Moon was this county's name." },
+  { m: 8, d: 6,  year: 1965, text: "President Johnson signed the Voting Rights Act. Within a decade, Houston's Barbara Jordan would sit in Congress because of it." },
+  { m: 8, d: 20, year: 1866, text: "President Andrew Johnson proclaimed the insurrection over in Texas, the last state so declared. The Civil War was formally at an end." },
   { m: 8, d: 25, year: 2017, text: "Hurricane Harvey made landfall. Over 50 inches of rain on parts of Harris County, the heaviest tropical rainfall in U.S. history." },
   { m: 8, d: 30, year: 1836, text: "The Allen brothers advertised lots in a new town on Buffalo Bayou named for Sam Houston. The city's founding day." },
   { m: 9, d: 8,  year: 1900, text: "The Great Galveston Hurricane killed thousands and shifted Texas commerce inland. The disaster that made Houston the region's port and metropolis." },
   { m: 9, d: 12, year: 1962, text: "At Rice University, President Kennedy declared “we choose to go to the Moon”. And Houston became Space City." },
+  { m: 9, d: 19, year: 1961, text: "NASA announced Houston as the site of the Manned Spacecraft Center. The decision that made this county the home of American spaceflight." },
+  { m: 10, d: 2,  year: 1835, text: "Texian colonists at Gonzales refused to surrender a cannon under a flag reading Come and Take It. The first shot of the Texas Revolution." },
   { m: 10, d: 14, year: 1947, text: "Chuck Yeager broke the sound barrier in an aircraft program with deep Houston-area aerospace roots to follow." },
+  { m: 10, d: 22, year: 1836, text: "Sam Houston was inaugurated as the first elected president of the Republic of Texas, seven months after independence was declared." },
+  { m: 11, d: 6,  year: 1990, text: "Ann Richards was elected governor of Texas, the first woman to win the office in her own right." },
   { m: 11, d: 7,  year: 1972, text: "Houston's Barbara Jordan became the first Black woman elected to Congress from the South." },
   { m: 11, d: 10, year: 1914, text: "The deep-water Houston Ship Channel formally opened. President Wilson fired the opening cannon by remote telegraph." },
+  { m: 11, d: 22, year: 1963, text: "President Kennedy was assassinated in Dallas, a day after speaking in Houston. Texan Lyndon Johnson took the oath aboard Air Force One." },
   { m: 12, d: 4,  year: 1998, text: "The Unity module launched: the first U.S.-built piece of the International Space Station, run from Johnson Space Center." },
+  { m: 12, d: 6,  year: 1997, text: "Lee P. Brown won the runoff to become Houston's first Black mayor, capping a career that included chief of police in three major cities." },
+  { m: 12, d: 12, year: 2009, text: "Annise Parker won the mayoral runoff, making Houston the largest American city to elect an openly gay mayor." },
+  { m: 12, d: 21, year: 1968, text: "Apollo 8 launched for the Moon. Houston's Mission Control guided the first humans ever to leave Earth orbit." },
+  { m: 12, d: 29, year: 1845, text: "Texas was admitted to the Union as the 28th state. The republic's flag came down for good the following February." },
   { m: 12, d: 31, year: 1981, text: "Kathy Whitmire took office days later as Houston's first woman mayor, after winning the December 1981 runoff." },
 ];
 
@@ -404,8 +427,8 @@ export default async function DashboardWidget() {
 
         {/* Source attribution */}
         <p className="mt-6 text-[10px] text-[var(--muted)]/40 text-center leading-relaxed max-w-2xl mx-auto">
-          Local: Houston Chronicle (Houston Politics) · State: Texas Tribune · Houston Chronicle (Texas Politics) ·
-          National: Houston Chronicle (US &amp; World) · Washington Post · New York Times.
+          Local: Houston Public Media · Houston Chronicle · State: Texas Tribune ·
+          National: NPR · The Hill · Washington Post · New York Times.
           News refreshes every 30 min. Quotes rotate daily.
         </p>
 
