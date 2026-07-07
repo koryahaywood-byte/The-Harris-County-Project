@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { SITE_URL } from "@/lib/site";
 
 export interface ShareStat {
   label: string;
@@ -32,7 +33,7 @@ export default function ShareButton({ toolName, section, description, stats, sum
     summary ?? `${toolName}. ${description} via The Harris County Project`;
 
   const currentUrl = () =>
-    typeof window !== "undefined" ? window.location.href : "https://the-harris-county-project.vercel.app";
+    typeof window !== "undefined" ? window.location.href : SITE_URL;
 
   const ogUrl = () => {
     const p = new URLSearchParams();

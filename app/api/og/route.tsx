@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
+import { SITE_HOST } from "@/lib/site";
 
 export const runtime = "edge";
 
@@ -93,7 +94,7 @@ export async function GET(req: NextRequest) {
             {`The Harris County Project · ${section}`}
           </div>
           <div style={{ fontSize: 16, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)" }}>
-            the-harris-county-project.vercel.app
+            {SITE_HOST}
           </div>
         </div>
 

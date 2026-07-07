@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SITE_HOST } from "@/lib/site";
 import ScrollReveal from "@/components/ScrollReveal";
 import DashboardWidget from "@/components/DashboardWidget";
 import ToolboxOpener from "@/components/ToolboxOpener";
@@ -429,7 +430,7 @@ export default function Home() {
                 <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#f87171" }} />
                 <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#fbbf24" }} />
                 <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#34d399" }} />
-                <span className="ml-2 text-[9px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "rgba(15,37,64,0.04)", color: "#94a3b8" }}>harriscounty.tools / heat-check</span>
+                <span className="ml-2 text-[9px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "rgba(15,37,64,0.04)", color: "#94a3b8" }}>{SITE_HOST} / heat-check</span>
               </div>
               {/* body */}
               <div className="p-5">

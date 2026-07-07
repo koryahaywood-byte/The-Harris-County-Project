@@ -206,7 +206,7 @@ export default function OfficialCard({ pol, defaultSide = "front" }: { pol: Poli
                 <span style={{ color: GOLD_BRIGHT }}>◆</span> {topBadge.name}
               </p>
             )}
-            <p className="text-center text-[9px] text-white/30">Tap to flip · harriscounty.tools</p>
+            <p className="text-center text-[9px] text-white/30">Tap to flip</p>
           </div>
         </div>
 

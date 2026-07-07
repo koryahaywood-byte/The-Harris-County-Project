@@ -190,7 +190,7 @@ export async function GET(
           {/* bottom rule */}
           <div style={{ marginTop: 14, borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 8, display: "flex", justifyContent: "center" }}>
             <span style={{ fontSize: 7, letterSpacing: "0.14em", color: "rgba(255,255,255,0.25)" }}>
-              harriscounty.tools
+              the-harris-county-project.vercel.app
             </span>
           </div>
         </div>
