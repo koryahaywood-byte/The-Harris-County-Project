@@ -95,7 +95,6 @@ export const EVENTS: CivicEvent[] = [
   { id: "hcc-jul26b", title: "Houston City Council Meeting", date: "2026-07-15", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
   { id: "hcc-jul26c", title: "Houston City Council Meeting", date: "2026-07-22", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
   { id: "hcc-jul26d", title: "Houston City Council Meeting", date: "2026-07-29", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
-  { id: "hcc-aug26a", title: "Houston City Council Meeting", date: "2026-08-05", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
   { id: "hcc-aug26b", title: "Houston City Council Meeting", date: "2026-08-12", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
   { id: "hcc-aug26c", title: "Houston City Council Meeting", date: "2026-08-19", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
   { id: "hcc-aug26d", title: "Houston City Council Meeting", date: "2026-08-26", category: "City Council", description: "Houston City Council weekly session.", importance: "normal" },
