@@ -1,0 +1,12 @@
+{
+  "note": "Recorded votes at Harris County Commissioners Court. ADDITIVE ONLY: never delete or rewrite past entries; append new votes after each meeting from the official agenda action pages at agenda.harriscountytx.gov. Only include items with a recorded (non-unanimous-consent) vote, or consent items explicitly pulled for a separate vote. Every entry must cite its agenda item number.",
+  "startedTracking": "2026-07-09",
+  "members": [
+    { "name": "Lina Hidalgo",   "seat": "County Judge",          "party": "D" },
+    { "name": "Rodney Ellis",   "seat": "Commissioner, Pct 1",   "party": "D" },
+    { "name": "Adrian Garcia",  "seat": "Commissioner, Pct 2",   "party": "D" },
+    { "name": "Tom Ramsey",     "seat": "Commissioner, Pct 3",   "party": "R" },
+    { "name": "Lesley Briones", "seat": "Commissioner, Pct 4",   "party": "D" }
+  ],
+  "votes": []
+}
