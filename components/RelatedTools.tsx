@@ -3,14 +3,19 @@ import Link from "next/link";
 // Cross-tool strip so the toolbox reads as one system, not separate pages.
 // Pass `current` to drop the self-link from the row.
 const TOOLS = [
+  { href: "/tools/my-ballot",           label: "Print your ballot →" },
   { href: "/tools/heat-check",          label: "Precinct heat map →" },
   { href: "/tools/districts",           label: "District vote history →" },
   { href: "/tools/where-is-the-dough",  label: "Follow the money →" },
+  { href: "/tools/donor-search",        label: "Who gave →" },
   { href: "/my-officials",              label: "Who represents me →" },
   { href: "/tools/who-do-i-call",       label: "Who do I call? →" },
   { href: "/tools/ballot-2026",         label: "2026 ballot →" },
+  { href: "/tools/judges",              label: "Know your judges →" },
   { href: "/tools/tx-house",            label: "TX House board →" },
   { href: "/tools/opportunity-map",     label: "Opportunity map →" },
+  { href: "/tools/tax-receipt",         label: "Your tax receipt →" },
+  { href: "/tools/court-votes",         label: "The vote record →" },
   { href: "/tools/the-brief",           label: "The Brief →" },
   { href: "/tools/public-money",        label: "Public money →" },
   { href: "/tools/the-network",         label: "The Network →" },

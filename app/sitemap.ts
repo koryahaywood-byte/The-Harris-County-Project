@@ -24,6 +24,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/tools/bill-tracker", "/tools/congressional-bills", "/tools/the-brief",
     "/tools/public-money", "/tools/the-network", "/tools/tv-station",
     "/tools/who-do-i-call",
+    "/tools/my-ballot", "/tools/judges", "/tools/donor-search",
+    "/tools/tax-receipt", "/tools/court-votes", "/tools/embeds",
   ].map(p => page(p, p === "/" ? 1 : 0.8));
 
   const politicians = POLITICIANS.map(p => page(`/politicians/${p.slug}`, 0.6));

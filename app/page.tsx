@@ -30,6 +30,14 @@ const ROWS: { section: string; tools: Tool[] }[] = [
         description: "County budget, city budget, TIRZ zones, infrastructure funding, and discretionary funds — in one place.",
         gradient: "linear-gradient(135deg,#0f2540 0%,#1a3a5c 100%)",
         photo: U("1575470021395-45dca7d3e3d0") },
+      { href: "/tools/donor-search", name: "Who Gave",
+        description: "Search 2,000 top donors by name or employer. See every official they fund and how much.",
+        gradient: "linear-gradient(135deg,#78350f 0%,#d97706 100%)",
+        photo: U("1553729459-efe14ef6055d") },
+      { href: "/tools/tax-receipt", name: "Your Tax Receipt",
+        description: "Enter your home value. Get your property tax bill line by line: HISD, city, county, hospital, flood control.",
+        gradient: "linear-gradient(135deg,#14532d 0%,#0d9c6c 100%)",
+        photo: U("1560518883-ce09059eeffa") },
     ],
   },
   {
@@ -43,10 +51,18 @@ const ROWS: { section: string; tools: Tool[] }[] = [
         description: "Pothole, flooding, trash, noise. Pick your issue — get the right phone number and official.",
         gradient: "linear-gradient(135deg,#0c4a6e 0%,#0284c7 100%)",
         photo: U("1516156008802-094adcff9a72") },
+      { href: "/tools/my-ballot", name: "My Ballot",
+        description: "Your address in, your exact November ballot out. Every race with ratings and money. Print it for the booth.",
+        gradient: "linear-gradient(135deg,#312e81 0%,#4f46e5 100%)",
+        photo: U("1540910419892-4a36d2c3266c") },
       { href: "/tools/ballot-2026", name: "2026 Ballot",
         description: "Every race on your November 2026 ballot: Governor to JP. D vs. R matchup, money on hand, and competitiveness rating.",
         gradient: "linear-gradient(135deg,#1e3a5f 0%,#2563a8 100%)",
         photo: U("1554224155-8d04cb9a382a") },
+      { href: "/tools/judges", name: "Know Your Judges",
+        description: "36 judicial races most voters skip. Who holds each bench, who's challenging, and our rating: one sheet.",
+        gradient: "linear-gradient(135deg,#3f3f46 0%,#71717a 100%)",
+        photo: U("1589829545856-d10d557cf95f") },
       { href: "/tools/tx-house", name: "Texas House Board",
         description: "Harris County's 24 state-house seats, ranked by competitiveness. Last general result, candidate cash, and the 6 swing seats that decide the majority.",
         gradient: "linear-gradient(135deg,#1a3a5c 0%,#dc2626 100%)",
@@ -99,6 +115,15 @@ const ROWS: { section: string; tools: Tool[] }[] = [
     ],
   },
   {
+    section: "Accountability",
+    tools: [
+      { href: "/tools/court-votes", name: "The Vote Record",
+        description: "How each commissioner votes on every recorded Commissioners Court item, and how often they vote together.",
+        gradient: "linear-gradient(135deg,#0f2540 0%,#b91c1c 100%)",
+        photo: U("1436450412740-6b988f486c6b") },
+    ],
+  },
+  {
     section: "The Brief",
     tools: [
       { href: "/tools/the-brief", name: "The Brief",
@@ -131,6 +156,10 @@ const ROWS: { section: string; tools: Tool[] }[] = [
         description: "Harris County elected officials. Stats, finance, bills, and social feeds.",
         gradient: "linear-gradient(135deg,#1a3a5c 0%,#2563a8 100%)",
         photo: U("1560472354-b33ff0c44a43") },
+      { href: "/tools/embeds", name: "Embed Our Widgets",
+        description: "Run a blog or dashboard? Put our election countdown or any race card on your site with one iframe tag.",
+        gradient: "linear-gradient(135deg,#164e63 0%,#0891b2 100%)",
+        photo: U("1461749280684-dccba630e2f6") },
       { href: "/contact", name: "Contact & Feedback",
         description: "Spot a data error? Have an idea for a new tool? Tell us.",
         gradient: "linear-gradient(135deg,#374151 0%,#6b7280 100%)",
@@ -138,6 +167,9 @@ const ROWS: { section: string; tools: Tool[] }[] = [
     ],
   },
 ];
+
+// Derived so the hero copy can't drift from the actual grid again.
+const TOOL_COUNT = ROWS.reduce((n, r) => n + r.tools.length, 0);
 
 /* ── Start Here. The 4 tools to master first ───────────────────────────── */
 /* tint/accent are a refined cool palette (blue, emerald, indigo, cyan) used for the
@@ -168,12 +200,12 @@ const START_HERE = [
     hero:        false,
   },
   {
-    href:        "/tools/districts",
-    name:        "Districts",
-    eyebrow:     "Elections",
-    headline:    "Your district,\nin full.",
-    description: "Demographics, vote history, 2026 matchup, win number, and actual race results for every seat.",
-    proof:       ["Every seat covered", "Actual race results"],
+    href:        "/tools/my-ballot",
+    name:        "My Ballot",
+    eyebrow:     "November 3",
+    headline:    "Print your\nballot sheet.",
+    description: "Your address, your exact November ballot: every race with ratings and money. Print it and take it to the booth.",
+    proof:       ["Every race at your address", "Printable crib sheet"],
     accent:      "#4f46e5",
     tint:        "linear-gradient(135deg,rgba(79,70,229,0.09),rgba(79,70,229,0.02))",
     chip:        "linear-gradient(135deg,#4f46e5,#818cf8)",
@@ -398,14 +430,14 @@ export default function Home() {
               <a href="#toolbox"
                 className="inline-flex items-center gap-2 font-semibold text-sm px-3 py-3.5 transition-colors duration-300"
                 style={{ color: "#5b6470" }}>
-                Browse all 22 tools →
+                {`Browse all ${TOOL_COUNT} tools →`}
               </a>
             </div>
 
             <div className="mt-12 flex flex-wrap gap-10">
               {[
                 { value: "1,011", label: "Precincts mapped" },
-                { value: "22", label: "Civic tools" },
+                { value: String(TOOL_COUNT), label: "Civic tools" },
                 { value: "100%", label: "Public data" },
               ].map(({ value, label }) => (
                 <div key={label}>

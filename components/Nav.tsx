@@ -25,6 +25,7 @@ export default function Nav() {
     "/tools/city-hall",
     "/tools/pac-tracker",
     "/tools/ballot-2026",
+    "/tools/my-ballot",
   ];
   const isLive = LIVE_TOOLS.some((t) => pathname.startsWith(t));
 
