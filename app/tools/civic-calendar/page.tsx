@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import dynamic from "next/dynamic";
 import type { MapEvent } from "./CivicMap";
+import MsKayCalendar from "./MsKayCalendar";
 
 const CivicMap = dynamic(() => import("./CivicMap"), { ssr: false, loading: () => (
   <div className="flex items-center justify-center rounded-2xl animate-pulse" style={{ height: 240, background: "#f0f4f8" }}>
@@ -178,6 +179,19 @@ export default function CivicCalendar() {
   const [filter, setFilter]     = useState<FilterGroup>("all");
   const [cats, setCats]         = useState<Set<Category>>(new Set(["Elections","Legislature","Courts","City Council","HISD","Civic"]));
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [kayMode, setKayMode]   = useState(false);
+
+  // ?view=ms-kay deep-links straight to Ms. Kay's Calendar (set post-mount to
+  // keep server and first client render identical).
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("view") === "ms-kay") setKayMode(true);
+  }, []);
+  function switchTo(kay: boolean) {
+    setKayMode(kay);
+    const url = new URL(window.location.href);
+    if (kay) url.searchParams.set("view", "ms-kay"); else url.searchParams.delete("view");
+    window.history.replaceState(null, "", url.toString());
+  }
 
   function prevMonth() {
     if (month === 0) { setYear(y => y - 1); setMonth(11); } else setMonth(m => m - 1);
@@ -257,6 +271,8 @@ export default function CivicCalendar() {
     .filter(e => cats.has(e.category) && e.date >= today)
     .sort((a, b) => a.date.localeCompare(b.date))[0];
 
+  if (kayMode) return <MsKayCalendar switchBack={() => switchTo(false)} />;
+
   return (
     <div style={{ background: "var(--bg, #f2f5f9)", minHeight: "100vh", fontFamily: "var(--font-outfit), sans-serif" }}>
       {/* Hero */}
@@ -265,12 +281,24 @@ export default function CivicCalendar() {
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%,rgba(37,99,168,0.18) 0%,transparent 70%)" }}/>
         <div className="relative max-w-6xl mx-auto px-5">
-          <p className="text-sky-300 text-xs font-bold uppercase tracking-[0.22em] mb-3">Community</p>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2"
-            style={{ fontFamily: "var(--font-playfair), serif" }}>Civic Calendar</h1>
-          <p className="text-white/50 text-sm max-w-lg mb-4">
-            Election days, voter registration deadlines, court meetings, city council, HISD. Every date that matters.
-          </p>
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <p className="text-sky-300 text-xs font-bold uppercase tracking-[0.22em] mb-3">Community</p>
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-2"
+                style={{ fontFamily: "var(--font-playfair), serif" }}>Civic Calendar</h1>
+              <p className="text-white/50 text-sm max-w-lg mb-4">
+                Election days, voter registration deadlines, court meetings, city council, HISD. Every date that matters.
+              </p>
+            </div>
+            <button onClick={() => switchTo(true)}
+              className="flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 hover:scale-[1.02]"
+              style={{ background: "rgba(124,58,237,0.25)", border: "1px solid rgba(196,181,253,0.45)", color: "#e9d5ff" }}>
+              <span className="w-8 h-4 rounded-full relative" style={{ background: "rgba(255,255,255,0.25)" }}>
+                <span className="absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white transition-all" />
+              </span>
+              <span style={{ fontFamily: "var(--font-dancing), cursive", fontSize: "1rem", fontWeight: 400 }}>Ms. Kay&apos;s Calendar</span>
+            </button>
+          </div>
           {nextUp && (
             <div className="inline-flex items-center gap-3 rounded-full px-4 py-2 text-xs"
               style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.15)" }}>
