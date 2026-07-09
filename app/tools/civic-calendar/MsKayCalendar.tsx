@@ -150,7 +150,7 @@ export default function MsKayCalendar({ switchBack }: { switchBack: () => void }
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth());
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(now.toISOString().split("T")[0]);
   const [cats, setCats] = useState<Set<KayCategory>>(new Set(Object.keys(KAY_CAT_COLOR) as KayCategory[]));
   const [showGroups, setShowGroups] = useState(false);
 
