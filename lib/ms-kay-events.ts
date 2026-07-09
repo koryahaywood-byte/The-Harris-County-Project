@@ -28,6 +28,8 @@ export interface KayEvent {
   rsvp?: string;            // email / phone / url from the listing
   category: KayCategory;
   channel: KayChannel[];    // where this host usually posts
+  channelVerified?: boolean; // true only when we confirmed the host's active pages;
+                             // the UI shows the "usually posts on" line only then
   recurring?: "weekly";     // projects onto the same weekday through Election Day
 }
 
@@ -42,15 +44,16 @@ export const KAY_CAT_COLOR: Record<KayCategory, string> = {
   "Election Day": "#c9a227",
 };
 
-// Who posts where: the recurring hosts of the season.
+// Who posts where. VERIFIED HOSTS ONLY: each entry below was confirmed
+// against the host's live pages. Don't add a host here on inference; verify
+// the page exists and has recent activity first.
 export const KAY_GROUPS: { name: string; posts: string }[] = [
-  { name: "HCDP clubs (Heights, Oak Forest, Meyerland, West U, Bayou Blue, East Houston, Baytown…)", posts: "Facebook pages + Mobilize (mobilize.us/hcdp); Heights and Oak Forest also keep site calendars" },
-  { name: "Harris County Tejano Democrats", posts: "Facebook (@hctejanos) + Mobilize" },
-  { name: "Campaigns (Talarico, Hinojosa, Plummer, Bell, Palmer, Rosenthal…)", posts: "Mobilize + campaign sites" },
-  { name: "Texas Majority Project (Take Texas Back / Texas Together)", posts: "Mobilize, weekly standing events" },
-  { name: "Houston LGBTQ+ Political Caucus", posts: "thecaucus.org + Facebook (@thecaucus)" },
-  { name: "League of Women Voters Houston (nonpartisan)", posts: "lwvhouston.org + Facebook" },
-  { name: "Ticketed galas & benefits (Urban League, Black Excellence, Freedom Lunch)", posts: "Eventbrite + host sites" },
+  { name: "Greater Heights Democratic Club", posts: "greaterheightsdemocrats.com/calendar · Facebook (@greaterheightsdems) · Mobilize (mobilize.us/hcdp)" },
+  { name: "Oak Forest Area Democrats", posts: "oakforestdems.org · Facebook" },
+  { name: "Harris County Tejano Democrats", posts: "Facebook (@hctejanos) · Mobilize" },
+  { name: "Bayou Blue Democrats", posts: "Facebook (@BayouBlueDems)" },
+  { name: "Houston LGBTQ+ Political Caucus", posts: "thecaucus.org · Facebook (@thecaucus)" },
+  { name: "HCDP club directory", posts: "harrisdemocrats.org/clubs lists every chartered club and its links" },
 ];
 
 export const KAY_EVENTS: KayEvent[] = [
@@ -59,16 +62,16 @@ export const KAY_EVENTS: KayEvent[] = [
     note: "Volunteers needed", rsvp: "FreedomLunch2026.eventbrite.com", category: "Service", channel: ["Eventbrite"] },
   { id: "mk-02", date: "2026-07-05", startTime: "18:00", endTime: "20:00", timeLabel: "6:00–8:00 PM",
     title: "Sunday Night Dems", host: "Greater Heights Democratic Club",
-    note: "RSVP for address", category: "Social", channel: ["Facebook", "Mobilize", "Website"] },
+    note: "RSVP for address", category: "Social", channel: ["Facebook", "Mobilize", "Website"], channelVerified: true },
   { id: "mk-03", date: "2026-07-06", startTime: "19:00", timeLabel: "7:00 PM",
     title: "Monthly Meeting", host: "Oak Forest Area Dems", venue: "Spaghetti Western Restaurant", address: "TC Jester",
-    category: "Club Meeting", channel: ["Website", "Facebook"] },
+    category: "Club Meeting", channel: ["Website", "Facebook"], channelVerified: true },
   { id: "mk-04", date: "2026-07-07", startTime: "19:00", endTime: "20:30", timeLabel: "7:00–8:30 PM",
     title: "Hinojosa for Governor Town Hall", host: "Gina Hinojosa campaign", venue: "Eldorado Ballroom", address: "2310 Elgin St",
     category: "Town Hall", channel: ["Mobilize"] },
   { id: "mk-05", date: "2026-07-09", startTime: "19:00", timeLabel: "7:00 PM",
     title: "Monthly Meeting", host: "Tejano Dems", venue: "Leonel Castillo Community Center", address: "2101 South St",
-    category: "Club Meeting", channel: ["Facebook", "Mobilize"] },
+    category: "Club Meeting", channel: ["Facebook", "Mobilize"], channelVerified: true },
   { id: "mk-06", date: "2026-07-09", startTime: "18:30", endTime: "19:30", timeLabel: "6:30–7:30 PM",
     title: "Monthly Meeting · Speaker Ana Hernandez", host: "East Houston Democrats", venue: "Pine Trails Community Bldg", address: "6003 Woodbend Dr",
     category: "Club Meeting", channel: ["Facebook"] },
@@ -104,7 +107,7 @@ export const KAY_EVENTS: KayEvent[] = [
     category: "Town Hall", channel: ["Facebook"] },
   { id: "mk-17", date: "2026-07-18", startTime: "10:00", timeLabel: "10:00 AM",
     title: "Club Gathering at 4th Wall Theatre", host: "Greater Heights Democratic Club", address: "1824 Spring St #101",
-    category: "Social", channel: ["Facebook", "Mobilize", "Website"] },
+    category: "Social", channel: ["Facebook", "Mobilize", "Website"], channelVerified: true },
   { id: "mk-18", date: "2026-07-20", startTime: "18:30", timeLabel: "6:30 PM",
     title: "Monthly Meeting · Guest: Pearland Mayor Quentin Wiltz", host: "Meyerland Dems",
     venue: "Faith Lutheran Church", address: "4600 Bellaire Blvd", category: "Club Meeting", channel: ["Facebook", "Mobilize"] },
@@ -136,13 +139,13 @@ export const KAY_EVENTS: KayEvent[] = [
     address: "3821 Rice Blvd", category: "Organizing", channel: ["Mobilize", "Facebook"] },
   { id: "mk-28", date: "2026-08-08", startTime: "09:00", timeLabel: "9:00 AM",
     title: "Endorsement Meeting", host: "Houston LGBTQ+ Political Caucus", venue: "Metropolitan Community Church",
-    address: "2025 W 11th St", category: "Club Meeting", channel: ["Website", "Facebook"] },
+    address: "2025 W 11th St", category: "Club Meeting", channel: ["Website", "Facebook"], channelVerified: true },
   { id: "mk-29", date: "2026-08-08", startTime: "14:00", endTime: "16:00", timeLabel: "2:00–4:00 PM",
     title: "Brazoria County Organizing Rally", host: "Pearland Organizing Rally", address: "11801 Shadow Creek Pkwy, Pearland",
     category: "Organizing", channel: ["Mobilize"] },
   { id: "mk-30", date: "2026-08-12", startTime: "18:30", timeLabel: "6:30 PM",
     title: "Monthly Meeting", host: "Bayou Blue Democrats", venue: "St. Stephen's Church", address: "1800 Sul Ross St",
-    category: "Club Meeting", channel: ["Facebook"] },
+    category: "Club Meeting", channel: ["Facebook"], channelVerified: true },
   { id: "mk-31", date: "2026-08-19", startTime: "16:00", endTime: "19:00", timeLabel: "4:00–7:00 PM",
     title: "Volunteer Launch Party & Community Social", host: "League of Women Voters (nonpartisan)",
     note: "First location TBA; second location Kirby Ice House", category: "Social", channel: ["Website", "Facebook"] },

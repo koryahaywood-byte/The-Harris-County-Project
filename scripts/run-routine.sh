@@ -31,5 +31,7 @@ PROMPT="$(awk 'BEGIN{fm=0} /^---$/{fm++; next} fm>=2 || fm==0 {print}' "$SKILL")
 
 echo "$(date '+%F %T') start $TASK_ID" >> "$LOG"
 cd "$HOME/harris-county-project" || exit 1
-claude -p "$PROMPT" --dangerously-skip-permissions >> "$LOG" 2>&1
+# Sonnet 4.6 at low effort keeps routine runs cheap; permissions are skipped
+# because these run unattended (repo-scoped, additive-only prompts).
+claude -p "$PROMPT" --model claude-sonnet-4-6 --effort low --dangerously-skip-permissions >> "$LOG" 2>&1
 echo "$(date '+%F %T') done $TASK_ID (exit $?)" >> "$LOG"

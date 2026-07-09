@@ -51,7 +51,8 @@ function plusHour(time: string) {
   return `${String(Math.min(h + 1, 23)).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 }
 function kayDescription(e: KayEvent) {
-  return [e.host, e.timeLabel, e.note, e.rsvp ? `RSVP: ${e.rsvp}` : "", `Usually posted on: ${e.channel.join(", ")}`]
+  return [e.host, e.timeLabel, e.note, e.rsvp ? `RSVP: ${e.rsvp}` : "",
+    e.channelVerified ? `Usually posted on: ${e.channel.join(", ")}` : ""]
     .filter(Boolean).join(" · ");
 }
 function kayLocation(e: KayEvent) {
@@ -121,7 +122,9 @@ function KayEventCard({ event, date }: { event: KayEvent; date: string }) {
           {event.address && <p>{event.address}</p>}
           {event.note && <p className="italic">{event.note}</p>}
           {event.rsvp && <p>RSVP: <strong style={{ color: PLUM }}>{event.rsvp}</strong></p>}
-          <p className="text-[10px]" style={{ color: "#9ca3af" }}>The host usually posts on {event.channel.join(" · ")}</p>
+          {event.channelVerified && (
+            <p className="text-[10px]" style={{ color: "#9ca3af" }}>The host usually posts on {event.channel.join(" · ")}</p>
+          )}
         </div>
         {!isPast && (
           <div className="flex flex-wrap gap-2">
@@ -202,7 +205,7 @@ export default function MsKayCalendar({ switchBack }: { switchBack: () => void }
               </h1>
               <p className="text-white/60 text-sm max-w-lg mb-4" style={{ fontStyle: "italic" }}>
                 Dearest reader: every club meeting, fundraiser, town hall, and gala of the
-                season, gathered for your perusal. One does not simply miss a meeting.
+                season, gathered for your perusal.
               </p>
             </div>
             {/* Switch back */}
