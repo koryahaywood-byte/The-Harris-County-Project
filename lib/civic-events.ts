@@ -66,6 +66,7 @@ export const EVENTS: CivicEvent[] = [
   { id: "cc-jul-1-26", title: "Commissioners Court Meeting", date: "2026-07-09", category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
   { id: "cc-jul-2-26", title: "Commissioners Court Meeting", date: "2026-07-21", category: "Courts", description: "Harris County Commissioners Court meeting (Business Court session).", importance: "normal" },
   { id: "cc-jul-3-26", title: "Commissioners Court Meeting", date: "2026-07-30", category: "Courts", description: "Harris County Commissioners Court meeting (Business Court session).", importance: "normal" },
+  { id: "cc-budget-hearings-2026", title: "Commissioners Court FY2026-2027 Budget Hearings", date: "2026-07-13", endDate: "2026-07-16", category: "Courts", description: "Harris County Commissioners Court holds FY2026-2027 budget hearings, Monday-Thursday at 10 AM, ahead of the Sep 29 budget adoption vote.", importance: "high" },
   { id: "cc-aug-1-26", title: "Commissioners Court Meeting", date: "2026-08-06", category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
   { id: "cc-aug-2-26", title: "Commissioners Court Meeting", date: "2026-08-25", category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
   { id: "cc-sep-1-26", title: "Commissioners Court Meeting", date: "2026-09-08", category: "Courts", description: "Harris County Commissioners Court regular meeting.", importance: "normal" },
