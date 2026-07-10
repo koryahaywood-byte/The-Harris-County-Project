@@ -174,14 +174,11 @@ function NewsCard({ story, tier }: { story: NewsStory | null; tier: keyof typeof
       </div>
 
       {/* Photo */}
-      <div className="w-full overflow-hidden flex-shrink-0" style={{ height: 130 }}>
+      <div className="w-full overflow-hidden flex-shrink-0 flex items-center justify-center" style={{ height: 160, background: `${meta.color}08` }}>
         {story?.image
           ? <img src={story.image} alt="" loading="lazy"
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-          : <div className="w-full h-full flex items-center justify-center"
-              style={{ background: `${meta.color}10` }}>
-              <span className="text-2xl opacity-15">📰</span>
-            </div>
+              className="w-full h-full object-contain" />
+          : <span className="text-2xl opacity-15">📰</span>
         }
       </div>
 
