@@ -410,9 +410,11 @@ export default function MsKayCalendar({ switchBack }: { switchBack: () => void }
           </div>
 
           <p className="mt-6 text-[10px] italic leading-relaxed" style={{ color: "#9ca3af" }}>
-            Compiled from Ms. Kay&apos;s circulated list (July 8, 2026 edition). Details change;
-            confirm with the host before setting out. Weekly standing events repeat through
-            Election Day. Yours in civic devotion, The Harris County Project.
+            Kept in step with Ms. Kay&apos;s own calendar at{" "}
+            <a href="https://www.ekayshepard.com/calendar" target="_blank" rel="noopener noreferrer"
+              className="underline" style={{ color: WISTERIA }}>ekayshepard.com</a>, checked daily.
+            Details change; confirm with the host before setting out. Weekly standing events repeat
+            through Election Day. Yours in civic devotion, The Harris County Project.
           </p>
         </div>
       </div>
