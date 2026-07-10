@@ -177,6 +177,9 @@ export const KAY_EVENTS: KayEvent[] = [
   { id: "mk-34", date: "2026-08-29", startTime: "07:00", timeLabel: "7:00 AM",
     title: "Wildcat Golf Tournament", host: "Constable Smokie Phillips", address: "12000 Almeda Rd",
     rsvp: "281.960.9217", category: "Fundraiser", channel: ["RSVP", "Eventbrite"] },
+  { id: "mk-63", date: "2026-08-06", startTime: "16:00", endTime: "20:00", timeLabel: "4:00–8:00 PM",
+    title: "Dinner Fundraiser · Tickets $10", host: "Precinct 3 Constable Sherman Eagleton",
+    venue: "Baytown Fairgrounds", address: "7900 N Main St, Baytown", category: "Fundraiser", channel: ["RSVP"] },
 
   // ── September 2026 ─────────────────────────────────────────────────────────
   { id: "mk-35", date: "2026-09-19", startTime: "11:00", endTime: "13:00", timeLabel: "11:00 AM–1:00 PM",
@@ -186,6 +189,10 @@ export const KAY_EVENTS: KayEvent[] = [
     title: "Texas Criminal Record Relief Bill Town Hall", host: "Community town hall",
     venue: "Barbara Jordan–Mickey Leland School of Public Affairs", address: "3100 Cleburne St, Auditorium",
     rsvp: "713.538.0466 (Tangi)", category: "Town Hall", channel: ["Facebook"] },
+  { id: "mk-64", date: "2026-09-17", startTime: "18:00", endTime: "20:00", timeLabel: "6:00–8:00 PM",
+    title: "Anniversary Dinner · Spotlight on Youth", host: "East Houston Democrats",
+    note: "Tickets $35; address upon dinner reservation", rsvp: "832.896.1633 (Charlotte)",
+    category: "Gala", channel: ["Facebook"] },
 
   // ── November & December 2026 ───────────────────────────────────────────────
   { id: "mk-37", date: "2026-11-03", startTime: "07:00", endTime: "19:00", timeLabel: "7:00 AM–7:00 PM",
