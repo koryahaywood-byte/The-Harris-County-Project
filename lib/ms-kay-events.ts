@@ -182,10 +182,6 @@ export const KAY_EVENTS: KayEvent[] = [
     address: "1600 Lamar St", note: "Save the date", category: "Gala", channel: ["Eventbrite", "Website"] },
 
   // ── Synced from ekayshepard.com July 10, 2026 ──────────────────────────────
-  { id: "mk-40", date: "2026-07-10", startTime: "18:00", endTime: "19:00", timeLabel: "6:00–7:00 PM",
-    title: "HC Organizing Rally · Colin Allred", host: "HCDP",
-    venue: "Julia C. Hester House", address: "2020 Solo St",
-    category: "Organizing", channel: ["Facebook", "Mobilize"] },
   { id: "mk-41", date: "2026-07-10", startTime: "17:30", timeLabel: "5:30 PM",
     title: "No Buyouts — Save HCDP", host: "Community organizers",
     venue: "Julia C. Hester House", address: "2020 Solo St",
