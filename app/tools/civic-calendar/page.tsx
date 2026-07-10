@@ -97,6 +97,36 @@ function downloadICS(event: CivicEvent) {
   a.download = `${event.id}.ics`;
   a.click();
 }
+function downloadAllICS(events: CivicEvent[], monthLabel: string) {
+  const vevents = events.map(e => {
+    const start = e.endDate
+      ? `DTSTART;VALUE=DATE:${toICSDateOnly(e.date)}`
+      : `DTSTART:${toICSDate(e.date)}`;
+    const end = e.endDate
+      ? `DTEND;VALUE=DATE:${toICSDateOnly(e.endDate)}`
+      : `DTEND:${toICSDate(e.date)}`;
+    return [
+      "BEGIN:VEVENT",
+      `UID:${e.id}@harriscountyproject`,
+      start, end,
+      `SUMMARY:${e.title}`,
+      `DESCRIPTION:${e.description.replace(/,/g, "\\,")}`,
+      "LOCATION:Harris County\\, TX",
+      "END:VEVENT",
+    ].join("\r\n");
+  });
+  const ics = [
+    "BEGIN:VCALENDAR", "VERSION:2.0",
+    "PRODID:-//The Harris County Project//EN",
+    "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
+    ...vevents,
+    "END:VCALENDAR",
+  ].join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
+  a.download = `civic-calendar-${monthLabel.toLowerCase().replace(/\s+/g, "-")}.ics`;
+  a.click();
+}
 
 /* ─── Event detail panel ─────────────────────────────────────────────────── */
 function EventDetail({ event }: { event: CivicEvent }) {
@@ -267,6 +297,15 @@ export default function CivicCalendar() {
 
   // Upcoming event for "next up" banner
   const today = now.toISOString().split("T")[0];
+
+  const monthEntries = useMemo(() => {
+    const monthStart = `${year}-${String(month + 1).padStart(2, "0")}-01`;
+    const monthEnd = `${year}-${String(month + 1).padStart(2, "0")}-${String(daysInMonth(year, month)).padStart(2, "0")}`;
+    return EVENTS
+      .filter(e => cats.has(e.category) && e.date >= today && e.date >= monthStart && e.date <= monthEnd)
+      .sort((a, b) => a.date.localeCompare(b.date));
+  }, [cats, year, month, today]);
+
   const nextUp = EVENTS
     .filter(e => cats.has(e.category) && e.date >= today)
     .sort((a, b) => a.date.localeCompare(b.date))[0];
@@ -435,6 +474,26 @@ export default function CivicCalendar() {
               </button>
             ))}
           </div>
+
+          {/* Add all month events */}
+          {monthEntries.length > 0 && (
+            <div className="flex items-center justify-between mb-3 gap-3 flex-wrap">
+              <p className="text-[11px] font-semibold" style={{ color: "#9ca3af" }}>
+                {monthEntries.length} upcoming event{monthEntries.length !== 1 ? "s" : ""} in {MONTH_NAMES[month]}
+              </p>
+              <button
+                onClick={() => downloadAllICS(monthEntries, `${MONTH_NAMES[month]} ${year}`)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold transition-colors duration-150"
+                style={{ background: "#1a3a5c", color: "#fff" }}
+                title="Download all events as a single .ics file — works with Apple Calendar, Google Calendar, and Outlook"
+              >
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M6 1v7M3 5l3 3 3-3M1 9v1a1 1 0 001 1h8a1 1 0 001-1V9"/>
+                </svg>
+                Add all {MONTH_NAMES[month]} events to calendar
+              </button>
+            </div>
+          )}
 
           {/* Calendar */}
           <div className="rounded-2xl overflow-hidden ring-1 ring-black/8 mb-6"
