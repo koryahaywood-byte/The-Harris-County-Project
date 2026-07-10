@@ -83,6 +83,33 @@ function downloadICS(e: KayEvent, date: string) {
   a.download = `${e.id}.ics`;
   a.click();
 }
+function downloadAllICS(entries: Array<{ event: KayEvent; date: string }>, monthLabel: string) {
+  const vevents = entries.map(({ event: e, date }) => {
+    const start = e.startTime ?? "09:00";
+    const end = e.endTime ?? plusHour(start);
+    return [
+      "BEGIN:VEVENT",
+      `UID:${e.id}-${date}@harriscountyproject`,
+      `DTSTART:${icsStamp(date, start)}`,
+      `DTEND:${icsStamp(date, end)}`,
+      `SUMMARY:${e.title.replace(/,/g, "\\,")}`,
+      `DESCRIPTION:${kayDescription(e).replace(/,/g, "\\,")}`,
+      `LOCATION:${kayLocation(e).replace(/,/g, "\\,")}`,
+      "END:VEVENT",
+    ].join("\r\n");
+  });
+  const ics = [
+    "BEGIN:VCALENDAR","VERSION:2.0",
+    "PRODID:-//The Harris County Project//Ms Kays Calendar//EN",
+    "CALSCALE:GREGORIAN","METHOD:PUBLISH",
+    ...vevents,
+    "END:VCALENDAR",
+  ].join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
+  a.download = `ms-kay-${monthLabel.toLowerCase().replace(/\s+/g, "-")}.ics`;
+  a.click();
+}
 
 /* ─── Event card ─────────────────────────────────────────────────────────── */
 function KayEventCard({ event, date }: { event: KayEvent; date: string }) {
@@ -183,6 +210,18 @@ export default function MsKayCalendar({ switchBack }: { switchBack: () => void }
   const grid = useMemo(() => buildGrid(year, month), [year, month]);
   const selectedEvents = selectedDate ? (eventMap.get(selectedDate) ?? []) : [];
   const today = now.toISOString().split("T")[0];
+
+  const monthEntries = useMemo(() => {
+    const monthStart = `${year}-${String(month + 1).padStart(2, "0")}-01`;
+    const monthEnd = `${year}-${String(month + 1).padStart(2, "0")}-${String(daysInMonth(year, month)).padStart(2, "0")}`;
+    const entries: Array<{ event: KayEvent; date: string }> = [];
+    for (const [ds, events] of eventMap.entries()) {
+      if (ds >= monthStart && ds <= monthEnd && ds >= today) {
+        for (const e of events) entries.push({ event: e, date: ds });
+      }
+    }
+    return entries.sort((a, b) => a.date.localeCompare(b.date));
+  }, [eventMap, year, month, today]);
   const nextUp = [...eventMap.entries()]
     .filter(([ds]) => ds >= today)
     .sort(([a], [b]) => a.localeCompare(b))[0];
@@ -313,6 +352,25 @@ export default function MsKayCalendar({ switchBack }: { switchBack: () => void }
             </div>
             <button onClick={jumpToday} className="px-4 py-1.5 rounded-full text-xs font-bold" style={{ background: `${WISTERIA}14`, color: PLUM }}>Today</button>
           </div>
+
+          {monthEntries.length > 0 && (
+            <div className="flex items-center justify-between mb-3 gap-3 flex-wrap">
+              <p className="text-[11px] font-semibold" style={{ color: "#9ca3af" }}>
+                {monthEntries.length} upcoming event{monthEntries.length !== 1 ? "s" : ""} in {MONTH_NAMES[month]}
+              </p>
+              <button
+                onClick={() => downloadAllICS(monthEntries, `${MONTH_NAMES[month]} ${year}`)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold transition-colors duration-150"
+                style={{ background: PLUM, color: "#fff" }}
+                title="Download all events as a single .ics file — works with Apple Calendar, Google Calendar, and Outlook"
+              >
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M6 1v7M3 5l3 3 3-3M1 9v1a1 1 0 001 1h8a1 1 0 001-1V9"/>
+                </svg>
+                Add all {MONTH_NAMES[month]} events to calendar
+              </button>
+            </div>
+          )}
 
           <div className="rounded-2xl overflow-hidden mb-6" style={{ background: "#fff", border: `1px solid ${WISTERIA}25`, boxShadow: "0 2px 8px rgba(74,29,110,0.08)" }}>
             <div className="grid grid-cols-7" style={{ borderBottom: `1px solid ${WISTERIA}15` }}>
