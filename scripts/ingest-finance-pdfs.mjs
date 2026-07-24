@@ -66,8 +66,37 @@ async function extractViaText(buf) {
   };
 }
 
+// ── Truncate oversized PDFs to first N pages (using pypdf via Python) ─────────
+const MAX_PDF_BYTES = 20 * 1024 * 1024; // 20 MB — Anthropic inline limit ~32 MB
+
+async function truncatePdf(buf, maxPages = 6) {
+  if (buf.length <= MAX_PDF_BYTES) return buf;
+  const { execFile } = await import("node:child_process");
+  const { promisify } = await import("node:util");
+  const { tmpdir } = await import("node:os");
+  const run = promisify(execFile);
+  const tmp = path.join(tmpdir(), `hcp-pdf-${Date.now()}.pdf`);
+  const out = path.join(tmpdir(), `hcp-pdf-${Date.now()}-trunc.pdf`);
+  fs.writeFileSync(tmp, buf);
+  try {
+    await run("python3", ["-c", `
+import sys
+from pypdf import PdfReader, PdfWriter
+r = PdfReader(sys.argv[1])
+w = PdfWriter()
+for p in r.pages[:${maxPages}]: w.add_page(p)
+with open(sys.argv[2], "wb") as f: w.write(f)
+`, tmp, out]);
+    const truncated = fs.readFileSync(out);
+    return truncated;
+  } finally {
+    for (const f of [tmp, out]) try { fs.unlinkSync(f); } catch {}
+  }
+}
+
 // ── Strategy 2: Claude reads the PDF directly ─────────────────────────────────
 async function extractViaClaude(buf, filename) {
+  const pdfBuf = await truncatePdf(buf);
   const { default: Anthropic } = await import("@anthropic-ai/sdk");
   const client = new Anthropic();
   const msg = await client.messages.create({
@@ -76,7 +105,7 @@ async function extractViaClaude(buf, filename) {
     messages: [{
       role: "user",
       content: [
-        { type: "document", source: { type: "base64", media_type: "application/pdf", data: buf.toString("base64") } },
+        { type: "document", source: { type: "base64", media_type: "application/pdf", data: pdfBuf.toString("base64") } },
         { type: "text", text:
 `This is a Texas C/OH campaign finance report. Find the COVER SHEET SUPPORT & TOTALS page (labeled "FORM C/OH SUPPORT & TOTALS COVER SHEET PG 2"). For Justice of the Peace filers this summary page is typically page 3 of the PDF; for city council and county officials it is usually page 2 or 4. Extract:
 - candidateName
