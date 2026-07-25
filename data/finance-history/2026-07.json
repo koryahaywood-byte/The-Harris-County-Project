@@ -1,6 +1,6 @@
 {
   "period": "2026-07",
-  "capturedAt": "2026-07-25T02:21:32.186Z",
+  "capturedAt": "2026-07-25T02:41:09.999Z",
   "source": "pipeline:merge-finance-data",
   "candidates": [
     {
@@ -706,17 +706,6 @@
       "spent": 12400.47,
       "loans": 5207.41,
       "asOf": "01/01/2025 through 06/30/2025"
-    },
-    {
-      "name": "Lesley Briones",
-      "office": "Commissioner PCT 4",
-      "level": "county",
-      "party": "D",
-      "cash": 31841.71,
-      "raised": 0,
-      "spent": 0,
-      "loans": 0,
-      "asOf": "12/31/2025"
     },
     {
       "name": "Christina Morales",

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-25T02:21:27.329Z",
+  "generatedAt": "2026-07-25T02:34:28.983Z",
   "pdfBatch": "2026-07-24T23-40-00-combined.json",
   "candidates": [
     {
@@ -827,20 +827,6 @@
       "asOf": "01/01/2025 through 06/30/2025",
       "source": "pdf:BURGESS-MARILYN-DISTRICT-CLERK-2026-01-12.pdf",
       "confidence": "high"
-    },
-    {
-      "name": "Lesley Briones",
-      "office": "Commissioner PCT 4",
-      "level": "county",
-      "party": "D",
-      "raised": null,
-      "spent": null,
-      "cash": 31841.71,
-      "loans": null,
-      "asOf": "12/31/2025",
-      "source": "pdf:BRIONES-UC-form",
-      "confidence": "medium",
-      "note": "Filed C/OH-UC (final disposition); $31,841 in unexpended contributions being distributed"
     },
     {
       "name": "Christina Morales",
