@@ -1,6 +1,6 @@
 {
   "period": "2026-07",
-  "capturedAt": "2026-07-25T02:11:44.949Z",
+  "capturedAt": "2026-07-25T02:20:53.939Z",
   "source": "pipeline:merge-finance-data",
   "candidates": [
     {
@@ -114,8 +114,8 @@
       "asOf": "Jan 2026"
     },
     {
-      "name": "Wanda Adams",
-      "office": "E Justice Of The Peace Pct 7 Pl 1",
+      "name": "Wanda E. Adams",
+      "office": "Justice of the Peace PCT 7 PL 1",
       "level": "county",
       "party": null,
       "cash": 2100000,
@@ -244,6 +244,17 @@
       "spent": 12184396.5,
       "loans": 0,
       "asOf": "2026-06-30"
+    },
+    {
+      "name": "Chris Hollins",
+      "office": "City Controller",
+      "level": "houston",
+      "party": "D",
+      "cash": 530765.63,
+      "raised": 0,
+      "spent": 0,
+      "loans": 0,
+      "asOf": "12/31/2025"
     },
     {
       "name": "Tom Oliverson",
@@ -554,7 +565,7 @@
       "asOf": "7/1/2025 - 12/31/2025"
     },
     {
-      "name": "Martha Castextatum",
+      "name": "Martha Castex-Tatum",
       "office": "City Council District K",
       "level": "houston",
       "party": null,
@@ -675,8 +686,8 @@
       "asOf": "7/1/2025 - 12/31/2025"
     },
     {
-      "name": "Mary Huffman",
-      "office": "Nan City Council District G",
+      "name": "Mary Nan Huffman",
+      "office": "City Council District G",
       "level": "houston",
       "party": null,
       "cash": 40963.36,
@@ -695,6 +706,17 @@
       "spent": 12400.47,
       "loans": 5207.41,
       "asOf": "01/01/2025 through 06/30/2025"
+    },
+    {
+      "name": "Lesley Briones",
+      "office": "Commissioner PCT 4",
+      "level": "county",
+      "party": "D",
+      "cash": 31841.71,
+      "raised": 0,
+      "spent": 0,
+      "loans": 0,
+      "asOf": "12/31/2025"
     },
     {
       "name": "Christina Morales",
@@ -730,8 +752,8 @@
       "asOf": "Jan 2026"
     },
     {
-      "name": "Eric Carter",
-      "office": "William Justice Of The Peace Pct 1 Pl 1",
+      "name": "Eric William Carter",
+      "office": "Justice of the Peace PCT 1 PL 1",
       "level": "county",
       "party": null,
       "cash": 29549.28,
@@ -840,7 +862,7 @@
       "asOf": "Jan 2026"
     },
     {
-      "name": "Carolyn Evansshabazz",
+      "name": "Carolyn Evans-Shabazz",
       "office": "City Council District D",
       "level": "houston",
       "party": null,
@@ -917,7 +939,7 @@
       "asOf": "Jan 2026"
     },
     {
-      "name": "Victor Iii",
+      "name": "Victor Treviño III",
       "office": "Trevino Justice Of The Peace Pct 6 Pl 1",
       "level": "county",
       "party": null,
@@ -1038,8 +1060,8 @@
       "asOf": "07/01/2024 - 12/31/2024"
     },
     {
-      "name": "Angela Rodriguez",
-      "office": "D Justice Of The Peace Pct 6 Pl 2",
+      "name": "Angela D. Rodriguez",
+      "office": "Justice of the Peace PCT 6 PL 2",
       "level": "county",
       "party": null,
       "cash": 664.26,
@@ -1124,6 +1146,28 @@
       "spent": 0,
       "loans": 0,
       "asOf": "07/01/2025 - 12/31/2025"
+    },
+    {
+      "name": "Sharon M. Burney",
+      "office": "Justice of the Peace PCT 7 PL 2 (lost D runoff)",
+      "level": "county",
+      "party": "D",
+      "cash": 0,
+      "raised": 0,
+      "spent": 0,
+      "loans": 0,
+      "asOf": "unknown"
+    },
+    {
+      "name": "Mark Fury",
+      "office": "Justice of the Peace PCT 5 PL 2 (R nominee)",
+      "level": "county",
+      "party": "R",
+      "cash": 0,
+      "raised": 2700,
+      "spent": 4140,
+      "loans": 0,
+      "asOf": "01/22/2026"
     }
   ]
 }
