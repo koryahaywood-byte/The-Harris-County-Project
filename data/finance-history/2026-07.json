@@ -1,6 +1,6 @@
 {
   "period": "2026-07",
-  "capturedAt": "2026-07-24T23:37:18.797Z",
+  "capturedAt": "2026-07-25T02:11:44.949Z",
   "source": "pipeline:merge-finance-data",
   "candidates": [
     {
@@ -13,6 +13,17 @@
       "spent": 0,
       "loans": 0,
       "asOf": "Jan 2026"
+    },
+    {
+      "name": "James Talarico",
+      "office": "U.S. Senate (D nominee)",
+      "level": "federal",
+      "party": "D",
+      "cash": 21548155.08,
+      "raised": 68555930.42,
+      "spent": 47007775.34,
+      "loans": 0,
+      "asOf": "2026-06-30"
     },
     {
       "name": "Glenn Hegar",
@@ -178,17 +189,6 @@
       "spent": 1260476.12,
       "loans": 1961000,
       "asOf": "2026-06-30"
-    },
-    {
-      "name": "James Talarico",
-      "office": "U.S. Senate (D nominee)",
-      "level": "state",
-      "party": "D",
-      "cash": 1135151.57,
-      "raised": 0,
-      "spent": 0,
-      "loans": 0,
-      "asOf": "Jan 2026"
     },
     {
       "name": "Paul Bettencourt",

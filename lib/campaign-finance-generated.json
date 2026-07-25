@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-24T23:37:08.780Z",
+  "generatedAt": "2026-07-25T02:11:41.581Z",
   "pdfBatch": "2026-07-24T23-40-00-combined.json",
   "candidates": [
     {
@@ -14,6 +14,18 @@
       "dataSource": "live",
       "fetchedAt": "2026-07-24T23:36:38.170Z",
       "source": "tec-api"
+    },
+    {
+      "name": "James Talarico",
+      "office": "U.S. Senate (D nominee)",
+      "level": "federal",
+      "party": "D",
+      "raised": 68555930.42,
+      "spent": 47007775.34,
+      "loans": 0,
+      "cash": 21548155.08,
+      "asOf": "2026-06-30",
+      "source": "fec-api"
     },
     {
       "name": "Glenn Hegar",
@@ -207,19 +219,6 @@
       "cash": 1469200.64,
       "asOf": "2026-06-30",
       "source": "fec-api"
-    },
-    {
-      "name": "James Talarico",
-      "office": "U.S. Senate (D nominee)",
-      "level": "state",
-      "party": "D",
-      "cash": 1135151.57,
-      "asOf": "Jan 2026",
-      "incumbent": false,
-      "filingUrl": "https://ethics.state.tx.us/search/cf/SimpleSearch.php?q=Talarico%2C%20James",
-      "dataSource": "live",
-      "fetchedAt": "2026-07-24T23:36:38.170Z",
-      "source": "tec-api"
     },
     {
       "name": "Paul Bettencourt",
