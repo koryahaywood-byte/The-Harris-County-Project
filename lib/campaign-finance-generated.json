@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-25T02:20:48.007Z",
+  "generatedAt": "2026-07-25T02:21:27.329Z",
   "pdfBatch": "2026-07-24T23-40-00-combined.json",
   "candidates": [
     {
@@ -1104,7 +1104,7 @@
     },
     {
       "name": "Victor Treviño III",
-      "office": "Trevino Justice Of The Peace Pct 6 Pl 1",
+      "office": "Justice of the Peace PCT 6 PL 1",
       "level": "county",
       "party": null,
       "raised": 26260,
@@ -1374,6 +1374,33 @@
       "source": "pdf:FURY-MARK",
       "confidence": "medium",
       "note": "Short reporting period (Jan 1-22, 2026); cash on hand not reported"
+    },
+    {
+      "name": "Jo Ann Delgado",
+      "office": "Justice of the Peace PCT 2 PL 1",
+      "level": "county",
+      "party": "D",
+      "raised": null,
+      "spent": null,
+      "cash": 0,
+      "loans": null,
+      "asOf": "01/15/2026",
+      "source": "pdf:DELGADO-JO-ANN",
+      "confidence": "high"
+    },
+    {
+      "name": "Bob Wolfe",
+      "office": "Justice of the Peace PCT 5 PL 2 (lost R primary)",
+      "level": "county",
+      "party": "R",
+      "raised": null,
+      "spent": null,
+      "cash": null,
+      "loans": null,
+      "asOf": null,
+      "source": "not-filed",
+      "confidence": "failed",
+      "note": "Lost 2026 R primary; no recent C/OH filing found"
     }
   ]
 }

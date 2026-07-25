@@ -1,6 +1,6 @@
 {
   "period": "2026-07",
-  "capturedAt": "2026-07-25T02:20:53.939Z",
+  "capturedAt": "2026-07-25T02:21:32.186Z",
   "source": "pipeline:merge-finance-data",
   "candidates": [
     {
@@ -940,7 +940,7 @@
     },
     {
       "name": "Victor Treviño III",
-      "office": "Trevino Justice Of The Peace Pct 6 Pl 1",
+      "office": "Justice of the Peace PCT 6 PL 1",
       "level": "county",
       "party": null,
       "cash": 6945.56,
@@ -1168,6 +1168,28 @@
       "spent": 4140,
       "loans": 0,
       "asOf": "01/22/2026"
+    },
+    {
+      "name": "Jo Ann Delgado",
+      "office": "Justice of the Peace PCT 2 PL 1",
+      "level": "county",
+      "party": "D",
+      "cash": 0,
+      "raised": 0,
+      "spent": 0,
+      "loans": 0,
+      "asOf": "01/15/2026"
+    },
+    {
+      "name": "Bob Wolfe",
+      "office": "Justice of the Peace PCT 5 PL 2 (lost R primary)",
+      "level": "county",
+      "party": "R",
+      "cash": 0,
+      "raised": 0,
+      "spent": 0,
+      "loans": 0,
+      "asOf": "unknown"
     }
   ]
 }
