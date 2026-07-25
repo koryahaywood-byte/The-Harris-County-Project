@@ -1,6 +1,6 @@
 {
   "period": "2026-07",
-  "capturedAt": "2026-07-25T02:41:09.999Z",
+  "capturedAt": "2026-07-25T02:50:04.965Z",
   "source": "pipeline:merge-finance-data",
   "candidates": [
     {
@@ -112,17 +112,6 @@
       "spent": 0,
       "loans": 0,
       "asOf": "Jan 2026"
-    },
-    {
-      "name": "Wanda E. Adams",
-      "office": "Justice of the Peace PCT 7 PL 1",
-      "level": "county",
-      "party": null,
-      "cash": 2100000,
-      "raised": 2225,
-      "spent": 1466.41,
-      "loans": 0,
-      "asOf": "01/01/2021 - 06/30/2021"
     },
     {
       "name": "Tom Ramsey",
@@ -543,17 +532,6 @@
       "asOf": "07/01/2025–12/31/2025"
     },
     {
-      "name": "Laryssa Korduba",
-      "office": "Justice Of The Peace Pct 4 Pl 2",
-      "level": "county",
-      "party": "D",
-      "cash": 79724.52,
-      "raised": 34265,
-      "spent": 4989.38,
-      "loans": 0,
-      "asOf": "01/01/2021 through 06/30/2021"
-    },
-    {
       "name": "Sallie Alcorn",
       "office": "City Council Atlarge 5",
       "level": "houston",
@@ -563,17 +541,6 @@
       "spent": 49106.23,
       "loans": 0,
       "asOf": "7/1/2025 - 12/31/2025"
-    },
-    {
-      "name": "Martha Castex-Tatum",
-      "office": "City Council District K",
-      "level": "houston",
-      "party": null,
-      "cash": 71747.5,
-      "raised": 16250,
-      "spent": 8520.22,
-      "loans": 0,
-      "asOf": "10/27/2019 through 12/31/2019"
     },
     {
       "name": "Steve Duble",
@@ -928,17 +895,6 @@
       "asOf": "Jan 2026"
     },
     {
-      "name": "Victor Treviño III",
-      "office": "Justice of the Peace PCT 6 PL 1",
-      "level": "county",
-      "party": null,
-      "cash": 6945.56,
-      "raised": 26260,
-      "spent": 25440.82,
-      "loans": 0,
-      "asOf": "01/01/2014 - 06/30/2014"
-    },
-    {
       "name": "Borris Miles",
       "office": "State Senator SD-13",
       "level": "state",
@@ -1047,17 +1003,6 @@
       "spent": 101.82,
       "loans": 0,
       "asOf": "07/01/2024 - 12/31/2024"
-    },
-    {
-      "name": "Angela D. Rodriguez",
-      "office": "Justice of the Peace PCT 6 PL 2",
-      "level": "county",
-      "party": null,
-      "cash": 664.26,
-      "raised": 0,
-      "spent": 500,
-      "loans": 0,
-      "asOf": "01/01/2021 - 06/30/2021"
     },
     {
       "name": "A'Yonna Kellum",
