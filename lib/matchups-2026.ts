@@ -65,9 +65,9 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     lean: "safe-r",
     sides: [
       { name: "Sarah Eckhardt", party: "D", incumbent: false, gender: "F", note: "Won March D primary with 60%+; former Travis County Judge" },
-      { name: "Don Huffines",   party: "R", incumbent: false, gender: "M", note: "Won R primary with 58% after Trump endorsement; former Dallas state senator" },
+      { name: "Don Huffines",   party: "R", incumbent: true,  gender: "M", note: "Won R primary with 58% after Trump endorsement; appointed acting Comptroller by Gov. Abbott effective Aug. 1, 2026 after Kelly Hancock's resignation" },
     ],
-    detail: "Open seat. Glenn Hegar left office in July 2026 to become Chancellor of Texas A&M. Don Huffines won the R primary with 58% after Trump endorsed him over Abbott-backed Kelly Hancock. Sarah Eckhardt (former Travis County Judge) won the D primary with 60%.",
+    detail: "Glenn Hegar left office in July 2026 to become Chancellor of Texas A&M. Don Huffines won the R primary with 58% after Trump endorsed him over Abbott-backed Kelly Hancock, who was serving as acting comptroller. Gov. Abbott then appointed Huffines acting Comptroller effective Aug. 1, 2026 after Hancock announced his resignation, making Huffines a sitting officeholder ahead of the November election. Sarah Eckhardt (former Travis County Judge), who won the D primary with 60%, has criticized the appointment as bypassing voters. Source: Houston Public Media, July 2, 2026.",
   },
   // ── Top of Ticket ──────────────────────────────────────────────────────────
   "US-Senate": {
