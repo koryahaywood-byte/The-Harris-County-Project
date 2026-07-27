@@ -12,7 +12,7 @@
 export const STAKES: Record<string, string> = {
   // ── Group ledes ─────────────────────────────────────────────────────────────
   top: "Both top-of-ticket seats are open: Paxton beat Cornyn for the Senate nomination, and Hidalgo isn't running for county judge.",
-  statewide: "Abbott and Patrick defend their offices. The attorney general and comptroller chairs are open after Paxton left for the Senate race and Hegar left to run Texas A&M.",
+  statewide: "Abbott and Patrick defend their offices. The attorney general chair is open after Paxton left for the Senate race. Hegar left the comptroller's office to run Texas A&M, and Abbott has since appointed Republican nominee Don Huffines to fill the seat through the election.",
   congress: "Five of the county's nine congressional races have no incumbent running. CD-7 is the only toss-up.",
   statelegis: "Primary voters already retired one incumbent: Breaux beat Hubert Vo in the HD-149 runoff. The suburban seats, HD-126, 132 and 138, decide whether the county delegation shifts.",
   countywide: "No Republican filed against Sheriff Gonzalez or DA Teare. The fights are Precinct 4, where former commissioner Radack challenges Briones, and an open District Clerk chair.",
