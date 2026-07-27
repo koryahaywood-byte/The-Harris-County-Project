@@ -78,7 +78,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "James Talarico", party: "D", incumbent: false, gender: "M", note: "Won May runoff over Jasmine Crockett" },
       { name: "Ken Paxton",     party: "R", incumbent: false, gender: "M", note: "Won May runoff over John Cornyn" },
     ],
-    detail: "Paxton beat Cornyn in the May runoff. Talarico beat Crockett in the Democratic runoff. Former state rep HD-52 (Austin area).",
+    detail: "Paxton beat Cornyn in the May runoff. Talarico beat Crockett in the Democratic runoff. Former state rep HD-52 (Austin area). Talarico outraised Paxton in the July semiannual filing, $31.6 million to $9.3 million for the quarter and $72 million to $16.8 million cumulatively since 2025, per a July 20, 2026 Texas Tribune analysis of the finance reports.",
   },
   "HC-Countywide": {
     office: "Harris County Judge",
