@@ -88,7 +88,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Letitia Plummer",  party: "D", incumbent: false, gender: "F", note: "Won May runoff over Annise Parker" },
       { name: "Orlando Sanchez",  party: "R", incumbent: false, gender: "M", note: "Won May runoff over Warren Howell" },
     ],
-    detail: "Open seat. Lina Hidalgo did not seek reelection. Plummer beat Parker 57,893–55,395 in the Democratic runoff; Sanchez beat Howell 85,304–49,367 in the Republican runoff.",
+    detail: "Open seat. Lina Hidalgo did not seek reelection. Plummer beat Parker 57,893–55,395 in the Democratic runoff; Sanchez beat Howell 85,304–49,367 in the Republican runoff. In the May 17–June 30, 2026 filing period, Sanchez outraised Plummer $181,126 to $145,881 and reported $132,680 cash on hand to Plummer's $70,161, per campaign finance reports published July 22, 2026.",
   },
   "CD-18": {
     office: "U.S. Representative, District 18",
