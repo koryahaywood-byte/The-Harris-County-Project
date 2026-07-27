@@ -506,7 +506,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Lesley Briones",  party: "D", incumbent: true,  gender: "F", note: "Incumbent; won PCT 4 in 2022 special" },
       { name: "Steve Radack",    party: "R", incumbent: false, gender: "M", note: "Former Commissioner PCT 3 (2003–2021); won 2026 R primary" },
     ],
-    detail: "Lesley Briones (D) won the 2022 special election for PCT 4, which leans Democratic. Former PCT 3 Commissioner Steve Radack (R) won the Republican primary for this seat. A rematch of sorts as he previously served in a neighboring precinct.",
+    detail: "Lesley Briones (D) won the 2022 special election for PCT 4, which leans Democratic. Former PCT 3 Commissioner Steve Radack (R) won the Republican primary for this seat. A rematch of sorts as he previously served in a neighboring precinct. In the May 17–June 30, 2026 filing period, Briones reported $4.1 million cash on hand to Radack's $482,649, per campaign finance reports published July 22, 2026.",
   },
 
   // Countywide offices. Law enforcement & admin
