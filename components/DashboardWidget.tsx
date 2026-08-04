@@ -87,6 +87,8 @@ const MOMENTS: { m: number; d: number; year: number; text: string }[] = [
   { m: 7, d: 4,  year: 1845, text: "A convention in Austin voted to accept U.S. annexation on July 4th, ending Texas's decade as an independent republic." },
   { m: 7, d: 11, year: 1979, text: "Skylab fell to Earth, scattering debris across Western Australia. Houston's Mission Control had tracked the station to its fiery end." },
   { m: 7, d: 20, year: 1969, text: "Houston, Tranquility Base here. The Eagle has landed. The first word spoken from the Moon was this county's name." },
+  { m: 7, d: 25, year: 1974, text: "Houston's Barbara Jordan opened the Nixon impeachment debate by telling the nation her faith in the Constitution was whole. The speech made her a national figure overnight." },
+  { m: 7, d: 30, year: 2002, text: "President Bush signed the Sarbanes-Oxley Act, the corporate accounting overhaul Congress wrote in response to the collapse of Houston's Enron." },
   { m: 8, d: 6,  year: 1965, text: "President Johnson signed the Voting Rights Act. Within a decade, Houston's Barbara Jordan would sit in Congress because of it." },
   { m: 8, d: 20, year: 1866, text: "President Andrew Johnson proclaimed the insurrection over in Texas, the last state so declared. The Civil War was formally at an end." },
   { m: 8, d: 25, year: 2017, text: "Hurricane Harvey made landfall. Over 50 inches of rain on parts of Harris County, the heaviest tropical rainfall in U.S. history." },
