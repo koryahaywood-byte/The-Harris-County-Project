@@ -59,9 +59,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="max-w-6xl mx-auto px-6 pt-14 pb-10 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-10 relative z-10">
             {/* Left: brand */}
             <div className="max-w-sm">
-              <p style={{ fontFamily: "var(--font-dancing), cursive", fontSize: "2rem", lineHeight: 1.1 }} className="mb-3">
+              <a href="https://blackivystrategies.com" target="_blank" rel="noopener noreferrer"
+                style={{ fontFamily: "var(--font-dancing), cursive", fontSize: "2rem", lineHeight: 1.1, color: "inherit", textDecoration: "none" }}
+                className="mb-3 block hover:opacity-80 transition-opacity duration-300">
                 Built With Wood
-              </p>
+              </a>
               <p className="text-white/60 text-sm leading-relaxed">
                 A free civic toolbox for Harris County residents. All data from public sources. Built to make local government legible.
               </p>

@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 
 const STORAGE_KEY = "hcp_email_passed";
-const SKIP_KEY = "hcp_email_skipped";
 
 export default function EmailGate() {
   const [show, setShow] = useState(false);
@@ -11,10 +10,12 @@ export default function EmailGate() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Only show on first visit. Check localStorage after mount
+    // Only show if user has never submitted or dismissed
     const passed = localStorage.getItem(STORAGE_KEY);
-    const skipped = sessionStorage.getItem(SKIP_KEY);
-    if (!passed && !skipped) setShow(true);
+    if (passed) return;
+    // Delay appearance so it doesn't interrupt the landing
+    const t = setTimeout(() => setShow(true), 3000);
+    return () => clearTimeout(t);
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -40,90 +41,81 @@ export default function EmailGate() {
     }
 
     localStorage.setItem(STORAGE_KEY, "1");
-    // Fade out
     setShow(false);
   }
 
-  function skipForNow() {
-    // Skip for this browsing session. They'll see it again next visit
-    sessionStorage.setItem(SKIP_KEY, "1");
+  function dismiss() {
+    // Permanently dismissed — won't come back
+    localStorage.setItem(STORAGE_KEY, "dismissed");
     setShow(false);
   }
 
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4"
-      style={{ background: "rgba(10,24,48,0.88)", backdropFilter: "blur(12px)" }}>
+    <div
+      className="fixed bottom-4 right-4 z-[9999] w-80 animate-[slideUp_0.4s_ease_forwards]"
+      role="dialog"
+      aria-label="Stay in the loop"
+    >
+      <div className="rounded-2xl shadow-2xl ring-1 ring-black/8 overflow-hidden"
+        style={{ background: "var(--background, #fff)" }}>
 
-      {/* Card */}
-      <div className="w-full max-w-md animate-[fadeUp_0.5s_ease_forwards]">
-        <div className="rounded-[1.75rem] bg-[var(--accent)]/10 ring-1 ring-white/15 p-[6px]">
-          <div className="rounded-[1.35rem] bg-[var(--background)] shadow-[inset_0_1px_1px_rgba(255,255,255,0.6)] p-8 md:p-10">
+        {/* Top accent bar */}
+        <div className="h-1" style={{ background: "linear-gradient(90deg,#1a3a5c,#2563a8)" }} />
 
-            {/* Logo mark */}
-            <div className="w-12 h-12 rounded-2xl bg-[var(--accent)] flex items-center justify-center mb-6">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                <polyline points="9 22 9 12 15 12 15 22"/>
-              </svg>
-            </div>
-
-            <h2 className="text-2xl font-bold text-[var(--accent)] leading-tight mb-2"
-              style={{ fontFamily: "var(--font-playfair), serif" }}>
-              Get free access to<br />The Harris County Toolbox
-            </h2>
-            <p className="text-[var(--muted)] text-sm leading-relaxed mb-7">
-              Drop your email and we&apos;ll let you know when new tools and data drop. No spam: just civic updates.
+        <div className="px-5 py-4">
+          {/* Header row */}
+          <div className="flex items-start justify-between gap-3 mb-2">
+            <p className="text-sm font-bold leading-tight" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair), serif" }}>
+              Stay in the loop
             </p>
-
-            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-              {/* Email input: double bezel */}
-              <div className="rounded-[1.35rem] ring-1 ring-[var(--border)] bg-white/60 p-[5px] focus-within:ring-[var(--accent-light)] transition-all duration-500">
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  className="w-full rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-4 py-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]/50"
-                />
-              </div>
-
-              {error && <p className="text-xs text-red-500">{error}</p>}
-
-              {/* Submit CTA */}
-              <button
-                type="submit"
-                disabled={loading || !email.trim()}
-                className="group inline-flex items-center justify-center gap-3 bg-[var(--accent)] hover:bg-[var(--accent-light)] disabled:opacity-40 disabled:pointer-events-none text-white font-bold rounded-full px-7 py-4 text-sm transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-lg active:scale-[0.98] w-full"
-              >
-                {loading ? "Signing up…" : "Get Access"}
-                {!loading && (
-                  <span className="inline-flex w-7 h-7 rounded-full bg-white/15 items-center justify-center group-hover:translate-x-1 group-hover:-translate-y-px transition-transform duration-500">
-                    →
-                  </span>
-                )}
-              </button>
-            </form>
-
             <button
-              onClick={skipForNow}
-              className="mt-4 w-full text-center text-xs text-[var(--muted)] hover:text-[var(--foreground)] transition-colors duration-300"
+              onClick={dismiss}
+              aria-label="Dismiss"
+              className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 -mt-0.5"
             >
-              Skip for now
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M1 1l12 12M13 1L1 13"/>
+              </svg>
             </button>
-
-            <p className="mt-4 text-[10px] text-[var(--muted)]/70 text-center leading-relaxed">
-              Free, always. No spam. Unsubscribe anytime.
-            </p>
           </div>
+
+          <p className="text-xs leading-relaxed mb-3" style={{ color: "#6b7280" }}>
+            New tools and data drop regularly. Drop your email and we&apos;ll tell you when.
+          </p>
+
+          <form onSubmit={handleSubmit} className="flex gap-2">
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com"
+              className="flex-1 min-w-0 rounded-full border px-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-[#2563a8]/30"
+              style={{ borderColor: "#e5e7eb" }}
+            />
+            <button
+              type="submit"
+              disabled={loading || !email.trim()}
+              className="rounded-full px-3 py-1.5 text-xs font-bold text-white disabled:opacity-40 flex-shrink-0 transition-opacity"
+              style={{ background: "#1a3a5c" }}
+            >
+              {loading ? "…" : "Join"}
+            </button>
+          </form>
+
+          {error && <p className="mt-1.5 text-[10px] text-red-500">{error}</p>}
+
+          <p className="mt-2 text-[10px]" style={{ color: "#9ca3af" }}>
+            Free, always. No spam.
+          </p>
         </div>
       </div>
 
       <style jsx global>{`
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(24px); }
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(20px); }
           to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>
