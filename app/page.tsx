@@ -3,6 +3,8 @@ import { SITE_HOST } from "@/lib/site";
 import ScrollReveal from "@/components/ScrollReveal";
 import DashboardWidget from "@/components/DashboardWidget";
 import ToolboxOpener from "@/components/ToolboxOpener";
+import { getHeroStats } from "@/lib/hero-stats";
+import { fmt } from "@/lib/campaign-finance";
 
 /* ── Tool catalogue ─────────────────────────────────────────────────────── */
 interface Tool {
@@ -184,8 +186,8 @@ const START_HERE = [
     name:        "Heat Check",
     eyebrow:     "Elections",
     headline:    "See how every\nprecinct voted.",
-    description: "1,011 precincts. Every election cycle back to 2012. Primaries, runoffs, and generals. Zoom into any neighborhood and see exactly how it voted.",
-    proof:       ["1,011 precincts mapped", "2012 – 2026 · all cycles", "Precinct-level detail"],
+    description: "Every precinct. Every election cycle back to 2012. Primaries, runoffs, and generals. Zoom into any neighborhood and see exactly how it voted.",
+    proof:       ["Precinct-level detail", "2012 – 2026 · all cycles", "Harris County only"],
     accent:      "#2563a8",
     tint:        "linear-gradient(135deg,rgba(37,99,168,0.10),rgba(37,99,168,0.02))",
     chip:        "linear-gradient(135deg,#2563a8,#3b82f6)",
@@ -392,7 +394,8 @@ function ToolboxBrowse() {
 }
 
 /* ── Page ────────────────────────────────────────────────────────────────── */
-export default function Home() {
+export default async function Home() {
+  const stats = getHeroStats();
   return (
     <div className="overflow-x-hidden">
 
@@ -440,9 +443,9 @@ export default function Home() {
 
             <div className="mt-12 flex flex-wrap gap-10">
               {[
-                { value: "1,011", label: "Precincts mapped" },
+                { value: stats.precinctCount.toLocaleString(), label: "Precincts mapped" },
                 { value: String(TOOL_COUNT), label: "Civic tools" },
-                { value: "100%", label: "Public data" },
+                { value: `${stats.candidatesTracked}`, label: "Officials tracked" },
               ].map(({ value, label }) => (
                 <div key={label}>
                   <p className="text-3xl font-bold leading-none tnum" style={{ color: "#0f2540", fontFamily: "var(--font-playfair), serif" }}>{value}</p>
@@ -471,14 +474,14 @@ export default function Home() {
                   <span className="text-[9px] font-bold uppercase tracking-[0.16em]" style={{ color: "#94a3b8" }}>Harris County · 2024 General</span>
                 </div>
                 <div className="flex items-end gap-2 mb-3">
-                  <span className="text-4xl font-bold leading-none tnum" style={{ color: "#0f2540", fontFamily: "var(--font-playfair), serif" }}>52%</span>
+                  <span className="text-4xl font-bold leading-none tnum" style={{ color: "#0f2540", fontFamily: "var(--font-playfair), serif" }}>{stats.d2024Pct}%</span>
                   <span className="text-sm font-bold mb-0.5" style={{ color: "#2563a8" }}>Dem</span>
-                  <span className="text-[10px] font-semibold mb-1 ml-auto px-1.5 py-0.5 rounded-full" style={{ background: "rgba(220,38,38,0.10)", color: "#b91c1c" }}>&minus;4 vs &apos;20</span>
+                  <span className="text-[10px] font-semibold mb-1 ml-auto px-1.5 py-0.5 rounded-full" style={{ background: "rgba(37,99,168,0.10)", color: "#2563a8" }}>2024 Presidential</span>
                 </div>
-                {/* D/R bar */}
+                {/* D/R bar — widths from real data */}
                 <div className="h-2.5 rounded-full overflow-hidden flex mb-4">
-                  <div style={{ width: "52%", background: "#2563a8" }} />
-                  <div style={{ width: "48%", background: "#dc2626" }} />
+                  <div style={{ width: `${stats.d2024Pct}%`, background: "#2563a8" }} />
+                  <div style={{ width: `${stats.r2024Pct}%`, background: "#dc2626" }} />
                 </div>
                 {/* mini area chart */}
                 <svg viewBox="0 0 240 64" className="w-full" style={{ height: 56 }} preserveAspectRatio="none">
@@ -494,8 +497,8 @@ export default function Home() {
                 {/* rows */}
                 <div className="mt-3 space-y-2">
                   {[
-                    { k: "HD 134", v: "61% D", c: "#2563a8" },
-                    { k: "Money tracked", v: "$345M", c: "#0f2540" },
+                    { k: "HD 134", v: `${stats.hd134DPct}% D`, c: "#2563a8" },
+                    { k: `${stats.candidatesTracked} officials`, v: fmt(stats.totalTracked), c: "#0f2540" },
                   ].map((r) => (
                     <div key={r.k} className="flex items-center justify-between text-[11px]">
                       <span className="font-semibold" style={{ color: "#64748b" }}>{r.k}</span>
@@ -506,20 +509,24 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Floating stat chip: top */}
-            <div className="hero-float-2 absolute -top-5 -left-3 rounded-2xl px-4 py-3"
+            {/* Floating stat chip: top — links to Heat Check */}
+            <Link href="/tools/heat-check" className="hero-float-2 absolute -top-5 -left-3 rounded-2xl px-4 py-3 block hover:scale-[1.03] transition-transform duration-300"
               style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.9)", boxShadow: "0 18px 40px rgba(15,37,64,0.16)" }}>
               <p className="text-[8px] font-bold uppercase tracking-[0.16em]" style={{ color: "#94a3b8" }}>Turnout · Nov &apos;24</p>
-              <p className="text-2xl font-bold leading-none tnum mt-0.5" style={{ color: "#0f2540", fontFamily: "var(--font-playfair), serif" }}>1.5M</p>
-            </div>
+              <p className="text-2xl font-bold leading-none tnum mt-0.5" style={{ color: "#0f2540", fontFamily: "var(--font-playfair), serif" }}>
+                {(stats.turnout2024 / 1_000_000).toFixed(1)}M
+              </p>
+            </Link>
 
-            {/* Floating stat chip: bottom */}
-            <div className="hero-float-3 absolute -bottom-9 -right-3 rounded-2xl px-4 py-3"
+            {/* Floating stat chip: bottom — links to Money tool */}
+            <Link href="/tools/where-is-the-dough" className="hero-float-3 absolute -bottom-9 -right-3 rounded-2xl px-4 py-3 block hover:scale-[1.03] transition-transform duration-300"
               style={{ background: "rgba(15,37,64,0.92)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.12)", boxShadow: "0 18px 40px rgba(15,37,64,0.28)" }}>
               <p className="text-[8px] font-bold uppercase tracking-[0.16em]" style={{ color: "#7aaee8" }}>Biggest local war chest</p>
-              <p className="text-2xl font-bold leading-none tnum mt-0.5 text-white" style={{ fontFamily: "var(--font-playfair), serif" }}>$7.8M</p>
-              <p className="text-[9px] font-semibold mt-1" style={{ color: "#9fc1e8" }}>Rodney Ellis · Commissioner Pct 1</p>
-            </div>
+              <p className="text-2xl font-bold leading-none tnum mt-0.5 text-white" style={{ fontFamily: "var(--font-playfair), serif" }}>
+                {fmt(stats.topCash)}
+              </p>
+              <p className="text-[9px] font-semibold mt-1" style={{ color: "#9fc1e8" }}>{stats.topName} · {stats.topOffice}</p>
+            </Link>
           </div>
         </div>
 
