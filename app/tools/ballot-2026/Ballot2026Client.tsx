@@ -27,10 +27,10 @@ const LEAN_LABEL: Record<RaceLean, string> = {
   "uncontested-d": "Uncontested D", "uncontested-r": "Uncontested R",
 };
 const LEAN_EMOJI: Record<RaceLean, string> = {
-  "safe-d": "🔵🔵", "likely-d": "🔵", "lean-d": "🔵",
-  "toss-up": "🟡",
-  "lean-r": "🔴", "likely-r": "🔴", "safe-r": "🔴🔴",
-  "uncontested-d": "🔵🔵", "uncontested-r": "🔴🔴",
+  "safe-d":   "🔵🔵", "likely-d": "🔵", "lean-d": "🔵",
+  "toss-up":  "🟡",
+  "lean-r":   "🟠", "likely-r": "🟠", "safe-r": "🔴",
+  "uncontested-d": "🔵🔵", "uncontested-r": "🔴",
 };
 
 type DistrictRaces = {
