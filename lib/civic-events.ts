@@ -9,6 +9,7 @@ export interface CivicEvent {
   description: string;
   importance: "high" | "normal";
   location?: { lat: number; lng: number; address: string };
+  party?: "D" | "R";
 }
 
 export const CAT_COLOR: Record<Category, string> = {
@@ -22,12 +23,16 @@ export const CAT_COLOR: Record<Category, string> = {
 
 export const EVENTS: CivicEvent[] = [
   // ── Elections ──────────────────────────────────────────────────────────
-  { id: "vreg-primary-2026",  title: "Voter Registration Deadline. Primary",   date: "2026-02-02", category: "Elections", description: "Last day to register or update registration for the March 2026 Texas Primary Election.", importance: "high" },
-  { id: "ev-primary-2026",    title: "Early Voting. 2026 Texas Primary",       date: "2026-02-17", endDate: "2026-02-28", category: "Elections", description: "Early voting period for the March 3 Texas Primary. Harris County Clerk locations open across the county.", importance: "high" },
-  { id: "primary-2026",       title: "2026 Texas Primary Election Day",          date: "2026-03-03", category: "Elections", description: "Texas statewide primary election. Vote for nominees for U.S. Senate, Congress, Governor, state legislature, and Harris County offices.", importance: "high" },
-  { id: "primary-runoff-vreg-2026", title: "Voter Reg Deadline. Primary Runoff", date: "2026-04-27", category: "Elections", description: "Last day to register to vote for the May 2026 Primary Runoff.", importance: "normal" },
-  { id: "ev-runoff-2026",     title: "Early Voting. 2026 Primary Runoff",      date: "2026-05-11", endDate: "2026-05-22", category: "Elections", description: "Early voting period for the May 26 Primary Runoff.", importance: "normal" },
-  { id: "runoff-2026",        title: "2026 Texas Primary Runoff",                date: "2026-05-26", category: "Elections", description: "Primary runoff for races where no candidate cleared 50% in March.", importance: "high" },
+  { id: "vreg-primary-2026",  title: "Voter Registration Deadline. Primary",   date: "2026-02-02", category: "Elections", description: "Last day to register or update registration for the March 2026 Texas Primary Election. Applies to both Democratic and Republican primaries.", importance: "high" },
+  { id: "ev-primary-2026-d",  title: "Early Voting. Democratic Primary",       date: "2026-02-17", endDate: "2026-02-28", category: "Elections", description: "Early voting period for the March 3 Texas Democratic Primary. Harris County Clerk locations open across the county.", importance: "high", party: "D" },
+  { id: "ev-primary-2026-r",  title: "Early Voting. Republican Primary",       date: "2026-02-17", endDate: "2026-02-28", category: "Elections", description: "Early voting period for the March 3 Texas Republican Primary. Harris County Clerk locations open across the county.", importance: "high", party: "R" },
+  { id: "primary-2026-d",     title: "2026 Democratic Primary Election Day",    date: "2026-03-03", category: "Elections", description: "Texas Democratic Primary. Vote for Democratic nominees for U.S. Senate, Congress, Governor, state legislature, and Harris County offices.", importance: "high", party: "D" },
+  { id: "primary-2026-r",     title: "2026 Republican Primary Election Day",    date: "2026-03-03", category: "Elections", description: "Texas Republican Primary. Vote for Republican nominees for U.S. Senate, Congress, Governor, state legislature, and Harris County offices.", importance: "high", party: "R" },
+  { id: "primary-runoff-vreg-2026", title: "Voter Reg Deadline. Primary Runoff", date: "2026-04-27", category: "Elections", description: "Last day to register to vote for the May 2026 Primary Runoff. Applies to both parties.", importance: "normal" },
+  { id: "ev-runoff-2026-d",   title: "Early Voting. Democratic Primary Runoff", date: "2026-05-11", endDate: "2026-05-22", category: "Elections", description: "Early voting period for the May 26 Democratic Primary Runoff.", importance: "normal", party: "D" },
+  { id: "ev-runoff-2026-r",   title: "Early Voting. Republican Primary Runoff", date: "2026-05-11", endDate: "2026-05-22", category: "Elections", description: "Early voting period for the May 26 Republican Primary Runoff.", importance: "normal", party: "R" },
+  { id: "runoff-2026-d",      title: "2026 Democratic Primary Runoff",          date: "2026-05-26", category: "Elections", description: "Democratic Primary runoff for races where no candidate cleared 50% in March.", importance: "high", party: "D" },
+  { id: "runoff-2026-r",      title: "2026 Republican Primary Runoff",          date: "2026-05-26", category: "Elections", description: "Republican Primary runoff for races where no candidate cleared 50% in March.", importance: "high", party: "R" },
   { id: "vreg-general-2026",  title: "Voter Registration Deadline. General",   date: "2026-10-05", category: "Elections", description: "Last day to register to vote for the November 3, 2026 General Election.", importance: "high" },
   { id: "ev-general-2026",    title: "Early Voting. 2026 General Election",    date: "2026-10-19", endDate: "2026-10-30", category: "Elections", description: "Early voting period for the November 3 General Election.", importance: "high" },
   { id: "general-2026",       title: "2026 General Election Day",                date: "2026-11-03", category: "Elections", description: "Texas General Election. Polls open 7 AM–7 PM.", importance: "high" },

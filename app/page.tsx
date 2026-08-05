@@ -105,6 +105,10 @@ const ROWS: { section: string; tools: Tool[] }[] = [
         description: "Every election date, filing deadline, and public meeting.",
         gradient: "linear-gradient(135deg,#14532d 0%,#16a34a 100%)",
         photo: U("1506784983877-45594efa4cbe") },
+      { href: "/tools/run-for-office", name: "Run for Office",
+        description: "What each office requires, Texas filing deadlines, treasurer rules, and the literal step-by-step to get on the ballot in Harris County.",
+        gradient: "linear-gradient(135deg,#0f2540 0%,#c9a227 100%)",
+        photo: U("1541872705-74bb3be19196") },
     ],
   },
   {

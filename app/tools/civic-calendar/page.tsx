@@ -15,6 +15,7 @@ const CivicMap = dynamic(() => import("./CivicMap"), { ssr: false, loading: () =
 import { EVENTS, CAT_COLOR, type Category, type CivicEvent } from "@/lib/civic-events";
 
 type FilterGroup = "all" | "political" | "governmental" | "civic";
+type PartyMode = "all" | "D" | "R";
 
 const POLITICAL:     Category[] = ["Elections", "Legislature"];
 const GOVERNMENTAL:  Category[] = ["Courts", "City Council", "HISD"];
@@ -209,6 +210,7 @@ export default function CivicCalendar() {
   const [filter, setFilter]     = useState<FilterGroup>("all");
   const [cats, setCats]         = useState<Set<Category>>(new Set(["Elections","Legislature","Courts","City Council","HISD","Civic"]));
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [partyMode, setPartyMode] = useState<PartyMode>("all");
   const [kayMode, setKayMode]   = useState(false);
 
   // ?view=ms-kay deep-links straight to Ms. Kay's Calendar (set post-mount to
@@ -253,11 +255,17 @@ export default function CivicCalendar() {
     setFilter("all");
   }
 
+  function matchesParty(e: CivicEvent) {
+    if (partyMode === "all") return true;
+    return !e.party || e.party === partyMode;
+  }
+
   // Map events to dates (multi-day events appear on every date in range)
   const eventMap = useMemo(() => {
     const m = new Map<string, CivicEvent[]>();
     for (const e of EVENTS) {
       if (!cats.has(e.category)) continue;
+      if (partyMode !== "all" && e.party && e.party !== partyMode) continue;
       // Enumerate all dates in range
       const start = new Date(e.date + "T12:00:00");
       const end   = e.endDate ? new Date(e.endDate + "T12:00:00") : start;
@@ -270,7 +278,7 @@ export default function CivicCalendar() {
       }
     }
     return m;
-  }, [cats]);
+  }, [cats, partyMode]);
 
   const grid = useMemo(() => buildGrid(year, month), [year, month]);
 
@@ -302,12 +310,12 @@ export default function CivicCalendar() {
     const monthStart = `${year}-${String(month + 1).padStart(2, "0")}-01`;
     const monthEnd = `${year}-${String(month + 1).padStart(2, "0")}-${String(daysInMonth(year, month)).padStart(2, "0")}`;
     return EVENTS
-      .filter(e => cats.has(e.category) && e.date >= today && e.date >= monthStart && e.date <= monthEnd)
+      .filter(e => cats.has(e.category) && matchesParty(e) && e.date >= today && e.date >= monthStart && e.date <= monthEnd)
       .sort((a, b) => a.date.localeCompare(b.date));
-  }, [cats, year, month, today]);
+  }, [cats, partyMode, year, month, today]);
 
   const nextUp = EVENTS
-    .filter(e => cats.has(e.category) && e.date >= today)
+    .filter(e => cats.has(e.category) && matchesParty(e) && e.date >= today)
     .sort((a, b) => a.date.localeCompare(b.date))[0];
 
   if (kayMode) return <MsKayCalendar switchBack={() => switchTo(false)} />;
@@ -338,6 +346,29 @@ export default function CivicCalendar() {
               <span style={{ fontFamily: "var(--font-dancing), cursive", fontSize: "1rem", fontWeight: 400 }}>Ms. Kay&apos;s Calendar</span>
             </button>
           </div>
+          {/* Party toggle */}
+          <div className="flex items-center gap-1.5 mb-4">
+            {([["all","All"], ["D","Democrat"], ["R","Republican"]] as [PartyMode, string][]).map(([p, label]) => {
+              const active = partyMode === p;
+              const bg = p === "D" ? "#1d4ed8" : p === "R" ? "#b91c1c" : "rgba(255,255,255,0.18)";
+              const activeBg = p === "D" ? "#2563eb" : p === "R" ? "#dc2626" : "rgba(255,255,255,0.30)";
+              return (
+                <button key={p} onClick={() => setPartyMode(p)}
+                  className="px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200"
+                  style={{
+                    background: active ? activeBg : bg,
+                    color: "#fff",
+                    border: active ? "1px solid rgba(255,255,255,0.5)" : "1px solid rgba(255,255,255,0.2)",
+                    boxShadow: active ? "0 0 0 2px rgba(255,255,255,0.25)" : "none",
+                  }}>
+                  {p === "D" && <span className="mr-1">🔵</span>}
+                  {p === "R" && <span className="mr-1">🔴</span>}
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
           {nextUp && (
             <div className="inline-flex items-center gap-3 rounded-full px-4 py-2 text-xs"
               style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.15)" }}>
@@ -389,6 +420,31 @@ export default function CivicCalendar() {
                 style={{ background: "rgba(26,58,92,0.07)", color: "#1a3a5c" }}>
                 Today
               </button>
+            </div>
+          </div>
+
+          {/* Party filter */}
+          <div className="rounded-2xl ring-1 ring-black/8 mb-4 overflow-hidden"
+            style={{ background: "#fff", boxShadow: "0 1px 4px rgba(26,58,92,0.06)" }}>
+            <div className="p-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: "#9ca3af" }}>Party</p>
+              <div className="flex flex-col gap-1.5">
+                {([["all","All Parties"], ["D","Democrat"], ["R","Republican"]] as [PartyMode,string][]).map(([p, label]) => {
+                  const on = partyMode === p;
+                  const color = p === "D" ? "#1d4ed8" : p === "R" ? "#b91c1c" : "#1a3a5c";
+                  return (
+                    <button key={p} onClick={() => setPartyMode(p)}
+                      className="text-left px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150"
+                      style={on ? { background: color, color: "#fff" } : { background: "rgba(26,58,92,0.05)", color: "#1a3a5c" }}>
+                      {p === "D" && <span className="mr-1.5">🔵</span>}
+                      {p === "R" && <span className="mr-1.5">🔴</span>}
+                      {label}
+                      {p === "D" && <span className="block text-[9px] font-normal mt-0.5 opacity-70">Dem primaries · Dem events</span>}
+                      {p === "R" && <span className="block text-[9px] font-normal mt-0.5 opacity-70">GOP primaries · GOP events</span>}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
@@ -463,12 +519,24 @@ export default function CivicCalendar() {
           </div>
 
           {/* Mobile filter pills */}
-          <div className="flex md:hidden gap-2 mb-4 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+          <div className="flex md:hidden gap-2 mb-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
             {([["all","All"],["political","Political"],["governmental","Governmental"],["civic","Civic"]] as [FilterGroup,string][]).map(([g,label]) => (
               <button key={g} onClick={() => applyFilterGroup(g)}
                 className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold"
                 style={filter === g
                   ? { background: g === "civic" ? CAT_COLOR.Civic : "#1a3a5c", color: "#fff" }
+                  : { background: "rgba(26,58,92,0.08)", color: "#1a3a5c" }}>
+                {label}
+              </button>
+            ))}
+          </div>
+          {/* Mobile party pills */}
+          <div className="flex md:hidden gap-2 mb-4 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+            {([["all","All Parties"],["D","🔵 Dem"],["R","🔴 GOP"]] as [PartyMode,string][]).map(([p,label]) => (
+              <button key={p} onClick={() => setPartyMode(p)}
+                className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold"
+                style={partyMode === p
+                  ? { background: p === "D" ? "#1d4ed8" : p === "R" ? "#b91c1c" : "#1a3a5c", color: "#fff" }
                   : { background: "rgba(26,58,92,0.08)", color: "#1a3a5c" }}>
                 {label}
               </button>
