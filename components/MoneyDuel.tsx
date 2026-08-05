@@ -72,6 +72,14 @@ function CashLabel({ side }: { side: DuelSide }) {
   );
 }
 
+function districtHref(key: string): string | null {
+  const hd = key.match(/^HD-(\d+)$/i);  if (hd) return `/tools/districts?type=hd&district=${hd[1]}`;
+  const sd = key.match(/^SD-(\d+)$/i);  if (sd) return `/tools/districts?type=sd&district=${sd[1]}`;
+  const cd = key.match(/^CD-(\d+)$/i);  if (cd) return `/tools/districts?type=cd&district=${cd[1]}`;
+  const jp = key.match(/^JP-(\d+)$/i);  if (jp) return `/tools/districts?type=jp&district=${jp[1]}`;
+  return null;
+}
+
 export default function MoneyDuel({ race }: { race: MoneyRace }) {
   const dCash = race.d.fin?.cash ?? 0;
   const rCash = race.r.fin?.cash ?? 0;
@@ -79,6 +87,7 @@ export default function MoneyDuel({ race }: { race: MoneyRace }) {
   // Floor tiny slivers at 2% so both sides stay visible
   const dPct = total > 0 ? Math.min(Math.max((dCash / total) * 100, 2), 98) : 50;
   const lean = race.lean ? LEAN_STYLE[race.lean] : undefined;
+  const dHref = districtHref(race.key);
 
   return (
     <div className="rounded-2xl bg-white ring-1 ring-black/8 px-5 py-4">
@@ -115,6 +124,19 @@ export default function MoneyDuel({ race }: { race: MoneyRace }) {
       <div className="flex items-baseline justify-between gap-3 mt-0.5">
         <Burn side={race.d} align="left" />
         <Burn side={race.r} align="right" />
+      </div>
+
+      <div className="flex items-center gap-3 mt-2.5 pt-2 border-t border-black/5">
+        <Link href={`/tools/ballot-2026?q=${encodeURIComponent(race.office)}`}
+          className="text-[9px] font-bold hover:underline" style={{ color: "#d97706" }}>
+          Ballot →
+        </Link>
+        {dHref && (
+          <Link href={dHref}
+            className="text-[9px] font-bold hover:underline" style={{ color: "#059669" }}>
+            District results →
+          </Link>
+        )}
       </div>
     </div>
   );
