@@ -14,8 +14,8 @@ const LEAN_STYLE: Partial<Record<RaceLean, { label: string; bg: string; color: s
   "likely-d": { label: "Likely D", bg: "#dbeafe", color: "#1d4ed8" },
   "lean-d":   { label: "Lean D",   bg: "#eff6ff", color: "#2563a8" },
   "toss-up":  { label: "Toss-up",  bg: "#fef3c7", color: "#b45309" },
-  "lean-r":   { label: "Lean R",   bg: "#fef2f2", color: "#b91c1c" },
-  "likely-r": { label: "Likely R", bg: "#fee2e2", color: "#b91c1c" },
+  "lean-r":   { label: "Lean R",   bg: "#fff7ed", color: "#c2410c" },
+  "likely-r": { label: "Likely R", bg: "#fff7ed", color: "#c2410c" },
   "safe-r":   { label: "Safe R",   bg: "#fee2e2", color: "#b91c1c" },
 };
 
