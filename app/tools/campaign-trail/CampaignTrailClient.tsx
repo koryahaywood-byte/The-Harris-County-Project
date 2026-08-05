@@ -184,7 +184,12 @@ export default function CampaignTrailClient({ initialEvents, counts, fetchedAt }
       {/* Event list grouped by day */}
       {grouped.length === 0 ? (
         <div className="py-20 text-center" style={{ color: "var(--muted)" }}>
-          No events match your filters.
+          {initialEvents.length === 0
+            ? <>
+                <p className="text-base font-semibold mb-1">No upcoming events found.</p>
+                <p className="text-sm">Mobilize.us and Harris County GOP events refresh every 2 hours.</p>
+              </>
+            : "No events match your filters."}
         </div>
       ) : (
         <div className="pt-6 flex flex-col gap-8">
