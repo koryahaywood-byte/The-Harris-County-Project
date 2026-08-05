@@ -4,6 +4,7 @@ import Link from "next/link";
 // Pass `current` to drop the self-link from the row.
 const TOOLS = [
   { href: "/tools/my-ballot",           label: "Print your ballot →" },
+  { href: "/tools/campaign-trail",      label: "Campaign events →" },
   { href: "/tools/heat-check",          label: "Precinct heat map →" },
   { href: "/tools/districts",           label: "District vote history →" },
   { href: "/tools/where-is-the-dough",  label: "Follow the money →" },
