@@ -229,6 +229,54 @@
       "name": "Carla Wyatt",
       "office": "County Treasurer",
       "party": "D"
+    },
+    {
+      "searchName": "Jordan, Darrell Jr.",
+      "name": "Darrell Jordan Jr.",
+      "office": "District Clerk (D nominee 2026)",
+      "party": "D",
+      "note": "Won May 2026 D runoff over Jose 'Alex' Maldonado 77,122-32,116."
+    },
+    {
+      "searchName": "Daniel, Chris",
+      "name": "Chris Daniel",
+      "office": "District Clerk (R nominee 2026)",
+      "party": "R",
+      "note": "Former District Clerk 2011-2018. Nov 2026 general vs. Darrell Jordan Jr."
+    },
+    {
+      "searchName": "Radack, Steve",
+      "name": "Steve Radack",
+      "office": "Commissioner PCT 4 (R nominee 2026)",
+      "party": "R",
+      "note": "Former Commissioner PCT 3 (2003-2021). Won 2026 R primary for PCT 4."
+    },
+    {
+      "searchName": "Vega, Richard",
+      "name": "Richard Vega",
+      "office": "Commissioner PCT 2 (R challenger 2026)",
+      "party": "R"
+    },
+    {
+      "searchName": "Wolfe, Mike",
+      "name": "Mike Wolfe",
+      "office": "County Clerk (R nominee 2026)",
+      "party": "R",
+      "note": "Won May 2026 R runoff over Lynda Sanchez."
+    },
+    {
+      "searchName": "Cowart, Marc",
+      "name": "Marc Cowart",
+      "office": "County Treasurer (R nominee 2026)",
+      "party": "R",
+      "note": "Won R primary over Hayley Hagan."
+    },
+    {
+      "searchName": "Ezell, Jack",
+      "name": "Jack Ezell",
+      "office": "Justice of the Peace PCT 2 PL 2 (R nominee 2026)",
+      "party": "R",
+      "note": "Won R primary. Nov 2026 general vs. Dolores Lozano."
     }
   ],
   "_harrisCountyDiscovery": {
@@ -449,9 +497,16 @@
     {
       "tecName": "Rosenthal, Jon",
       "name": "Jon Rosenthal",
-      "office": "State Rep HD-135",
+      "office": "Texas Railroad Commissioner (D nominee 2026)",
       "party": "D",
-      "note": "Key competitive seat. One of most-watched HD races in Harris County."
+      "note": "Former State Rep HD-135. Did not seek reelection; running for RRC instead."
+    },
+    {
+      "tecName": "Evbagharu, Odus",
+      "name": "Odus Evbagharu",
+      "office": "State Rep HD-135 (D nominee 2026)",
+      "party": "D",
+      "note": "Rosenthal's chosen successor. Won March 2026 D primary. Open seat race."
     },
     {
       "tecName": "Hull, Lacey",
@@ -468,8 +523,9 @@
     {
       "tecName": "Paul, Dennis",
       "name": "Dennis Paul",
-      "office": "State Rep HD-129",
-      "party": "R"
+      "office": "State Senator SD-11 (R nominee 2026)",
+      "party": "R",
+      "note": "Former State Rep HD-129. Won 2026 R primary for open SD-11 seat."
     },
     {
       "tecName": "Bonnen, Greg",
@@ -519,6 +575,13 @@
       "office": "County Attorney (D nominee 2026)",
       "party": "D",
       "note": "Open seat. Won D primary. Files at TEC (county attorney is a state-law filer)."
+    },
+    {
+      "tecName": "Smith, Jacqueline Lucci",
+      "name": "Jacqueline Lucci Smith",
+      "office": "County Attorney (R nominee 2026)",
+      "party": "R",
+      "note": "Won 2026 R primary unopposed. County attorney files with TEC as a state-law office."
     },
     {
       "tecName": "Cunningham, Charles",
@@ -614,9 +677,16 @@
     {
       "tecName": "Creighton, Brandon",
       "name": "Brandon Creighton",
-      "office": "State Senator SD-4 (R incumbent)",
+      "office": "State Senator SD-4 (resigned 2026)",
       "party": "R",
-      "note": "Seeking reelection. SD-4 covers NW Harris County + Montgomery + Galveston counties."
+      "note": "Resigned to become Texas Tech University System Chancellor. Brett Ligon won the May 2026 special election."
+    },
+    {
+      "tecName": "Ligon, Brett",
+      "name": "Brett Ligon",
+      "office": "State Senator SD-4 (R nominee 2026)",
+      "party": "R",
+      "note": "Former Montgomery County DA. Won May 2026 special election for Creighton's vacated seat."
     },
     {
       "tecName": "Miles, Borris",
