@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import CampaignTrailClient from "./CampaignTrailClient";
 import type { CampaignEvent } from "@/app/api/events/campaign-trail/route";
 import { SITE_URL } from "@/lib/site";
+import RelatedTools from "@/components/RelatedTools";
 
 export const metadata: Metadata = {
   title:       "Campaign Trail · The Harris County Project",
@@ -71,26 +72,8 @@ export default async function CampaignTrailPage() {
         />
       </div>
 
-      {/* Related tools */}
-      <div className="max-w-4xl mx-auto px-4 pb-16">
-        <div className="border-t pt-10" style={{ borderColor: "var(--border)" }}>
-          <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "var(--muted)" }}>Go deeper</p>
-          <div className="flex flex-wrap gap-3">
-            {[
-              { href: "/tools/heat-check",         label: "Heat Check" },
-              { href: "/tools/where-is-the-dough", label: "Where the Money Resides" },
-              { href: "/tools/ballot-2026",         label: "2026 Ballot" },
-              { href: "/tools/districts",           label: "Districts" },
-              { href: "/tools/civic-calendar",      label: "Civic Calendar" },
-            ].map(({ href, label }) => (
-              <a key={href} href={href}
-                className="text-sm font-semibold px-4 py-2 rounded-full transition-all duration-200 hover:opacity-80"
-                style={{ background: "var(--background)", border: "1px solid var(--border)", color: "var(--accent)" }}>
-                {label} →
-              </a>
-            ))}
-          </div>
-        </div>
+      <div className="max-w-4xl mx-auto px-4 pb-16 pt-8 border-t" style={{ borderColor: "var(--border)" }}>
+        <RelatedTools current="/tools/campaign-trail" />
       </div>
     </div>
   );
