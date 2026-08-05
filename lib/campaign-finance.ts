@@ -20,7 +20,7 @@ const FEC = (id: string) => `https://www.fec.gov/data/candidate/${id}/`;
 
 export const FINANCE_DATA: CandidateFinance[] = [
   // Federal
-  { name: "James Talarico",        office: "U.S. Senate (D nominee)",        level: "federal",  party: "D", cash: 9858865, raised: 40284109, spent: 30425243, asOf: "Apr 2026", incumbent: false, filingUrl: "https://www.fec.gov/data/candidate/S6TX00462/" },
+  { name: "James Talarico",        office: "U.S. Senate (D nominee)",        level: "federal",  party: "D", cash: 21548155, raised: 68555930, spent: 47007775, asOf: "Jun 2026", incumbent: false, filingUrl: "https://www.fec.gov/data/candidate/S6TX00462/" },
   { name: "Jasmine Crockett",      office: "U.S. Senate (lost D runoff to Talarico)", level: "federal",  party: "D", cash: 633086,   raised: 11092295,  spent: 10459209,  asOf: "Apr 2026", incumbent: false, filingUrl: "https://www.fec.gov/data/candidate/S6TX00338/" },
   { name: "John Cornyn",           office: "U.S. Senator (lost R runoff. Term ends Jan 2027)", level: "federal", party: "R", cash: 8200000, raised: 9000000, spent: 15800000, asOf: "Apr 2026", incumbent: true, filingUrl: FEC("S0TX00999") },
   { name: "Ken Paxton",            office: "U.S. Senate (R nominee)",        level: "federal",  party: "R", cash: 2600000,   raised: 2200000,  spent: 3200000,  asOf: "Apr 2026", incumbent: false, filingUrl: FEC("S4TX00462") },
@@ -125,12 +125,12 @@ export const FINANCE_DATA: CandidateFinance[] = [
   { name: "Martha Fierro",         office: "U.S. Rep CD-29 (R nominee)",     level: "federal",  party: "R", cash: 0,         asOf: "Dec 2025",  incumbent: false, filingUrl: FEC("H6TX29122") },
   // County
   { name: "Rodney Ellis",          office: "Commissioner PCT 1",             level: "county",   party: "D", cash: 7783681,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Rodney Ellis") },
-  { name: "Lesley Briones",        office: "Commissioner PCT 4",             level: "county",   party: "D", cash: 4058292,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Lesley Briones") },
-  { name: "Steve Radack",          office: "Commissioner PCT 4 (R nominee)", level: "county",   party: "R", cash: 410969.79,  asOf: "2025-12-31", incumbent: false, filingUrl: "https://ethics.harrisvotes.com/Document.aspx?ID=8clm5/UZ7yw9/6Sqmckox+EzZBFseAp1uK35cp80QU8OPjPAWK0ZMceaq2xgb30uoa8hSsy54QptvWbpzYtqOKgLMfxqfKiMLGntpysWEDHqovYMQJhT1O14pmy/DBID" },
+  { name: "Lesley Briones",        office: "Commissioner PCT 4",             level: "county",   party: "D", cash: 4100000,   asOf: "Jul 2026", incumbent: true,  filingUrl: TEC("Lesley Briones") },
+  { name: "Steve Radack",          office: "Commissioner PCT 4 (R nominee)", level: "county",   party: "R", cash: 482649,     asOf: "Jul 2026", incumbent: false, filingUrl: "https://ethics.harrisvotes.com/Document.aspx?ID=8clm5/UZ7yw9/6Sqmckox+EzZBFseAp1uK35cp80QU8OPjPAWK0ZMceaq2xgb30uoa8hSsy54QptvWbpzYtqOKgLMfxqfKiMLGntpysWEDHqovYMQJhT1O14pmy/DBID" },
   { name: "Adrian Garcia",         office: "Commissioner PCT 2",             level: "county",   party: "D", cash: 2544776,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Adrian Garcia") },
   { name: "Tom Ramsey",            office: "Commissioner PCT 3",             level: "county",   party: "R", cash: 2032612,   asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Tom Ramsey") },
-  { name: "Letitia Plummer",       office: "County Judge (D nominee)",       level: "county",   party: "D", cash: 420000,    asOf: "May 2026 est.", incumbent: false, filingUrl: TEC("Letitia Plummer") },
-  { name: "Orlando Sanchez",       office: "County Judge (R nominee)",       level: "county",   party: "R", cash: 890000,    asOf: "May 2026 est.", incumbent: false, filingUrl: TEC("Orlando Sanchez") },
+  { name: "Letitia Plummer",       office: "County Judge (D nominee)",       level: "county",   party: "D", cash: 70161,     asOf: "Jul 2026", incumbent: false, filingUrl: TEC("Letitia Plummer") },
+  { name: "Orlando Sanchez",       office: "County Judge (R nominee)",       level: "county",   party: "R", cash: 132680,    asOf: "Jul 2026", incumbent: false, filingUrl: TEC("Orlando Sanchez") },
   { name: "Lina Hidalgo",          office: "County Judge (lame duck, not seeking reelection)", level: "county", party: "D", cash: 344873, asOf: "Jan 2026", incumbent: true, filingUrl: TEC("Lina Hidalgo") },
   { name: "Annise Parker",         office: "County Judge (lost D runoff)",   level: "county",   party: "D", cash: 332475,    asOf: "Jan 2026", incumbent: false, filingUrl: TEC("Annise Parker") },
   { name: "Abbie Kamin",           office: "County Attorney",                level: "county",   party: "D", cash: 572019,    asOf: "Jan 2026", incumbent: true,  filingUrl: TEC("Abbie Kamin") },
