@@ -685,9 +685,12 @@ function Ballot2026Inner() {
                             <span className="text-[11px] font-bold truncate" style={{ color: "#1a3a5c" }}>{r.office}</span>
                             {r.lean && (() => {
                               const pos = LEAN_LANE[r.lean] ?? 50;
-                              const isDem = pos < 45; const isRep = pos > 55; const isToss = !isDem && !isRep;
-                              const bg = isDem ? "#dbeafe" : isRep ? "#fee2e2" : "#f3e8ff";
-                              const fg = isDem ? "#1d4ed8" : isRep ? "#b91c1c" : "#6d28d9";
+                              const isSafeR = pos >= 80;
+                              const isLeanR = pos > 55 && pos < 80;
+                              const isDem = pos < 45;
+                              const isToss = pos >= 45 && pos <= 55;
+                              const bg = isDem ? "#dbeafe" : isToss ? "#f3e8ff" : isLeanR ? "#fff7ed" : "#fee2e2";
+                              const fg = isDem ? "#1d4ed8" : isToss ? "#6d28d9" : isLeanR ? "#c2410c" : "#b91c1c";
                               return (
                                 <span className="text-[9px] font-bold px-2 py-0.5 rounded-full shrink-0" style={{ background: bg, color: fg }}>
                                   {LEAN_EMOJI[r.lean]} {LEAN_LABEL[r.lean]}
