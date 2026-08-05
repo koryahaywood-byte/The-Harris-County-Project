@@ -26,6 +26,12 @@ const LEAN_LABEL: Record<RaceLean, string> = {
   "lean-r": "Lean R", "likely-r": "Likely R", "safe-r": "Safe R",
   "uncontested-d": "Uncontested D", "uncontested-r": "Uncontested R",
 };
+const LEAN_EMOJI: Record<RaceLean, string> = {
+  "safe-d": "🔵🔵", "likely-d": "🔵", "lean-d": "🔵",
+  "toss-up": "🟡",
+  "lean-r": "🔴", "likely-r": "🔴", "safe-r": "🔴🔴",
+  "uncontested-d": "🔵🔵", "uncontested-r": "🔴🔴",
+};
 
 type DistrictRaces = {
   hd: Record<string, Record<string, Record<string, RaceData>>>;
@@ -684,7 +690,7 @@ function Ballot2026Inner() {
                               const fg = isDem ? "#1d4ed8" : isRep ? "#b91c1c" : "#6d28d9";
                               return (
                                 <span className="text-[9px] font-bold px-2 py-0.5 rounded-full shrink-0" style={{ background: bg, color: fg }}>
-                                  {LEAN_LABEL[r.lean]}
+                                  {LEAN_EMOJI[r.lean]} {LEAN_LABEL[r.lean]}
                                 </span>
                               );
                             })()}
