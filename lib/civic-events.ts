@@ -210,4 +210,80 @@ export const EVENTS: CivicEvent[] = [
   { id: "sn-assembly-apr-26",  title: "Super Neighborhood Assembly", date: "2026-04-23", category: "Civic", description: "Houston Super Neighborhood Assembly quarterly gathering.", importance: "high", location: { lat: 29.7569, lng: -95.3677, address: "Houston City Hall, 901 Bagby St" } },
   { id: "naacp-aug-25",        title: "Houston NAACP Branch Meeting", date: "2025-08-19", category: "Civic", description: "Houston Branch NAACP monthly membership meeting.", importance: "normal", location: { lat: 29.7560, lng: -95.3580, address: "NAACP Houston office (4805 Mt Vernon St)" } },
   { id: "lulac-aug-25",        title: "LULAC Council Houston Meeting", date: "2025-08-26", category: "Civic", description: "League of United Latin American Citizens (LULAC) Council Houston monthly meeting.", importance: "normal", location: { lat: 29.7425, lng: -95.3680, address: "East Houston (2100 Navigation Blvd area)" } },
+
+  // ── Democratic Party Pipeline ────────────────────────────────────────────
+  // HCDP Executive Committee — 3rd Saturday monthly
+  { id: "hcdp-ec-aug-25",  title: "HCDP Executive Committee Meeting",  date: "2025-08-16", category: "Civic", party: "D", description: "Harris County Democratic Party Executive Committee monthly meeting. All precinct chairs and alternates. Posted at harriscountydemocrats.org.", importance: "normal" },
+  { id: "hcdp-ec-sep-25",  title: "HCDP Executive Committee Meeting",  date: "2025-09-20", category: "Civic", party: "D", description: "Harris County Democratic Party Executive Committee monthly meeting.", importance: "normal" },
+  { id: "hcdp-ec-oct-25",  title: "HCDP Executive Committee Meeting",  date: "2025-10-18", category: "Civic", party: "D", description: "Harris County Democratic Party Executive Committee monthly meeting.", importance: "normal" },
+  { id: "hcdp-ec-nov-25",  title: "HCDP Executive Committee Meeting",  date: "2025-11-15", category: "Civic", party: "D", description: "Harris County Democratic Party Executive Committee monthly meeting.", importance: "normal" },
+  { id: "hcdp-ec-dec-25",  title: "HCDP Executive Committee Meeting",  date: "2025-12-20", category: "Civic", party: "D", description: "Harris County Democratic Party Executive Committee monthly meeting. Year-end planning.", importance: "normal" },
+  { id: "hcdp-ec-jan-26",  title: "HCDP Executive Committee Meeting",  date: "2026-01-17", category: "Civic", party: "D", description: "Harris County Democratic Party Executive Committee monthly meeting. First 2026 meeting — primary filing window closes Jan 2.", importance: "high" },
+  { id: "hcdp-ec-feb-26",  title: "HCDP Executive Committee Meeting",  date: "2026-02-21", category: "Civic", party: "D", description: "Harris County Democratic Party Executive Committee monthly meeting. Primary early voting starts Feb 17.", importance: "normal" },
+  { id: "hcdp-ec-mar-26",  title: "HCDP Executive Committee Meeting",  date: "2026-03-21", category: "Civic", party: "D", description: "Harris County Democratic Party Executive Committee monthly meeting. Post-primary results review.", importance: "normal" },
+  { id: "hcdp-ec-apr-26",  title: "HCDP Executive Committee Meeting",  date: "2026-04-18", category: "Civic", party: "D", description: "Harris County Democratic Party Executive Committee monthly meeting. Runoff organizing.", importance: "normal" },
+  { id: "hcdp-ec-may-26",  title: "HCDP Executive Committee Meeting",  date: "2026-05-16", category: "Civic", party: "D", description: "Harris County Democratic Party Executive Committee monthly meeting. Runoff GOTV push — election May 26.", importance: "high" },
+  { id: "hcdp-ec-jun-26",  title: "HCDP Executive Committee Meeting",  date: "2026-06-20", category: "Civic", party: "D", description: "Harris County Democratic Party Executive Committee monthly meeting. General election prep begins.", importance: "normal" },
+  { id: "hcdp-ec-jul-26",  title: "HCDP Executive Committee Meeting",  date: "2026-07-18", category: "Civic", party: "D", description: "Harris County Democratic Party Executive Committee monthly meeting.", importance: "normal" },
+  { id: "hcdp-ec-aug-26",  title: "HCDP Executive Committee Meeting",  date: "2026-08-15", category: "Civic", party: "D", description: "Harris County Democratic Party Executive Committee monthly meeting. 80 days to Election Day.", importance: "normal" },
+  { id: "hcdp-ec-sep-26",  title: "HCDP Executive Committee Meeting",  date: "2026-09-19", category: "Civic", party: "D", description: "Harris County Democratic Party Executive Committee monthly meeting. Voter registration deadline Oct 5.", importance: "high" },
+  { id: "hcdp-ec-oct-26",  title: "HCDP Executive Committee Meeting",  date: "2026-10-17", category: "Civic", party: "D", description: "Harris County Democratic Party Executive Committee monthly meeting. Early voting Oct 19 — GOTV all-hands.", importance: "high" },
+
+  // Blockwalks — Democratic primary season
+  { id: "d-bw-jan1-26",   title: "Dem Block Walk. Primary Season Kickoff",    date: "2026-01-10", category: "Civic", party: "D", description: "Harris County Democratic coordinated block walk. Primary filing closed Jan 2 — now it's time to walk the turf. Meet at HCDP HQ. Check harriscountydemocrats.org for signup.", importance: "normal" },
+  { id: "d-bw-jan2-26",   title: "Dem Block Walk. District Organizing",        date: "2026-01-24", category: "Civic", party: "D", description: "Coordinated precinct-level block walk. Identify supporters ahead of the March 3 primary. Check harriscountydemocrats.org for turf assignments.", importance: "normal" },
+  { id: "d-bw-feb1-26",   title: "Dem Block Walk. Primary GOTV",               date: "2026-02-07", category: "Civic", party: "D", description: "Primary GOTV block walk — 3 weeks to early voting. Focus on identified supporters and low-frequency primary voters.", importance: "normal" },
+  { id: "d-bw-feb2-26",   title: "Dem Block Walk. Early Vote Weekend",         date: "2026-02-21", category: "Civic", party: "D", description: "Block walks and door-knocking during early voting week. Remind voters which locations are open and when.", importance: "high" },
+  { id: "d-bw-mar1-26",   title: "Dem Block Walk. Primary Election Weekend",   date: "2026-02-28", category: "Civic", party: "D", description: "Last weekend block walk before March 3 Primary Election Day. Focus on high-propensity Democratic precincts.", importance: "high" },
+
+  // Blockwalks — Democratic runoff season
+  { id: "d-bw-apr-26",    title: "Dem Block Walk. Runoff Organizing",          date: "2026-04-25", category: "Civic", party: "D", description: "Runoff organizing block walk — identify and mobilize primary voters for the May 26 runoff. Low-turnout races decided by who shows up.", importance: "normal" },
+  { id: "d-bw-may1-26",   title: "Dem Block Walk. Runoff GOTV",                date: "2026-05-09", category: "Civic", party: "D", description: "Runoff early voting starts May 11 — final block walk push. Confirmed supporters only at this stage.", importance: "high" },
+
+  // Blockwalks — Democratic general election season
+  { id: "d-bw-aug-26",    title: "Dem Block Walk. General Volunteer Kickoff",  date: "2026-08-22", category: "Civic", party: "D", description: "First major coordinated block walk of general election season. New volunteer training included. Check harriscountydemocrats.org for locations.", importance: "normal" },
+  { id: "d-bw-sep1-26",   title: "Dem Block Walk. Voter Registration Push",    date: "2026-09-12", category: "Civic", party: "D", description: "Block walk focused on voter registration — deadline is October 5. Bring clipboards. Targeting low-registration precincts.", importance: "high" },
+  { id: "d-bw-sep2-26",   title: "Dem Block Walk. General Persuasion",         date: "2026-09-26", category: "Civic", party: "D", description: "Swing-precinct block walk. Persuasion phase — talking to voters who could go either way.", importance: "normal" },
+  { id: "d-bw-oct1-26",   title: "Dem Block Walk. Early Vote Weekend 1",       date: "2026-10-24", category: "Civic", party: "D", description: "Early voting is live — block walk focuses on confirmed supporters who haven't voted yet. Check with precinct chair for turf.", importance: "high" },
+  { id: "d-bw-oct2-26",   title: "Dem Block Walk. Early Vote Weekend 2",       date: "2026-10-31", category: "Civic", party: "D", description: "Last weekend of early voting. Final block walk push for the Nov 3 general. All hands.", importance: "high" },
+
+  // Phone banks — Democratic
+  { id: "d-pb-feb-26",    title: "Dem Phone Bank. Primary Voter Contact",      date: "2026-02-03", category: "Civic", party: "D", description: "Harris County Democrats phone bank — contact primary voters ahead of March 3. Virtual and in-person options. Sign up at harriscountydemocrats.org.", importance: "normal" },
+  { id: "d-pb-oct-26",    title: "Dem Phone Bank. General Election GOTV",      date: "2026-10-06", category: "Civic", party: "D", description: "General election phone bank — early voting starts Oct 19. Calling low-frequency Dem voters in Harris County. Virtual option available.", importance: "normal" },
+
+  // ── Republican Party Pipeline ────────────────────────────────────────────
+  // HCRP Executive Committee — 4th Monday monthly (approximate)
+  { id: "hcrp-ec-aug-25",  title: "HCRP Executive Committee Meeting",  date: "2025-08-25", category: "Civic", party: "R", description: "Harris County Republican Party Executive Committee monthly meeting. Check harriscountygop.com for location and agenda.", importance: "normal" },
+  { id: "hcrp-ec-sep-25",  title: "HCRP Executive Committee Meeting",  date: "2025-09-22", category: "Civic", party: "R", description: "Harris County Republican Party Executive Committee monthly meeting.", importance: "normal" },
+  { id: "hcrp-ec-oct-25",  title: "HCRP Executive Committee Meeting",  date: "2025-10-27", category: "Civic", party: "R", description: "Harris County Republican Party Executive Committee monthly meeting.", importance: "normal" },
+  { id: "hcrp-ec-nov-25",  title: "HCRP Executive Committee Meeting",  date: "2025-11-24", category: "Civic", party: "R", description: "Harris County Republican Party Executive Committee monthly meeting.", importance: "normal" },
+  { id: "hcrp-ec-dec-25",  title: "HCRP Executive Committee Meeting",  date: "2025-12-22", category: "Civic", party: "R", description: "Harris County Republican Party Executive Committee monthly meeting. Year-end planning.", importance: "normal" },
+  { id: "hcrp-ec-jan-26",  title: "HCRP Executive Committee Meeting",  date: "2026-01-26", category: "Civic", party: "R", description: "Harris County Republican Party Executive Committee monthly meeting. Primary filing closed Jan 2.", importance: "high" },
+  { id: "hcrp-ec-feb-26",  title: "HCRP Executive Committee Meeting",  date: "2026-02-23", category: "Civic", party: "R", description: "Harris County Republican Party Executive Committee monthly meeting. Primary early voting in progress.", importance: "normal" },
+  { id: "hcrp-ec-mar-26",  title: "HCRP Executive Committee Meeting",  date: "2026-03-23", category: "Civic", party: "R", description: "Harris County Republican Party Executive Committee monthly meeting. Post-primary debrief.", importance: "normal" },
+  { id: "hcrp-ec-apr-26",  title: "HCRP Executive Committee Meeting",  date: "2026-04-27", category: "Civic", party: "R", description: "Harris County Republican Party Executive Committee monthly meeting. Runoff organizing.", importance: "normal" },
+  { id: "hcrp-ec-may-26",  title: "HCRP Executive Committee Meeting",  date: "2026-05-18", category: "Civic", party: "R", description: "Harris County Republican Party Executive Committee monthly meeting. Runoff GOTV — election May 26.", importance: "high" },
+  { id: "hcrp-ec-jun-26",  title: "HCRP Executive Committee Meeting",  date: "2026-06-22", category: "Civic", party: "R", description: "Harris County Republican Party Executive Committee monthly meeting.", importance: "normal" },
+  { id: "hcrp-ec-jul-26",  title: "HCRP Executive Committee Meeting",  date: "2026-07-27", category: "Civic", party: "R", description: "Harris County Republican Party Executive Committee monthly meeting.", importance: "normal" },
+  { id: "hcrp-ec-aug-26",  title: "HCRP Executive Committee Meeting",  date: "2026-08-24", category: "Civic", party: "R", description: "Harris County Republican Party Executive Committee monthly meeting.", importance: "normal" },
+  { id: "hcrp-ec-sep-26",  title: "HCRP Executive Committee Meeting",  date: "2026-09-28", category: "Civic", party: "R", description: "Harris County Republican Party Executive Committee monthly meeting. Voter reg deadline Oct 5.", importance: "high" },
+  { id: "hcrp-ec-oct-26",  title: "HCRP Executive Committee Meeting",  date: "2026-10-26", category: "Civic", party: "R", description: "Harris County Republican Party Executive Committee monthly meeting. Early voting runs Oct 19–30.", importance: "high" },
+
+  // Blockwalks — Republican primary season
+  { id: "r-bw-jan-26",    title: "GOP Block Walk. Primary Organizing",         date: "2026-01-17", category: "Civic", party: "R", description: "Harris County Republican coordinated block walk. Identify GOP primary voters ahead of March 3. Check harriscountygop.com for signup and turf assignments.", importance: "normal" },
+  { id: "r-bw-feb1-26",   title: "GOP Block Walk. Primary GOTV",               date: "2026-02-14", category: "Civic", party: "R", description: "Primary GOTV block walk — 3 weeks to early voting (Feb 17). Focus on high-propensity Republican primary precincts.", importance: "normal" },
+  { id: "r-bw-feb2-26",   title: "GOP Block Walk. Early Vote Push",            date: "2026-02-22", category: "Civic", party: "R", description: "Block walk during early voting week — remind voters which locations are open and when.", importance: "high" },
+
+  // Blockwalks — Republican runoff season
+  { id: "r-bw-apr-26",    title: "GOP Block Walk. Runoff GOTV",                date: "2026-04-18", category: "Civic", party: "R", description: "Republican runoff organizing block walk. May 26 runoff has low turnout — the race usually goes to whoever shows up.", importance: "normal" },
+
+  // Blockwalks — Republican general election season
+  { id: "r-bw-aug-26",    title: "GOP Block Walk. General Season Kickoff",     date: "2026-08-29", category: "Civic", party: "R", description: "First major GOP block walk of general election season. Check harriscountygop.com for precinct assignments.", importance: "normal" },
+  { id: "r-bw-sep-26",    title: "GOP Block Walk. Voter Contact",               date: "2026-09-19", category: "Civic", party: "R", description: "Republican precinct-level voter contact — swing precincts. Persuasion phase.", importance: "normal" },
+  { id: "r-bw-oct1-26",   title: "GOP Block Walk. Early Vote Weekend 1",       date: "2026-10-24", category: "Civic", party: "R", description: "Early voting is live — block walk targeting confirmed Republicans who haven't voted yet.", importance: "high" },
+  { id: "r-bw-oct2-26",   title: "GOP Block Walk. Early Vote Weekend 2",       date: "2026-10-31", category: "Civic", party: "R", description: "Final block walk weekend before the Nov 3 general. All hands on deck.", importance: "high" },
+
+  // Phone banks — Republican
+  { id: "r-pb-feb-26",    title: "GOP Phone Bank. Primary Voter Contact",      date: "2026-02-10", category: "Civic", party: "R", description: "Harris County Republican phone bank — contact likely primary voters ahead of March 3. Check harriscountygop.com to sign up.", importance: "normal" },
+  { id: "r-pb-oct-26",    title: "GOP Phone Bank. General GOTV",               date: "2026-10-13", category: "Civic", party: "R", description: "General election phone bank. Calling low-frequency Republican voters. Early voting starts Oct 19.", importance: "normal" },
 ];

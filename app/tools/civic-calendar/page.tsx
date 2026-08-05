@@ -17,8 +17,8 @@ import { EVENTS, CAT_COLOR, type Category, type CivicEvent } from "@/lib/civic-e
 type FilterGroup = "all" | "political" | "governmental" | "civic";
 type PartyMode = "all" | "D" | "R";
 
-const POLITICAL:     Category[] = ["Elections", "Legislature"];
-const GOVERNMENTAL:  Category[] = ["Courts", "City Council", "HISD"];
+const POLITICAL:     Category[] = ["Elections"];
+const GOVERNMENTAL:  Category[] = ["Courts", "City Council", "HISD", "Legislature"];
 const CIVIC_CATS:    Category[] = ["Civic"];
 
 /* ─── Calendar helpers ───────────────────────────────────────────────────── */
