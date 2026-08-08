@@ -20,13 +20,13 @@ export const STAKES: Record<string, string> = {
   local: "Two JP incumbents fell in the primaries: Wolfe lost Precinct 5 Place 2 to Fury, and Burney lost the Precinct 7 runoff to Miles.",
 
   // ── Top of ticket ───────────────────────────────────────────────────────────
-  "US-Senate": "No incumbent: Paxton beat Cornyn in the May Republican runoff, and Talarico beat Crockett in the Democratic one.",
+  "US-Senate": "No incumbent: Paxton beat Cornyn in the May Republican runoff, and Talarico beat Crockett in the Democratic one. A July 28 poll had Talarico up 45-40, taken after a ProPublica/Texas Tribune report alleged Paxton voted from a former address.",
   "HC-Countywide": "Hidalgo isn't running. Plummer won her runoff over Parker by 2,498 votes; Sanchez took his by 35,937.",
 
   // ── Statewide Texas ─────────────────────────────────────────────────────────
   "TX-Governor": "Abbott has run Texas since 2014 and wants a third term. Hinojosa, a former Austin state rep, won the Democratic primary.",
   "TX-LtGov": "Patrick wants a fourth term, sits on more than $30M, and won his March primary by the widest margin of his tenure.",
-  "TX-AG": "Paxton's old job. Middleton beat Chip Roy 56-44 in the runoff after running as 'MAGA Mayes'; Dallas state senator Nathan Johnson won the D runoff over Jaworski.",
+  "TX-AG": "Paxton's old job. Middleton beat Chip Roy 56-44 in the runoff after running as 'MAGA Mayes'; Dallas state senator Nathan Johnson won the D runoff over Jaworski. A July poll had them nearly tied, 39-38.",
   "TX-Comptroller": "Hegar left in July to run Texas A&M. Trump's endorsement carried Huffines past Abbott-backed Hancock in the primary.",
   "TX-RailroadCommission": "Dunn and Wilks money, roughly $1M through the Texas Freedom Fund, took out incumbent Jim Wright in the runoff. Rosenthal is the first credible Democratic challenger for the seat since 1994.",
 
@@ -56,7 +56,7 @@ export const STAKES: Record<string, string> = {
   // ── Harris County ───────────────────────────────────────────────────────────
   "PCT-4": "Radack ran neighboring Precinct 3 for 18 years. Now he wants Briones' lean-D seat.",
   "HC-County-Attorney": "Menefee left for Congress. Kamin, appointed interim on a 3-2 court vote in April, is the first woman in the job; Lucci Smith nearly beat Menefee in 2024.",
-  "HC-District-Clerk": "Burgess walked after commissioners denied her raise request. Maldonado and Daniel both start fresh.",
+  "HC-District-Clerk": "Burgess walked after commissioners denied her raise request. Jordan and Daniel both start fresh.",
 
   // ── Courts ──────────────────────────────────────────────────────────────────
   "CCL-3": "One of two Republican-held misdemeanor benches: Johnson defends against defense attorney Mathis.",

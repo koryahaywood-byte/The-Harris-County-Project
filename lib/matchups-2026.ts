@@ -52,12 +52,12 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "TX-AG": {
     office: "Texas Attorney General",
     status: "set",
-    lean: "safe-r",
+    lean: "lean-r",
     sides: [
       { name: "Nathan Johnson",  party: "D", incumbent: false, gender: "M", note: "State Senator SD-16 (Dallas); won May D runoff over Joe Jaworski" },
       { name: "Mayes Middleton", party: "R", incumbent: false, gender: "M", note: "Won May R runoff (56%) over U.S. Rep. Chip Roy; former State Senator SD-11" },
     ],
-    detail: "Open seat. Ken Paxton vacated to run for U.S. Senate. Middleton beat Chip Roy in the R runoff; Nathan Johnson (Dallas state senator) won the D runoff over Joe Jaworski. A nationalized race: Middleton ran as 'MAGA Mayes,' Roy as the Trump-skeptic establishment pick.",
+    detail: "Open seat. Ken Paxton vacated to run for U.S. Senate. Middleton beat Chip Roy in the R runoff; Nathan Johnson (Dallas state senator) won the D runoff over Joe Jaworski. A nationalized race: Middleton ran as 'MAGA Mayes,' Roy as the Trump-skeptic establishment pick. A Texas Public Opinion Research poll of 1,048 likely voters (July 15-17, released July 2026) found the race nearly tied, 39% Middleton to 38% Johnson with 18% undecided; Johnson led with Black, Latino, and independent voters while Middleton led with college-educated and white voters.",
   },
   "TX-Comptroller": {
     office: "Texas Comptroller",
@@ -78,7 +78,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "James Talarico", party: "D", incumbent: false, gender: "M", note: "Won May runoff over Jasmine Crockett" },
       { name: "Ken Paxton",     party: "R", incumbent: false, gender: "M", note: "Won May runoff over John Cornyn" },
     ],
-    detail: "Paxton beat Cornyn in the May runoff. Talarico beat Crockett in the Democratic runoff. Former state rep HD-52 (Austin area). Talarico outraised Paxton in the July semiannual filing, $31.6 million to $9.3 million for the quarter and $72 million to $16.8 million cumulatively since 2025, per a July 20, 2026 Texas Tribune analysis of the finance reports.",
+    detail: "Paxton beat Cornyn in the May runoff. Talarico beat Crockett in the Democratic runoff. Former state rep HD-52 (Austin area). Talarico outraised Paxton in the July semiannual filing, $31.6 million to $9.3 million for the quarter and $72 million to $16.8 million cumulatively since 2025, per a July 20, 2026 Texas Tribune analysis of the finance reports. A Texas Public Opinion Research poll of 1,048 likely voters (July 15-17, released July 28, 2026) had Talarico ahead 45-40, his largest lead of the general-election period, taken after a July 7 Texas Tribune/ProPublica investigation alleged Paxton voted in six elections using a former address.",
   },
   "HC-Countywide": {
     office: "Harris County Judge",
@@ -543,10 +543,10 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
     status: "set",
     lean: "safe-d",
     sides: [
-      { name: "Jose Maldonado",  party: "D", incumbent: false, gender: "M", note: "Won May D primary runoff over Darrell William Jordan" },
-      { name: "Chris Daniel",    party: "R", incumbent: false, gender: "M", note: "Won R primary" },
+      { name: "Darrell Jordan Jr.", party: "D", incumbent: false, gender: "M", note: "Won May D primary runoff over Jose \"Alex\" Maldonado, 77,122-32,116" },
+      { name: "Chris Daniel",       party: "R", incumbent: false, gender: "M", note: "Won R primary" },
     ],
-    detail: "Open seat. Marilyn Burgess announced she would not seek reelection after commissioners denied her raise request. Jose Maldonado won the May Democratic runoff. Chris Daniel is the R nominee.",
+    detail: "Open seat. Marilyn Burgess announced she would not seek reelection after commissioners denied her raise request. Darrell Jordan Jr. won the May Democratic runoff over Jose \"Alex\" Maldonado, 77,122-32,116. Chris Daniel is the R nominee. Correction: an earlier version of this file incorrectly listed Maldonado as the runoff winner.",
   },
   "HC-County-Clerk": {
     office: "County Clerk",
