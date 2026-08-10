@@ -47,7 +47,7 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
       { name: "Vikki Goodwin", party: "D", incumbent: false, gender: "F", note: "State Rep from Austin (HD-47); won May D runoff over Marcos Velez" },
       { name: "Dan Patrick",   party: "R", incumbent: true,  gender: "M", note: "Seeking 4th term; Patrick has $30M+ CoH and won March primary by widest margin in his tenure" },
     ],
-    detail: "Dan Patrick seeks a 4th term with $30M+ in cash on hand and Trump's endorsement. D nominee Vikki Goodwin, a state rep from Austin, won the May runoff. The structural R lean of Texas statewide races makes this safe-R barring a major environment shift.",
+    detail: "Dan Patrick seeks a 4th term with $30M+ in cash on hand and Trump's endorsement. D nominee Vikki Goodwin, a state rep from Austin, won the May runoff. Late-July 2026 polling on the race diverged sharply: ReconMR for Texas A&M's Bush School (July 27-30, 619 likely voters) had Goodwin ahead 48-46, while a Texas Southern University poll fielded the same window (1,200 likely voters) had Patrick ahead 46-39. Both polls found most voters still don't know enough about Goodwin to rate her. The structural R lean of Texas statewide races makes this safe-R barring a major environment shift.",
   },
   "TX-AG": {
     office: "Texas Attorney General",
