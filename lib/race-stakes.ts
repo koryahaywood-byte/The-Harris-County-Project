@@ -20,7 +20,7 @@ export const STAKES: Record<string, string> = {
   local: "Two JP incumbents fell in the primaries: Wolfe lost Precinct 5 Place 2 to Fury, and Burney lost the Precinct 7 runoff to Miles.",
 
   // ── Top of ticket ───────────────────────────────────────────────────────────
-  "US-Senate": "No incumbent: Paxton beat Cornyn in the May Republican runoff, and Talarico beat Crockett in the Democratic one. A July 28 poll had Talarico up 45-40, taken after a ProPublica/Texas Tribune report alleged Paxton voted from a former address.",
+  "US-Senate": "No incumbent: Paxton beat Cornyn in the May Republican runoff, and Talarico beat Crockett in the Democratic one. A July 28 poll had Talarico up 45-40, taken after a ProPublica/Texas Tribune report alleged Paxton voted from a former address. On Aug. 5 the Tribune reported Talarico had his own residency lapse, voting from his parents' address for two years after buying his own home.",
   "HC-Countywide": "Hidalgo isn't running. Plummer won her runoff over Parker by 2,498 votes; Sanchez took his by 35,937.",
 
   // ── Statewide Texas ─────────────────────────────────────────────────────────
