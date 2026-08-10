@@ -12,7 +12,7 @@
 export const STAKES: Record<string, string> = {
   // ── Group ledes ─────────────────────────────────────────────────────────────
   top: "Both top-of-ticket seats are open: Paxton beat Cornyn for the Senate nomination, and Hidalgo isn't running for county judge.",
-  statewide: "Abbott and Patrick defend their offices. The attorney general chair is open after Paxton left for the Senate race. Hegar left the comptroller's office to run Texas A&M, and Abbott has since appointed Republican nominee Don Huffines to fill the seat through the election.",
+  statewide: "Abbott and Patrick defend their offices, though July polling put both within single digits of their Democratic challengers. The attorney general chair is open after Paxton left for the Senate race. Hegar left the comptroller's office to run Texas A&M, and Abbott has since appointed Republican nominee Don Huffines to fill the seat through the election.",
   congress: "Five of the county's nine congressional races have no incumbent running. CD-7 is the only toss-up.",
   statelegis: "Primary voters already retired one incumbent: Breaux beat Hubert Vo in the HD-149 runoff. The suburban seats, HD-126, 132 and 138, decide whether the county delegation shifts.",
   countywide: "No Republican filed against Sheriff Gonzalez or DA Teare. The fights are Precinct 4, where former commissioner Radack challenges Briones, and an open District Clerk chair.",
@@ -24,7 +24,7 @@ export const STAKES: Record<string, string> = {
   "HC-Countywide": "Hidalgo isn't running. Plummer won her runoff over Parker by 2,498 votes; Sanchez took his by 35,937.",
 
   // ── Statewide Texas ─────────────────────────────────────────────────────────
-  "TX-Governor": "Abbott has run Texas since 2014 and wants a third term. Hinojosa, a former Austin state rep, won the Democratic primary.",
+  "TX-Governor": "Abbott has run Texas since 2014 and wants a fourth term. Three late-July polls, from TPOR, Fox News/Beacon and Texas A&M's Bush School, all had him under 3 points ahead of Hinojosa: his tightest position on a statewide ballot yet.",
   "TX-LtGov": "Patrick wants a fourth term, sits on more than $30M, and won his March primary by the widest margin of his tenure.",
   "TX-AG": "Paxton's old job. Middleton beat Chip Roy 56-44 in the runoff after running as 'MAGA Mayes'; Dallas state senator Nathan Johnson won the D runoff over Jaworski. A July poll had them nearly tied, 39-38.",
   "TX-Comptroller": "Hegar left in July to run Texas A&M. Trump's endorsement carried Huffines past Abbott-backed Hancock in the primary.",

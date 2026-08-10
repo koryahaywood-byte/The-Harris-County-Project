@@ -32,12 +32,12 @@ export const MATCHUPS_2026: Record<string, Matchup> = {
   "TX-Governor": {
     office: "Texas Governor",
     status: "set",
-    lean: "safe-r",
+    lean: "lean-r",
     sides: [
       { name: "Gina Hinojosa", party: "D", incumbent: false, gender: "F", note: "Former State Rep HD-49 (Austin); won D primary" },
-      { name: "Greg Abbott",   party: "R", incumbent: true,  gender: "M", note: "Seeking 3rd term" },
+      { name: "Greg Abbott",   party: "R", incumbent: true,  gender: "M", note: "Seeking 4th term" },
     ],
-    detail: "Statewide race. Abbott has dominated Texas since 2014. Hinojosa is a former state representative from Austin who won the Democratic nomination.",
+    detail: "Statewide race. Abbott has dominated Texas since 2014 and won by 11 points in 2022, but three polls taken in the back half of July 2026 found his tightest margin yet: Texas Public Opinion Research (July 15-17, 1,048 likely voters) had him up 45-42; Fox News/Beacon Research (July 23-27, 1,006 registered voters) put it at a statistical tie, 50-49; and ReconMR for Texas A&M's Bush School (July 27-30, 619 likely voters) had him up just 46-45. A Yahoo News/Newsweek polling roundup published Aug. 6, 2026 noted Abbott's unfavorable rating (51%) has overtaken his favorable rating (48%). Hinojosa is a former state representative from Austin who won the Democratic nomination.",
   },
   "TX-LtGov": {
     office: "Lt. Governor of Texas",
