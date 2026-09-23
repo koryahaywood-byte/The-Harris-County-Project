@@ -43,7 +43,7 @@ const CONGRESS_OFFICIALS: Official[] = [
 
 const TRACKS: Record<Level, Track[]> = {
   county: [
-    { label: "Commissioners Court",   desc: "Full court meets biweekly: Tuesdays at 10am. Votes on budget, contracts, flood control, and county policy.", color: "#1a3a5c" },
+    { label: "Commissioners Court",   desc: "Full court meets biweekly: Tuesdays at 10am. Votes on budget, contracts, flood control, and county policy.", color: "#0D2A21" },
     { label: "Justice & Policing",    desc: "JPD oversight, constable offices, and the DA's office. Reform progress and critical incidents tracked here.",  color: "#b91c1c" },
     { label: "Flood Control",         desc: "Harris County Flood Control District. Bond projects, buyouts, detention ponds. Updated after each board meeting.", color: "#0891b2" },
     { label: "Budget & Contracts",    desc: "FY2027 county budget, major vendor contracts, and discretionary spending by precinct.",                         color: "#059669" },
@@ -158,7 +158,7 @@ const LEVEL_META: Record<Level, {
   partyBar?: { d: number; r: number };
 }> = {
   county: {
-    label: "County", subtitle: "Harris County Government", gradient: "linear-gradient(135deg,#0f2540 0%,#1a3a5c 100%)", accentColor: "#1a3a5c", photoColor: "#38bdf8",
+    label: "County", subtitle: "Harris County Government", gradient: "linear-gradient(135deg,#0A1F18 0%,#0D2A21 100%)", accentColor: "#0D2A21", photoColor: "#38bdf8",
     statusChips: [{ label: "Next Court", value: "Tue · 10:00 AM" }, { label: "Venue", value: "1001 Preston St" }, { label: "Watch Live", value: "hcgovstreams.com" }],
     officialLabel: "The Court",
   },
@@ -185,7 +185,7 @@ const LEVEL_META: Record<Level, {
 const SIG_COLOR = { high: "#b91c1c", medium: "#d97706", low: "#6b7280" } as const;
 const SIG_LABEL = { high: "Major", medium: "Notable", low: "Procedural" } as const;
 const CAT_META: Record<string, string> = { Budget: "#0f766e", Development: "#7c3aed", "Public Safety": "#1d4ed8", Transportation: "#0891b2", Housing: "#b45309", Environment: "#15803d", Personnel: "#6b7280", Other: "#4b5563" };
-const cc = (c: string) => CAT_META[c] ?? "#1a3a5c";
+const cc = (c: string) => CAT_META[c] ?? "#0D2A21";
 
 function TimelineItem({ item, index }: { item: AgendaItem; index: number }) {
   const [open, setOpen] = useState(false);
@@ -208,7 +208,7 @@ function TimelineItem({ item, index }: { item: AgendaItem; index: number }) {
                 <span className="text-[9px] font-bold uppercase tracking-[0.14em] px-2 py-0.5 rounded-full" style={{ background: `${sc}12`, color: sc }}>{SIG_LABEL[item.significance]}</span>
                 {item.newsHits.length > 0 && <span className="text-[9px] font-bold" style={{ color: "#2563a8" }}>{item.newsHits.length} article{item.newsHits.length !== 1 ? "s" : ""}</span>}
               </div>
-              <h3 className="text-sm font-bold leading-snug" style={{ fontFamily: "var(--font-playfair), serif", color: "#1a3a5c" }}>{item.title}</h3>
+              <h3 className="text-sm font-bold leading-snug" style={{ fontFamily: "var(--font-playfair), serif", color: "#0D2A21" }}>{item.title}</h3>
               <p className="text-xs leading-relaxed mt-1" style={{ color: "#6b7280" }}>{item.summary}</p>
             </div>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#9ca3af" strokeWidth="1.5" style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s", flexShrink: 0, marginTop: 4 }}>
@@ -242,7 +242,7 @@ function OfficialCard({ official, grid }: { official: Official; grid?: boolean }
           onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="font-bold text-sm group-hover:text-[var(--accent-light)] transition-colors truncate" style={{ fontFamily: "var(--font-playfair), serif", color: "#1a3a5c" }}>{official.name}</p>
+        <p className="font-bold text-sm group-hover:text-[var(--accent-light)] transition-colors truncate" style={{ fontFamily: "var(--font-playfair), serif", color: "#0D2A21" }}>{official.name}</p>
         <p className="text-[10px]" style={{ color: "#6b7280" }}>{official.title}{official.district ? ` · ${official.district}` : ""}</p>
       </div>
       <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0 ${official.party === "D" ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"}`}>{official.party}</span>
@@ -427,9 +427,9 @@ function TheBriefInner() {
               {/* County-specific: open seat banner */}
               {level === "county" && (
                 <div className="rounded-2xl mb-6 p-4 flex gap-4 items-start" style={{ background: "rgba(37,99,168,0.06)", border: "1px solid rgba(37,99,168,0.15)" }}>
-                  <div className="flex-shrink-0 w-2 h-2 mt-1.5 rounded-full" style={{ background: "#1a3a5c" }} />
+                  <div className="flex-shrink-0 w-2 h-2 mt-1.5 rounded-full" style={{ background: "#0D2A21" }} />
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "#1a3a5c" }}>Open Seat · November 3, 2026</p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "#0D2A21" }}>Open Seat · November 3, 2026</p>
                     <p className="text-xs font-semibold text-[var(--fg)] mb-0.5">Harris County Judge</p>
                     <p className="text-[11px]" style={{ color: "#6b7280" }}><span className="text-blue-700 font-bold">Letitia Plummer</span> (D) vs. <span className="text-red-700 font-bold">Orlando Sanchez</span> (R). Lina Hidalgo did not seek reelection.</p>
                   </div>
@@ -462,7 +462,7 @@ function TheBriefInner() {
                   <div key={t.label} className="rounded-2xl bg-white ring-1 ring-black/7 p-4 flex gap-4">
                     <div className="w-1 rounded-full flex-shrink-0" style={{ background: t.color, minHeight: 40 }} />
                     <div>
-                      <p className="font-bold text-sm mb-1" style={{ fontFamily: "var(--font-playfair), serif", color: "#1a3a5c" }}>{t.label}</p>
+                      <p className="font-bold text-sm mb-1" style={{ fontFamily: "var(--font-playfair), serif", color: "#0D2A21" }}>{t.label}</p>
                       <p className="text-xs leading-relaxed" style={{ color: "#6b7280" }}>{t.desc}</p>
                     </div>
                   </div>
@@ -510,13 +510,13 @@ function TheBriefInner() {
             {!cityLoading && cityData && (
               <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-8">
                 <div>
-                  <p className="text-2xl md:text-3xl font-bold leading-snug mb-6" style={{ fontFamily: "var(--font-playfair), serif", color: "#1a3a5c" }}>
+                  <p className="text-2xl md:text-3xl font-bold leading-snug mb-6" style={{ fontFamily: "var(--font-playfair), serif", color: "#0D2A21" }}>
                     {cityData.lede || cityData.meetingTitle}
                   </p>
                   <div className="flex gap-2 mb-6 flex-wrap">
                     {(["all", "high", "medium", "low"] as const).map(f => {
                       const cnt = f === "all" ? cityData.items.length : cityData.items.filter(i => i.significance === f).length;
-                      const col = f === "all" ? "#1a3a5c" : SIG_COLOR[f];
+                      const col = f === "all" ? "#0D2A21" : SIG_COLOR[f];
                       return (
                         <button key={f} onClick={() => setCityFilter(f)} className="px-3 py-1 rounded-full text-[11px] font-bold capitalize transition-all cursor-pointer"
                           style={cityFilter === f ? { background: col, color: "#fff" } : { background: `${col}10`, color: col, border: `1px solid ${col}30` }}>
@@ -530,7 +530,7 @@ function TheBriefInner() {
                 </div>
                 <div className="space-y-5">
                   <div className="rounded-[1.5rem] bg-white ring-1 ring-black/7 p-5 text-center">
-                    <p className="text-xs font-bold mb-1" style={{ fontFamily: "var(--font-playfair), serif", color: "#1a3a5c" }}>Past Meetings</p>
+                    <p className="text-xs font-bold mb-1" style={{ fontFamily: "var(--font-playfair), serif", color: "#0D2A21" }}>Past Meetings</p>
                     <p className="text-[10px] mb-3" style={{ color: "#6b7280" }}>Every council recap archived here.</p>
                     <a href="https://emilytakesnotes.com" target="_blank" rel="noopener noreferrer" className="text-[11px] font-bold hover:underline" style={{ color: "#0891b2" }}>emilytakesnotes.com →</a>
                   </div>

@@ -45,7 +45,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ key: st
 <style>
   html,body{margin:0;padding:0;background:transparent}
   .card{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-    background:#1a3a5c;color:#fff;border-radius:16px;padding:16px 18px;min-height:150px;
+    background:#0D2A21;color:#fff;border-radius:16px;padding:16px 18px;min-height:150px;
     display:flex;flex-direction:column;gap:8px}
   .head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
   .office{font-size:14px;font-weight:800;line-height:1.25}

@@ -163,7 +163,7 @@ function NewsCard({ story, tier }: { story: NewsStory | null; tier: keyof typeof
   const meta = TIER_META[tier];
   return (
     <div className="group flex flex-col rounded-[1.5rem] overflow-hidden bg-white ring-1 ring-black/8"
-      style={{ boxShadow: "0 2px 12px rgba(26,58,92,0.06)" }}>
+      style={{ boxShadow: "0 2px 12px rgba(13,42,33,0.06)" }}>
 
       {/* Tier bar */}
       <div className="flex items-center gap-2 px-5 pt-4 pb-3"
@@ -238,7 +238,7 @@ function AgendaCard({ todayEvents, upcomingEvent, notableDays }: {
 
   return (
     <div className="rounded-[1.5rem] bg-white ring-1 ring-black/8 p-5 flex flex-col"
-      style={{ boxShadow: "0 2px 12px rgba(26,58,92,0.06)" }}>
+      style={{ boxShadow: "0 2px 12px rgba(13,42,33,0.06)" }}>
       <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--muted)] mb-3">
         Today&apos;s Agenda
       </p>
@@ -267,7 +267,7 @@ function AgendaCard({ todayEvents, upcomingEvent, notableDays }: {
           {todayEvents.slice(0, 4 - Math.min(notableDays.length, 2)).map((e, i) => (
             <li key={`ev-${i}`} className="flex items-start gap-2.5">
               <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0"
-                style={{ background: CAT_COLOR[e.category] ?? "#1a3a5c" }} />
+                style={{ background: CAT_COLOR[e.category] ?? "#0D2A21" }} />
               <div className="min-w-0">
                 <p className="text-[12px] font-semibold text-[var(--accent)] leading-snug">{e.title}</p>
                 <p className="text-[10px] text-[var(--muted)] mt-0.5 leading-snug line-clamp-2">{e.description}</p>
@@ -303,7 +303,7 @@ function CountdownCard({ nextElection, nextFiling }: {
 }) {
   return (
     <div className="rounded-[1.5rem] text-white flex flex-col items-center justify-center text-center p-6 relative overflow-hidden"
-      style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#0f2540 100%)" }}>
+      style={{ background: "linear-gradient(135deg,#0D2A21 0%,#0A1F18 100%)" }}>
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse 80% 80% at 50% 30%,rgba(125,211,252,0.13),transparent)" }} />
 
@@ -356,10 +356,10 @@ function QuoteCard() {
   const q = getDailyQuote();
   return (
     <div className="rounded-[1.5rem] bg-white ring-1 ring-black/8 p-6 flex flex-col justify-between relative overflow-hidden"
-      style={{ boxShadow: "0 2px 12px rgba(26,58,92,0.06)" }}>
+      style={{ boxShadow: "0 2px 12px rgba(13,42,33,0.06)" }}>
       {/* Decorative quote mark */}
       <span className="absolute top-4 right-5 text-[5rem] leading-none font-serif select-none pointer-events-none"
-        style={{ color: "rgba(26,58,92,0.05)", fontFamily: "Georgia, serif" }}>
+        style={{ color: "rgba(13,42,33,0.05)", fontFamily: "Georgia, serif" }}>
         &ldquo;
       </span>
 

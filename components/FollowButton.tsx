@@ -57,10 +57,10 @@ export default function FollowButton({ slug, name }: { slug: string; name: strin
               type="email" required value={email} onChange={e => setEmail(e.target.value)}
               placeholder="your@email.com"
               className="flex-1 min-w-0 rounded-full px-3 py-1.5 text-xs outline-none"
-              style={{ background: "rgba(255,255,255,0.92)", color: "#1a3a5c" }}
+              style={{ background: "rgba(255,255,255,0.92)", color: "#0D2A21" }}
             />
             <button type="submit" disabled={state === "sending"}
-              className="pressable rounded-full px-3.5 py-1.5 text-xs font-bold text-[#1a3a5c] disabled:opacity-60"
+              className="pressable rounded-full px-3.5 py-1.5 text-xs font-bold text-[#0D2A21] disabled:opacity-60"
               style={{ background: "#fbbf24" }}>
               {state === "sending" ? "…" : "Follow"}
             </button>

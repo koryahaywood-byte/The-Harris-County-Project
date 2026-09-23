@@ -83,7 +83,7 @@ function DistrictRow({
           <Link
             href={`/tools/districts?type=${field}&district=${dist}`}
             className="text-sm font-bold hover:underline"
-            style={{ color: "#1a3a5c" }}
+            style={{ color: "#0D2A21" }}
           >
             {distLabel(field, dist)}
           </Link>
@@ -95,7 +95,7 @@ function DistrictRow({
           </span>
         </div>
         <div className="text-right shrink-0">
-          <div className="text-lg font-black" style={{ color: "#1a3a5c" }}>
+          <div className="text-lg font-black" style={{ color: "#0D2A21" }}>
             {stat.opportunity !== null ? fmt(stat.opportunity) : "—"}
           </div>
           <div className="text-[10px] text-[#9ca3af] font-medium">est. D undervotes</div>
@@ -194,13 +194,13 @@ export default function OpportunityMapPage() {
   const lowestTurnout = rows[sort === "turnout_rate" ? 0 : -1] ?? rows.find(r => (r.stat.turnout_rate ?? 1) < 0.5);
 
   const PILL = "px-3 py-1.5 rounded-full text-[11px] font-bold border transition-colors cursor-pointer";
-  const active = { background: "#1a3a5c", color: "#fff", borderColor: "#1a3a5c" };
+  const active = { background: "#0D2A21", color: "#fff", borderColor: "#0D2A21" };
   const inactive = { background: "#fff", color: "#374151", borderColor: "#e5e7eb" };
 
   return (
     <div className="min-h-screen" style={{ background: "#f8fafc" }}>
       {/* Hero */}
-      <div style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#4c1d95 100%)" }} className="px-6 pt-12 pb-10">
+      <div style={{ background: "linear-gradient(135deg,#0D2A21 0%,#4c1d95 100%)" }} className="px-6 pt-12 pb-10">
         <div className="max-w-3xl mx-auto">
           <Link href="/" className="text-[11px] font-bold uppercase tracking-widest mb-4 block" style={{ color: "rgba(255,255,255,0.5)" }}>
             ← Harris County Project
@@ -264,7 +264,7 @@ export default function OpportunityMapPage() {
         {data && (
           <div className="grid grid-cols-3 gap-3 mb-6">
             <div className="bg-white rounded-xl border border-black/6 p-4 text-center">
-              <div className="text-2xl font-black" style={{ color: "#1a3a5c" }}>{rows.length}</div>
+              <div className="text-2xl font-black" style={{ color: "#0D2A21" }}>{rows.length}</div>
               <div className="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider mt-0.5">Districts</div>
             </div>
             <div className="bg-white rounded-xl border border-black/6 p-4 text-center">

@@ -165,7 +165,7 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
 
   return (
     <div className="rounded-[1.35rem] mt-4" style={{ background: "#1a2e44" }}>
-      <div className="rounded-[1.35rem] p-5" style={{ background: "#1a3a5c" }}>
+      <div className="rounded-[1.35rem] p-5" style={{ background: "#0D2A21" }}>
         <div className="flex items-center justify-between mb-4">
           <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.4)" }}>November 2026: The Matchup</p>
           <div className="flex items-center gap-2">
@@ -337,7 +337,7 @@ function WinNumber({ data, loading }: { data: WinNum | null; loading: boolean })
 
         {/* Target to win + progress bar */}
         <div className="flex items-baseline gap-2 mb-2">
-          <span className="text-3xl font-black tabular-nums leading-none" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>
+          <span className="text-3xl font-black tabular-nums leading-none" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair,serif)" }}>
             {fmt(data.targetDVotes)}
           </span>
           <span className="text-[11px]" style={{ color: "#9ca3af" }}>D votes needed to win</span>
@@ -389,7 +389,7 @@ function WinNumber({ data, loading }: { data: WinNum | null; loading: boolean })
             { label: "Est. 2026 Total", value: fmt(data.estimatedTurnout2026), sub: "reg-adjusted" },
           ].map(s => (
             <div key={s.label} className="text-center rounded-xl py-2 px-1" style={{ background: "#f8f9fa" }}>
-              <p className="text-sm font-bold leading-none" style={{ color: "#1a3a5c" }}>{s.value}</p>
+              <p className="text-sm font-bold leading-none" style={{ color: "#0D2A21" }}>{s.value}</p>
               <p className="text-[9px] mt-1 uppercase tracking-wider leading-tight" style={{ color: "#9ca3af" }}>{s.label}</p>
               <p className="text-[8px] leading-tight mt-0.5" style={{ color: "#cbd5e1" }}>{s.sub}</p>
             </div>
@@ -548,7 +548,7 @@ function VoterProfile({ type, district, agg, cvap }: {
         {entry ? (
           <div className="mb-5">
             {topGroup && (
-              <p className="text-[13px] font-bold mb-3 leading-snug" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>
+              <p className="text-[13px] font-bold mb-3 leading-snug" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair,serif)" }}>
                 <span style={{ color: topGroup.color }}>{topGroup.pct}% {topGroup.label}</span>
                 {" "}<span style={{ color: "#9ca3af", fontWeight: 400, fontSize: "11px" }}>citizen voting-age population</span>
               </p>
@@ -581,7 +581,7 @@ function VoterProfile({ type, district, agg, cvap }: {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: "#9ca3af" }}>2026 Primary</p>
-              <p className="text-base font-bold" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>
+              <p className="text-base font-bold" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair,serif)" }}>
                 {demPct}% D · {100 - demPct}% R
               </p>
               <div className="h-2 rounded-full overflow-hidden mt-1.5" style={{ background: "#fecaca" }}>
@@ -592,7 +592,7 @@ function VoterProfile({ type, district, agg, cvap }: {
             {turnoutRate !== null && (
               <div>
                 <p className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: "#9ca3af" }}>Primary turnout</p>
-                <p className="text-base font-bold" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>{turnoutRate}%</p>
+                <p className="text-base font-bold" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair,serif)" }}>{turnoutRate}%</p>
                 <p className="text-[9px] mt-1" style={{ color: "#9ca3af" }}>of eligible citizens voted</p>
               </div>
             )}
@@ -707,10 +707,10 @@ export default function DistrictsPage() {
   }
 
   return (
-    <div className="districts-page" style={{ background: "#f2f5f9", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
+    <div className="districts-page" style={{ background: "#F1F2EE", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
       {/* Hero */}
       <section className="relative overflow-hidden topo-hero"
-        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 60%,#f2f5f9 100%)", paddingTop: "3.75rem", paddingBottom: "3.25rem" }}>
+        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#F1F2EE 60%,#F1F2EE 100%)", paddingTop: "3.75rem", paddingBottom: "3.25rem" }}>
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(37,99,168,0.10),transparent_70%)]" />
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_40%_45%_at_90%_75%,rgba(52,160,110,0.04),transparent_70%)]" />
         <div className="relative max-w-7xl mx-auto px-5">
@@ -719,7 +719,7 @@ export default function DistrictsPage() {
             Elections · Representation
           </p>
           <h1 className="text-4xl md:text-5xl font-bold mb-2" style={{ fontFamily: "var(--font-playfair,serif)" }}>
-            <span style={{ color: "#0f2540" }}>Districts</span>
+            <span style={{ color: "#0A1F18" }}>Districts</span>
           </h1>
           <p className="text-sm max-w-lg" style={{ color: "#5b6470" }}>
             Every Harris County voting precinct, mapped to its real districts. See who votes, who represents the seat, and the matchup for November.
@@ -782,9 +782,9 @@ export default function DistrictsPage() {
                 <button key={t.key} onClick={() => pickType(t.key)}
                   className="pressable rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-200"
                   style={{
-                    background: type === t.key ? "#1a3a5c" : "#fff",
+                    background: type === t.key ? "#0D2A21" : "#fff",
                     color:      type === t.key ? "#fff" : "#374151",
-                    border:     `1.5px solid ${type === t.key ? "#1a3a5c" : "#e5e7eb"}`,
+                    border:     `1.5px solid ${type === t.key ? "#0D2A21" : "#e5e7eb"}`,
                   }}>
                   {t.label}
                 </button>
@@ -798,9 +798,9 @@ export default function DistrictsPage() {
                   <button key={d} onClick={() => { setDistrict(d); setSelectedPrecinct(null); }}
                     className="pressable rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-150"
                     style={{
-                      background: district === d ? "#1a3a5c" : "#fff",
+                      background: district === d ? "#0D2A21" : "#fff",
                       color:      district === d ? "#fff" : "#374151",
-                      border:     `1.5px solid ${district === d ? "#1a3a5c" : "#e5e7eb"}`,
+                      border:     `1.5px solid ${district === d ? "#0D2A21" : "#e5e7eb"}`,
                     }}>
                     {CHIP_PREFIX[districtField]} {d}
                   </button>
@@ -884,10 +884,10 @@ export default function DistrictsPage() {
               <div className="rounded-[1rem] overflow-hidden bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]">
                 {mapError ? (
                   <div className="empty-state" style={{ height: 540, border: "none" }}>
-                    <p className="text-sm font-semibold" style={{ color: "#1a3a5c" }}>The precinct map didn&rsquo;t load.</p>
+                    <p className="text-sm font-semibold" style={{ color: "#0D2A21" }}>The precinct map didn&rsquo;t load.</p>
                     <p className="text-xs max-w-xs">Usually a network hiccup. The boundary file is ~1MB.</p>
                     <button onClick={() => { setMapError(false); fetch("/data/harris-precincts.geojson").then(r => r.json()).then(setGeojson).catch(() => setMapError(true)); }}
-                      className="pressable mt-2 rounded-full px-5 py-2 text-xs font-bold text-white" style={{ background: "#1a3a5c" }}>
+                      className="pressable mt-2 rounded-full px-5 py-2 text-xs font-bold text-white" style={{ background: "#0D2A21" }}>
                       Try again
                     </button>
                   </div>
@@ -954,13 +954,13 @@ export default function DistrictsPage() {
                     <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "#2563a8" }}>
                       {TYPES.find(t => t.key === type)?.label}
                     </p>
-                    <h2 className="text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-playfair,serif)", color: "#1a3a5c" }}>
+                    <h2 className="text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-playfair,serif)", color: "#0D2A21" }}>
                       {headerLabel(type, district)}
                     </h2>
                   </div>
                   <button onClick={() => window.print()}
                     className="print-hide pressable shrink-0 rounded-full px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white"
-                    style={{ background: "#1a3a5c" }}
+                    style={{ background: "#0D2A21" }}
                     title="Print a one-pager for this seat">
                     Print brief
                   </button>
@@ -984,7 +984,7 @@ export default function DistrictsPage() {
                         onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="font-bold text-sm group-hover:underline" style={{ color: "#1a3a5c" }}>{currentRep.name}</p>
+                      <p className="font-bold text-sm group-hover:underline" style={{ color: "#0D2A21" }}>{currentRep.name}</p>
                       <span className="inline-block rounded px-1.5 py-0.5 text-[10px] font-bold mt-1"
                         style={{
                           background: currentRep.party === "D" ? "#dbeafe" : "#fee2e2",
@@ -1023,7 +1023,7 @@ export default function DistrictsPage() {
                       { label: "Dem Share", value: `${demPct}%` },
                     ].map(s => (
                       <div key={s.label} className="text-center rounded-xl py-3 px-1" style={{ background: "#f8f9fa" }}>
-                        <p className="text-base font-bold leading-none" style={{ color: "#1a3a5c" }}>{s.value}</p>
+                        <p className="text-base font-bold leading-none" style={{ color: "#0D2A21" }}>{s.value}</p>
                         <p className="text-[9px] mt-1 uppercase tracking-wider leading-tight" style={{ color: "#9ca3af" }}>{s.label}</p>
                       </div>
                     ))}
@@ -1064,7 +1064,7 @@ export default function DistrictsPage() {
                       <div key={i} className="flex items-center gap-2">
                         <span className="inline-block w-2 h-2 rounded-full shrink-0"
                           style={{ background: h.party === "D" ? "#2563a8" : h.party === "R" ? "#dc2626" : "#9ca3af" }} />
-                        <span className="text-[12px] font-semibold flex-1" style={{ color: "#1a3a5c" }}>{h.name}</span>
+                        <span className="text-[12px] font-semibold flex-1" style={{ color: "#0D2A21" }}>{h.name}</span>
                         <span className="text-[11px]" style={{ color: "#9ca3af" }}>{h.years}</span>
                       </div>
                     ))}
@@ -1074,7 +1074,7 @@ export default function DistrictsPage() {
             )}
 
             {/* Data sources note */}
-            <div className="rounded-xl px-4 py-3 text-[10px] leading-relaxed" style={{ background: "rgba(26,58,92,0.05)", color: "#6b7280" }}>
+            <div className="rounded-xl px-4 py-3 text-[10px] leading-relaxed" style={{ background: "rgba(13,42,33,0.05)", color: "#6b7280" }}>
               Racial composition is Census CVAP 2019–23 (CD/SD/HD only). Turnout is March 2026 primary, Harris County Clerk.
               Turnout by race/age/gender requires the Harris County voter file (harrisvotes.com → Voter Registration Data Request).
             </div>

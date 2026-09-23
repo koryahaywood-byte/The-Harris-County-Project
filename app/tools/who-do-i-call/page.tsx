@@ -293,7 +293,7 @@ function ContactCard({ c }: { c: OfficialContact }) {
   return (
     <div className="hcp-card p-4 flex flex-col gap-2">
       <div>
-        <div className="font-bold text-sm" style={{ color: "#1a3a5c" }}>{c.name}</div>
+        <div className="font-bold text-sm" style={{ color: "#0D2A21" }}>{c.name}</div>
         <div className="text-xs mt-0.5" style={{ color: "#6b7280" }}>
           {c.office}
           {c.district && c.district !== "citywide" && c.district !== "countywide" ? ` · ${c.district}` : ""}
@@ -347,7 +347,7 @@ function ManualCard({ m }: { m: { name: string; office: string; phone?: string; 
   return (
     <div className="hcp-card p-4 flex flex-col gap-2">
       <div>
-        <div className="font-bold text-sm" style={{ color: "#1a3a5c" }}>{m.name}</div>
+        <div className="font-bold text-sm" style={{ color: "#0D2A21" }}>{m.name}</div>
         <div className="text-xs mt-0.5" style={{ color: "#6b7280" }}>{m.office}</div>
       </div>
       <div className="flex flex-col gap-1 text-xs">
@@ -371,7 +371,7 @@ function FindCard({ label }: { label: string }) {
     <Link href="/my-officials"
       className="hcp-card card-lift p-4 flex flex-col justify-center items-start gap-1 group"
       style={{ background: "rgba(37,99,168,0.05)" }}>
-      <span className="text-xs font-bold" style={{ color: "#1a3a5c" }}>Find {label} →</span>
+      <span className="text-xs font-bold" style={{ color: "#0D2A21" }}>Find {label} →</span>
       <span className="text-[11px]" style={{ color: "#6b7280" }}>
         This seat depends on your address. Look it up by entering it.
       </span>
@@ -398,9 +398,9 @@ function OfficialPersonCard({ o }: { o: EnrichedOfficial }) {
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
           {o.slug ? (
-            <Link href={`/politicians/${o.slug}`} className="font-bold text-sm truncate hover:underline" style={{ color: "#1a3a5c" }}>{o.name}</Link>
+            <Link href={`/politicians/${o.slug}`} className="font-bold text-sm truncate hover:underline" style={{ color: "#0D2A21" }}>{o.name}</Link>
           ) : (
-            <p className="font-bold text-sm truncate" style={{ color: "#1a3a5c" }}>{o.name}</p>
+            <p className="font-bold text-sm truncate" style={{ color: "#0D2A21" }}>{o.name}</p>
           )}
           <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0" style={{ background: `${accent}15`, color: accent }}>
             {o.party === "NP" ? "NP" : o.party}
@@ -479,7 +479,7 @@ function AnswerBlock({ place, route, issueIcon, loc }: { place: string | null; r
     <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[5px]">
       <div className="rounded-[1.1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] overflow-hidden">
         {/* Headline answer */}
-        <div className="px-5 py-4" style={{ background: "linear-gradient(135deg,#1a3a5c,#0f2540)" }}>
+        <div className="px-5 py-4" style={{ background: "linear-gradient(135deg,#0D2A21,#0A1F18)" }}>
           {place && (
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1.5" style={{ color: "#7aaee8" }}>{place}</p>
           )}
@@ -493,7 +493,7 @@ function AnswerBlock({ place, route, issueIcon, loc }: { place: string | null; r
           {route.hotline && (
             <a href={`tel:${route.hotline.phone.replace(/[^\d]/g, "")}`}
               className="inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-full text-sm font-bold pressable"
-              style={{ background: "#fbbf24", color: "#1a3a5c" }}>
+              style={{ background: "#fbbf24", color: "#0D2A21" }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.21 2 2 0 012 .01h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z" />
               </svg>
@@ -564,7 +564,7 @@ function LocationPanel({
       {!hideButton && (
         <button onClick={onUse} disabled={locating}
           className="pressable inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-bold disabled:opacity-60"
-          style={{ background: compact ? "var(--card)" : "#1a3a5c", color: compact ? "#1a3a5c" : "#fff", boxShadow: "var(--ring-card), 0 2px 8px rgba(26,58,92,0.08)" }}>
+          style={{ background: compact ? "var(--card)" : "#0D2A21", color: compact ? "#0D2A21" : "#fff", boxShadow: "var(--ring-card), 0 2px 8px rgba(13,42,33,0.08)" }}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
           </svg>
@@ -576,7 +576,7 @@ function LocationPanel({
       )}
       {loc && !hideResult && (
         <div className={`hcp-card p-4 ${hideButton ? "" : "mt-3"}`}>
-          <p className="text-sm font-bold mb-0.5" style={{ color: "#1a3a5c" }}>
+          <p className="text-sm font-bold mb-0.5" style={{ color: "#0D2A21" }}>
             You&rsquo;re in {loc.inHouston ? "the City of Houston" : "unincorporated Harris County"}
           </p>
           <p className="text-[11px] mb-3" style={{ color: "#9ca3af" }}>Voting precinct {loc.precinct}</p>
@@ -649,7 +649,7 @@ export default function WhoDoICallPage() {
     <div style={{ background: "var(--background)", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
       {/* Hero */}
       <section className="relative overflow-hidden topo-hero"
-        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 60%,#f2f5f9 100%)", paddingTop: "3.75rem", paddingBottom: "3rem" }}>
+        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#F1F2EE 60%,#F1F2EE 100%)", paddingTop: "3.75rem", paddingBottom: "3rem" }}>
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(37,99,168,0.10),transparent_70%)]" />
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_40%_45%_at_90%_75%,rgba(52,160,110,0.04),transparent_70%)]" />
         <div className="relative max-w-3xl mx-auto px-5">
@@ -658,7 +658,7 @@ export default function WhoDoICallPage() {
             Your Government · Take Action
           </p>
           <h1 className="text-4xl md:text-5xl font-bold mb-2" style={{ fontFamily: "var(--font-playfair,serif)" }}>
-            <span style={{ color: "#aab4c0" }}>Who do I </span><span style={{ color: "#0f2540" }}>call?</span>
+            <span style={{ color: "#aab4c0" }}>Who do I </span><span style={{ color: "#0A1F18" }}>call?</span>
           </h1>
           <p className="text-sm max-w-lg mb-5" style={{ color: "#5b6470" }}>
             Two questions. What&rsquo;s wrong and where it is. And you&rsquo;ll have the right number to call and the official who answers for it.
@@ -676,8 +676,8 @@ export default function WhoDoICallPage() {
       <div className="max-w-3xl mx-auto px-5 py-8">
         {/* Step 1: the problem */}
         <div className="flex items-baseline gap-2 mb-3">
-          <span className="flex items-center justify-center w-5 h-5 rounded-full text-[11px] font-bold text-white" style={{ background: "#1a3a5c" }}>1</span>
-          <h2 className="text-sm font-bold uppercase tracking-[0.16em]" style={{ color: "#1a3a5c" }}>What&rsquo;s the problem?</h2>
+          <span className="flex items-center justify-center w-5 h-5 rounded-full text-[11px] font-bold text-white" style={{ background: "#0D2A21" }}>1</span>
+          <h2 className="text-sm font-bold uppercase tracking-[0.16em]" style={{ color: "#0D2A21" }}>What&rsquo;s the problem?</h2>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mb-8">
           {ISSUES.map((i) => {
@@ -686,12 +686,12 @@ export default function WhoDoICallPage() {
               <button key={i.id} onClick={() => pickIssue(i)}
                 className="pressable text-left rounded-[1rem] p-3.5 transition-all duration-150 flex flex-col gap-1.5"
                 style={{
-                  background: active ? "#1a3a5c" : "var(--card)",
-                  boxShadow: active ? "0 8px 22px rgba(26,58,92,0.22)" : "var(--ring-card), 0 2px 8px rgba(26,58,92,0.05)",
+                  background: active ? "#0D2A21" : "var(--card)",
+                  boxShadow: active ? "0 8px 22px rgba(13,42,33,0.22)" : "var(--ring-card), 0 2px 8px rgba(13,42,33,0.05)",
                   outline: active ? "none" : undefined,
                 }}>
                 <span className="text-xl leading-none" aria-hidden>{i.icon}</span>
-                <span className="text-[13px] font-semibold leading-tight" style={{ color: active ? "#fff" : "#1a3a5c" }}>
+                <span className="text-[13px] font-semibold leading-tight" style={{ color: active ? "#fff" : "#0D2A21" }}>
                   {i.label}
                 </span>
               </button>
@@ -703,8 +703,8 @@ export default function WhoDoICallPage() {
         {issue && needsWhere && (
           <div className="mb-8 animate-in visible">
             <div className="flex items-baseline gap-2 mb-3">
-              <span className="flex items-center justify-center w-5 h-5 rounded-full text-[11px] font-bold text-white" style={{ background: "#1a3a5c" }}>2</span>
-              <h2 className="text-sm font-bold uppercase tracking-[0.16em]" style={{ color: "#1a3a5c" }}>Where is it?</h2>
+              <span className="flex items-center justify-center w-5 h-5 rounded-full text-[11px] font-bold text-white" style={{ background: "#0D2A21" }}>2</span>
+              <h2 className="text-sm font-bold uppercase tracking-[0.16em]" style={{ color: "#0D2A21" }}>Where is it?</h2>
             </div>
 
             {/* Smart option: share location → exact precinct, districts, and city/county.
@@ -728,9 +728,9 @@ export default function WhoDoICallPage() {
                     className="pressable text-left rounded-[1rem] px-4 py-3 transition-all duration-150"
                     style={{
                       background: active ? "#2563a8" : "var(--card)",
-                      boxShadow: active ? "0 8px 22px rgba(37,99,168,0.25)" : "var(--ring-card), 0 2px 8px rgba(26,58,92,0.05)",
+                      boxShadow: active ? "0 8px 22px rgba(37,99,168,0.25)" : "var(--ring-card), 0 2px 8px rgba(13,42,33,0.05)",
                     }}>
-                    <div className="text-[13px] font-bold" style={{ color: active ? "#fff" : "#1a3a5c" }}>{opt.label}</div>
+                    <div className="text-[13px] font-bold" style={{ color: active ? "#fff" : "#0D2A21" }}>{opt.label}</div>
                     <div className="text-[11px] mt-0.5" style={{ color: active ? "rgba(255,255,255,0.7)" : "#9ca3af" }}>{opt.sub}</div>
                   </button>
                 );
@@ -805,7 +805,7 @@ export default function WhoDoICallPage() {
               { href: "/tools/ballot-2026", label: "2026 ballot →" },
             ].map((l) => (
               <Link key={l.href} href={l.href}
-                className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#1a3a5c] hover:text-white hover:border-[#1a3a5c]"
+                className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#0D2A21] hover:text-white hover:border-[#0D2A21]"
                 style={{ color: "#374151", borderColor: "#e5e7eb", background: "#fff" }}>
                 {l.label}
               </Link>

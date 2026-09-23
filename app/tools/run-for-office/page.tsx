@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-const NAVY = "#1a3a5c";
+const NAVY = "#0D2A21";
 const BLUE = "#2563a8";
 const GOLD = "#c9a227";
 
@@ -150,7 +150,7 @@ function StepCard({ step, isOpen, onToggle }: {
 }) {
   return (
     <div className="rounded-2xl overflow-hidden ring-1 ring-black/8 transition-all duration-200"
-      style={{ background: "#fff", boxShadow: isOpen ? "0 4px 16px rgba(26,58,92,0.10)" : "0 1px 4px rgba(26,58,92,0.06)" }}>
+      style={{ background: "#fff", boxShadow: isOpen ? "0 4px 16px rgba(13,42,33,0.10)" : "0 1px 4px rgba(13,42,33,0.06)" }}>
       <button onClick={onToggle} className="w-full text-left p-5 flex items-start gap-4">
         <span className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-sm font-black"
           style={{ background: isOpen ? NAVY : `${NAVY}12`, color: isOpen ? "#fff" : NAVY }}>
@@ -209,11 +209,11 @@ export default function RunForOffice() {
   const [officeGroup, setOfficeGroup] = useState<string>("Harris County");
 
   return (
-    <div style={{ background: "#f2f5f9", minHeight: "100vh", fontFamily: "var(--font-outfit), sans-serif" }}>
+    <div style={{ background: "#F1F2EE", minHeight: "100vh", fontFamily: "var(--font-outfit), sans-serif" }}>
 
       {/* Hero */}
       <section className="relative overflow-hidden"
-        style={{ background: `linear-gradient(135deg,${NAVY} 0%,#0f2540 60%,#162e4a 100%)`, paddingTop: "3rem", paddingBottom: "3.5rem" }}>
+        style={{ background: `linear-gradient(135deg,${NAVY} 0%,#0A1F18 60%,#162e4a 100%)`, paddingTop: "3rem", paddingBottom: "3.5rem" }}>
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%,rgba(37,99,168,0.18) 0%,transparent 70%)" }}/>
         <div className="relative max-w-4xl mx-auto px-5">
@@ -267,7 +267,7 @@ export default function RunForOffice() {
         {/* Treasurer Rules */}
         <section id="treasurer">
           <div className="rounded-2xl overflow-hidden" style={{ background: "#fff", border: `2px solid ${GOLD}55`, boxShadow: `0 4px 20px ${GOLD}18` }}>
-            <div className="p-5 pb-4" style={{ background: `linear-gradient(135deg,${NAVY},#0f2540)` }}>
+            <div className="p-5 pb-4" style={{ background: `linear-gradient(135deg,${NAVY},#0A1F18)` }}>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-lg">⚠️</span>
                 <h2 className="text-base font-bold text-white" style={{ fontFamily: "var(--font-playfair), serif" }}>
@@ -334,7 +334,7 @@ export default function RunForOffice() {
                 className="px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-150"
                 style={officeGroup === g.group
                   ? { background: NAVY, color: "#fff" }
-                  : { background: "rgba(26,58,92,0.08)", color: NAVY }}>
+                  : { background: "rgba(13,42,33,0.08)", color: NAVY }}>
                 {g.group}
               </button>
             ))}
@@ -343,7 +343,7 @@ export default function RunForOffice() {
             <div key={g.group} className="space-y-3">
               {g.offices.map(o => (
                 <div key={o.title} className="rounded-2xl p-5 ring-1 ring-black/8"
-                  style={{ background: "#fff", boxShadow: "0 1px 4px rgba(26,58,92,0.06)" }}>
+                  style={{ background: "#fff", boxShadow: "0 1px 4px rgba(13,42,33,0.06)" }}>
                   <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
                     <h3 className="font-bold text-sm" style={{ color: NAVY, fontFamily: "var(--font-playfair), serif" }}>
                       {o.title}
@@ -352,7 +352,7 @@ export default function RunForOffice() {
                       <span className="text-[10px] font-bold uppercase tracking-[0.12em] px-2 py-0.5 rounded-full"
                         style={{ background: `${BLUE}12`, color: BLUE }}>{o.level}</span>
                       <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                        style={{ background: "rgba(26,58,92,0.07)", color: "#6b7280" }}>
+                        style={{ background: "rgba(13,42,33,0.07)", color: "#6b7280" }}>
                         {o.term} term
                       </span>
                     </div>

@@ -64,7 +64,7 @@ export async function GET(
           width: 1200,
           height: 630,
           display: "flex",
-          background: "radial-gradient(ellipse 80% 90% at 30% 50%, #0f2540 0%, #060d16 60%, #020608 100%)",
+          background: "radial-gradient(ellipse 80% 90% at 30% 50%, #0A1F18 0%, #060d16 60%, #020608 100%)",
           position: "relative",
           overflow: "hidden",
         }}

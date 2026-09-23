@@ -11,7 +11,7 @@ import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 
 const THEMES = {
-  D:  { suit: "#1a3a5c", dark: "#0d1f30", tie: "#2f6bbf", accent: "#3b82f6", floor: "#2a4a7a", ring: "#60a5fa" },
+  D:  { suit: "#0D2A21", dark: "#0d1f30", tie: "#2f6bbf", accent: "#3b82f6", floor: "#2a4a7a", ring: "#60a5fa" },
   R:  { suit: "#5c1515", dark: "#330b0b", tie: "#b32020", accent: "#ef4444", floor: "#6a2020", ring: "#f87171" },
   NP: { suit: "#2e3a45", dark: "#1a2129", tie: "#64748b", accent: "#94a3b8", floor: "#3a4a58", ring: "#cbd5e1" },
 };

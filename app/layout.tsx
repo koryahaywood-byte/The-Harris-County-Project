@@ -1,109 +1,95 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Dancing_Script, Outfit } from "next/font/google";
+import { Source_Serif_4, Overpass, Overpass_Mono, Dancing_Script } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import { SITE_URL } from "@/lib/site";
 import Nav from "@/components/Nav";
 import EmailGate from "@/components/EmailGate";
 import ChatWidget from "@/components/ChatWidget";
 
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
-const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
-const dancing = Dancing_Script({ subsets: ["latin"], variable: "--font-dancing" });
+const serif = Source_Serif_4({ subsets: ["latin"], variable: "--font-source-serif", axes: ["opsz"], display: "swap" });
+const sans = Overpass({ subsets: ["latin"], variable: "--font-overpass", display: "swap" });
+const mono = Overpass_Mono({ subsets: ["latin"], variable: "--font-overpass-mono", display: "swap" });
+const signature = Dancing_Script({ subsets: ["latin"], variable: "--font-dancing", weight: ["700"], display: "swap" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "The Harris County Project",
-  description: "Civic tools for Harris County residents. They stopped teaching civics: we didn't.",
+  description: "Every race on the Harris County ballot, rated. The money, the maps, and the officials behind them, from public records.",
 };
+
+const FOOTER: { head: string; links: [string, string][] }[] = [
+  { head: "2026 election", links: [
+    ["/races", "All races, rated"],
+    ["/tools/my-ballot", "Your ballot"],
+    ["/tools/tx-house", "Texas House board"],
+    ["/tools/judges", "Know your judges"],
+    ["/tools/civic-calendar", "Election calendar"],
+  ] },
+  { head: "Money", links: [
+    ["/tools/where-is-the-dough", "Campaign cash"],
+    ["/tools/donor-search", "Who gave"],
+    ["/tools/pac-tracker", "Outside money"],
+    ["/tools/public-money", "Public budgets"],
+    ["/tools/tax-receipt", "Your tax receipt"],
+  ] },
+  { head: "Maps and results", links: [
+    ["/tools/heat-check", "Precinct results"],
+    ["/tools/districts", "District portraits"],
+    ["/tools/precinct-lookup", "Precinct history"],
+    ["/tools/field-sweep", "Field sweep"],
+  ] },
+  { head: "Government", links: [
+    ["/my-officials", "Who represents me"],
+    ["/politicians", "Officials"],
+    ["/tools/court-votes", "Commissioners Court votes"],
+    ["/tools/bill-tracker", "Bill tracker"],
+    ["/tools/who-do-i-call", "Who do I call"],
+  ] },
+];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${outfit.variable} ${playfair.variable} ${dancing.variable}`}>
-      <body className="min-h-screen flex flex-col" style={{ fontFamily: "var(--font-outfit), sans-serif" }}>
-        {/* Global SVG filter defs. Cel-shade effect applied to politician photos */}
-        <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
-          <defs>
-            <filter id="hcp-cel" colorInterpolationFilters="sRGB" x="-2%" y="-2%" width="104%" height="104%">
-              {/* 1. Slight blur to kill JPEG noise before processing */}
-              <feGaussianBlur in="SourceGraphic" stdDeviation="0.6" result="blurred"/>
-              {/* 2. Posterize to 7 levels. Smooth enough for skin tones */}
-              <feComponentTransfer in="blurred" result="poster">
-                <feFuncR type="discrete" tableValues="0 0.17 0.33 0.5 0.67 0.83 1"/>
-                <feFuncG type="discrete" tableValues="0 0.17 0.33 0.5 0.67 0.83 1"/>
-                <feFuncB type="discrete" tableValues="0 0.17 0.33 0.5 0.67 0.83 1"/>
-              </feComponentTransfer>
-              {/* 3. Saturation pop */}
-              <feColorMatrix type="saturate" values="1.2" in="poster" result="vivid"/>
-              {/* 4. Edge detect on the blurred source (not raw JPEG) */}
-              <feConvolveMatrix order="3" kernelMatrix="-1 -1 -1 -1 8 -1 -1 -1 -1"
-                in="blurred" result="edge" preserveAlpha="false" divisor="4"/>
-              {/* 5. Desaturate edges */}
-              <feColorMatrix type="saturate" values="0" in="edge" result="grayEdge"/>
-              {/* 6. Invert: bright edges → dark ink lines */}
-              <feComponentTransfer in="grayEdge" result="ink">
-                <feFuncR type="linear" slope="-1" intercept="1"/>
-                <feFuncG type="linear" slope="-1" intercept="1"/>
-                <feFuncB type="linear" slope="-1" intercept="1"/>
-              </feComponentTransfer>
-              {/* 7. Multiply ink lines onto vivid posterized base */}
-              <feBlend mode="multiply" in="vivid" in2="ink"/>
-            </filter>
-          </defs>
-        </svg>
+    <html lang="en" className={`${serif.variable} ${sans.variable} ${mono.variable} ${signature.variable}`}>
+      <body className="min-h-screen flex flex-col">
+        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] btn btn-ink">Skip to content</a>
         <EmailGate />
         <Nav />
-        <main className="flex-1">{children}</main>
+        <main id="main" className="flex-1">{children}</main>
         <ChatWidget />
-        <footer className="relative overflow-hidden topo-dark text-white" style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#0f2540 100%)" }}>
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_15%_0%,rgba(37,99,168,0.25),transparent_70%)]" />
-          {/* Top strip */}
-          <div className="max-w-6xl mx-auto px-6 pt-14 pb-10 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-10 relative z-10">
-            {/* Left: brand */}
-            <div className="max-w-sm">
-              <a href="https://blackivystrategies.com" target="_blank" rel="noopener noreferrer"
-                style={{ fontFamily: "var(--font-dancing), cursive", fontSize: "2rem", lineHeight: 1.1, color: "inherit", textDecoration: "none" }}
-                className="mb-3 block hover:opacity-80 transition-opacity duration-300">
+        <footer className="board no-print" style={{ backgroundSize: "auto, 100% 100%" }}>
+          <div className="max-w-7xl mx-auto px-4 md:px-6 pt-14 pb-10 grid gap-10 md:grid-cols-[1.3fr_repeat(4,1fr)]">
+            <div className="max-w-xs">
+              <p className="serif text-[22px] font-semibold leading-tight text-white">The Harris County Project</p>
+              <p className="mt-3 text-[14px] leading-relaxed text-white/60">
+                Every race on the Harris County ballot, rated, with the money and maps behind it. Built from public records: county canvass returns, FEC and Texas Ethics Commission filings, and Census data.
+              </p>
+              <p className="mt-5 label text-white/40">Free to use. Free to share.</p>
+            </div>
+            {FOOTER.map(col => (
+              <nav key={col.head} aria-label={col.head}>
+                <p className="label mb-3" style={{ color: "var(--gold)" }}>{col.head}</p>
+                <ul className="space-y-2">
+                  {col.links.map(([href, label]) => (
+                    <li key={href}><Link href={href} className="text-[14px] text-white/70 hover:text-white">{label}</Link></li>
+                  ))}
+                </ul>
+              </nav>
+            ))}
+          </div>
+          <div className="border-t" style={{ borderColor: "var(--board-line)" }}>
+            <div className="max-w-7xl mx-auto px-4 md:px-6 py-5 flex flex-col sm:flex-row gap-3 sm:items-center justify-between text-[13px] text-white/45">
+              <p className="flex flex-wrap gap-x-5 gap-y-1">
+                <Link href="/methodology" className="hover:text-white">How we rate races</Link>
+                <Link href="/about" className="hover:text-white">About</Link>
+                <Link href="/contact" className="hover:text-white">Report an error</Link>
+                <Link href="/tools" className="hover:text-white">Every tool</Link>
+              </p>
+              <a href="https://blackivystrategies.com" target="_blank" rel="noopener noreferrer" className="hover:text-white/80"
+                style={{ fontFamily: "var(--font-dancing), cursive", fontSize: 20 }}>
                 Built With Wood
               </a>
-              <p className="text-white/60 text-sm leading-relaxed">
-                A free civic toolbox for Harris County residents. All data from public sources. Built to make local government legible.
-              </p>
             </div>
-
-            {/* Right: nav links */}
-            <nav className="grid grid-cols-2 gap-x-12 gap-y-2 text-sm text-white/70 self-start pt-1">
-              <div className="flex flex-col gap-2">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 mb-1">Tools</p>
-                <Link href="/#toolbox" className="hover:text-white transition-colors duration-300">Toolbox</Link>
-                <Link href="/tools/heat-check" className="hover:text-white transition-colors duration-300">Heat Check</Link>
-                <Link href="/tools/bill-tracker" className="hover:text-white transition-colors duration-300">Bill Tracker</Link>
-                <Link href="/tools/county-budget" className="hover:text-white transition-colors duration-300">County Budget</Link>
-                <Link href="/tools/civic-calendar" className="hover:text-white transition-colors duration-300">Civic Calendar</Link>
-                <Link href="/tools/tv-station" className="hover:text-white transition-colors duration-300">TV Station</Link>
-                <Link href="/tools/endorsement-flowchart" className="hover:text-white transition-colors duration-300">Endorsements</Link>
-                <Link href="/tools/ballot-2026" className="hover:text-white transition-colors duration-300">2026 Ballot</Link>
-                <Link href="/tools/pac-tracker" className="hover:text-white transition-colors duration-300">Outside Money</Link>
-                <Link href="/tools/field-sweep" className="hover:text-white transition-colors duration-300">Field Sweep</Link>
-                <Link href="/tools/donor-network" className="hover:text-white transition-colors duration-300">Donor Network</Link>
-              </div>
-              <div className="flex flex-col gap-2">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 mb-1">Site</p>
-                <Link href="/politicians" className="hover:text-white transition-colors duration-300">Officials</Link>
-                <Link href="/blogs" className="hover:text-white transition-colors duration-300">Media</Link>
-                <Link href="/tools/tirz" className="hover:text-white transition-colors duration-300">TIRZs</Link>
-                <Link href="/about" className="hover:text-white transition-colors duration-300">About</Link>
-                <Link href="/contact" className="hover:text-white transition-colors duration-300">Contact</Link>
-              </div>
-            </nav>
-          </div>
-
-          {/* Bottom bar */}
-          <div className="border-t border-white/10 px-6 py-4 max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 relative z-10">
-            <p className="text-white/40 text-xs">
-              The Harris County Project. Free, always. Data from public sources.
-            </p>
-            <p className="text-white/40 text-xs">
-              Houston, TX. Built for the people
-            </p>
           </div>
         </footer>
       </body>

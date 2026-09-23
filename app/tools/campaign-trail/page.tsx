@@ -33,7 +33,7 @@ export default async function CampaignTrailPage() {
     <div className="min-h-screen" style={{ background: "var(--background)" }}>
       {/* Hero */}
       <div className="relative overflow-hidden py-16 md:py-20"
-        style={{ background: "linear-gradient(135deg,#0f2540 0%,#1a3a5c 60%,#1d4ed8 100%)" }}>
+        style={{ background: "linear-gradient(135deg,#0A1F18 0%,#0D2A21 60%,#1d4ed8 100%)" }}>
         <div className="pointer-events-none absolute inset-0"
           style={{ background: "radial-gradient(ellipse 80% 60% at 20% 50%,rgba(37,99,168,0.35),transparent 70%)" }} />
         <div className="max-w-4xl mx-auto px-4 relative z-10">

@@ -16,7 +16,7 @@ import { computeFieldPositions, summarizeFieldPositions, FIELD_POSITION_METHOD }
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
 import FieldNotes from "@/components/FieldNotes";
 
-const NAVY = "#1a3a5c";
+const NAVY = "#0D2A21";
 const D_BLUE = "#2563a8";
 const R_RED = "#dc2626";
 const MUTED = "#9ca3af";
@@ -195,7 +195,7 @@ function FieldPositionModule({ h, precincts }: { h: PrecinctHistory; precincts: 
         ))}
       </div>
       {showMethod && (
-        <div className="rounded-xl px-3.5 py-2.5" style={{ background: "#1a3a5c0a", border: "1px solid #1a3a5c1a" }}>
+        <div className="rounded-xl px-3.5 py-2.5" style={{ background: "#0D2A210a", border: "1px solid #0D2A211a" }}>
           <p className="text-[10px] leading-relaxed" style={{ color: "#374151" }}>{FIELD_POSITION_METHOD}</p>
         </div>
       )}

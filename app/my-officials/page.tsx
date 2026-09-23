@@ -134,9 +134,9 @@ function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupRes
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           {rep.slug ? (
-            <Link href={`/politicians/${rep.slug}`} className="font-bold text-[15px] truncate hover:underline" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>{rep.name}</Link>
+            <Link href={`/politicians/${rep.slug}`} className="font-bold text-[15px] truncate hover:underline" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair,serif)" }}>{rep.name}</Link>
           ) : (
-            <p className="font-bold text-[15px] truncate" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>{rep.name}</p>
+            <p className="font-bold text-[15px] truncate" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair,serif)" }}>{rep.name}</p>
           )}
           {WOMEN_IN_POLITICS.has(rep.name) && (
             <span className="text-[9px] font-bold px-1 py-0.5 rounded leading-none flex-shrink-0"
@@ -211,6 +211,10 @@ export default function MyOfficialsPage() {
 
   useEffect(() => {
     fetch("/data/cvap-districts.json").then(r => r.json()).then(setCvap).catch(() => {});
+    // Deep link from Your Ballot: /my-officials?address=...
+    const pre = new URLSearchParams(window.location.search).get("address");
+    if (pre) { setAddress(pre); runLookup(`/api/my-officials?address=${encodeURIComponent(pre)}`); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function runLookup(url: string) {
@@ -279,10 +283,10 @@ export default function MyOfficialsPage() {
   const cvapActive = (cvapSel && hasCvap(cvapSel)) ? cvapSel : cvapDefault;
 
   return (
-    <div style={{ background: "#f2f5f9", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
+    <div style={{ background: "#F1F2EE", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
       {/* Hero. Synex-style light, with the topo terrain motif */}
       <section className="relative overflow-hidden topo-hero"
-        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 60%,#f2f5f9 100%)", paddingTop: "3.75rem", paddingBottom: "3.5rem" }}>
+        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#F1F2EE 60%,#F1F2EE 100%)", paddingTop: "3.75rem", paddingBottom: "3.5rem" }}>
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(37,99,168,0.10),transparent_70%)]" />
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_40%_45%_at_90%_75%,rgba(52,160,110,0.04),transparent_70%)]" />
         <div className="relative max-w-3xl mx-auto px-5">
@@ -291,7 +295,7 @@ export default function MyOfficialsPage() {
             Your Government · Lookup
           </p>
           <h1 className="text-4xl md:text-5xl font-bold mb-3" style={{ fontFamily: "var(--font-playfair,serif)" }}>
-            <span style={{ color: "#aab4c0" }}>Who represents </span><span style={{ color: "#0f2540" }}>me?</span>
+            <span style={{ color: "#aab4c0" }}>Who represents </span><span style={{ color: "#0A1F18" }}>me?</span>
           </h1>
           <p className="text-sm md:text-[15px] max-w-lg mb-7" style={{ color: "#5b6470" }}>
             Enter your Harris County address. Get every elected official who answers to you –
@@ -305,11 +309,11 @@ export default function MyOfficialsPage() {
               onChange={e => setAddress(e.target.value)}
               placeholder="1001 Preston St, Houston, TX 77002"
               className="flex-1 rounded-full px-5 py-3 text-sm outline-none transition-shadow focus:shadow-[0_0_0_3px_rgba(37,99,168,0.12)]"
-              style={{ background: "#fff", color: "#1a3a5c", border: "1px solid #e5e7eb" }}
+              style={{ background: "#fff", color: "#0D2A21", border: "1px solid #e5e7eb" }}
             />
             <button type="submit" disabled={loading}
               className="pressable rounded-full px-7 py-3 text-sm font-bold text-white disabled:opacity-60"
-              style={{ background: "#0f2540", boxShadow: "0 10px 24px rgba(15,37,64,0.2)" }}>
+              style={{ background: "#0A1F18", boxShadow: "0 10px 24px rgba(13,42,33,0.2)" }}>
               {loading ? "Looking up…" : "Find My Officials"}
             </button>
           </form>
@@ -374,7 +378,7 @@ export default function MyOfficialsPage() {
                   light={false}
                 />
               </div>
-              <p className="text-sm font-bold" style={{ color: "#1a3a5c" }}>{result.matched}</p>
+              <p className="text-sm font-bold" style={{ color: "#0D2A21" }}>{result.matched}</p>
               <div className="chip-row mt-3">
                 <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/[0.05] text-[#6b7280]">Precinct {result.precinct}</span>
                 {/* CD/SD/HD chips toggle the demographics shown below (no navigation) */}
@@ -435,7 +439,7 @@ export default function MyOfficialsPage() {
 
               <div key={level} className="mb-8">
                 <div className="flex items-baseline gap-3 mb-3">
-                  <h2 className="text-lg font-bold" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>{level}</h2>
+                  <h2 className="text-lg font-bold" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair,serif)" }}>{level}</h2>
                   <p className="text-[11px] text-[#9ca3af]">{LEVEL_DESC[level]}</p>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-3">

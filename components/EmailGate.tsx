@@ -62,12 +62,12 @@ export default function EmailGate() {
         style={{ background: "var(--background, #fff)" }}>
 
         {/* Top accent bar */}
-        <div className="h-1" style={{ background: "linear-gradient(90deg,#1a3a5c,#2563a8)" }} />
+        <div className="h-1" style={{ background: "linear-gradient(90deg,#0D2A21,#2563a8)" }} />
 
         <div className="px-5 py-4">
           {/* Header row */}
           <div className="flex items-start justify-between gap-3 mb-2">
-            <p className="text-sm font-bold leading-tight" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair), serif" }}>
+            <p className="text-sm font-bold leading-tight" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair), serif" }}>
               Stay in the loop
             </p>
             <button
@@ -99,7 +99,7 @@ export default function EmailGate() {
               type="submit"
               disabled={loading || !email.trim()}
               className="rounded-full px-3 py-1.5 text-xs font-bold text-white disabled:opacity-40 flex-shrink-0 transition-opacity"
-              style={{ background: "#1a3a5c" }}
+              style={{ background: "#0D2A21" }}
             >
               {loading ? "…" : "Join"}
             </button>

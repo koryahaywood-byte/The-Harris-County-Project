@@ -24,9 +24,9 @@ export default function ReviewQueue() {
   const open = flags.filter((f: { status: string }) => f.status === "open");
 
   return (
-    <div style={{ background: "#f2f5f9", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }} className="px-5 py-10">
+    <div style={{ background: "#F1F2EE", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }} className="px-5 py-10">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-2xl font-bold mb-1" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>
+        <h1 className="text-2xl font-bold mb-1" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair,serif)" }}>
           Field Notes Review Queue
         </h1>
         <p className="text-xs mb-6" style={{ color: "#6b7280" }}>

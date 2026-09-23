@@ -58,7 +58,7 @@ function InsightCard({ kicker, headline, rows }: { kicker: string; headline: str
               <div className="flex items-baseline gap-2 min-w-0">
                 <Link href={`/tools/precinct-lookup?p=${r.prec}`}
                   className="text-[12px] font-bold tabular-nums hover:underline"
-                  style={{ color: "#1a3a5c" }}>
+                  style={{ color: "#0D2A21" }}>
                   {r.prec}
                 </Link>
                 {hd && (

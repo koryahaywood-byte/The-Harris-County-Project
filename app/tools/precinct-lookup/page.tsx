@@ -283,7 +283,7 @@ function PrecinctLookupInner() {
             <div className="rounded-2xl p-6 flex items-start gap-6"
               style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}>
               <div>
-                <p className="text-[9px] font-black uppercase tracking-[0.22em] mb-1" style={{ color: "rgba(26,58,92,0.4)" }}>
+                <p className="text-[9px] font-black uppercase tracking-[0.22em] mb-1" style={{ color: "rgba(13,42,33,0.4)" }}>
                   Harris County
                 </p>
                 <p className="text-4xl font-black" style={{ color: "var(--accent)" }}>

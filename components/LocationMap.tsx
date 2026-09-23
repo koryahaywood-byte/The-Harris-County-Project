@@ -49,7 +49,7 @@ export default function LocationMap({
         html:
           '<div style="position:relative;width:18px;height:18px">' +
           '<span style="position:absolute;inset:0;border-radius:9999px;background:#2563a8;opacity:0.35;animation:alive-halo 2.4s cubic-bezier(0.4,0,0.6,1) infinite"></span>' +
-          '<span style="position:absolute;inset:3px;border-radius:9999px;background:#1a3a5c;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.35)"></span>' +
+          '<span style="position:absolute;inset:3px;border-radius:9999px;background:#0D2A21;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.35)"></span>' +
           "</div>",
         iconSize: [18, 18],
         iconAnchor: [9, 9],

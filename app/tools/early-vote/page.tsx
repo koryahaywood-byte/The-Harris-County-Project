@@ -7,7 +7,7 @@ const EarlyVoteMap = dynamic(() => import("./EarlyVoteMap"), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center rounded-2xl animate-pulse"
-      style={{ height: 500, background: "#f0f4f8", border: "1px solid rgba(26,58,92,0.08)" }}>
+      style={{ height: 500, background: "#f0f4f8", border: "1px solid rgba(13,42,33,0.08)" }}>
       <p className="text-xs" style={{ color: "#9ca3af" }}>Loading map...</p>
     </div>
   ),
@@ -131,11 +131,11 @@ export default function EarlyVotePage() {
   const repOverallPct   = Math.round((totalRepVoted / totalRepUniverse) * 100);
 
   return (
-    <div style={{ background: "#f2f5f9", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
+    <div style={{ background: "#F1F2EE", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
 
       {/* Hero */}
       <section className="relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#0f2540 60%,#162e4a 100%)", paddingTop: "4rem", paddingBottom: "4rem" }}>
+        style={{ background: "linear-gradient(135deg,#0D2A21 0%,#0A1F18 60%,#162e4a 100%)", paddingTop: "4rem", paddingBottom: "4rem" }}>
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%,rgba(37,99,168,0.18) 0%,transparent 70%)" }} />
         <div className="relative max-w-6xl mx-auto px-5">
@@ -172,9 +172,9 @@ export default function EarlyVotePage() {
                   <input
                     type="range" min={1} max={12} value={daysPassed}
                     onChange={e => setDaysPassed(Number(e.target.value))}
-                    className="flex-1 accent-[#1a3a5c]"
+                    className="flex-1 accent-[#0D2A21]"
                   />
-                  <span className="text-sm font-bold w-20 text-right" style={{ color: "#1a3a5c" }}>
+                  <span className="text-sm font-bold w-20 text-right" style={{ color: "#0D2A21" }}>
                     Day {daysPassed} of 12
                   </span>
                 </div>
@@ -192,9 +192,9 @@ export default function EarlyVotePage() {
                     onClick={() => setSelectedCategory(cat)}
                     className="rounded-full px-3 py-1 text-xs font-semibold transition-all duration-150"
                     style={{
-                      background: selectedCategory === cat ? "#1a3a5c" : "#fff",
+                      background: selectedCategory === cat ? "#0D2A21" : "#fff",
                       color:      selectedCategory === cat ? "#fff" : "#374151",
-                      border:     `1.5px solid ${selectedCategory === cat ? "#1a3a5c" : "#e5e7eb"}`,
+                      border:     `1.5px solid ${selectedCategory === cat ? "#0D2A21" : "#e5e7eb"}`,
                     }}
                   >{cat}</button>
                 ))}
@@ -205,9 +205,9 @@ export default function EarlyVotePage() {
                     onClick={() => setSelectedRace(r.id)}
                     className="rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-150"
                     style={{
-                      background: selectedRace === r.id ? "#1a3a5c" : "#fff",
+                      background: selectedRace === r.id ? "#0D2A21" : "#fff",
                       color:      selectedRace === r.id ? "#fff" : "#374151",
-                      border:     `1.5px solid ${selectedRace === r.id ? "#1a3a5c" : "#e5e7eb"}`,
+                      border:     `1.5px solid ${selectedRace === r.id ? "#0D2A21" : "#e5e7eb"}`,
                     }}
                   >{r.label}</button>
                 ))}
@@ -238,8 +238,8 @@ export default function EarlyVotePage() {
             </div>
 
             {/* Data source note */}
-            <div className="mt-4 rounded-xl px-4 py-3 text-[10px] leading-relaxed" style={{ background: "rgba(26,58,92,0.05)", color: "#6b7280" }}>
-              <strong style={{ color: "#1a3a5c" }}>Data source:</strong> During active elections, Harris County Clerk publishes daily early vote participation files at harrisvotes.com. The voter file (TEAM system, TX Sec. of State) provides party primary history. Precinct-level cross-reference powers the Dem vs. Rep universe gauge.
+            <div className="mt-4 rounded-xl px-4 py-3 text-[10px] leading-relaxed" style={{ background: "rgba(13,42,33,0.05)", color: "#6b7280" }}>
+              <strong style={{ color: "#0D2A21" }}>Data source:</strong> During active elections, Harris County Clerk publishes daily early vote participation files at harrisvotes.com. The voter file (TEAM system, TX Sec. of State) provides party primary history. Precinct-level cross-reference powers the Dem vs. Rep universe gauge.
             </div>
           </div>
 
@@ -252,14 +252,14 @@ export default function EarlyVotePage() {
                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "#2563a8" }}>
                   {race.category}
                 </p>
-                <h2 className="text-lg font-bold mb-3" style={{ fontFamily: "var(--font-playfair,serif)", color: "#1a3a5c" }}>
+                <h2 className="text-lg font-bold mb-3" style={{ fontFamily: "var(--font-playfair,serif)", color: "#0D2A21" }}>
                   {race.label}
                 </h2>
                 {race.candidates.map(c => (
                   <div key={c.name} className="flex items-center gap-2 mb-1.5">
                     <span className="inline-block w-2 h-2 rounded-full"
                       style={{ background: c.party === "D" ? "#2563a8" : c.party === "R" ? "#dc2626" : "#9ca3af" }} />
-                    <span className="text-sm font-medium" style={{ color: "#1a3a5c" }}>{c.name}</span>
+                    <span className="text-sm font-medium" style={{ color: "#0D2A21" }}>{c.name}</span>
                     <span className="text-[10px] rounded px-1.5 py-0.5 font-bold ml-auto"
                       style={{
                         background: c.party === "D" ? "#dbeafe" : c.party === "R" ? "#fee2e2" : "#f3f4f6",
@@ -294,7 +294,7 @@ export default function EarlyVotePage() {
                 />
                 <div className="mt-3 pt-3" style={{ borderTop: "1px solid #f3f4f6" }}>
                   <p className="text-[10px]" style={{ color: "#9ca3af" }}>
-                    Total early ballots cast (est.): <strong style={{ color: "#1a3a5c" }}>{(totalDemVoted + totalRepVoted).toLocaleString()}</strong>
+                    Total early ballots cast (est.): <strong style={{ color: "#0D2A21" }}>{(totalDemVoted + totalRepVoted).toLocaleString()}</strong>
                   </p>
                   {demOverallPct > repOverallPct ? (
                     <p className="text-[11px] font-semibold mt-1" style={{ color: "#2563a8" }}>

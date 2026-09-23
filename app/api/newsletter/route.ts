@@ -18,7 +18,7 @@ import { SITE_URL, SITE_NAME } from "@/lib/site";
 
 export const revalidate = 3600;
 
-const NAVY = "#1a3a5c", SKY = "#2563a8", CREAM = "#f5f3ef", MUTED = "#6b7280";
+const NAVY = "#0D2A21", SKY = "#2563a8", CREAM = "#f5f3ef", MUTED = "#6b7280";
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 const LEAN_LABEL: Record<RaceLean, string> = {

@@ -564,7 +564,7 @@ export default function WhereIsTheDough() {
     <div className="bg-[var(--background)] min-h-screen">
 
       {/* ── Hero. Synex-style light, topo terrain ─────────────────────── */}
-      <div className="px-6 py-14 md:py-20 relative overflow-hidden topo-hero" style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 60%,#f2f5f9 100%)" }}>
+      <div className="px-6 py-14 md:py-20 relative overflow-hidden topo-hero" style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#F1F2EE 60%,#F1F2EE 100%)" }}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_60%_at_85%_40%,rgba(37,99,168,0.10),transparent_70%)]"/>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_38%_45%_at_92%_80%,rgba(52,160,110,0.04),transparent_70%)]"/>
         <div className="max-w-6xl mx-auto relative z-10">
@@ -573,7 +573,7 @@ export default function WhereIsTheDough() {
             Money
           </p>
           <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-2" style={{ fontFamily: "var(--font-playfair), serif" }}>
-            <span style={{ color: "#aab4c0" }}>Where the </span><span style={{ color: "#0f2540" }}>money resides.</span>
+            <span style={{ color: "#aab4c0" }}>Where the </span><span style={{ color: "#0A1F18" }}>money resides.</span>
           </h1>
           <p className="text-sm max-w-lg" style={{ color: "#5b6470" }}>
             Cash-on-hand for every Harris County official, candidate, and challenger. TEC &amp; FEC filings.

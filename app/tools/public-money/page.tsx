@@ -32,7 +32,7 @@ function StackedBar({ lines }: { lines: BudgetLine[] }) {
           <div key={cat} className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full" style={{ background: CAT_COLOR[cat] ?? "#9ca3af" }} />
             <span className="text-[10px]" style={{ color: "#6b7280" }}>{cat}</span>
-            <span className="text-[10px] font-bold" style={{ color: "#1a3a5c" }}>{fmtM(amt)}</span>
+            <span className="text-[10px] font-bold" style={{ color: "#0D2A21" }}>{fmtM(amt)}</span>
           </div>
         ))}
       </div>
@@ -50,7 +50,7 @@ function BudgetBar({ line, max }: { line: BudgetLine; max: number }) {
         <div className="flex items-start gap-2 min-w-0 flex-1">
           <span className="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-[3px]" style={{ background: color }} />
           <div className="min-w-0">
-            <p className="text-sm font-semibold leading-tight" style={{ color: "#1a3a5c" }}>{line.dept}</p>
+            <p className="text-sm font-semibold leading-tight" style={{ color: "#0D2A21" }}>{line.dept}</p>
             <p className="text-[10px]" style={{ color: "#9ca3af" }}>
               {line.category}{line.employees ? ` · ${line.employees.toLocaleString()} staff` : ""}
               {line.note ? <span className="text-amber-600 font-semibold ml-1">· {line.note}</span> : null}
@@ -58,7 +58,7 @@ function BudgetBar({ line, max }: { line: BudgetLine; max: number }) {
           </div>
         </div>
         <div className="text-right flex-shrink-0">
-          <p className="text-base font-bold" style={{ fontFamily: "var(--font-playfair), serif", color: "#1a3a5c" }}>{fmtM(line.amount)}</p>
+          <p className="text-base font-bold" style={{ fontFamily: "var(--font-playfair), serif", color: "#0D2A21" }}>{fmtM(line.amount)}</p>
           <span className={`text-[10px] font-bold ${up ? "text-emerald-600" : line.change < 0 ? "text-red-500" : "text-[#9ca3af]"}`}>
             {up ? "▲" : line.change < 0 ? "▼" : "–"} {Math.abs(line.change).toFixed(1)}%
           </span>
@@ -78,7 +78,7 @@ function BudgetBar({ line, max }: { line: BudgetLine; max: number }) {
 type MainTab = "county" | "city" | "infrastructure" | "discretionary" | "tirz";
 
 const TAB_META: Record<MainTab, { label: string; subtitle: string; gradient: string; chips: { label: string; value: string }[] }> = {
-  county:         { label: "Harris County", subtitle: "FY2027 Proposed Budget — $3B+, 5th consecutive deficit",  gradient: "linear-gradient(135deg,#0f2540 0%,#1a3a5c 100%)", chips: [{ label: "Total Budget", value: "$3B+" }, { label: "Deficit", value: "$129M–$287M" }, { label: "Deficit Year", value: "5th in a row" }] },
+  county:         { label: "Harris County", subtitle: "FY2027 Proposed Budget — $3B+, 5th consecutive deficit",  gradient: "linear-gradient(135deg,#0A1F18 0%,#0D2A21 100%)", chips: [{ label: "Total Budget", value: "$3B+" }, { label: "Deficit", value: "$129M–$287M" }, { label: "Deficit Year", value: "5th in a row" }] },
   city:           { label: "City of Houston", subtitle: "FY2027 Budget — $7.5B total, $3.1B General Fund, passed 15–1", gradient: "linear-gradient(135deg,#0c4a6e 0%,#0891b2 100%)", chips: [{ label: "Total", value: "$7.5B" }, { label: "General Fund", value: "$3.1B" }, { label: "Gap closed", value: "$180M" }] },
   infrastructure: { label: "Infrastructure", subtitle: "Federal & state infrastructure funding flowing to Harris County", gradient: "linear-gradient(135deg,#064e3b 0%,#059669 100%)", chips: [] },
   discretionary:  { label: "Discretionary",  subtitle: "City Council member discretionary funds by district",          gradient: "linear-gradient(135deg,#431407 0%,#b45309 100%)", chips: [] },
@@ -173,7 +173,7 @@ function PublicMoneyInner() {
               <div className="w-1 rounded-full flex-shrink-0" style={{ background: "#dc2626" }} />
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "#dc2626" }}>FY2027 Gap</p>
-                <p className="text-sm font-semibold" style={{ color: "#1a3a5c" }}>
+                <p className="text-sm font-semibold" style={{ color: "#0D2A21" }}>
                   $129M–$287M shortfall to close before Oct. 1. Fifth consecutive deficit. Law enforcement raises are the single biggest driver (+$73M).
                   State cap prevents revenue growth. Commissioner Tom Ramsey: <em>"Thank God for Harris County. Otherwise we'd have a problem in the state of Texas."</em>
                 </p>
@@ -211,7 +211,7 @@ function PublicMoneyInner() {
               ].map(s => (
                 <div key={s.label} className="rounded-2xl bg-white ring-1 ring-black/7 p-4 text-center">
                   <p className="text-3xl font-black mb-1" style={{ color: s.color, fontFamily: "var(--font-playfair), serif" }}>{s.stat}</p>
-                  <p className="text-xs font-bold mb-0.5" style={{ color: "#1a3a5c" }}>{s.label}</p>
+                  <p className="text-xs font-bold mb-0.5" style={{ color: "#0D2A21" }}>{s.label}</p>
                   <p className="text-[10px]" style={{ color: "#9ca3af" }}>{s.detail}</p>
                 </div>
               ))}
@@ -272,7 +272,7 @@ function PublicMoneyInner() {
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div className="min-w-0">
                       <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: "#9ca3af" }}>TIRZ {tirz.id} · {tirz.neighborhood}</p>
-                      <p className="font-bold text-sm leading-tight" style={{ fontFamily: "var(--font-playfair), serif", color: "#1a3a5c" }}>{tirz.name}</p>
+                      <p className="font-bold text-sm leading-tight" style={{ fontFamily: "var(--font-playfair), serif", color: "#0D2A21" }}>{tirz.name}</p>
                     </div>
                     <div className="text-right flex-shrink-0">
                       <p className="text-lg font-black" style={{ color: "#7c3aed", fontFamily: "var(--font-playfair), serif" }}>${tirz.totalRevenueM}M</p>
@@ -286,7 +286,7 @@ function PublicMoneyInner() {
                         <span><span className="font-bold" style={{ color: "#9ca3af" }}>Created</span> {tirz.created}</span>
                         <span><span className="font-bold" style={{ color: "#9ca3af" }}>Expires</span> {tirz.expires}</span>
                       </div>
-                      <p className="text-[11px]"><span className="font-bold" style={{ color: "#1a3a5c" }}>Key project: </span><span style={{ color: "#6b7280" }}>{tirz.keyProject}</span></p>
+                      <p className="text-[11px]"><span className="font-bold" style={{ color: "#0D2A21" }}>Key project: </span><span style={{ color: "#6b7280" }}>{tirz.keyProject}</span></p>
                       <div>
                         <p className="text-[10px] font-bold uppercase tracking-[0.12em] mb-1" style={{ color: "#9ca3af" }}>Board appointers</p>
                         <div className="flex flex-wrap gap-1">

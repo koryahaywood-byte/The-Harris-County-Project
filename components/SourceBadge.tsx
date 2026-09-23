@@ -10,7 +10,7 @@ export interface Source {
 }
 
 const TYPE_CONFIG: Record<SourceType, { icon: string; color: string; bg: string }> = {
-  news:       { icon: "N", color: "#1a3a5c", bg: "#e0eaf4" },
+  news:       { icon: "N", color: "#0D2A21", bg: "#e0eaf4" },
   government: { icon: "G", color: "#1a5c3a", bg: "#e0f4ea" },
   api:        { icon: "A", color: "#5c3a1a", bg: "#f4ede0" },
   court:      { icon: "C", color: "#5c1a3a", bg: "#f4e0ea" },

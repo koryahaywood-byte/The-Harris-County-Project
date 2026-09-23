@@ -1,18 +1,25 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import MyBallotClient from "./MyBallotClient";
 import { SITE_URL } from "@/lib/site";
+import { getAllRaces, toLite } from "@/lib/races";
 
 export const metadata: Metadata = {
-  title: "My Ballot · The Harris County Project",
+  title: "Your ballot · The Harris County Project",
   description:
-    "Type your address, get your exact November 2026 ballot: every race from U.S. Senate to Justice of the Peace, with competitiveness ratings and money. Print it and take it to the booth.",
+    "Enter your address and get your November 3, 2026 ballot: every race from U.S. Senate to justice of the peace, with the desk's rating and each candidate's cash. Print it and take it to the booth.",
   openGraph: {
-    title: "My Ballot — every race at your address, November 3, 2026",
-    description: "Your personalized Harris County ballot with ratings, money, and stakes. Printable.",
-    images: [`${SITE_URL}/api/og?s=${encodeURIComponent("Your ballot|Nov 3, 2026")}&badge=${encodeURIComponent("MY BALLOT")}`],
+    title: "Your Harris County ballot, race by race",
+    description: "Every race at your address, rated, with money and the last result. Printable.",
+    images: [`${SITE_URL}/api/og?${new URLSearchParams({ tool: "Your ballot", section: "November 3, 2026", desc: "Every race at your address, rated, with the money and the last result. Printable for the booth." })}`],
   },
 };
 
 export default function MyBallotPage() {
-  return <MyBallotClient />;
+  const races = getAllRaces().map(toLite);
+  return (
+    <Suspense fallback={null}>
+      <MyBallotClient races={races} />
+    </Suspense>
+  );
 }

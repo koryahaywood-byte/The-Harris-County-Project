@@ -81,7 +81,7 @@ export async function GET(req: NextRequest) {
         style={{
           width: "100%", height: "100%", display: "flex", flexDirection: "column",
           justifyContent: "space-between",
-          background: "linear-gradient(135deg, #1a3a5c 0%, #0f2540 55%, #1a3a5c 100%)",
+          background: "linear-gradient(135deg, #0D2A21 0%, #0A1F18 55%, #0D2A21 100%)",
           padding: "56px 72px", position: "relative",
         }}
       >

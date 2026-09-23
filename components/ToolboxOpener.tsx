@@ -141,11 +141,11 @@ export default function ToolboxOpener() {
             <defs>
               <filter id="tb-drop" x="-15%" y="-15%" width="130%" height="160%">
                 <feDropShadow dx="0" dy="8" stdDeviation="12"
-                  floodColor="#1a3a5c" floodOpacity="0.28"/>
+                  floodColor="#0D2A21" floodOpacity="0.28"/>
               </filter>
               <filter id="tb-lid-drop" x="-15%" y="-60%" width="130%" height="220%">
                 <feDropShadow dx="0" dy="4" stdDeviation="6"
-                  floodColor="#1a3a5c" floodOpacity="0.35"/>
+                  floodColor="#0D2A21" floodOpacity="0.35"/>
               </filter>
               <radialGradient id="tb-interior" cx="50%" cy="0%" r="100%">
                 <stop offset="0%"   stopColor="#fdf8f0"/>
@@ -153,7 +153,7 @@ export default function ToolboxOpener() {
               </radialGradient>
               <linearGradient id="tb-body-grad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%"   stopColor="#22507a"/>
-                <stop offset="100%" stopColor="#1a3a5c"/>
+                <stop offset="100%" stopColor="#0D2A21"/>
               </linearGradient>
               <linearGradient id="tb-lid-grad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%"   stopColor="#26598a"/>
@@ -228,9 +228,9 @@ export default function ToolboxOpener() {
             {/* ── LATCH / CLASP ── */}
             <rect x="124" y="104" width="92" height="30" rx="10" fill="#2563a8"/>
             <rect x="136" y="112" width="68" height="14" rx="5"
-              fill="#1a3a5c" opacity="0.55"/>
+              fill="#0D2A21" opacity="0.55"/>
             <circle cx="170" cy="119" r="5"   fill="#2563a8"/>
-            <circle cx="170" cy="119" r="2.2" fill="#1a3a5c" opacity="0.5"/>
+            <circle cx="170" cy="119" r="2.2" fill="#0D2A21" opacity="0.5"/>
 
             {/* ── 5 TOOL ICONS. Fall to shelf ── */}
             {SHELF.map((s, i) => (

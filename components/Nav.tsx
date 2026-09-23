@@ -1,188 +1,114 @@
 "use client";
+
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import SeasonRail from "@/components/SeasonRail";
+
+// Masthead. One navigation for the whole site, organized by the questions
+// people bring: what's on the ballot, what's on MY ballot, who has the money,
+// how places vote, who holds office, what's coming up.
+
+const SECTIONS: { href: string; label: string; match: string[] }[] = [
+  { href: "/races",                    label: "Races",       match: ["/races", "/tools/ballot-2026", "/tools/tx-house", "/tools/judges"] },
+  { href: "/tools/my-ballot",          label: "Your ballot", match: ["/tools/my-ballot", "/my-officials"] },
+  { href: "/tools/where-is-the-dough", label: "Money",       match: ["/tools/where-is-the-dough", "/tools/donor", "/tools/pac-tracker", "/tools/public-money"] },
+  { href: "/tools/heat-check",         label: "Maps",        match: ["/tools/heat-check", "/tools/districts", "/tools/precinct-lookup", "/tools/field-sweep", "/tools/opportunity-map", "/tools/early-vote"] },
+  { href: "/politicians",              label: "Officials",   match: ["/politicians", "/compare"] },
+  { href: "/tools/civic-calendar",     label: "Calendar",    match: ["/tools/civic-calendar", "/tools/campaign-trail"] },
+];
 
 export default function Nav() {
-  const [open, setOpen]       = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const pathname = usePathname();
-  const isToolPage =
-    pathname.startsWith("/tools/") ||
-    pathname.startsWith("/contact") ||
-    pathname.startsWith("/blogs") ||
-    pathname.startsWith("/politicians");
-
-  // Only these tools pull live data. Everything else is static
-  const LIVE_TOOLS = [
-    "/tools/heat-check",
-    "/tools/precinct-lookup",
-    "/tools/voter-search",
-    "/tools/where-is-the-dough",
-    "/tools/bill-tracker",
-    "/tools/congressional-bills",
-    "/tools/districts",
-    "/tools/city-hall",
-    "/tools/pac-tracker",
-    "/tools/ballot-2026",
-    "/tools/my-ballot",
-    "/tools/campaign-trail",
-  ];
-  const isLive = LIVE_TOOLS.some((t) => pathname.startsWith(t));
-
+  const pathname = usePathname() ?? "/";
+  const [open, setOpen] = useState(false);
+  useEffect(() => { setOpen(false); }, [pathname]);
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
 
-  /* ── Inner pages: liquid glass bar ─────────────────────────────────────── */
-  if (isToolPage) {
-    return (
-      <header
-        className="sticky top-0 z-40"
-        style={{
-          background: "rgba(26,58,92,0.75)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          borderBottom: "1px solid rgba(255,255,255,0.10)",
-          boxShadow: "0 1px 0 rgba(255,255,255,0.06) inset, 0 4px 24px rgba(26,58,92,0.22)",
-        }}
-      >
-        <div className="max-w-7xl mx-auto px-5 py-3 flex items-center gap-3">
-          <Link
-            href="/"
-            className="group flex items-center gap-1.5 text-white/50 hover:text-white/90 text-xs font-semibold transition-colors duration-300"
-          >
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5"
-              className="group-hover:-translate-x-0.5 transition-transform duration-300">
-              <path d="M7.5 2L3.5 6l4 4"/>
-            </svg>
-            Toolbox
-          </Link>
-          <span className="text-white/20 text-xs">/</span>
-          <span className="text-white/55 text-xs font-medium" style={{ fontFamily: "var(--font-playfair), serif" }}>
-            The Harris County Project
-          </span>
+  const isActive = (s: typeof SECTIONS[number]) => s.match.some(m => pathname === m || pathname.startsWith(m + "/") || pathname.startsWith(m));
+  if (pathname.startsWith("/embed")) return null;
 
-          {/* Live / Static indicator */}
-          <span className="ml-auto flex items-center gap-1.5">
-            {isLive ? (
-              <>
-                <span className="relative flex h-2 w-2">
-                  <span className="alive-halo absolute inline-flex h-full w-full rounded-full bg-emerald-400" />
-                  <span className="alive-pulse relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-                </span>
-                <span className="text-[10px] font-semibold text-white/35 uppercase tracking-[0.18em]">Live</span>
-              </>
-            ) : (
-              <>
-                <span className="relative flex h-2 w-2">
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-white/20" />
-                </span>
-                <span className="text-[10px] font-semibold text-white/25 uppercase tracking-[0.18em]">Static</span>
-              </>
-            )}
-          </span>
-        </div>
-      </header>
-    );
-  }
-
-  /* ── Home: floating pill nav ────────────────────────────────────────────── */
   return (
     <>
-      <header className="fixed top-4 left-0 right-0 z-50 px-4 flex justify-center pointer-events-none">
-        <div className="pointer-events-auto w-full max-w-2xl">
-          <div
-            className="flex items-center justify-between text-white rounded-full px-5 py-3 ring-1 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"
-            style={{
-              background: scrolled
-                ? "rgba(26,58,92,0.92)"
-                : "rgba(26,58,92,0.78)",
-              backdropFilter: "blur(24px)",
-              WebkitBackdropFilter: "blur(24px)",
-              boxShadow: scrolled
-                ? "0 8px 40px rgba(26,58,92,0.45), 0 1px 0 rgba(255,255,255,0.12) inset"
-                : "0 4px 32px rgba(26,58,92,0.25), 0 1px 0 rgba(255,255,255,0.08) inset",
-              border: scrolled
-                ? "1px solid rgba(255,255,255,0.14)"
-                : "1px solid rgba(255,255,255,0.09)",
-            }}
-          >
-            <Link
-              href="/"
-              className="text-sm font-bold tracking-wide leading-none hover:text-sky-200 transition-colors duration-500"
-              style={{ fontFamily: "var(--font-playfair), serif" }}
-            >
+      <SeasonRail />
+      <header className="sticky top-0 z-40 no-print" style={{ background: "rgba(255,255,255,0.94)", backdropFilter: "saturate(1.4) blur(12px)", WebkitBackdropFilter: "saturate(1.4) blur(12px)", borderBottom: "1px solid var(--rule)" }}>
+        <div className="max-w-7xl mx-auto px-4 md:px-6 h-14 flex items-center gap-6">
+          <Link href="/" className="flex items-center gap-2.5 shrink-0" aria-label="The Harris County Project, front page">
+            <Mark />
+            <span className="serif text-[19px] leading-none font-semibold tracking-[-0.01em]" style={{ color: "var(--ink)" }}>
               The Harris County Project
-            </Link>
+            </span>
+          </Link>
 
-            <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-              {[
-                { href: "/#toolbox", label: "Toolbox" },
-                { href: "/politicians", label: "Officials" },
-                { href: "/blogs", label: "Media" },
-                { href: "/about", label: "About" },
-                { href: "/contact", label: "Contact" },
-              ].map(({ href, label }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className="text-white/70 hover:text-white transition-colors duration-300 relative group"
-                >
-                  {label}
-                  <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-sky-300 group-hover:w-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]" />
+          <nav className="hidden lg:flex items-center gap-1 ml-2" aria-label="Sections">
+            {SECTIONS.map(s => {
+              const active = isActive(s);
+              return (
+                <Link key={s.href} href={s.href}
+                  aria-current={active ? "page" : undefined}
+                  className="relative px-3 py-2 text-[14px] font-semibold rounded-md transition-colors"
+                  style={{ color: active ? "var(--ink)" : "#4A524D" }}>
+                  {s.label}
+                  <span className="absolute left-3 right-3 -bottom-[9px] h-[3px] rounded-full transition-opacity"
+                    style={{ background: "var(--gold)", opacity: active ? 1 : 0 }} aria-hidden />
                 </Link>
-              ))}
-            </nav>
+              );
+            })}
+          </nav>
 
-            <button
-              className="md:hidden text-white/80 hover:text-white p-1 relative w-7 h-7 flex flex-col justify-center items-center gap-1.5 transition-colors"
-              onClick={() => setOpen(!open)}
-              aria-label="Toggle menu"
-            >
-              <span className={`block h-0.5 bg-current w-5 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] origin-center ${open ? "rotate-45 translate-y-2" : ""}`} />
-              <span className={`block h-0.5 bg-current w-5 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] ${open ? "opacity-0 scale-x-0" : ""}`} />
-              <span className={`block h-0.5 bg-current w-5 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] origin-center ${open ? "-rotate-45 -translate-y-2" : ""}`} />
+          <div className="ml-auto flex items-center gap-2">
+            <Link href="/tools" className="hidden md:inline-flex items-center gap-1.5 text-[13px] font-semibold px-3 py-1.5 rounded-md border transition-colors hover:bg-[var(--paper)]"
+              style={{ borderColor: "var(--rule)", color: "var(--ink)" }}>
+              <GridIcon /> All tools
+            </Link>
+            <button className="lg:hidden inline-flex items-center justify-center w-10 h-10 -mr-2 rounded-md"
+              aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen(o => !o)}>
+              <span className="relative block w-5 h-3">
+                <span className="absolute left-0 right-0 h-[2px] bg-[var(--ink)] transition-transform" style={{ top: 0, transform: open ? "translateY(5px) rotate(45deg)" : "none" }} />
+                <span className="absolute left-0 right-0 h-[2px] bg-[var(--ink)] transition-transform" style={{ bottom: 0, transform: open ? "translateY(-5px) rotate(-45deg)" : "none" }} />
+              </span>
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile overlay */}
-      <div
-        className={`fixed inset-0 z-40 flex flex-col items-center justify-center gap-7 text-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-          open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
-        style={{ background: "rgba(10,24,48,0.97)", backdropFilter: "blur(24px)" }}
-        onClick={() => setOpen(false)}
-      >
-        {[
-          { href: "/#toolbox", label: "Toolbox",  delay: "0.08s" },
-          { href: "/politicians", label: "Officials", delay: "0.14s" },
-          { href: "/blogs",    label: "Media",     delay: "0.20s" },
-          { href: "/about",   label: "About",     delay: "0.26s" },
-          { href: "/contact",  label: "Contact",   delay: "0.32s" },
-        ].map(({ href, label, delay }) => (
-          <Link
-            key={href}
-            href={href}
-            onClick={() => setOpen(false)}
-            className="text-3xl font-bold text-white/90 hover:text-sky-300 transition-all duration-500"
-            style={{
-              fontFamily: "var(--font-playfair), serif",
-              opacity: open ? 1 : 0,
-              transform: open ? "translateY(0)" : "translateY(16px)",
-              transition: `opacity 0.45s ${delay} ease, transform 0.45s ${delay} cubic-bezier(0.32,0.72,0,1), color 0.3s ease`,
-            }}
-          >
-            {label}
-          </Link>
-        ))}
-      </div>
-
-      <div className="h-16" />
+      {open && (
+        <div className="fixed inset-0 top-[92px] z-30 lg:hidden overflow-y-auto" style={{ background: "var(--surface)" }}>
+          <nav className="px-4 py-2" aria-label="Sections">
+            {SECTIONS.map(s => (
+              <Link key={s.href} href={s.href} className="flex items-center justify-between py-4 border-b text-[20px] serif font-semibold"
+                style={{ borderColor: "var(--rule)", color: "var(--ink)" }}>
+                {s.label}
+                <span aria-hidden style={{ color: isActive(s) ? "var(--gold-ink)" : "#9AA19C" }}>→</span>
+              </Link>
+            ))}
+            <Link href="/tools" className="flex items-center justify-between py-4 text-[16px] font-semibold" style={{ color: "var(--brand)" }}>
+              Every tool, A to Z <span aria-hidden>→</span>
+            </Link>
+          </nav>
+        </div>
+      )}
     </>
+  );
+}
+
+/* The mark: a ballot square, half inked. */
+function Mark() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden>
+      <rect x="1" y="1" width="20" height="20" rx="3" fill="var(--board)" />
+      <path d="M6 11.5l3.2 3.2L16 7.8" fill="none" stroke="var(--gold)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function GridIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 13 13" aria-hidden fill="currentColor">
+      <rect x="0" y="0" width="5.5" height="5.5" rx="1" /><rect x="7.5" y="0" width="5.5" height="5.5" rx="1" />
+      <rect x="0" y="7.5" width="5.5" height="5.5" rx="1" /><rect x="7.5" y="7.5" width="5.5" height="5.5" rx="1" />
+    </svg>
   );
 }

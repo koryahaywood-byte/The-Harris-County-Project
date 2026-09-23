@@ -103,7 +103,7 @@ export default function ThreadsFeed({ posts, footer }: { posts: ThreadsPost[]; f
           Written by our newsroom in feed format. Not live social posts. Follow the linked accounts for their actual feeds.
         </p>
       </div>
-      <div className="rounded-3xl bg-white ring-1 ring-black/8 overflow-hidden shadow-[0_1px_8px_rgba(26,58,92,0.06)]">
+      <div className="rounded-3xl bg-white ring-1 ring-black/8 overflow-hidden shadow-[0_1px_8px_rgba(13,42,33,0.06)]">
         {posts.map((post, i) => (
           <PostCard key={i} post={post} isLast={i === posts.length - 1} />
         ))}

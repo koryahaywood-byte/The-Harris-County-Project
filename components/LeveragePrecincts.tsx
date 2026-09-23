@@ -51,7 +51,7 @@ export default function LeveragePrecincts({ districtLabel, precincts }: {
   return (
     <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px] mt-4">
       <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-5">
-        <h3 className="text-lg font-bold mb-1" style={{ fontFamily: "var(--font-playfair), serif", color: "#1a3a5c" }}>
+        <h3 className="text-lg font-bold mb-1" style={{ fontFamily: "var(--font-playfair), serif", color: "#0D2A21" }}>
           The {top.length} precincts that decide {districtLabel}
         </h3>
         <p className="text-[11px] mb-4" style={{ color: "#6b7280" }}>

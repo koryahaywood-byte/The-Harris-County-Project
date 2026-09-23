@@ -495,11 +495,11 @@ function Ballot2026Inner() {
   }, [rows]);
 
   return (
-    <div style={{ background: "#f2f5f9", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
+    <div style={{ background: "#F1F2EE", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
 
       {/* Hero. Synex-style light, topo terrain */}
       <section className="relative overflow-hidden topo-hero"
-        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 60%,#f2f5f9 100%)", paddingTop: "3.75rem", paddingBottom: "3rem" }}>
+        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#F1F2EE 60%,#F1F2EE 100%)", paddingTop: "3.75rem", paddingBottom: "3rem" }}>
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(37,99,168,0.10),transparent_70%)]" />
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_40%_45%_at_90%_75%,rgba(52,160,110,0.04),transparent_70%)]" />
         <div className="relative max-w-5xl mx-auto px-5">
@@ -508,7 +508,7 @@ function Ballot2026Inner() {
             November 2026
           </p>
           <h1 className="text-4xl md:text-5xl font-bold mb-2" style={{ fontFamily: "var(--font-playfair,serif)" }}>
-            <span style={{ color: "#aab4c0" }}>The 2026 </span><span style={{ color: "#0f2540" }}>Ballot</span>
+            <span style={{ color: "#aab4c0" }}>The 2026 </span><span style={{ color: "#0A1F18" }}>Ballot</span>
           </h1>
           <p className="text-sm mb-4" style={{ color: "#5b6470" }}>
             {stats.contested} contested · {stats.tossups} toss-ups · {stats.competitive} competitive · {stats.womenCount} women candidates · Harris County
@@ -560,7 +560,7 @@ function Ballot2026Inner() {
             onChange={e => setSearch(e.target.value)}
             placeholder="Search candidate or office…"
             className="w-full px-4 py-2 rounded-full text-sm border outline-none transition-all"
-            style={{ background: "#fff", borderColor: search ? "#1a3a5c" : "#e5e7eb", color: "#1a3a5c", paddingRight: search ? "2.5rem" : undefined }}
+            style={{ background: "#fff", borderColor: search ? "#0D2A21" : "#e5e7eb", color: "#0D2A21", paddingRight: search ? "2.5rem" : undefined }}
           />
           {search && (
             <button onClick={() => setSearch("")}
@@ -584,7 +584,7 @@ function Ballot2026Inner() {
             <button key={g} onClick={() => setFilterGroup(g)}
               className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-all"
               style={filterGroup === g
-                ? { background: "#1a3a5c", color: "#fff", borderColor: "#1a3a5c" }
+                ? { background: "#0D2A21", color: "#fff", borderColor: "#0D2A21" }
                 : { background: "#fff", color: "#374151", borderColor: "#e5e7eb" }}>
               {label}
             </button>
@@ -616,7 +616,7 @@ function Ballot2026Inner() {
             {search && (
               <button onClick={() => setSearch("")}
                 className="mt-3 text-xs font-semibold hover:underline"
-                style={{ color: "#1a3a5c" }}>
+                style={{ color: "#0D2A21" }}>
                 Clear search
               </button>
             )}
@@ -653,7 +653,7 @@ function Ballot2026Inner() {
                   </span>
                 )}
                 {grp === "statelegis" && (
-                  <Link href="/tools/tx-house" className="text-[9px] font-bold px-2 py-0.5 rounded-full hover:opacity-80" style={{ background: "#1a3a5c", color: "#fff" }}>
+                  <Link href="/tools/tx-house" className="text-[9px] font-bold px-2 py-0.5 rounded-full hover:opacity-80" style={{ background: "#0D2A21", color: "#fff" }}>
                     House board →
                   </Link>
                 )}
@@ -682,7 +682,7 @@ function Ballot2026Inner() {
                         {/* Office header */}
                         <div className="flex items-center justify-between px-4 py-2 border-b" style={{ borderColor: "#f3f4f6" }}>
                           <div className="flex items-center gap-2 min-w-0">
-                            <span className="text-[11px] font-bold truncate" style={{ color: "#1a3a5c" }}>{r.office}</span>
+                            <span className="text-[11px] font-bold truncate" style={{ color: "#0D2A21" }}>{r.office}</span>
                             {r.lean && (() => {
                               const pos = LEAN_LANE[r.lean] ?? 50;
                               const isSafeR = pos >= 80;

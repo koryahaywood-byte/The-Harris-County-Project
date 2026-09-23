@@ -165,9 +165,9 @@ export default function DistrictsMap({
           const active = inDistrict(prec);
 
           const rows: string[] = [];
-          rows.push(`<div style="font-weight:700;font-size:13px;margin-bottom:5px;border-bottom:1px solid rgba(26,58,92,0.12);padding-bottom:4px">Precinct ${parseInt(prec, 10) || prec}</div>`);
+          rows.push(`<div style="font-weight:700;font-size:13px;margin-bottom:5px;border-bottom:1px solid rgba(13,42,33,0.12);padding-bottom:4px">Precinct ${parseInt(prec, 10) || prec}</div>`);
           const tag = (label: string, val?: string) => val
-            ? `<span style="background:rgba(26,58,92,0.06);border-radius:4px;padding:1px 6px;font-size:10px;font-weight:600;color:#1a3a5c">${label} ${val}</span>` : "";
+            ? `<span style="background:rgba(13,42,33,0.06);border-radius:4px;padding:1px 6px;font-size:10px;font-weight:600;color:#0D2A21">${label} ${val}</span>` : "";
           rows.push(`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px">${tag("CD", cw.cd)}${tag("SD", cw.sd)}${tag("HD", cw.hd)}${tag("JP", cw.jp)}${cw.council ? tag("Council", cw.council) : ""}</div>`);
 
           if (layer === "results" && results?.byPrecinct[prec]) {
@@ -186,7 +186,7 @@ export default function DistrictsMap({
           }
 
           lyr.bindTooltip(
-            `<div style="font-family:system-ui,sans-serif;font-size:12px;color:#1a3a5c;min-width:170px">${rows.join("")}</div>`,
+            `<div style="font-family:system-ui,sans-serif;font-size:12px;color:#0D2A21;min-width:170px">${rows.join("")}</div>`,
             { sticky: true, offset: [12, 0] }
           );
 
@@ -212,7 +212,7 @@ export default function DistrictsMap({
           key={`wash_${fitKey}`}
           data={activeFC}
           interactive={false}
-          style={{ fill: true, fillColor: "#1a3a5c", fillOpacity: 0.14, stroke: false }}
+          style={{ fill: true, fillColor: "#0D2A21", fillOpacity: 0.14, stroke: false }}
         />
       )}
     </MapContainer>

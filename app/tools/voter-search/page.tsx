@@ -287,7 +287,7 @@ export default function VoterSearch() {
               <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <div>
-              <p className="text-xs font-bold mb-0.5" style={{ color: "#1a3a5c" }}>Voter roll pending import</p>
+              <p className="text-xs font-bold mb-0.5" style={{ color: "#0D2A21" }}>Voter roll pending import</p>
               <p className="text-xs leading-relaxed" style={{ color: "#6b7280" }}>
                 Harris County voter registration data is not yet loaded. The tool is ready. Once the roll is imported, searches go live instantly.
               </p>
@@ -447,7 +447,7 @@ export default function VoterSearch() {
 
                   {/* Voter header */}
                   <div className="px-6 py-5 border-b border-black/8"
-                    style={{ background: "linear-gradient(135deg, #1a3a5c 0%, #2563a8 100%)" }}>
+                    style={{ background: "linear-gradient(135deg, #0D2A21 0%, #2563a8 100%)" }}>
                     <p className="text-[9px] font-black uppercase tracking-[0.22em] mb-1 text-white/50">
                       Voter Record
                     </p>

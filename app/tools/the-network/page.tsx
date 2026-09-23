@@ -76,7 +76,7 @@ function TheNetworkInner() {
   return (
     <div style={{ background: "var(--background)", minHeight: "100vh" }}>
       {/* Hero */}
-      <section className="relative overflow-hidden" style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#7c3aed 100%)", minHeight: 200 }}>
+      <section className="relative overflow-hidden" style={{ background: "linear-gradient(135deg,#0D2A21 0%,#7c3aed 100%)", minHeight: 200 }}>
         <div className="relative max-w-5xl mx-auto px-5 pt-10 pb-6">
           <Link href="/" className="text-[10px] font-bold uppercase tracking-[0.2em] mb-3 block" style={{ color: "rgba(255,255,255,0.45)" }}>← Harris County Project</Link>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-1" style={{ fontFamily: "var(--font-playfair), serif" }}>The Network</h1>
@@ -129,10 +129,10 @@ function TheNetworkInner() {
                 <div key={candidate} className="rounded-2xl bg-white ring-1 ring-black/7 p-5">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h3 className="font-bold text-lg leading-tight" style={{ fontFamily: "var(--font-playfair), serif", color: "#1a3a5c" }}>{candidate}</h3>
+                      <h3 className="font-bold text-lg leading-tight" style={{ fontFamily: "var(--font-playfair), serif", color: "#0D2A21" }}>{candidate}</h3>
                       <p className="text-[11px] mt-0.5" style={{ color: "#6b7280" }}>{endorsements[0].race}</p>
                     </div>
-                    <span className="text-2xl font-black" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair), serif" }}>{endorsements.length}</span>
+                    <span className="text-2xl font-black" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair), serif" }}>{endorsements.length}</span>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {endorsements.map(e => {
@@ -181,7 +181,7 @@ function TheNetworkInner() {
               <div className="flex gap-1 bg-white rounded-full border border-[#e5e7eb] overflow-hidden">
                 {(["all", "D", "R"] as const).map(p => (
                   <button key={p} onClick={() => setCParty(p)}
-                    className={`px-3 py-1 text-[11px] font-bold cursor-pointer transition-colors ${cParty === p ? "bg-[#1a3a5c] text-white" : "text-[#374151]"}`}>
+                    className={`px-3 py-1 text-[11px] font-bold cursor-pointer transition-colors ${cParty === p ? "bg-[#0D2A21] text-white" : "text-[#374151]"}`}>
                     {p === "all" ? "Both" : p}
                   </button>
                 ))}
@@ -200,7 +200,7 @@ function TheNetworkInner() {
                   <div key={consultant} className="rounded-2xl bg-white ring-1 ring-black/7 p-5">
                     <div className="flex items-start justify-between gap-3 mb-4">
                       <div>
-                        <h3 className="font-bold text-base leading-tight" style={{ fontFamily: "var(--font-playfair), serif", color: "#1a3a5c" }}>{firmName}</h3>
+                        <h3 className="font-bold text-base leading-tight" style={{ fontFamily: "var(--font-playfair), serif", color: "#0D2A21" }}>{firmName}</h3>
                         {firmName !== consultant && <p className="text-[11px]" style={{ color: "#6b7280" }}>{consultant}</p>}
                         <div className="flex gap-1 mt-1">
                           {parties.map(p => (
@@ -210,7 +210,7 @@ function TheNetworkInner() {
                           ))}
                         </div>
                       </div>
-                      <span className="text-2xl font-black flex-shrink-0" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair), serif" }}>{rels.length}</span>
+                      <span className="text-2xl font-black flex-shrink-0" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair), serif" }}>{rels.length}</span>
                     </div>
                     <div className="space-y-2">
                       {rels.map(r => {
@@ -218,7 +218,7 @@ function TheNetworkInner() {
                         return (
                           <div key={r.id} className="flex items-center gap-3">
                             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 w-28 text-center" style={{ background: rc.bg, color: rc.text }}>{r.role}</span>
-                            <span className="text-[11px] font-semibold" style={{ color: "#1a3a5c" }}>{r.client}</span>
+                            <span className="text-[11px] font-semibold" style={{ color: "#0D2A21" }}>{r.client}</span>
                             <span className="text-[10px]" style={{ color: "#9ca3af" }}>· {r.race.replace("U.S. Senate 2026 (D Primary)", "Senate '26 D") .replace("Harris County Judge ", "HC Judge ").replace("County Commissioner Pct 2", "CC Pct 2")}</span>
                             <span className="text-[9px] font-bold ml-auto flex-shrink-0" style={{ color: "#9ca3af" }}>{r.year}</span>
                           </div>
@@ -240,7 +240,7 @@ function TheNetworkInner() {
           <div>
             <p className="text-sm mb-6 leading-relaxed" style={{ color: "#6b7280" }}>
               Major PAC and organizational donors to Harris County-area candidates. Sourced from TEC filings and FEC records.
-              <Link href="/tools/where-is-the-dough" className="ml-2 font-bold hover:underline" style={{ color: "#1a3a5c" }}>See individual candidate finance →</Link>
+              <Link href="/tools/where-is-the-dough" className="ml-2 font-bold hover:underline" style={{ color: "#0D2A21" }}>See individual candidate finance →</Link>
             </p>
             <div className="space-y-4">
               {DONORS.map((d, i) => (
@@ -249,16 +249,16 @@ function TheNetworkInner() {
                     <div className="flex items-center gap-3">
                       <span className="text-sm font-black w-6 flex-shrink-0" style={{ color: "#9ca3af" }}>#{i + 1}</span>
                       <div>
-                        <h3 className="font-bold text-base" style={{ fontFamily: "var(--font-playfair), serif", color: "#1a3a5c" }}>{d.donor}</h3>
+                        <h3 className="font-bold text-base" style={{ fontFamily: "var(--font-playfair), serif", color: "#0D2A21" }}>{d.donor}</h3>
                         <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: "#f3f4f6", color: "#6b7280" }}>{d.type}</span>
                       </div>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <p className="text-xl font-black" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair), serif" }}>${d.totalM.toFixed(1)}M</p>
+                      <p className="text-xl font-black" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair), serif" }}>${d.totalM.toFixed(1)}M</p>
                       <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: "#9ca3af" }}>Total contributions</p>
                     </div>
                   </div>
-                  <div className="h-1 rounded-full mb-3" style={{ background: `linear-gradient(90deg, #1a3a5c ${Math.min(100, (d.totalM / DONORS[0].totalM) * 100).toFixed(0)}%, #e5e7eb 0%)` }} />
+                  <div className="h-1 rounded-full mb-3" style={{ background: `linear-gradient(90deg, #0D2A21 ${Math.min(100, (d.totalM / DONORS[0].totalM) * 100).toFixed(0)}%, #e5e7eb 0%)` }} />
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-[0.12em] mb-1.5" style={{ color: "#9ca3af" }}>Top recipients</p>
                     <div className="flex flex-wrap gap-1.5">

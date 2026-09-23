@@ -1,692 +1,298 @@
 import Link from "next/link";
-import { SITE_HOST } from "@/lib/site";
-import ScrollReveal from "@/components/ScrollReveal";
-import DashboardWidget from "@/components/DashboardWidget";
-import ToolboxOpener from "@/components/ToolboxOpener";
-import { getHeroStats } from "@/lib/hero-stats";
+import { Suspense } from "react";
+import { getAllRaces, competitiveRaces, tally, toLite, byCompetitiveness, type Race } from "@/lib/races";
+import { RATING, PARTY, raceHref } from "@/lib/ratings";
+import { DESK_LOG } from "@/lib/desk-log";
+import { EVENTS } from "@/lib/civic-events";
 import { fmt } from "@/lib/campaign-finance";
+import { getDashboardData } from "@/lib/dashboard-data";
+import BallotStrip from "@/components/desk/BallotStrip";
+import RaceTile from "@/components/desk/RaceTile";
+import Face from "@/components/desk/Face";
+import { RatingChip } from "@/components/desk/Rating";
+import { CashDuel, ResultBar } from "@/components/desk/Bars";
+import AddressForm from "@/components/desk/AddressForm";
 
-/* ── Tool catalogue ─────────────────────────────────────────────────────── */
-interface Tool {
-  href: string;
-  name: string;
-  description: string;
-  gradient: string;
-  photo?: string;        // Unsplash URL. Shown behind gradient overlay
-  status?: "coming";
+export const revalidate = 1800;
+
+const WORDS = ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"];
+const spell = (n: number) => WORDS[n] ?? String(n);
+
+function todayCentral(): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
 }
+const fmtDate = (iso: string, opts: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" }) =>
+  new Date(iso + "T12:00:00Z").toLocaleDateString("en-US", { ...opts, timeZone: "UTC" });
 
-// Curated Unsplash photos. Each dark enough to work under a semi-opaque gradient
-const PX = "?auto=format&fit=crop&w=600&q=75";
-const U  = (id: string) => `https://images.unsplash.com/photo-${id}${PX}`;
+export default function FrontPage() {
+  const races = getAllRaces();
+  const t = tally(races);
+  const competitive = competitiveRaces();
+  const tossups = competitive.filter(r => r.lean === "toss-up");
+  const watch = competitive.slice(0, 9);
+  const marquee = ["US-Senate", "HC-Countywide"].map(k => races.find(r => r.key === k)).filter(Boolean) as Race[];
+  const stripRaces = [...races]
+    .sort((a, b) => (RATING[a.lean ?? "toss-up"].order - RATING[b.lean ?? "toss-up"].order) || byCompetitiveness(a, b))
+    .map(r => ({ key: r.key, tag: r.tag, office: r.office, lean: r.lean, d: r.d?.name, r: r.r?.name }));
 
-const ROWS: { section: string; tools: Tool[] }[] = [
-  {
-    section: "Money",
-    tools: [
-      { href: "/tools/where-is-the-dough", name: "Where the Money Resides",
-        description: "Campaign finance for every Harris County elected official. Live from FEC, TEC, and county filings.",
-        gradient: "linear-gradient(135deg,#92400e 0%,#b45309 60%,#d97706 100%)",
-        photo: U("1554672408-b55a5c0cc4b7") },
-      { href: "/tools/public-money", name: "Public Money",
-        description: "County budget, city budget, TIRZ zones, infrastructure funding, and discretionary funds — in one place.",
-        gradient: "linear-gradient(135deg,#0f2540 0%,#1a3a5c 100%)",
-        photo: U("1575470021395-45dca7d3e3d0") },
-      { href: "/tools/donor-search", name: "Who Gave",
-        description: "Search 2,000 top donors by name or employer. See every official they fund and how much.",
-        gradient: "linear-gradient(135deg,#78350f 0%,#d97706 100%)",
-        photo: U("1553729459-efe14ef6055d") },
-      { href: "/tools/tax-receipt", name: "Your Tax Receipt",
-        description: "Enter your home value. Get your property tax bill line by line: HISD, city, county, hospital, flood control.",
-        gradient: "linear-gradient(135deg,#14532d 0%,#0d9c6c 100%)",
-        photo: U("1560518883-ce09059eeffa") },
-    ],
-  },
-  {
-    section: "Elections",
-    tools: [
-      { href: "/my-officials", name: "Who Represents Me?",
-        description: "Enter your address. Every official who answers to you, JP to Congress.",
-        gradient: "linear-gradient(135deg,#92400e 0%,#d97706 100%)",
-        photo: U("1449157291145-7efd050a4d0e") },
-      { href: "/tools/who-do-i-call", name: "Who Do I Call?",
-        description: "Pothole, flooding, trash, noise. Pick your issue — get the right phone number and official.",
-        gradient: "linear-gradient(135deg,#0c4a6e 0%,#0284c7 100%)",
-        photo: U("1516156008802-094adcff9a72") },
-      { href: "/tools/my-ballot", name: "My Ballot",
-        description: "Your address in, your exact November ballot out. Every race with ratings and money. Print it for the booth.",
-        gradient: "linear-gradient(135deg,#312e81 0%,#4f46e5 100%)",
-        photo: U("1540910419892-4a36d2c3266c") },
-      { href: "/tools/ballot-2026", name: "2026 Ballot",
-        description: "Every race on your November 2026 ballot: Governor to JP. D vs. R matchup, money on hand, and competitiveness rating.",
-        gradient: "linear-gradient(135deg,#1e3a5f 0%,#2563a8 100%)",
-        photo: U("1554224155-8d04cb9a382a") },
-      { href: "/tools/judges", name: "Know Your Judges",
-        description: "36 judicial races most voters skip. Who holds each bench, who's challenging, and our rating: one sheet.",
-        gradient: "linear-gradient(135deg,#3f3f46 0%,#71717a 100%)",
-        photo: U("1589829545856-d10d557cf95f") },
-      { href: "/tools/tx-house", name: "Texas House Board",
-        description: "Harris County's 24 state-house seats, ranked by competitiveness. Last general result, candidate cash, and the 6 swing seats that decide the majority.",
-        gradient: "linear-gradient(135deg,#1a3a5c 0%,#dc2626 100%)",
-        photo: U("1529107386315-e1a2ed48a620") },
-      { href: "/tools/field-sweep", name: "Field Sweep",
-        description: "All 1,174 precincts classified by GOTV opportunity from D% across the 2020/2022/2024 generals. Filter, sort, and export to CSV for field operations.",
-        gradient: "linear-gradient(135deg,#0f766e 0%,#14b8a6 100%)",
-        photo: U("1551836022-d5d88e9218df") },
-      { href: "/tools/pac-tracker", name: "Outside Money",
-        description: "PAC and Super PAC independent expenditures in Texas 2026 federal races. Who's buying air time?",
-        gradient: "linear-gradient(135deg,#4c1d95 0%,#7c3aed 100%)",
-        photo: U("1611532736542-ef8f87e20f8c") },
-      { href: "/tools/heat-check", name: "Heat Check",
-        description: "Harris County primary & runoff results, precinct by precinct.",
-        gradient: "linear-gradient(135deg,#991b1b 0%,#dc2626 100%)",
-        photo: U("1524661135-1165ef7b63f4") },
-      { href: "/tools/precinct-lookup", name: "Precinct History",
-        description: "Enter any precinct number. See how it voted in 2020, 2022, 2024, and 2026.",
-        gradient: "linear-gradient(135deg,#1e3a8a 0%,#2563a8 100%)",
-        photo: U("1507041957456-9c397ce39c97") },
-      { href: "/tools/districts", name: "Districts",
-        description: "Portrait of a seat. Demographics, vote history, 2026 matchup, and win number target.",
-        gradient: "linear-gradient(135deg,#0f2540 0%,#1a3a5c 100%)",
-        photo: U("1569091791842-7cfb64e04797") },
-      { href: "/tools/early-vote", name: "Early Vote Tracker",
-        description: "Dem vs. Rep universe turnout by precinct. Who is showing up.",
-        gradient: "linear-gradient(135deg,#3730a3 0%,#4f46e5 100%)",
-        photo: U("1541872703-74c5e44368f9") },
-      { href: "/tools/opportunity-map", name: "Opportunity Map",
-        description: "Turnout vs. registered voters by district. Where D votes are being left on the table and which candidates lost the most.",
-        gradient: "linear-gradient(135deg,#1e3a5c 0%,#7c3aed 100%)",
-        photo: U("1551288049-bebda4e38f71") },
-      { href: "/tools/campaign-trail", name: "Campaign Trail",
-        description: "Every block walk, phone bank, and organizing event in Harris County. Democrat and Republican, auto-updated from live sources.",
-        gradient: "linear-gradient(135deg,#1e3a5f 0%,#7c3aed 100%)",
-        photo: U("1529107386315-e1a2ed48a620") },
-      { href: "/tools/civic-calendar", name: "Civic Calendar",
-        description: "Every election date, filing deadline, and public meeting.",
-        gradient: "linear-gradient(135deg,#14532d 0%,#16a34a 100%)",
-        photo: U("1506784983877-45594efa4cbe") },
-      { href: "/tools/run-for-office", name: "Run for Office",
-        description: "What each office requires, Texas filing deadlines, treasurer rules, and the literal step-by-step to get on the ballot in Harris County.",
-        gradient: "linear-gradient(135deg,#0f2540 0%,#c9a227 100%)",
-        photo: U("1541872705-74bb3be19196") },
-    ],
-  },
-  {
-    section: "Legislation",
-    tools: [
-      { href: "/tools/bill-tracker", name: "Bill Tracker",
-        description: "TX 89th Legislature. Bills filed by Harris County reps, ranked by laws passed.",
-        gradient: "linear-gradient(135deg,#4c1d95 0%,#6d28d9 100%)",
-        photo: U("1585952406519-9d8b8c3ba4b4") },
-      { href: "/tools/congressional-bills", name: "Congress Bills",
-        description: "119th Congress. What Harris County's US reps actually signed into law.",
-        gradient: "linear-gradient(135deg,#1d4ed8 0%,#2563a8 100%)",
-        photo: U("1523348837708-15d4a09cfac2") },
-    ],
-  },
-  {
-    section: "Accountability",
-    tools: [
-      { href: "/tools/court-votes", name: "The Vote Record",
-        description: "How each commissioner votes on every recorded Commissioners Court item, and how often they vote together.",
-        gradient: "linear-gradient(135deg,#0f2540 0%,#b91c1c 100%)",
-        photo: U("1436450412740-6b988f486c6b") },
-    ],
-  },
-  {
-    section: "The Brief",
-    tools: [
-      { href: "/tools/the-brief", name: "The Brief",
-        description: "County · State · Congress · City — every level of government, one place. Delegates, social feeds, and who covers it.",
-        gradient: "linear-gradient(135deg,#0f2540 0%,#1a3a5c 50%,#7c3aed 100%)",
-        photo: U("1503198515498-d0bd9ed16902") },
-    ],
-  },
-  {
-    section: "The Network",
-    tools: [
-      { href: "/tools/the-network", name: "The Network",
-        description: "Endorsements, consultant relationships, and major donors across every Harris County race.",
-        gradient: "linear-gradient(135deg,#1a3a5c 0%,#7c3aed 100%)",
-        photo: U("1521737604-43416ae6b50a") },
-    ],
-  },
-  {
-    section: "Media",
-    tools: [
-      { href: "/tools/tv-station", name: "TV Station",
-        description: "Commissioners Court, City Council, HISD, TX Legislature: all live.",
-        gradient: "linear-gradient(135deg,#111827 0%,#1f2937 100%)",
-        photo: U("1585771724684-38269d6639fd") },
-      { href: "/blogs", name: "Journalists & Voices",
-        description: "The best journalists and civic accounts. X, Instagram, Threads, newsletters: covering Harris County.",
-        gradient: "linear-gradient(135deg,#78350f 0%,#b45309 100%)",
-        photo: U("1504711434969-e33886168f5c") },
-      { href: "/politicians", name: "Politicians",
-        description: "Harris County elected officials. Stats, finance, bills, and social feeds.",
-        gradient: "linear-gradient(135deg,#1a3a5c 0%,#2563a8 100%)",
-        photo: U("1560472354-b33ff0c44a43") },
-      { href: "/tools/embeds", name: "Embed Our Widgets",
-        description: "Run a blog or dashboard? Put our election countdown or any race card on your site with one iframe tag.",
-        gradient: "linear-gradient(135deg,#164e63 0%,#0891b2 100%)",
-        photo: U("1461749280684-dccba630e2f6") },
-      { href: "/contact", name: "Contact & Feedback",
-        description: "Spot a data error? Have an idea for a new tool? Tell us.",
-        gradient: "linear-gradient(135deg,#374151 0%,#6b7280 100%)",
-        photo: U("1577563908411-5077b6dc7624") },
-    ],
-  },
-];
+  const today = todayCentral();
+  const upcoming = EVENTS
+    .filter(e => (e.endDate ?? e.date) >= today && (e.importance === "high" || e.category === "Elections" || e.category === "Courts"))
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(0, 6);
 
-// Derived so the hero copy can't drift from the actual grid again.
-const TOOL_COUNT = ROWS.reduce((n, r) => n + r.tools.length, 0);
+  // Every candidate on a November ballot with money on file, richest first.
+  const warChests = races.flatMap(r => [r.d, r.r].filter(Boolean).map(c => ({ c: c!, race: r })))
+    .filter(x => (x.c.finance?.cash ?? 0) > 0)
+    .sort((a, b) => b.c.finance!.cash - a.c.finance!.cash)
+    .slice(0, 7);
+  const topCash = warChests[0]?.c.finance?.cash ?? 1;
 
-/* ── Start Here. The 4 tools to master first ───────────────────────────── */
-/* tint/accent are a refined cool palette (blue, emerald, indigo, cyan) used for the
-   light Synex cards. Not the raw warm tool gradients. */
-const START_HERE = [
-  {
-    href:        "/tools/heat-check",
-    name:        "Heat Check",
-    eyebrow:     "Elections",
-    headline:    "See how every\nprecinct voted.",
-    description: "Every precinct. Every election cycle back to 2012. Primaries, runoffs, and generals. Zoom into any neighborhood and see exactly how it voted.",
-    proof:       ["Precinct-level detail", "2012 – 2026 · all cycles", "Harris County only"],
-    accent:      "#2563a8",
-    tint:        "linear-gradient(135deg,rgba(37,99,168,0.10),rgba(37,99,168,0.02))",
-    chip:        "linear-gradient(135deg,#2563a8,#3b82f6)",
-    hero:        true,
-  },
-  {
-    href:        "/tools/where-is-the-dough",
-    name:        "Where the Money Resides",
-    eyebrow:     "Money",
-    headline:    "Follow the money.",
-    description: "Live FEC, TEC, and county filings for every Harris County elected official.",
-    proof:       ["All elected officials", "FEC + TEC live"],
-    accent:      "#0d9c6c",
-    tint:        "linear-gradient(135deg,rgba(13,156,108,0.09),rgba(13,156,108,0.02))",
-    chip:        "linear-gradient(135deg,#0d9c6c,#34d399)",
-    hero:        false,
-  },
-  {
-    href:        "/tools/my-ballot",
-    name:        "My Ballot",
-    eyebrow:     "November 3",
-    headline:    "Print your\nballot sheet.",
-    description: "Your address, your exact November ballot: every race with ratings and money. Print it and take it to the booth.",
-    proof:       ["Every race at your address", "Printable crib sheet"],
-    accent:      "#4f46e5",
-    tint:        "linear-gradient(135deg,rgba(79,70,229,0.09),rgba(79,70,229,0.02))",
-    chip:        "linear-gradient(135deg,#4f46e5,#818cf8)",
-    hero:        false,
-  },
-  {
-    href:        "/my-officials",
-    name:        "Who Represents Me?",
-    eyebrow:     "Officials",
-    headline:    "Enter your\naddress.",
-    description: "Every official who answers to you: JP to Congress. With contact info, money raised, and record.",
-    proof:       ["JP to Congress", "Real contact info"],
-    accent:      "#0891b2",
-    tint:        "linear-gradient(135deg,rgba(8,145,178,0.09),rgba(8,145,178,0.02))",
-    chip:        "linear-gradient(135deg,#0891b2,#22d3ee)",
-    hero:        false,
-  },
-] as const;
+  const lastUpdate = DESK_LOG[0]?.date;
 
-function FeaturedSection() {
-  const [hero, ...three] = START_HERE;
   return (
-    <section id="start-here" className="py-16 md:py-24 px-6" style={{ background: "#f2f5f9" }}>
-      <div className="max-w-6xl mx-auto">
-        {/* Section label */}
-        <div className="flex items-center gap-3 mb-10">
-          <span className="block w-8 h-px bg-[var(--accent)]/25" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--accent)]/50">Start Here</span>
-          <span className="flex-1 h-px bg-[var(--border)]" />
-          <span className="text-[11px]" style={{ color: "#9ca3af" }}>4 tools to know cold</span>
-        </div>
-
-        <div className="flex flex-col gap-5">
-
-          {/* Hero. Heat Check (light Synex) */}
-          <Link href={hero.href} className="group block relative rounded-[2rem] overflow-hidden hcp-card card-lift"
-            style={{ minHeight: 340 }}>
-            <div className="absolute inset-0" style={{ background: hero.tint }} />
-            <div className="absolute inset-0 topo-light opacity-60" />
-            <div className="relative z-10 flex flex-col justify-end h-full p-8 md:p-10" style={{ minHeight: 340 }}>
-              <div className="w-11 h-11 rounded-2xl mb-5" style={{ background: hero.chip, boxShadow: `0 8px 20px ${hero.accent}40` }} />
-              <span className="text-[9px] font-bold uppercase tracking-[0.25em] mb-3" style={{ color: hero.accent }}>{hero.eyebrow}</span>
-              <h2 className="text-4xl md:text-5xl font-bold leading-[1.08] mb-4 whitespace-pre-line"
-                style={{ fontFamily: "var(--font-playfair), serif", color: "#0f2540" }}>
-                {hero.headline}
-              </h2>
-              <p className="text-sm leading-relaxed max-w-xl mb-6" style={{ color: "#5b6470" }}>{hero.description}</p>
-              <div className="flex flex-wrap gap-2 mb-6">
-                {hero.proof.map(p => (
-                  <span key={p} className="text-[10px] font-bold px-3 py-1 rounded-full"
-                    style={{ background: `${hero.accent}14`, color: hero.accent, border: `1px solid ${hero.accent}28` }}>
-                    {p}
-                  </span>
-                ))}
-              </div>
-              <span className="inline-flex items-center gap-2 text-sm font-bold group-hover:gap-3 transition-all duration-300" style={{ color: "#0f2540" }}>
-                Open Heat Check
-                <span className="inline-flex w-8 h-8 rounded-full items-center justify-center text-white" style={{ background: hero.accent }}>→</span>
-              </span>
+    <div>
+      {/* ── SCOREBOARD ─────────────────────────────────────────────── */}
+      <section className="board">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 pt-10 md:pt-14 pb-10">
+          <div className="grid lg:grid-cols-[1fr_380px] gap-10 lg:gap-16 items-end">
+            <div>
+              <p className="label" style={{ color: "var(--gold)" }}>Election desk · November 3, 2026 general</p>
+              <h1 className="serif mt-4 text-[38px] sm:text-[50px] lg:text-[62px] leading-[1.02] tracking-[-0.02em] font-semibold text-white">
+                {t.total} races are on the Harris County ballot.{" "}
+                <span style={{ color: "var(--gold)" }}>{spell(t.toss + t.dLean + t.rLean)} are in play.</span>
+              </h1>
+              <p className="mt-5 max-w-2xl text-[16px] md:text-[17px] leading-relaxed text-white/70">
+                Every contest from U.S. Senate to justice of the peace, rated from Safe Democratic to Safe Republican
+                and backed by the last result, the money on hand, and what changed this cycle.
+              </p>
             </div>
-          </Link>
-
-          {/* Three equal cards (light Synex) */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {three.map(tool => (
-              <Link key={tool.href} href={tool.href}
-                className="group block relative rounded-[2rem] overflow-hidden hcp-card card-lift"
-                style={{ minHeight: 220 }}>
-                <div className="absolute inset-0" style={{ background: tool.tint }} />
-                <div className="absolute inset-0 topo-light opacity-50" />
-                <div className="relative z-10 flex flex-col justify-end h-full p-6" style={{ minHeight: 220 }}>
-                  <div className="w-9 h-9 rounded-xl mb-3" style={{ background: tool.chip, boxShadow: `0 6px 16px ${tool.accent}40` }} />
-                  <span className="text-[9px] font-bold uppercase tracking-[0.25em] mb-2" style={{ color: tool.accent }}>{tool.eyebrow}</span>
-                  <h3 className="text-2xl font-bold leading-[1.1] mb-3 whitespace-pre-line"
-                    style={{ fontFamily: "var(--font-playfair), serif", color: "#0f2540" }}>
-                    {tool.headline}
-                  </h3>
-                  <p className="text-[11px] leading-relaxed mb-3 line-clamp-2" style={{ color: "#64748b" }}>{tool.description}</p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-wrap gap-1.5">
-                      {tool.proof.map(p => (
-                        <span key={p} className="text-[9px] font-bold px-2 py-0.5 rounded-full"
-                          style={{ background: `${tool.accent}14`, color: tool.accent, border: `1px solid ${tool.accent}26` }}>
-                          {p}
-                        </span>
-                      ))}
-                    </div>
-                    <span className="text-sm font-bold group-hover:translate-x-1 transition-all duration-300" style={{ color: tool.accent }}>→</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+            <div className="rounded-lg p-5" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
+              <p className="serif text-[20px] font-semibold text-white leading-snug">What&apos;s on your ballot?</p>
+              <p className="text-[14px] text-white/60 mt-1 mb-4">Enter a Harris County address. You&apos;ll get every race you vote in, in ballot order.</p>
+              <AddressForm dark />
+            </div>
           </div>
 
+          <div className="mt-12">
+            <div className="flex items-baseline justify-between mb-4">
+              <p className="label text-white/60">The whole ballot, one bar per race</p>
+              <Link href="/races" className="text-[13px] font-semibold text-white/80 hover:text-white">Open the race board <span aria-hidden>→</span></Link>
+            </div>
+            <BallotStrip races={stripRaces} />
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* ── THE MARQUEE ─────────────────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 md:px-6 pt-12">
+        <SectionHead title="Top of the ticket" note="Both seats are open for the first time in years" />
+        <div className="grid md:grid-cols-2 gap-5">
+          {marquee.map(r => <Marquee key={r.key} race={r} />)}
+        </div>
+      </section>
+
+      {/* ── RACES TO WATCH ──────────────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 md:px-6 pt-14">
+        <SectionHead
+          title="Races to watch"
+          note={`${spell(tossups.length)} toss-up${tossups.length === 1 ? "" : "s"} and ${t.dLean + t.rLean} leaning races, closest first`}
+          href="/races?view=competitive" cta={`All ${competitive.length} competitive races`} />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {watch.map(r => <RaceTile key={r.key} race={toLite(r)} />)}
+        </div>
+      </section>
+
+      {/* ── DESK + SIDEBAR ─────────────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 md:px-6 pt-14 grid lg:grid-cols-[1fr_360px] gap-12">
+        <div>
+          <SectionHead title="Latest from the desk" note={lastUpdate ? `Updated ${fmtDate(lastUpdate, { month: "long", day: "numeric" })}` : undefined} />
+          <ol className="divide-y" style={{ borderColor: "var(--rule)" }}>
+            {DESK_LOG.slice(0, 7).map((e, i) => {
+              const race = races.find(r => r.key === e.race);
+              return (
+                <li key={i} className="py-4 grid grid-cols-[72px_1fr] gap-4" style={{ borderColor: "var(--rule)" }}>
+                  <div>
+                    <p className="label" style={{ color: "#6B726D" }}>{fmtDate(e.date)}</p>
+                    <p className="label mt-1" style={{ color: e.kind === "rating" ? "var(--gold-ink)" : e.kind === "fix" ? "#962A20" : "#8A918C", fontSize: 10 }}>
+                      {e.kind === "rating" ? "Rating" : e.kind === "money" ? "Money" : e.kind === "fix" ? "Correction" : "News"}
+                    </p>
+                  </div>
+                  <div>
+                    <Link href={raceHref(e.race)} className="serif text-[17px] font-semibold hover:underline decoration-1 underline-offset-4" style={{ color: "var(--ink)" }}>
+                      {race?.office ?? e.race}
+                    </Link>
+                    {e.kind === "rating" && e.from && e.to && (
+                      <span className="ml-2 inline-flex items-center gap-1.5 align-middle">
+                        <RatingChip lean={e.from} className="opacity-60 line-through" />
+                        <span aria-hidden style={{ color: "#8A918C" }}>→</span>
+                        <RatingChip lean={e.to} />
+                      </span>
+                    )}
+                    <p className="text-[15px] leading-relaxed mt-1" style={{ color: "#3C443F" }}>{e.headline}</p>
+                    {e.source && <p className="text-[12px] mt-1" style={{ color: "#8A918C" }}>Source: {e.source}</p>}
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+
+        <aside className="space-y-12">
+          <div>
+            <SectionHead title="Coming up" href="/tools/civic-calendar" cta="Calendar" />
+            <ul className="space-y-0">
+              {upcoming.map(e => {
+                const days = Math.round((Date.parse(e.date + "T12:00:00Z") - Date.parse(today + "T12:00:00Z")) / 86_400_000);
+                return (
+                  <li key={e.id} className="grid grid-cols-[52px_1fr] gap-3 py-3 border-b" style={{ borderColor: "var(--rule)" }}>
+                    <div className="text-center rounded-md py-1.5" style={{ background: e.category === "Elections" ? "var(--board)" : "var(--surface)", border: e.category === "Elections" ? "none" : "1px solid var(--rule)" }}>
+                      <p className="label leading-none" style={{ fontSize: 10, color: e.category === "Elections" ? "var(--gold)" : "#6B726D" }}>{fmtDate(e.date, { month: "short" })}</p>
+                      <p className="text-[20px] font-extrabold leading-tight num" style={{ color: e.category === "Elections" ? "#fff" : "var(--ink)" }}>{fmtDate(e.date, { day: "numeric" })}</p>
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[14px] font-semibold leading-snug" style={{ color: "var(--ink)" }}>{e.title.replace(/\. /g, ": ")}</p>
+                      <p className="text-[12px] mt-0.5" style={{ color: "#6B726D" }}>
+                        {days <= 0 ? "Happening now" : days === 1 ? "Tomorrow" : `In ${days} days`} · {e.category}
+                      </p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+
+          <div>
+            <SectionHead title="Biggest war chests" note="Cash on hand, November candidates" href="/tools/where-is-the-dough" cta="Money" />
+            <ol>
+              {warChests.map(({ c, race }, i) => (
+                <li key={c.name} className="py-2.5 border-b" style={{ borderColor: "var(--rule)" }}>
+                  <Link href={raceHref(race.key)} className="group grid grid-cols-[18px_1fr_auto] gap-3 items-baseline">
+                    <span className="text-[12px] font-bold num" style={{ color: "#8A918C" }}>{i + 1}</span>
+                    <span className="min-w-0">
+                      <span className="text-[14px] font-semibold group-hover:underline" style={{ color: "var(--ink)" }}>{c.name}</span>
+                      <span className="block text-[12px] truncate" style={{ color: "#6B726D" }}>{race.office}</span>
+                      <span className="block mt-1 h-[3px] rounded-full" style={{ background: "#ECEDE8" }}>
+                        <span className="block h-[3px] rounded-full" style={{ width: `${(c.finance!.cash / topCash) * 100}%`, background: PARTY[c.party].color }} />
+                      </span>
+                    </span>
+                    <span className="text-[14px] font-bold num" style={{ color: "var(--ink)" }}>{fmt(c.finance!.cash)}</span>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </aside>
+      </section>
+
+      {/* ── HEADLINES ──────────────────────────────────────────────── */}
+      <Suspense fallback={null}>
+        <Headlines />
+      </Suspense>
+
+      {/* ── USE THE DESK ───────────────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 md:px-6 pt-14 pb-20">
+        <SectionHead title="Go deeper" href="/tools" cta="Every tool" />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px rounded-lg overflow-hidden" style={{ background: "var(--rule)", border: "1px solid var(--rule)" }}>
+          {[
+            { href: "/tools/heat-check", k: "Maps", t: "How every precinct voted", d: "1,011 precincts, every general since 2012. Zoom to your block and see the swing." },
+            { href: "/tools/where-is-the-dough", k: "Money", t: "Who has the cash", d: "Cash on hand, raised and spent for every official and challenger, from FEC and TEC filings." },
+            { href: "/my-officials", k: "Government", t: "Who represents you", d: "Your address in, every official out: justice of the peace through U.S. Senate, with contacts." },
+            { href: "/tools/districts", k: "Districts", t: "Portrait of a seat", d: "Vote history, demographics and the number of votes it takes to win any district." },
+          ].map(x => (
+            <Link key={x.href} href={x.href} className="group p-5 bg-white hover:bg-[#FAFAF8] transition-colors">
+              <p className="label" style={{ color: "var(--brand)" }}>{x.k}</p>
+              <p className="serif text-[19px] font-semibold mt-1.5 group-hover:underline decoration-1 underline-offset-4" style={{ color: "var(--ink)" }}>{x.t}</p>
+              <p className="text-[14px] leading-relaxed mt-1.5" style={{ color: "#4F5752" }}>{x.d}</p>
+            </Link>
+          ))}
+        </div>
+        <p className="mt-6 text-[13px]" style={{ color: "#6B726D" }}>
+          Ratings are the desk&apos;s judgment, built from past results, registration, money and reported polling. <Link href="/methodology" className="link">How we rate races</Link>.
+        </p>
+      </section>
+    </div>
   );
 }
 
-/* ── Browse card (light Synex: clean white card, vivid app-icon chip) ─────── */
-function BrowseCard({ tool }: { tool: Tool }) {
-  const card = (
-    <div
-      className={`group hcp-card card-lift flex-shrink-0 w-[230px] p-4 ${tool.status === "coming" ? "opacity-40 pointer-events-none" : ""}`}
-    >
-      {/* Fully-visible color chip: app-icon style */}
-      <div className="w-11 h-11 rounded-2xl mb-3.5 relative overflow-hidden"
-        style={{ background: tool.gradient, boxShadow: "0 7px 18px rgba(15,37,64,0.20)" }}>
-        <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent" />
+/* ── Pieces ──────────────────────────────────────────────────────────── */
+
+function SectionHead({ title, note, href, cta }: { title: string; note?: string; href?: string; cta?: string }) {
+  return (
+    <div className="desk-head flex items-baseline justify-between gap-4 mb-5">
+      <div className="flex items-baseline gap-3 flex-wrap">
+        <h2 className="serif text-[24px] md:text-[26px] font-semibold tracking-[-0.01em]" style={{ color: "var(--ink)" }}>{title}</h2>
+        {note && <p className="text-[13px]" style={{ color: "#6B726D" }}>{note}</p>}
       </div>
-      <h3
-        className="font-bold text-sm leading-tight mb-1.5 group-hover:text-[#2563a8] transition-colors duration-300"
-        style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair), serif" }}
-      >
-        {tool.name}
-      </h3>
-      <p className="text-[11px] leading-relaxed line-clamp-2" style={{ color: "#6b7280" }}>
-        {tool.description}
-      </p>
-      {tool.status !== "coming" && (
-        <p className="mt-2.5 text-[11px] font-semibold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ color: "#2563a8" }}>
-          Open <span className="group-hover:translate-x-0.5 transition-transform">→</span>
-        </p>
+      {href && cta && (
+        <Link href={href} className="shrink-0 text-[13px] font-bold whitespace-nowrap" style={{ color: "var(--brand)" }}>{cta} <span aria-hidden>→</span></Link>
       )}
     </div>
   );
-
-  if (tool.status === "coming") return card;
-  return <Link href={tool.href}>{card}</Link>;
 }
 
-/* ── Scroll row ──────────────────────────────────────────────────────────── */
-function BrowseRow({ section, tools }: { section: string; tools: Tool[] }) {
+function Marquee({ race }: { race: Race }) {
+  const d = race.d, r = race.r;
   return (
-    <div className="mb-12">
-      <div className="flex items-baseline gap-3 mb-4 px-6 max-w-7xl mx-auto">
-        <h2
-          className="text-lg font-bold text-[#1a3a5c]"
-          style={{ fontFamily: "var(--font-playfair), serif" }}
-        >
-          {section}
-        </h2>
-        <span className="text-[11px] text-[#9ca3af]">{tools.length} tool{tools.length !== 1 ? "s" : ""}</span>
+    <Link href={raceHref(race.key)} className="group panel panel-hover block overflow-hidden">
+      <div className="px-5 pt-4 pb-5">
+        <div className="flex items-center justify-between">
+          <p className="label" style={{ color: "#6B726D" }}>{race.tag} · {race.open ? "Open seat" : "Incumbent running"}</p>
+          <RatingChip lean={race.lean} />
+        </div>
+        <h3 className="serif text-[26px] font-semibold mt-1 group-hover:underline decoration-1 underline-offset-4" style={{ color: "var(--ink)" }}>{race.office}</h3>
+        <div className="grid grid-cols-2 gap-4 mt-5">
+          {[d, r].map((c, i) => c && (
+            <div key={c.name} className={`flex flex-col ${i === 1 ? "items-end text-right" : ""}`}>
+              <Face name={c.name} party={c.party} photo={c.photo} size={64} />
+              <p className="mt-3 text-[17px] font-bold leading-tight" style={{ color: "var(--ink)" }}>{c.name}</p>
+              <p className="text-[12px] mt-0.5" style={{ color: PARTY[c.party].color }}>{c.party === "D" ? "Democrat" : "Republican"}</p>
+            </div>
+          ))}
+        </div>
+        {race.stakes && <p className="mt-4 text-[15px] leading-relaxed" style={{ color: "#3C443F" }}>{race.stakes.split(". ").slice(0, 2).join(". ").replace(/\.?$/, ".")}</p>}
+        <div className="mt-5 grid sm:grid-cols-2 gap-5">
+          {(d?.finance || r?.finance) && (
+            <div>
+              <p className="label mb-2" style={{ color: "#6B726D" }}>Cash on hand</p>
+              <CashDuel d={d?.finance?.cash ?? 0} r={r?.finance?.cash ?? 0} compact />
+            </div>
+          )}
+          {race.last && (
+            <div>
+              <p className="label mb-2" style={{ color: "#6B726D" }}>{race.last.label}, {race.last.year}</p>
+              <ResultBar dPct={race.last.dPct} rPct={race.last.rPct} compact />
+            </div>
+          )}
+        </div>
       </div>
-      {/* Scrollable strip. No scrollbar, drag to scroll on mobile */}
-      <div
-        className="flex gap-3 overflow-x-auto pl-6 pr-6"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-      >
-        {tools.map(tool => (
-          <BrowseCard key={tool.href} tool={tool} />
+    </Link>
+  );
+}
+
+async function Headlines() {
+  let data: Awaited<ReturnType<typeof getDashboardData>> | null = null;
+  try { data = await getDashboardData(); } catch { return null; }
+  const stories = [data.local && { k: "Harris County", s: data.local }, data.state && { k: "Texas", s: data.state }, data.federal && { k: "Washington", s: data.federal }]
+    .filter(Boolean) as { k: string; s: NonNullable<typeof data.local> }[];
+  if (!stories.length) return null;
+  return (
+    <section className="max-w-7xl mx-auto px-4 md:px-6 pt-14">
+      <SectionHead title="Elsewhere in the news" note="Latest reporting, linked to the source" />
+      <div className="grid md:grid-cols-3 gap-5">
+        {stories.map(({ k, s }) => (
+          <a key={s.link} href={s.link} target="_blank" rel="noopener noreferrer" className="group block">
+            {s.image && (
+              <div className="aspect-[16/9] rounded-md overflow-hidden mb-3" style={{ background: "#E4E6E0" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={s.image} alt="" loading="lazy" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" />
+              </div>
+            )}
+            <p className="label" style={{ color: "var(--brand)" }}>{k} · {s.source}</p>
+            <p className="serif text-[18px] font-semibold leading-snug mt-1 group-hover:underline decoration-1 underline-offset-4" style={{ color: "var(--ink)" }}>{s.title}</p>
+          </a>
         ))}
-        {/* End spacer */}
-        <div className="flex-shrink-0 w-2" />
       </div>
-    </div>
-  );
-}
-
-/* ── Full toolbox browse ─────────────────────────────────────────────────── */
-function ToolboxBrowse() {
-  return (
-    <section id="toolbox" className="pb-20" style={{ background: "#f2f5f9", borderTop: "1px solid #dde3ec" }}>
-      <div className="max-w-7xl mx-auto px-6 pt-12 pb-6">
-        <div className="flex items-center gap-3">
-          <span className="block w-8 h-px bg-[var(--accent)]/25" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--accent)]/50">All Tools</span>
-          <span className="flex-1 h-px bg-[var(--border)]" />
-          <span className="text-[11px] text-[var(--muted)]">
-            {ROWS.reduce((n, r) => n + r.tools.length, 0)} tools · {ROWS.map(r => r.section).join(" · ")}
-          </span>
-        </div>
-      </div>
-      {ROWS.map(row => (
-        <BrowseRow key={row.section} section={row.section} tools={row.tools} />
-      ))}
     </section>
-  );
-}
-
-/* ── Page ────────────────────────────────────────────────────────────────── */
-export default async function Home() {
-  const stats = getHeroStats();
-  return (
-    <div className="overflow-x-hidden">
-
-      {/* ── HERO (Synex-style: airy, two-tone headline, floating data card) ── */}
-      {/* -mt-16 pulls the hero up under the floating nav's spacer so its gradient
-          reaches the very top (no cream seam from the body background). */}
-      <section className="relative overflow-hidden topo-hero -mt-16 px-6 pt-32 pb-20 md:pt-36 md:pb-28 min-h-[94dvh] flex items-center"
-        style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#f2f5f9 55%,#f2f5f9 100%)" }}>
-        {/* Soft organic glows. The "terrain" light */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_78%_32%,rgba(37,99,168,0.10),transparent_70%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_45%_at_88%_70%,rgba(52,160,110,0.045),transparent_70%)]" />
-
-        <div className="max-w-6xl mx-auto w-full relative z-10 grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-8 items-center">
-          {/* ── Left: copy ── */}
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-7 flex items-center gap-2" style={{ color: "#64748b" }}>
-              <span className="w-5 h-px" style={{ background: "#94a3b8" }} />
-              Harris County · Civics, Reimagined
-            </p>
-
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5rem] font-bold leading-[1.02] mb-7"
-              style={{ fontFamily: "var(--font-playfair), serif" }}>
-              <span style={{ color: "#aab4c0" }}>They stopped<br />teaching civics.</span>
-              <br /><span style={{ color: "#0f2540" }}>We didn&apos;t.</span>
-            </h1>
-
-            <p className="text-base md:text-lg max-w-md leading-relaxed mb-9" style={{ color: "#5b6470", lineHeight: 1.7 }}>
-              A free toolbox for Harris County residents. See how your government
-              votes, where it spends, and who answers to you.
-            </p>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <a href="#start-here"
-                className="group inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-bold text-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98]"
-                style={{ background: "#0f2540", boxShadow: "0 12px 30px rgba(15,37,64,0.22)" }}>
-                Start exploring
-                <span className="inline-flex w-6 h-6 rounded-full items-center justify-center group-hover:translate-y-0.5 transition-transform duration-500" style={{ background: "rgba(255,255,255,0.15)" }}>↓</span>
-              </a>
-              <a href="#toolbox"
-                className="inline-flex items-center gap-2 font-semibold text-sm px-3 py-3.5 transition-colors duration-300"
-                style={{ color: "#5b6470" }}>
-                {`Browse all ${TOOL_COUNT} tools →`}
-              </a>
-            </div>
-
-            <div className="mt-12 flex flex-wrap gap-10">
-              {[
-                { value: stats.precinctCount.toLocaleString(), label: "Precincts mapped" },
-                { value: String(TOOL_COUNT), label: "Civic tools" },
-                { value: `${stats.candidatesTracked}`, label: "Officials tracked" },
-              ].map(({ value, label }) => (
-                <div key={label}>
-                  <p className="text-3xl font-bold leading-none tnum" style={{ color: "#0f2540", fontFamily: "var(--font-playfair), serif" }}>{value}</p>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] mt-1.5" style={{ color: "#94a3b8" }}>{label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* ── Right: floating glass data card ── */}
-          <div className="relative hidden lg:block" style={{ perspective: 1200 }}>
-            {/* Main dashboard card */}
-            <div className="hero-float relative rounded-[1.4rem] overflow-hidden mx-auto max-w-sm"
-              style={{ background: "rgba(255,255,255,0.82)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.9)", boxShadow: "0 30px 70px rgba(15,37,64,0.18), 0 6px 18px rgba(15,37,64,0.08)" }}>
-              {/* window chrome */}
-              <div className="flex items-center gap-1.5 px-4 py-2.5 border-b" style={{ borderColor: "rgba(15,37,64,0.06)" }}>
-                <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#f87171" }} />
-                <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#fbbf24" }} />
-                <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#34d399" }} />
-                <span className="ml-2 text-[9px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "rgba(15,37,64,0.04)", color: "#94a3b8" }}>{SITE_HOST} / heat-check</span>
-              </div>
-              {/* body */}
-              <div className="p-5">
-                <div className="flex items-center gap-1.5 mb-2">
-                  <span className="w-1.5 h-1.5 rounded-full alive-pulse" style={{ background: "#2563a8" }} />
-                  <span className="text-[9px] font-bold uppercase tracking-[0.16em]" style={{ color: "#94a3b8" }}>Harris County · 2024 General</span>
-                </div>
-                <div className="flex items-end gap-2 mb-3">
-                  <span className="text-4xl font-bold leading-none tnum" style={{ color: "#0f2540", fontFamily: "var(--font-playfair), serif" }}>{stats.d2024Pct}%</span>
-                  <span className="text-sm font-bold mb-0.5" style={{ color: "#2563a8" }}>Dem</span>
-                  <span className="text-[10px] font-semibold mb-1 ml-auto px-1.5 py-0.5 rounded-full" style={{ background: "rgba(37,99,168,0.10)", color: "#2563a8" }}>2024 Presidential</span>
-                </div>
-                {/* D/R bar — widths from real data */}
-                <div className="h-2.5 rounded-full overflow-hidden flex mb-4">
-                  <div style={{ width: `${stats.d2024Pct}%`, background: "#2563a8" }} />
-                  <div style={{ width: `${stats.r2024Pct}%`, background: "#dc2626" }} />
-                </div>
-                {/* mini area chart */}
-                <svg viewBox="0 0 240 64" className="w-full" style={{ height: 56 }} preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="heroArea" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#2563a8" stopOpacity="0.32" />
-                      <stop offset="100%" stopColor="#2563a8" stopOpacity="0" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M0,48 L40,42 L80,46 L120,30 L160,34 L200,18 L240,22 L240,64 L0,64 Z" fill="url(#heroArea)" />
-                  <path d="M0,48 L40,42 L80,46 L120,30 L160,34 L200,18 L240,22" fill="none" stroke="#2563a8" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
-                </svg>
-                {/* rows */}
-                <div className="mt-3 space-y-2">
-                  {[
-                    { k: "HD 134", v: `${stats.hd134DPct}% D`, c: "#2563a8" },
-                    { k: `${stats.candidatesTracked} officials`, v: fmt(stats.totalTracked), c: "#0f2540" },
-                  ].map((r) => (
-                    <div key={r.k} className="flex items-center justify-between text-[11px]">
-                      <span className="font-semibold" style={{ color: "#64748b" }}>{r.k}</span>
-                      <span className="font-bold tnum" style={{ color: r.c }}>{r.v}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Floating stat chip: top — links to Heat Check */}
-            <Link href="/tools/heat-check" className="hero-float-2 absolute -top-5 -left-3 rounded-2xl px-4 py-3 block hover:scale-[1.03] transition-transform duration-300"
-              style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.9)", boxShadow: "0 18px 40px rgba(15,37,64,0.16)" }}>
-              <p className="text-[8px] font-bold uppercase tracking-[0.16em]" style={{ color: "#94a3b8" }}>Turnout · Nov &apos;24</p>
-              <p className="text-2xl font-bold leading-none tnum mt-0.5" style={{ color: "#0f2540", fontFamily: "var(--font-playfair), serif" }}>
-                {(stats.turnout2024 / 1_000_000).toFixed(1)}M
-              </p>
-            </Link>
-
-            {/* Floating stat chip: bottom — links to Money tool */}
-            <Link href="/tools/where-is-the-dough" className="hero-float-3 absolute -bottom-9 -right-3 rounded-2xl px-4 py-3 block hover:scale-[1.03] transition-transform duration-300"
-              style={{ background: "rgba(15,37,64,0.92)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.12)", boxShadow: "0 18px 40px rgba(15,37,64,0.28)" }}>
-              <p className="text-[8px] font-bold uppercase tracking-[0.16em]" style={{ color: "#7aaee8" }}>Biggest local war chest</p>
-              <p className="text-2xl font-bold leading-none tnum mt-0.5 text-white" style={{ fontFamily: "var(--font-playfair), serif" }}>
-                {fmt(stats.topCash)}
-              </p>
-              <p className="text-[9px] font-semibold mt-1" style={{ color: "#9fc1e8" }}>{stats.topName} · {stats.topOffice}</p>
-            </Link>
-          </div>
-        </div>
-
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 opacity-25">
-          <div className="w-px h-10" style={{ background: "#1a3a5c", animation: "pulse 2s ease-in-out infinite" }} />
-        </div>
-      </section>
-
-      {/* ── CLARITY (Synex-style numbered feature columns + floating cards) ── */}
-      <section className="relative overflow-hidden topo-hero px-6 py-20 md:py-28" style={{ background: "linear-gradient(180deg,#f2f5f9 0%,#f2f5f9 100%)" }}>
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_45%_at_15%_30%,rgba(52,160,110,0.04),transparent_70%)]" />
-        <div className="max-w-6xl mx-auto relative z-10">
-          {/* Header row */}
-          <div className="grid md:grid-cols-[1.2fr_1fr] gap-6 md:gap-12 items-end mb-14">
-            <h2 className="text-3xl md:text-[2.75rem] font-bold leading-[1.08]" style={{ fontFamily: "var(--font-playfair),serif" }}>
-              <span style={{ color: "#aab4c0" }}>Clarity and control over </span>
-              <span style={{ color: "#0f2540" }}>every part of your county.</span>
-            </h2>
-            <p className="text-sm md:text-[15px] leading-relaxed" style={{ color: "#5b6470" }}>
-              A clear, structured view of local power. From how each precinct votes to where the
-              money flows and who, exactly, answers to you.
-            </p>
-          </div>
-
-          {/* Three numbered feature columns */}
-          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
-            {[
-              {
-                n: "1", title: "See every vote",
-                desc: "Precinct-level results for every cycle back to 2012. Primaries, runoffs, and generals.",
-                href: "/tools/heat-check",
-                card: (
-                  <div>
-                    <div className="flex items-center justify-between mb-2.5">
-                      <span className="text-[9px] font-bold uppercase tracking-[0.16em]" style={{ color: "#94a3b8" }}>Precinct results</span>
-                      <span className="text-[10px] font-bold" style={{ color: "#2563a8" }}>61% D</span>
-                    </div>
-                    <div className="grid grid-cols-6 gap-1">
-                      {["#2563a8","#2563a8","#7aaee8","#dc2626","#2563a8","#7aaee8","#2563a8","#f08080","#2563a8","#2563a8","#7aaee8","#dc2626","#7aaee8","#2563a8","#2563a8","#2563a8","#f08080","#2563a8"].map((c,i)=>(
-                        <span key={i} className="rounded-[3px]" style={{ background: c, aspectRatio: "1", opacity: 0.9 }} />
-                      ))}
-                    </div>
-                    <p className="text-[10px] mt-2.5" style={{ color: "#9ca3af" }}>1,011 precincts · 2012–2026</p>
-                  </div>
-                ),
-              },
-              {
-                n: "2", title: "Follow every dollar",
-                desc: "Live FEC, TEC, and county filings. Cash on hand for every official and challenger.",
-                href: "/tools/where-is-the-dough",
-                card: (
-                  <div>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.16em] mb-2" style={{ color: "#94a3b8" }}>Cash on hand</p>
-                    <p className="text-3xl font-bold leading-none tnum mb-3" style={{ color: "#0f2540", fontFamily: "var(--font-playfair),serif" }}>$345M</p>
-                    <div className="h-2 rounded-full overflow-hidden flex mb-1.5">
-                      <div style={{ width: "44%", background: "#93c5fd" }} />
-                      <div style={{ width: "56%", background: "#fca5a5" }} />
-                    </div>
-                    <div className="flex justify-between text-[10px] font-semibold">
-                      <span style={{ color: "#2563a8" }}>D 44%</span>
-                      <span style={{ color: "#9ca3af" }}>FEC + TEC live</span>
-                      <span style={{ color: "#dc2626" }}>R 56%</span>
-                    </div>
-                  </div>
-                ),
-              },
-              {
-                n: "3", title: "Know who answers",
-                desc: "Type your address or share your location. Every official from your JP to Congress.",
-                href: "/my-officials",
-                card: (
-                  <div>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.16em] mb-2.5" style={{ color: "#94a3b8" }}>Your district</p>
-                    {[
-                      { i: "AJ", n: "Ann Johnson", o: "State Rep · HD 134", c: "#2563a8" },
-                      { i: "RE", n: "Rodney Ellis", o: "Commissioner · Pct 1", c: "#2563a8" },
-                    ].map((r) => (
-                      <div key={r.n} className="flex items-center gap-2.5 mb-2">
-                        <span className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold flex-shrink-0" style={{ background: `${r.c}1a`, color: r.c, border: `1px solid ${r.c}33` }}>{r.i}</span>
-                        <div className="min-w-0">
-                          <p className="text-[11px] font-bold leading-tight truncate" style={{ color: "#1a3a5c" }}>{r.n}</p>
-                          <p className="text-[9px] truncate" style={{ color: "#9ca3af" }}>{r.o}</p>
-                        </div>
-                      </div>
-                    ))}
-                    <p className="text-[10px] mt-1" style={{ color: "#9ca3af" }}>JP → Congress</p>
-                  </div>
-                ),
-              },
-            ].map((f) => (
-              <Link key={f.n} href={f.href} className="group block">
-                <div className="flex items-baseline gap-2.5 mb-3">
-                  <span className="text-[11px] font-bold tnum" style={{ color: "#94a3b8" }}>[{f.n}]</span>
-                  <h3 className="text-base font-bold" style={{ color: "#0f2540" }}>{f.title}</h3>
-                </div>
-                <p className="text-[13px] leading-relaxed mb-5" style={{ color: "#64748b" }}>{f.desc}</p>
-                {/* Floating frosted preview card */}
-                <div className="card-lift rounded-2xl p-4"
-                  style={{ background: "rgba(255,255,255,0.78)", backdropFilter: "blur(14px)", border: "1px solid rgba(255,255,255,0.9)", boxShadow: "0 18px 44px rgba(15,37,64,0.10), 0 3px 10px rgba(15,37,64,0.05)" }}>
-                  {f.card}
-                </div>
-                <span className="inline-flex items-center gap-1.5 mt-4 text-[12px] font-bold group-hover:gap-2.5 transition-all duration-300" style={{ color: "#2563a8" }}>
-                  Open tool <span>→</span>
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── DASHBOARD WIDGET ─────────────────────────────────────── */}
-      <DashboardWidget />
-
-      {/* ── FEATURED FLAGSHIP TOOLS ──────────────────────────────── */}
-      <FeaturedSection />
-
-      {/* ── FULL TOOLBOX BROWSE ──────────────────────────────────── */}
-      <ToolboxBrowse />
-
-      {/* ── ABOUT ──────────────────────────────────────────────────── */}
-      <section id="about" className="border-t border-[var(--border)] py-28 md:py-40 px-6 bg-[var(--accent)] text-white relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_20%_50%,rgba(37,99,168,0.4),transparent)]" />
-        <ScrollReveal className="max-w-4xl mx-auto relative z-10">
-          <div className="flex items-center gap-3 mb-8">
-            <span className="block w-8 h-px bg-sky-300/30" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-sky-300/60">About</span>
-          </div>
-          <h2
-            className="text-4xl md:text-5xl font-bold text-white leading-[1.1] mb-8 max-w-2xl"
-            style={{ fontFamily: "var(--font-playfair), serif" }}
-          >
-            Built for Harris County.
-            <br /><span className="text-sky-300">Free, always.</span>
-          </h2>
-          <p className="text-white/60 leading-relaxed text-lg max-w-xl" style={{ lineHeight: 1.8 }}>
-            This project exists because civic engagement shouldn&apos;t require a lobbyist or
-            a law degree. All data comes from public sources. All tools are free to use and share.
-          </p>
-          <div className="mt-10 flex flex-wrap gap-4">
-            <Link
-              href="/#toolbox"
-              className="group inline-flex items-center gap-3 bg-sky-300 hover:bg-sky-200 text-[var(--accent)] font-bold rounded-full px-6 py-3.5 text-sm transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:shadow-[0_0_36px_rgba(125,211,252,0.3)] active:scale-[0.98]"
-            >
-              See the tools
-              <span className="inline-flex w-6 h-6 rounded-full bg-[var(--accent)]/15 items-center justify-center group-hover:translate-x-1 transition-transform duration-500">→</span>
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 text-white/60 hover:text-white font-semibold text-sm transition-colors duration-300 underline underline-offset-4"
-            >
-              Contact us
-            </Link>
-          </div>
-        </ScrollReveal>
-      </section>
-
-    </div>
   );
 }

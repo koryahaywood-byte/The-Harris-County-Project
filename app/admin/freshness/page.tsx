@@ -28,7 +28,7 @@ export default function FreshnessAdmin() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
       <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--muted)] mb-2">Admin · Internal</p>
-      <h1 className="text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-playfair), serif", color: "#1a3a5c" }}>
+      <h1 className="text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-playfair), serif", color: "#0D2A21" }}>
         Data Freshness
       </h1>
       <p className="text-sm text-[var(--muted)] mb-8">
@@ -67,7 +67,7 @@ export default function FreshnessAdmin() {
                       {r.status}
                     </span>
                   </td>
-                  <td className="px-4 py-2.5 font-medium" style={{ color: "#1a3a5c" }}>{r.name}</td>
+                  <td className="px-4 py-2.5 font-medium" style={{ color: "#0D2A21" }}>{r.name}</td>
                   <td className="px-4 py-2.5 hidden md:table-cell"><code className="text-[11px] text-[var(--muted)]">{r.path}</code></td>
                   <td className="px-4 py-2.5 text-right tnum text-xs">{r.mtime ?? "–"}</td>
                   <td className="px-4 py-2.5 text-right tnum text-xs">{r.ageDays ?? "–"}d</td>

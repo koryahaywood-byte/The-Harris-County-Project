@@ -487,7 +487,7 @@ export default function HeatCheckHistoryMap() {
             <button key={mode} onClick={() => setViewMode(mode)}
               className="px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.14em] transition-colors"
               style={{
-                background: viewMode === mode ? "#0f2540" : "#fff",
+                background: viewMode === mode ? "#0A1F18" : "#fff",
                 color: viewMode === mode ? "#fbbf24" : "#6b7280",
                 borderRight: "1px solid rgba(0,0,0,0.08)",
               }}>
@@ -519,9 +519,9 @@ export default function HeatCheckHistoryMap() {
           title="Color precincts by change in presidential D share, 2020 to 2024"
           className="px-3 py-1.5 rounded-lg text-[11px] font-bold border transition-colors"
           style={{
-            background: deltaPresetActive ? "#0f2540" : "#fff",
+            background: deltaPresetActive ? "#0A1F18" : "#fff",
             color: deltaPresetActive ? "#fbbf24" : "#6b7280",
-            borderColor: deltaPresetActive ? "#0f2540" : "rgba(0,0,0,0.1)",
+            borderColor: deltaPresetActive ? "#0A1F18" : "rgba(0,0,0,0.1)",
           }}>
           Δ 2020→2024
         </button>
@@ -632,11 +632,11 @@ export default function HeatCheckHistoryMap() {
         {loadError && (
           <div className="absolute inset-0 z-[1100] flex items-center justify-center" style={{ background: "rgba(245,243,239,0.96)" }}>
             <div className="text-center max-w-xs px-4">
-              <p className="text-sm font-bold mb-1" style={{ color: "#1a3a5c" }}>Precinct data didn&rsquo;t load</p>
+              <p className="text-sm font-bold mb-1" style={{ color: "#0D2A21" }}>Precinct data didn&rsquo;t load</p>
               <p className="text-[11px] mb-3 leading-relaxed" style={{ color: "#6b7280" }}>
                 The map data failed to fetch. Check your connection and try again.
               </p>
-              <button onClick={loadData} className="pressable rounded-full px-5 py-2 text-xs font-bold text-white" style={{ background: "#1a3a5c" }}>
+              <button onClick={loadData} className="pressable rounded-full px-5 py-2 text-xs font-bold text-white" style={{ background: "#0D2A21" }}>
                 Retry
               </button>
             </div>
@@ -646,7 +646,7 @@ export default function HeatCheckHistoryMap() {
         {/* Precinct card: transient on hover, pinned on click */}
         {popup && (
           <div className="absolute bottom-4 left-4 rounded-xl p-3 z-[1000] min-w-[220px]"
-            style={{ background: "rgba(15,37,64,0.93)", backdropFilter: "blur(12px)", border: popup.isPinned ? "1px solid rgba(251,191,36,0.45)" : "1px solid rgba(255,255,255,0.12)" }}>
+            style={{ background: "rgba(13,42,33,0.93)", backdropFilter: "blur(12px)", border: popup.isPinned ? "1px solid rgba(251,191,36,0.45)" : "1px solid rgba(255,255,255,0.12)" }}>
             <div className="flex items-center justify-between gap-2 mb-2">
               <p className="text-[9px] font-bold uppercase tracking-[0.16em]" style={{ color: "rgba(255,255,255,0.4)" }}>
                 Precinct {popup.prec}
@@ -750,7 +750,7 @@ export default function HeatCheckHistoryMap() {
             {popup.isPinned ? (
               <Link href={`/tools/precinct-lookup?p=${popup.prec}`}
                 className="block text-center text-[10px] font-bold rounded-lg px-3 py-1.5 mt-2 hover:opacity-90"
-                style={{ background: "#fbbf24", color: "#0f2540" }}>
+                style={{ background: "#fbbf24", color: "#0A1F18" }}>
                 Full history: Precinct {popup.prec} →
               </Link>
             ) : (
@@ -806,7 +806,7 @@ export default function HeatCheckHistoryMap() {
                     <th key={h.col} onClick={() => handleSort(h.col)}
                       className="px-3 py-2 text-left cursor-pointer select-none"
                       style={{
-                        color: sortCol === h.col ? "#1a3a5c" : "#6b7280",
+                        color: sortCol === h.col ? "#0D2A21" : "#6b7280",
                         fontWeight: sortCol === h.col ? 800 : 600,
                         letterSpacing: "0.12em",
                         fontSize: 9,

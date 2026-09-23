@@ -48,11 +48,11 @@ export default function NarrativePanel({ pol, billCount, lawCount }: { pol: Poli
       <div className="hcp-card topo-light p-5 md:p-6">
         <div className="flex items-center gap-2 mb-2.5 flex-wrap">
           <svg width="18" height="18" viewBox="0 0 22 22" fill="none" aria-hidden>
-            <circle cx="11" cy="11" r="3" stroke="#1a3a5c" strokeWidth="1.3" />
-            <circle cx="11" cy="11" r="6.5" stroke="#1a3a5c" strokeWidth="1" opacity="0.55" />
-            <circle cx="11" cy="11" r="10" stroke="#1a3a5c" strokeWidth="0.8" opacity="0.3" />
+            <circle cx="11" cy="11" r="3" stroke="#0D2A21" strokeWidth="1.3" />
+            <circle cx="11" cy="11" r="6.5" stroke="#0D2A21" strokeWidth="1" opacity="0.55" />
+            <circle cx="11" cy="11" r="10" stroke="#0D2A21" strokeWidth="0.8" opacity="0.3" />
           </svg>
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em]" style={{ color: "#1a3a5c" }}>
+          <p className="text-[10px] font-bold uppercase tracking-[0.22em]" style={{ color: "#0D2A21" }}>
             Field Briefing
           </p>
           <span className="text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider"
@@ -68,7 +68,7 @@ export default function NarrativePanel({ pol, billCount, lawCount }: { pol: Poli
           {narrative.paragraph}
         </p>
         {open && (
-          <div className="mt-3 rounded-xl px-3.5 py-2.5" style={{ background: "#1a3a5c08" }}>
+          <div className="mt-3 rounded-xl px-3.5 py-2.5" style={{ background: "#0D2A2108" }}>
             <ul className="space-y-0.5">
               {narrative.sources.map(s => (
                 <li key={s} className="text-[10px]" style={{ color: "#374151" }}>· {s}</li>

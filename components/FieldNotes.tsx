@@ -116,12 +116,12 @@ export default function FieldNotes({ target, dark = false }: { target: string; d
               {mode === "note" && (
                 <input value={key} onChange={e => setKey(e.target.value)} placeholder="Annotator key"
                   className="w-full rounded-full px-3 py-1.5 text-[11px] outline-none"
-                  style={{ background: "#fff", color: "#1a3a5c", border: "1px solid #e5e7eb" }} />
+                  style={{ background: "#fff", color: "#0D2A21", border: "1px solid #e5e7eb" }} />
               )}
               <textarea value={text} onChange={e => setText(e.target.value)} rows={3}
                 placeholder={mode === "note" ? "Context the data can't show. What's behind this number?" : "What looks wrong, and how do you know?"}
                 className="w-full rounded-xl px-3 py-2 text-[11px] outline-none resize-none"
-                style={{ background: "#fff", color: "#1a3a5c", border: "1px solid #e5e7eb" }} />
+                style={{ background: "#fff", color: "#0D2A21", border: "1px solid #e5e7eb" }} />
               <div className="flex items-center gap-2.5">
                 <button type="submit" className="pressable text-[10px] font-bold px-4 py-1.5 rounded-full text-white"
                   style={{ background: mode === "note" ? "#0f766e" : "#b45309" }}>

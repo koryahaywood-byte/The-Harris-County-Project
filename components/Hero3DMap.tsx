@@ -304,7 +304,7 @@ export default function Hero3DMap() {
       <div ref={wrapRef} className="absolute inset-0 cursor-crosshair" />
       {/* fade the map's left edge so the headline stays clean */}
       <div className="absolute inset-0 pointer-events-none"
-        style={{ background: "linear-gradient(90deg, var(--accent, #1a3a5c) 0%, var(--accent, #1a3a5c) 18%, rgba(26,58,92,0.85) 34%, rgba(26,58,92,0.3) 55%, transparent 75%)" }} />
+        style={{ background: "linear-gradient(90deg, var(--accent, #0D2A21) 0%, var(--accent, #0D2A21) 18%, rgba(13,42,33,0.85) 34%, rgba(13,42,33,0.3) 55%, transparent 75%)" }} />
       {/* live precinct tooltip */}
       {tip && (
         <div className="absolute pointer-events-none z-20 px-3 py-2 rounded-xl"

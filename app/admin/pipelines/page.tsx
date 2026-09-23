@@ -34,10 +34,10 @@ export default function PipelinesAdmin() {
   const blocked = jobs.filter(([, j]) => j.status === "blocked").length;
 
   return (
-    <div style={{ background: "#f2f5f9", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }} className="px-5 py-10">
+    <div style={{ background: "#F1F2EE", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }} className="px-5 py-10">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-baseline justify-between flex-wrap gap-2 mb-1">
-          <h1 className="text-2xl font-bold" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>
+          <h1 className="text-2xl font-bold" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair,serif)" }}>
             Pipeline Health
           </h1>
           <Link href="/admin/freshness" className="text-xs underline" style={{ color: "#6b7280" }}>data freshness →</Link>
@@ -57,7 +57,7 @@ export default function PipelinesAdmin() {
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: s.bg, color: s.fg }}>{s.label}</span>
-                      <p className="font-bold text-sm" style={{ color: "#1a3a5c" }}>{j.name}</p>
+                      <p className="font-bold text-sm" style={{ color: "#0D2A21" }}>{j.name}</p>
                       <span className="text-[10px] font-mono" style={{ color: "#9ca3af" }}>{id}</span>
                     </div>
                     <p className="text-[11px] mt-1" style={{ color: "#6b7280" }}>

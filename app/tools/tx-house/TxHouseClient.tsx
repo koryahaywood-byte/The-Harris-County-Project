@@ -182,13 +182,13 @@ export default function TxHouse2026() {
   const decided = seats.length - tally.battleground;
 
   return (
-    <main className="min-h-screen" style={{ background: "#f2f5f9" }}>
+    <main className="min-h-screen" style={{ background: "#F1F2EE" }}>
       <div className="max-w-5xl mx-auto px-5 sm:px-6 py-10">
         {/* Header */}
-        <Link href="/tools/ballot-2026" className="text-[11px] font-semibold hover:opacity-70" style={{ color: "#1a3a5c" }}>
+        <Link href="/tools/ballot-2026" className="text-[11px] font-semibold hover:opacity-70" style={{ color: "#0D2A21" }}>
           ← Back to the 2026 ballot
         </Link>
-        <h1 className="font-black mt-3 leading-tight" style={{ color: "#1a3a5c", fontSize: "clamp(26px,5vw,40px)" }}>
+        <h1 className="font-black mt-3 leading-tight" style={{ color: "#0D2A21", fontSize: "clamp(26px,5vw,40px)" }}>
           Texas House 2026
         </h1>
         <p className="text-[13px] sm:text-[15px] mt-1.5 max-w-2xl" style={{ color: "#475569" }}>
@@ -311,7 +311,7 @@ function Pill({ active, onClick, children }: { active: boolean; onClick: () => v
     <button onClick={onClick}
       className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors"
       style={active
-        ? { background: "#1a3a5c", color: "#fff", borderColor: "#1a3a5c" }
+        ? { background: "#0D2A21", color: "#fff", borderColor: "#0D2A21" }
         : { background: "#fff", color: "#475569", borderColor: "#e2e8f0" }}>
       {children}
     </button>
@@ -321,7 +321,7 @@ function Pill({ active, onClick, children }: { active: boolean; onClick: () => v
 function AllyLink({ href, label }: { href: string; label: string }) {
   return (
     <a href={href} target="_blank" rel="noopener noreferrer"
-      className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#1a3a5c] hover:text-white hover:border-[#1a3a5c]"
+      className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#0D2A21] hover:text-white hover:border-[#0D2A21]"
       style={{ color: "#374151", borderColor: "#e5e7eb", background: "#fff" }}>
       {label} ↗
     </a>
@@ -349,7 +349,7 @@ function SeatCard({ seat }: { seat: Seat }) {
       {/* Top row: district + rating */}
       <div className="flex items-start justify-between gap-2 mb-3">
         <div className="min-w-0">
-          <div className="font-black text-[17px] leading-none" style={{ color: "#1a3a5c" }}>HD {seat.num}</div>
+          <div className="font-black text-[17px] leading-none" style={{ color: "#0D2A21" }}>HD {seat.num}</div>
           {seat.locale && <div className="text-[10.5px] mt-1 truncate" style={{ color: "#94a3b8" }}>{seat.locale}</div>}
         </div>
         <span className="text-[10px] font-bold px-2 py-1 rounded shrink-0"

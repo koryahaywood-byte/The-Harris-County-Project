@@ -1,28 +1,58 @@
 @import "tailwindcss";
 
+/* ── Election Desk design system (Sep 2026) ────────────────────────────────
+   Party-neutral institution. Brand = scoreboard green + gold; party blue/red
+   appear ONLY in data. Type: Source Serif 4 (editorial), Overpass (UI + data,
+   Highway Gothic lineage: the Texas freeway sign), Overpass Mono (labels). */
+@theme {
+  /* Legacy sky-* eyebrows on dark heroes resolve to desk gold */
+  --color-sky-100: #FBF1D6;
+  --color-sky-200: #F1D48A;
+  --color-sky-300: #E2B13C;
+  --color-sky-400: #D39E22;
+  --font-serif: var(--font-source-serif), Georgia, serif;
+  --font-sans: var(--font-overpass), system-ui, sans-serif;
+  --font-mono: var(--font-overpass-mono), ui-monospace, monospace;
+}
+
 :root {
-  --background: #f2f5f9;
-  --foreground: #1a1a1a;
-  --accent: #1a3a5c;
-  --accent-light: #2563a8;
-  --muted: #6b7280;
-  --border: #dde3ec;
-  --card: #ffffff;
+  --ink: #121714;
+  --ink-2: #3C443F;
+  --paper: #F1F2EE;
+  --surface: #FFFFFF;
+  --rule: #DADCD5;
+  --rule-strong: #BFC2BA;
+  --board: #0D2A21;
+  --board-2: #143A2D;
+  --board-line: rgba(255,255,255,0.09);
+  --gold: #E2B13C;
+  --gold-ink: #8A6408;
+  --brand: #0B6A4A;
+  --dem: #2350C2;
+  --rep: #C0392E;
 
-  /* Liquid glass tokens */
-  --glass-bg: rgba(255,255,255,0.72);
-  --glass-border: rgba(255,255,255,0.45);
-  --glass-shadow: 0 8px 32px rgba(26,58,92,0.10), 0 1.5px 0 rgba(255,255,255,0.7) inset;
-  --glass-blur: 18px;
+  /* Legacy tokens, remapped so every existing tool inherits the new system */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --accent: #0D2A21;
+  --accent-light: #0B6A4A;
+  --muted: #5B635E;
+  --border: var(--rule);
+  --card: var(--surface);
+  --font-playfair: var(--font-source-serif);
+  --font-outfit: var(--font-overpass);
 
-  /* Depth tokens */
-  --lift-shadow: 0 20px 60px rgba(26,58,92,0.18), 0 4px 16px rgba(26,58,92,0.10);
-  --lift-shadow-sm: 0 8px 28px rgba(26,58,92,0.13);
+  --glass-bg: rgba(255,255,255,0.86);
+  --glass-border: rgba(18,23,20,0.08);
+  --glass-shadow: 0 1px 2px rgba(18,23,20,0.05);
+  --glass-blur: 14px;
 
-  /* Design-system tokens - single source of truth for card/chip/tab treatments */
-  --radius-card: 1.35rem;
+  --lift-shadow: 0 10px 30px rgba(18,23,20,0.10), 0 2px 6px rgba(18,23,20,0.06);
+  --lift-shadow-sm: 0 4px 14px rgba(18,23,20,0.08);
+
+  --radius-card: 10px;
   --radius-chip: 9999px;
-  --ring-card: 0 0 0 1px rgba(0,0,0,0.07);
+  --ring-card: 0 0 0 1px var(--rule);
 }
 
 /* ── Design system utilities (2026 refresh) ─────────────────────────────── */
@@ -34,7 +64,7 @@
 .hcp-card {
   background: var(--card);
   border-radius: var(--radius-card);
-  box-shadow: var(--ring-card), 0 1px 2px rgba(26,58,92,0.04), 0 6px 18px rgba(26,58,92,0.06);
+  box-shadow: var(--ring-card), 0 1px 2px rgba(18,23,20,0.04);
 }
 
 /* ── Terrain intelligence motif ─────────────────────────────────────────────
@@ -70,7 +100,7 @@
   100% { background-position: 400px 0; }
 }
 .skeleton {
-  background: linear-gradient(90deg, #e5eaf1 25%, #f2f5f9 50%, #e5eaf1 75%);
+  background: linear-gradient(90deg, #E4E6E0 25%, #F1F2EE 50%, #E4E6E0 75%);
   background-size: 800px 100%;
   animation: shimmer 1.6s linear infinite;
   border-radius: 8px;
@@ -101,12 +131,12 @@ body {
 }
 
 ::selection {
-  background: #1a3a5c;
-  color: #f2f5f9;
+  background: var(--gold);
+  color: var(--ink);
 }
 
 :focus-visible {
-  outline: 2px solid #2563a8;
+  outline: 2px solid var(--brand);
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -195,7 +225,7 @@ body {
               box-shadow 0.55s cubic-bezier(0.32,0.72,0,1);
 }
 .card-lift:hover {
-  transform: translateY(-4px) scale(1.008);
+  transform: translateY(-2px);
   box-shadow: var(--lift-shadow);
 }
 
@@ -203,8 +233,8 @@ img { image-rendering: -webkit-optimize-contrast; }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #dde3ec; border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: #1a3a5c40; }
+::-webkit-scrollbar-thumb { background: #CDD0C8; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #9EA39B; }
 
 /* ── Toolbox opening animation ───────────────────────────────────────────── */
 
@@ -369,4 +399,61 @@ img { image-rendering: -webkit-optimize-contrast; }
   }
   /* Lid should be invisible (open) in reduced-motion */
   .tb-lid-open3d { transform: rotateX(-105deg) !important; }
+}
+
+
+/* ══ Election Desk primitives ═══════════════════════════════════════════ */
+body { font-family: var(--font-overpass), system-ui, sans-serif; font-feature-settings: "kern"; }
+.serif { font-family: var(--font-source-serif), Georgia, serif; font-optical-sizing: auto; }
+.mono  { font-family: var(--font-overpass-mono), ui-monospace, monospace; }
+.num   { font-variant-numeric: tabular-nums lining-nums; }
+
+/* Label: the small uppercase mono line used for every section and data label */
+.label {
+  font-family: var(--font-overpass-mono), ui-monospace, monospace;
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500;
+}
+
+/* Desk rule: section heading with a heavy top rule (ink) */
+.desk-head { border-top: 2px solid var(--ink); padding-top: 10px; }
+.desk-head-light { border-top: 1px solid var(--rule-strong); padding-top: 10px; }
+
+/* Panels */
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; }
+.panel-hover { transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+.panel-hover:hover { border-color: var(--rule-strong); box-shadow: 0 6px 20px rgba(18,23,20,0.07); }
+
+/* Scoreboard surface */
+.board {
+  background: var(--board); color: #F2F4EF;
+  background-image: radial-gradient(ellipse 70% 90% at 85% -10%, rgba(226,177,60,0.08), transparent 60%);
+}
+
+/* Links in running text */
+.link { color: var(--brand); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: rgba(11,106,74,0.35); }
+.link:hover { text-decoration-color: currentColor; }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: .5rem; font-weight: 700; font-size: 14px; border-radius: 8px; padding: .7rem 1.1rem; transition: background .15s ease, transform .15s ease; }
+.btn:active { transform: translateY(1px); }
+.btn-gold { background: var(--gold); color: #1B1400; }
+.btn-gold:hover { background: #EDC05A; }
+.btn-ink { background: var(--ink); color: #fff; }
+.btn-ink:hover { background: #26302B; }
+
+/* Ballot strip cell hover */
+.strip-cell { transition: transform .15s ease, opacity .15s ease; transform-origin: bottom; }
+.strip:hover .strip-cell { opacity: .45; }
+.strip .strip-cell:hover, .strip .strip-cell:focus-visible { opacity: 1; transform: scaleY(1.12); outline: none; }
+
+@keyframes strip-in { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+.strip-grow .strip-cell { animation: strip-in .6s cubic-bezier(.2,.8,.2,1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .strip-grow .strip-cell { animation: none; }
+  .strip-cell, .panel-hover { transition: none; }
+}
+
+@media print {
+  .no-print, header, footer, nav { display: none !important; }
 }

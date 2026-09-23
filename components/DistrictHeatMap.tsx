@@ -325,7 +325,7 @@ export default function DistrictHeatMap({ districtField, districtValue, district
       if (!feature) return;
       const layer = L.geoJSON(
         { type: "FeatureCollection", features: [feature] } as GeoJSON.GeoJsonObject,
-        { style: { color: "#1a3a5c", weight: 2.5, opacity: 0.7, fill: false } }
+        { style: { color: "#0D2A21", weight: 2.5, opacity: 0.7, fill: false } }
       ).addTo(leafletMap.current!);
       councilBoundaryRef.current = layer;
       const bounds = layer.getBounds();

@@ -129,7 +129,7 @@ function RaceRow({ matchup }: { matchup: Matchup }) {
   return (
     <div className="px-4 py-3 border-t" style={{ borderColor: "#f3f4f6" }}>
       <div className="flex items-center justify-between gap-3">
-        <p className="text-[11px] font-bold uppercase tracking-wide min-w-0 truncate" style={{ color: "#1a3a5c" }}>
+        <p className="text-[11px] font-bold uppercase tracking-wide min-w-0 truncate" style={{ color: "#0D2A21" }}>
           {matchup.office}
         </p>
         {lean && (
@@ -186,7 +186,7 @@ export default function NovemberBallot({ districts }: { districts: BallotDistric
   return (
     <section className="mb-8">
       <div className="flex items-baseline justify-between gap-3 mb-3 flex-wrap">
-        <h2 className="text-lg font-bold" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>
+        <h2 className="text-lg font-bold" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair,serif)" }}>
           Your ballot on November 3, 2026
         </h2>
         <span className="text-[10px] font-bold px-2.5 py-1 rounded-full"

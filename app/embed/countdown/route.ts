@@ -28,7 +28,7 @@ export async function GET() {
 <style>
   html,body{margin:0;padding:0;background:transparent}
   .card{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-    background:#1a3a5c;color:#fff;border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;
+    background:#0D2A21;color:#fff;border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;
     gap:2px;min-height:100px;justify-content:center}
   .eyebrow{font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#7dd3fc;opacity:.9}
   .num{font-size:34px;font-weight:800;line-height:1.05}

@@ -90,9 +90,9 @@ export default function PoliticiansIndex() {
             <button key={key} onClick={() => setSort(key)}
               className="pressable text-xs font-bold px-4 py-2 rounded-full transition-all"
               style={{
-                background: sort === key ? "#1a3a5c" : "#fff",
+                background: sort === key ? "#0D2A21" : "#fff",
                 color: sort === key ? "#fff" : "#374151",
-                border: `1.5px solid ${sort === key ? "#1a3a5c" : "#e5e7eb"}`,
+                border: `1.5px solid ${sort === key ? "#0D2A21" : "#e5e7eb"}`,
               }}>
               {label}
             </button>

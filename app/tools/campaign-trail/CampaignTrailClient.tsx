@@ -13,7 +13,7 @@ const TYPE_COLORS: Record<string, string> = {
   "Fundraiser":        "#b45309",
   "GOTV":              "#9333ea",
   "Rally":             "#dc2626",
-  "Town Hall":         "#0f2540",
+  "Town Hall":         "#0A1F18",
   "Organizing":        "#1d4ed8",
   "Community":         "#0e7490",
   "Peer-to-Peer":      "#854d0e",

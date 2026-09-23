@@ -38,7 +38,7 @@ export default function CivicMap({ events }: { events: MapEvent[] }) {
 
   if (events.length === 0) return (
     <div className="flex items-center justify-center rounded-2xl"
-      style={{ height: 240, background: "#f0f4f8", border: "1px solid rgba(26,58,92,0.08)" }}>
+      style={{ height: 240, background: "#f0f4f8", border: "1px solid rgba(13,42,33,0.08)" }}>
       <p className="text-xs" style={{ color: "#9ca3af" }}>No civic events this month</p>
     </div>
   );
@@ -63,7 +63,7 @@ export default function CivicMap({ events }: { events: MapEvent[] }) {
         <Marker key={e.id} position={[e.lat, e.lng]} icon={makeIcon(e.color)}>
           <Popup>
             <div style={{ fontFamily: "var(--font-outfit, sans-serif)", minWidth: 160 }}>
-              <p style={{ fontWeight: 700, fontSize: 12, color: "#1a3a5c", marginBottom: 2 }}>{e.title}</p>
+              <p style={{ fontWeight: 700, fontSize: 12, color: "#0D2A21", marginBottom: 2 }}>{e.title}</p>
               <p style={{ fontSize: 10, color: "#6b7280" }}>{e.address}</p>
               <p style={{ fontSize: 10, color: e.color, fontWeight: 600, marginTop: 2 }}>
                 {new Date(e.date + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}

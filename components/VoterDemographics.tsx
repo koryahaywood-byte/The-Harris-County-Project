@@ -139,7 +139,7 @@ export default function VoterDemographics({ districtField, districtValue }: Prop
                   onClick={() => { setElectionTab(tab.key); setCycleIdx(0); }}
                   className="px-2.5 py-1 transition-colors"
                   style={{
-                    background: electionTab === tab.key ? "#1a3a5c" : "white",
+                    background: electionTab === tab.key ? "#0D2A21" : "white",
                     color: electionTab === tab.key ? "white" : "#6b7280",
                   }}>
                   {tab.label}
@@ -154,7 +154,7 @@ export default function VoterDemographics({ districtField, districtValue }: Prop
                   <button key={p} onClick={() => setParty(p)}
                     className="px-2.5 py-1 transition-colors"
                     style={{
-                      background: party === p ? (p === "dem" ? "#2563a8" : p === "rep" ? "#dc2626" : "#1a3a5c") : "white",
+                      background: party === p ? (p === "dem" ? "#2563a8" : p === "rep" ? "#dc2626" : "#0D2A21") : "white",
                       color: party === p ? "white" : "#6b7280",
                     }}>{l}</button>
                 ))}
@@ -171,9 +171,9 @@ export default function VoterDemographics({ districtField, districtValue }: Prop
                   onClick={() => setCycleIdx(i)}
                   className="text-[9px] font-semibold px-2 py-0.5 rounded-full border transition-colors"
                   style={{
-                    background: i === safeCycleIdx ? "#1a3a5c" : "white",
+                    background: i === safeCycleIdx ? "#0D2A21" : "white",
                     color: i === safeCycleIdx ? "white" : "#6b7280",
-                    borderColor: i === safeCycleIdx ? "#1a3a5c" : "#e5e7eb",
+                    borderColor: i === safeCycleIdx ? "#0D2A21" : "#e5e7eb",
                   }}>
                   {c.replace("G", " Gen").replace("P", " Pri").replace("R", " Run")}
                 </button>
@@ -216,7 +216,7 @@ export default function VoterDemographics({ districtField, districtValue }: Prop
             /* ── Live data ── */
             <div>
               <div className="flex items-baseline gap-2 mb-3">
-                <span className="text-xl font-bold" style={{ fontFamily: "var(--font-playfair,serif)", color: "#1a3a5c" }}>
+                <span className="text-xl font-bold" style={{ fontFamily: "var(--font-playfair,serif)", color: "#0D2A21" }}>
                   {totalVoters.toLocaleString()}
                 </span>
                 <span className="text-[10px]" style={{ color: "#9ca3af" }}>
@@ -254,7 +254,7 @@ function SegmentRow({ seg, prevPct }: { seg: Segment; prevPct: number | undefine
       <div className="w-5 flex justify-center shrink-0">{rankBadge(seg.rank)}</div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-1 mb-0.5">
-          <span className="text-[11px] font-semibold truncate" style={{ color: "#1a3a5c" }}>{seg.label}</span>
+          <span className="text-[11px] font-semibold truncate" style={{ color: "#0D2A21" }}>{seg.label}</span>
           <div className="flex items-center gap-1.5 shrink-0">
             <span className="text-[9px]" style={{ color: "#9ca3af" }}>avg {seg.avg_age}</span>
             <span className="text-[10px] font-bold w-10 text-right" style={{ color }}>{seg.pct}%</span>

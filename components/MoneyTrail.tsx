@@ -15,7 +15,7 @@ const DonorGraph3D = dynamic(() => import("./DonorGraph3D"), {
   loading: () => <div className="skeleton h-[430px] rounded-xl" />,
 });
 
-const NAVY = "#1a3a5c";
+const NAVY = "#0D2A21";
 const MUTED = "#9ca3af";
 
 interface DonorRecipient { official: string; amount: number }
@@ -62,7 +62,7 @@ function NetworkGraph({ net, donors, focus }: { net: DonorNetwork; donors: Donor
   }, [net, donors]);
 
   return (
-    <svg viewBox={`0 0 ${layout.W} ${layout.H}`} className="w-full rounded-xl" style={{ background: "#1a3a5c08" }}>
+    <svg viewBox={`0 0 ${layout.W} ${layout.H}`} className="w-full rounded-xl" style={{ background: "#0D2A2108" }}>
       {/* edges */}
       {layout.dPos.map(({ donor, x, y }) =>
         donor.recipients.map(r => {
@@ -161,7 +161,7 @@ export function MoneyTrailView() {
                   <div className="chip-row mt-2">
                     {d.recipients.sort((a, b) => b.amount - a.amount).map(r => (
                       <span key={r.official} className="text-[10px] font-bold px-2.5 py-1 rounded-full"
-                        style={{ background: "#1a3a5c10", color: NAVY }}>
+                        style={{ background: "#0D2A2110", color: NAVY }}>
                         {r.official} · {fmtMoney(r.amount)}
                       </span>
                     ))}

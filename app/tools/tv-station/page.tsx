@@ -128,18 +128,18 @@ function TVSilhouette({ stream, chNum }: { stream: Stream; chNum: number }) {
         className="absolute left-1/2 -translate-x-1/2"
         style={{ bottom: "calc(100% - 4px)", width: "42%", pointerEvents: "none" }}
       >
-        <line x1="82" y1="72" x2="24" y2="4" stroke="#1a3a5c" strokeWidth="5" strokeLinecap="round"/>
-        <circle cx="24" cy="4" r="5" fill="#1a3a5c"/>
-        <line x1="158" y1="72" x2="216" y2="4" stroke="#1a3a5c" strokeWidth="5" strokeLinecap="round"/>
-        <circle cx="216" cy="4" r="5" fill="#1a3a5c"/>
+        <line x1="82" y1="72" x2="24" y2="4" stroke="#0D2A21" strokeWidth="5" strokeLinecap="round"/>
+        <circle cx="24" cy="4" r="5" fill="#0D2A21"/>
+        <line x1="158" y1="72" x2="216" y2="4" stroke="#0D2A21" strokeWidth="5" strokeLinecap="round"/>
+        <circle cx="216" cy="4" r="5" fill="#0D2A21"/>
       </svg>
 
       {/* Chassis */}
       <div
         className="flex items-stretch gap-0 rounded-[1.75rem] overflow-hidden"
         style={{
-          background: "#1a3a5c",
-          boxShadow: "0 24px 64px rgba(26,58,92,0.28), 0 2px 0 rgba(255,255,255,0.06) inset, 0 -2px 0 rgba(0,0,0,0.2) inset",
+          background: "#0D2A21",
+          boxShadow: "0 24px 64px rgba(13,42,33,0.28), 0 2px 0 rgba(255,255,255,0.06) inset, 0 -2px 0 rgba(0,0,0,0.2) inset",
           padding: "18px 14px 22px",
         }}
       >
@@ -199,18 +199,18 @@ function TVSilhouette({ stream, chNum }: { stream: Stream; chNum: number }) {
 
       {/* Brand strip */}
       <div className="flex items-center justify-center gap-3 mt-2">
-        <div className="h-px flex-1 max-w-[80px]" style={{ background: "rgba(26,58,92,0.2)" }}/>
+        <div className="h-px flex-1 max-w-[80px]" style={{ background: "rgba(13,42,33,0.2)" }}/>
         <p className="text-[9px] font-bold uppercase tracking-[0.45em]"
-          style={{ color: "rgba(26,58,92,0.35)", fontFamily: "var(--font-playfair), serif" }}>
+          style={{ color: "rgba(13,42,33,0.35)", fontFamily: "var(--font-playfair), serif" }}>
           Harris County
         </p>
-        <div className="h-px flex-1 max-w-[80px]" style={{ background: "rgba(26,58,92,0.2)" }}/>
+        <div className="h-px flex-1 max-w-[80px]" style={{ background: "rgba(13,42,33,0.2)" }}/>
       </div>
 
       {/* Legs */}
       <div className="flex justify-between" style={{ padding: "0 22%" }}>
         {[0, 1].map(i => (
-          <div key={i} style={{ width: 22, height: 36, background: "#1a3a5c", borderRadius: "0 0 4px 4px", clipPath: "polygon(15% 0, 85% 0, 100% 100%, 0% 100%)" }} />
+          <div key={i} style={{ width: 22, height: 36, background: "#0D2A21", borderRadius: "0 0 4px 4px", clipPath: "polygon(15% 0, 85% 0, 100% 100%, 0% 100%)" }} />
         ))}
       </div>
     </div>
@@ -237,7 +237,7 @@ function RemoteControl({
 
   const btnStyle = (pressed?: boolean) => ({
     background: pressed
-      ? "radial-gradient(circle at 50% 60%, #0d1f35, #1a3a5c)"
+      ? "radial-gradient(circle at 50% 60%, #0d1f35, #0D2A21)"
       : "radial-gradient(circle at 35% 35%, rgba(255,255,255,0.18), #1e3a5c)",
     border: "1px solid rgba(255,255,255,0.12)",
     boxShadow: pressed
@@ -376,7 +376,7 @@ function RemoteControl({
         {/* Active channel hero */}
         <div
           className="rounded-2xl p-5 mb-3"
-          style={{ background: "#1a3a5c", border: "1px solid rgba(255,255,255,0.08)" }}
+          style={{ background: "#0D2A21", border: "1px solid rgba(255,255,255,0.08)" }}
         >
           <div className="flex items-start justify-between gap-3 mb-3">
             <div>
@@ -429,14 +429,14 @@ function RemoteControl({
                 className="w-full text-left rounded-xl px-4 py-3 flex items-center gap-3 transition-all duration-200"
                 style={
                   isActive
-                    ? { background: "#1a3a5c", boxShadow: `0 0 0 1px ${col}50` }
-                    : { background: "rgba(26,58,92,0.05)", border: "1px solid rgba(26,58,92,0.1)" }
+                    ? { background: "#0D2A21", boxShadow: `0 0 0 1px ${col}50` }
+                    : { background: "rgba(13,42,33,0.05)", border: "1px solid rgba(13,42,33,0.1)" }
                 }
               >
                 {/* CH number */}
                 <span
                   className="font-black text-sm w-7 flex-shrink-0"
-                  style={{ color: isActive ? col : "rgba(26,58,92,0.4)", fontFamily: "var(--font-outfit), sans-serif" }}
+                  style={{ color: isActive ? col : "rgba(13,42,33,0.4)", fontFamily: "var(--font-outfit), sans-serif" }}
                 >
                   {i + 1}
                 </span>
@@ -444,7 +444,7 @@ function RemoteControl({
                 <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: col }} />
                 {/* Names */}
                 <span className="flex-1 min-w-0">
-                  <span className="font-semibold text-sm" style={{ color: isActive ? "#fff" : "#1a3a5c" }}>{s.name}</span>
+                  <span className="font-semibold text-sm" style={{ color: isActive ? "#fff" : "#0D2A21" }}>{s.name}</span>
                   <span className="text-[11px] ml-2" style={{ color: isActive ? "rgba(255,255,255,0.4)" : "#9ca3af" }}>{s.body}</span>
                 </span>
                 {/* Schedule */}
@@ -473,12 +473,12 @@ export default function TVStation() {
   const activeStream = STREAMS[activeIdx] ?? STREAMS[0];
 
   return (
-    <div style={{ background: "var(--bg, #f2f5f9)", minHeight: "100vh", fontFamily: "var(--font-outfit), sans-serif" }}>
+    <div style={{ background: "var(--bg, #F1F2EE)", minHeight: "100vh", fontFamily: "var(--font-outfit), sans-serif" }}>
 
       {/* Hero */}
       <section
         className="relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #1a3a5c 0%, #0f2540 60%, #162e4a 100%)", paddingTop: "3rem", paddingBottom: "3rem" }}
+        style={{ background: "linear-gradient(135deg, #0D2A21 0%, #0A1F18 60%, #162e4a 100%)", paddingTop: "3rem", paddingBottom: "3rem" }}
       >
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%, rgba(37,99,168,0.18) 0%, transparent 70%)" }} />

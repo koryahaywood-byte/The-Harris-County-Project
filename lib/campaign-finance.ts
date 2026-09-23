@@ -314,3 +314,24 @@ export function fmt(n: number): string {
   if (n >= 1_000) return `$${Math.round(n / 1000).toLocaleString()}K`;
   return `$${n.toLocaleString()}`;
 }
+
+/** Normalize the mixed asOf formats in the finance data ("2026-06-30",
+ *  "01/01/2026 - 06/30/2026", "Jun 2026", "Q1 2026") into one reader-facing
+ *  form: "Jun 30, 2026" when a day is known, else "Jun 2026" / "Q1 2026". */
+export function formatAsOf(asOf?: string | null): string | null {
+  if (!asOf || asOf === "pending") return null;
+  const s = asOf.trim();
+  const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  let m = s.match(/(\d{4})-(\d{2})-(\d{2})\s*$/);
+  if (m) return `${MON[+m[2] - 1]} ${+m[3]}, ${m[1]}`;
+  // Period ranges: take the closing date ("07/01/2025 through 12/31/2025")
+  const dates = [...s.matchAll(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/g)];
+  if (dates.length) {
+    const [, mo, dy, yr] = dates[dates.length - 1];
+    const y = yr.length === 2 ? `20${yr}` : yr;
+    return `${MON[+mo - 1]} ${+dy}, ${y}`;
+  }
+  m = s.match(/^([A-Z][a-z]{2})[a-z]* (\d{4})/);
+  if (m) return `${m[1]} ${m[2]}${/est/i.test(s) ? " (est.)" : ""}`;
+  return s;
+}

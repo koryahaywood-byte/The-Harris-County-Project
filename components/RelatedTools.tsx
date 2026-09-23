@@ -30,7 +30,7 @@ export default function RelatedTools({ current, className }: { current?: string;
       <div className="flex flex-wrap gap-2">
         {links.map(l => (
           <Link key={l.href} href={l.href}
-            className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#1a3a5c] hover:text-white hover:border-[#1a3a5c]"
+            className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#0D2A21] hover:text-white hover:border-[#0D2A21]"
             style={{ color: "#374151", borderColor: "#e5e7eb", background: "#fff" }}>
             {l.label}
           </Link>

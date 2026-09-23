@@ -138,7 +138,7 @@ function EventDetail({ event }: { event: CivicEvent }) {
   const dateLabel = d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
 
   return (
-    <div className="rounded-2xl overflow-hidden ring-1 ring-black/8" style={{ background: "#fff", boxShadow: "0 2px 8px rgba(26,58,92,0.07)" }}>
+    <div className="rounded-2xl overflow-hidden ring-1 ring-black/8" style={{ background: "#fff", boxShadow: "0 2px 8px rgba(13,42,33,0.07)" }}>
       {/* Top accent */}
       <div style={{ height: 3, background: event.importance === "high" ? cc : `${cc}60` }}/>
       <div className="p-5">
@@ -169,7 +169,7 @@ function EventDetail({ event }: { event: CivicEvent }) {
                   style={{ background: "#f3f4f6", color: "#6b7280" }}>Past</span>
               )}
             </div>
-            <h3 className="font-bold text-sm leading-snug" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair), serif" }}>
+            <h3 className="font-bold text-sm leading-snug" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair), serif" }}>
               {event.title}
             </h3>
             <p className="text-[11px] mt-0.5" style={{ color: "#9ca3af" }}>
@@ -184,12 +184,12 @@ function EventDetail({ event }: { event: CivicEvent }) {
           <div className="flex flex-wrap gap-2">
             <button onClick={() => downloadICS(event)}
               className="px-3 py-1.5 rounded-full text-[10px] font-bold transition-colors duration-150"
-              style={{ background: "#1a3a5c", color: "#fff" }}>
+              style={{ background: "#0D2A21", color: "#fff" }}>
               + Apple / iCal
             </button>
             <a href={googleCalendarUrl(event)} target="_blank" rel="noopener noreferrer"
               className="px-3 py-1.5 rounded-full text-[10px] font-semibold ring-1 ring-black/10 transition-colors duration-150"
-              style={{ background: "#fff", color: "#1a3a5c" }}>
+              style={{ background: "#fff", color: "#0D2A21" }}>
               + Google Calendar
             </a>
           </div>
@@ -321,10 +321,10 @@ export default function CivicCalendar() {
   if (kayMode) return <MsKayCalendar switchBack={() => switchTo(false)} />;
 
   return (
-    <div style={{ background: "var(--bg, #f2f5f9)", minHeight: "100vh", fontFamily: "var(--font-outfit), sans-serif" }}>
+    <div style={{ background: "var(--bg, #F1F2EE)", minHeight: "100vh", fontFamily: "var(--font-outfit), sans-serif" }}>
       {/* Hero */}
       <section className="relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#0f2540 60%,#162e4a 100%)", paddingTop: "3rem", paddingBottom: "3rem" }}>
+        style={{ background: "linear-gradient(135deg,#0D2A21 0%,#0A1F18 60%,#162e4a 100%)", paddingTop: "3rem", paddingBottom: "3rem" }}>
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%,rgba(37,99,168,0.18) 0%,transparent 70%)" }}/>
         <div className="relative max-w-6xl mx-auto px-5">
@@ -391,33 +391,33 @@ export default function CivicCalendar() {
         <aside className="w-56 flex-shrink-0 hidden md:block sticky top-20">
           {/* Month nav */}
           <div className="rounded-2xl ring-1 ring-black/8 mb-4 overflow-hidden"
-            style={{ background: "#fff", boxShadow: "0 1px 4px rgba(26,58,92,0.06)" }}>
+            style={{ background: "#fff", boxShadow: "0 1px 4px rgba(13,42,33,0.06)" }}>
             <div className="p-4">
               <div className="flex items-center justify-between mb-1">
                 <button onClick={prevMonth}
                   className="w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-150"
-                  style={{ background: "rgba(26,58,92,0.07)" }}>
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#1a3a5c" strokeWidth="2">
+                  style={{ background: "rgba(13,42,33,0.07)" }}>
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#0D2A21" strokeWidth="2">
                     <path d="M8 2L4 6l4 4"/>
                   </svg>
                 </button>
                 <div className="text-center">
-                  <p className="font-bold text-sm" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair), serif" }}>
+                  <p className="font-bold text-sm" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair), serif" }}>
                     {MONTH_NAMES[month]}
                   </p>
                   <p className="text-xs" style={{ color: "#9ca3af" }}>{year}</p>
                 </div>
                 <button onClick={nextMonth}
                   className="w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-150"
-                  style={{ background: "rgba(26,58,92,0.07)" }}>
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#1a3a5c" strokeWidth="2">
+                  style={{ background: "rgba(13,42,33,0.07)" }}>
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#0D2A21" strokeWidth="2">
                     <path d="M4 2l4 4-4 4"/>
                   </svg>
                 </button>
               </div>
               <button onClick={jumpToday}
                 className="w-full mt-2 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-[0.15em] transition-colors duration-150"
-                style={{ background: "rgba(26,58,92,0.07)", color: "#1a3a5c" }}>
+                style={{ background: "rgba(13,42,33,0.07)", color: "#0D2A21" }}>
                 Today
               </button>
             </div>
@@ -425,17 +425,17 @@ export default function CivicCalendar() {
 
           {/* Party filter */}
           <div className="rounded-2xl ring-1 ring-black/8 mb-4 overflow-hidden"
-            style={{ background: "#fff", boxShadow: "0 1px 4px rgba(26,58,92,0.06)" }}>
+            style={{ background: "#fff", boxShadow: "0 1px 4px rgba(13,42,33,0.06)" }}>
             <div className="p-4">
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: "#9ca3af" }}>Party</p>
               <div className="flex flex-col gap-1.5">
                 {([["all","All Parties"], ["D","Democrat"], ["R","Republican"]] as [PartyMode,string][]).map(([p, label]) => {
                   const on = partyMode === p;
-                  const color = p === "D" ? "#1d4ed8" : p === "R" ? "#b91c1c" : "#1a3a5c";
+                  const color = p === "D" ? "#1d4ed8" : p === "R" ? "#b91c1c" : "#0D2A21";
                   return (
                     <button key={p} onClick={() => setPartyMode(p)}
                       className="text-left px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150"
-                      style={on ? { background: color, color: "#fff" } : { background: "rgba(26,58,92,0.05)", color: "#1a3a5c" }}>
+                      style={on ? { background: color, color: "#fff" } : { background: "rgba(13,42,33,0.05)", color: "#0D2A21" }}>
                       {p === "D" && <span className="mr-1.5">🔵</span>}
                       {p === "R" && <span className="mr-1.5">🔴</span>}
                       {label}
@@ -450,7 +450,7 @@ export default function CivicCalendar() {
 
           {/* Filter groups */}
           <div className="rounded-2xl ring-1 ring-black/8 overflow-hidden"
-            style={{ background: "#fff", boxShadow: "0 1px 4px rgba(26,58,92,0.06)" }}>
+            style={{ background: "#fff", boxShadow: "0 1px 4px rgba(13,42,33,0.06)" }}>
             <div className="p-4">
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "#9ca3af" }}>Filter</p>
               <div className="flex flex-col gap-1.5 mb-4">
@@ -458,8 +458,8 @@ export default function CivicCalendar() {
                   <button key={g} onClick={() => applyFilterGroup(g)}
                     className="text-left px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150"
                     style={filter === g
-                      ? { background: g === "civic" ? CAT_COLOR.Civic : "#1a3a5c", color: "#fff" }
-                      : { background: "rgba(26,58,92,0.05)", color: "#1a3a5c" }}>
+                      ? { background: g === "civic" ? CAT_COLOR.Civic : "#0D2A21", color: "#fff" }
+                      : { background: "rgba(13,42,33,0.05)", color: "#0D2A21" }}>
                     {label}
                     {g === "political" && <span className="block text-[9px] font-normal mt-0.5 opacity-60">Elections · Legislature</span>}
                     {g === "governmental" && <span className="block text-[9px] font-normal mt-0.5 opacity-60">Courts · City Council · HISD</span>}
@@ -505,17 +505,17 @@ export default function CivicCalendar() {
           {/* Mobile month nav */}
           <div className="flex md:hidden items-center justify-between mb-4 gap-2 flex-wrap">
             <div className="flex items-center gap-3">
-              <button onClick={prevMonth} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(26,58,92,0.08)" }}>
-                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#1a3a5c" strokeWidth="2"><path d="M8 2L4 6l4 4"/></svg>
+              <button onClick={prevMonth} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(13,42,33,0.08)" }}>
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#0D2A21" strokeWidth="2"><path d="M8 2L4 6l4 4"/></svg>
               </button>
-              <p className="font-bold" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair), serif" }}>
+              <p className="font-bold" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair), serif" }}>
                 {MONTH_NAMES[month]} {year}
               </p>
-              <button onClick={nextMonth} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(26,58,92,0.08)" }}>
-                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#1a3a5c" strokeWidth="2"><path d="M4 2l4 4-4 4"/></svg>
+              <button onClick={nextMonth} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(13,42,33,0.08)" }}>
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#0D2A21" strokeWidth="2"><path d="M4 2l4 4-4 4"/></svg>
               </button>
             </div>
-            <button onClick={jumpToday} className="px-4 py-1.5 rounded-full text-xs font-bold" style={{ background: "rgba(26,58,92,0.08)", color: "#1a3a5c" }}>Today</button>
+            <button onClick={jumpToday} className="px-4 py-1.5 rounded-full text-xs font-bold" style={{ background: "rgba(13,42,33,0.08)", color: "#0D2A21" }}>Today</button>
           </div>
 
           {/* Mobile filter pills */}
@@ -524,8 +524,8 @@ export default function CivicCalendar() {
               <button key={g} onClick={() => applyFilterGroup(g)}
                 className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold"
                 style={filter === g
-                  ? { background: g === "civic" ? CAT_COLOR.Civic : "#1a3a5c", color: "#fff" }
-                  : { background: "rgba(26,58,92,0.08)", color: "#1a3a5c" }}>
+                  ? { background: g === "civic" ? CAT_COLOR.Civic : "#0D2A21", color: "#fff" }
+                  : { background: "rgba(13,42,33,0.08)", color: "#0D2A21" }}>
                 {label}
               </button>
             ))}
@@ -536,8 +536,8 @@ export default function CivicCalendar() {
               <button key={p} onClick={() => setPartyMode(p)}
                 className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold"
                 style={partyMode === p
-                  ? { background: p === "D" ? "#1d4ed8" : p === "R" ? "#b91c1c" : "#1a3a5c", color: "#fff" }
-                  : { background: "rgba(26,58,92,0.08)", color: "#1a3a5c" }}>
+                  ? { background: p === "D" ? "#1d4ed8" : p === "R" ? "#b91c1c" : "#0D2A21", color: "#fff" }
+                  : { background: "rgba(13,42,33,0.08)", color: "#0D2A21" }}>
                 {label}
               </button>
             ))}
@@ -552,7 +552,7 @@ export default function CivicCalendar() {
               <button
                 onClick={() => downloadAllICS(monthEntries, `${MONTH_NAMES[month]} ${year}`)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold transition-colors duration-150"
-                style={{ background: "#1a3a5c", color: "#fff" }}
+                style={{ background: "#0D2A21", color: "#fff" }}
                 title="Download all events as a single .ics file — works with Apple Calendar, Google Calendar, and Outlook"
               >
                 <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
@@ -565,7 +565,7 @@ export default function CivicCalendar() {
 
           {/* Calendar */}
           <div className="rounded-2xl overflow-hidden ring-1 ring-black/8 mb-6"
-            style={{ background: "#fff", boxShadow: "0 2px 8px rgba(26,58,92,0.07)" }}>
+            style={{ background: "#fff", boxShadow: "0 2px 8px rgba(13,42,33,0.07)" }}>
             {/* Day-of-week header */}
             <div className="grid grid-cols-7 border-b border-black/6">
               {DOW.map(d => (
@@ -590,7 +590,7 @@ export default function CivicCalendar() {
                       onClick={() => setSelectedDate(isSelected ? null : cell.dateStr)}
                       className="relative min-h-[72px] sm:min-h-[80px] p-1.5 text-left transition-colors duration-150 flex flex-col"
                       style={{
-                        background: isSelected ? "rgba(26,58,92,0.07)" : cell.isToday ? "rgba(37,99,168,0.05)" : "transparent",
+                        background: isSelected ? "rgba(13,42,33,0.07)" : cell.isToday ? "rgba(37,99,168,0.05)" : "transparent",
                         borderRight: "1px solid rgba(0,0,0,0.04)",
                       }}
                     >
@@ -598,8 +598,8 @@ export default function CivicCalendar() {
                       <span
                         className="text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full mb-1"
                         style={{
-                          color: cell.isToday ? "#fff" : cell.isCurrentMonth ? "#1a3a5c" : "#d1d5db",
-                          background: cell.isToday ? "#1a3a5c" : "transparent",
+                          color: cell.isToday ? "#fff" : cell.isCurrentMonth ? "#0D2A21" : "#d1d5db",
+                          background: cell.isToday ? "#0D2A21" : "transparent",
                           fontFamily: cell.isToday ? "var(--font-playfair), serif" : undefined,
                         }}
                       >

@@ -4,7 +4,7 @@ export default function NotFound() {
   return (
     <div
       className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center px-6 text-center"
-      style={{ background: "#f2f5f9" }}
+      style={{ background: "#F1F2EE" }}
     >
       {/* Big number */}
       <p
@@ -12,7 +12,7 @@ export default function NotFound() {
         style={{
           fontFamily: "var(--font-playfair, serif)",
           color: "transparent",
-          WebkitTextStroke: "2px rgba(26,58,92,0.12)",
+          WebkitTextStroke: "2px rgba(13,42,33,0.12)",
         }}
       >
         404

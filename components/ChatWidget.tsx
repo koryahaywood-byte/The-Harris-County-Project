@@ -74,7 +74,7 @@ export default function ChatWidget() {
       <button
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Close chat" : "Open civic assistant"}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[var(--accent)] hover:bg-[var(--accent-light)] text-white shadow-[0_4px_24px_rgba(26,58,92,0.35)] flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-105 active:scale-95"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[var(--accent)] hover:bg-[var(--accent-light)] text-white shadow-[0_4px_24px_rgba(13,42,33,0.35)] flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-105 active:scale-95"
       >
         {open ? (
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
@@ -97,7 +97,7 @@ export default function ChatWidget() {
           open ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"
         }`}
       >
-        <div className="rounded-[1.75rem] bg-white/95 ring-1 ring-black/10 shadow-[0_8px_48px_rgba(26,58,92,0.2)] backdrop-blur-xl flex flex-col overflow-hidden"
+        <div className="rounded-[1.75rem] bg-white/95 ring-1 ring-black/10 shadow-[0_8px_48px_rgba(13,42,33,0.2)] backdrop-blur-xl flex flex-col overflow-hidden"
           style={{ maxHeight: "min(520px, calc(100dvh - 120px))" }}>
 
           {/* Header */}

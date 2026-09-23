@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import FieldNotes from "@/components/FieldNotes";
 
-const NAVY = "#1a3a5c";
+const NAVY = "#0D2A21";
 const MUTED = "#9ca3af";
 
 export interface Signal {
@@ -62,7 +62,7 @@ function SignalCard({ s }: { s: Signal }) {
       </p>
       <p className="text-xs leading-relaxed" style={{ color: "#374151" }}>{s.body}</p>
       {open && (
-        <div className="mt-2.5 rounded-xl px-3 py-2.5" style={{ background: "#1a3a5c08" }}>
+        <div className="mt-2.5 rounded-xl px-3 py-2.5" style={{ background: "#0D2A2108" }}>
           <p className="text-[10px] leading-relaxed" style={{ color: "#374151" }}>
             <strong>Sources:</strong> {s.sources.join(" · ")}
           </p>

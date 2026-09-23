@@ -79,7 +79,7 @@ export default function ShareButton({ toolName, section, description, stats, sum
         className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 mt-4 ${
           light
             ? "border border-white/25 bg-white/10 text-white/80 hover:bg-white/20 hover:text-white hover:border-white/40"
-            : "border border-[#1a3a5c]/20 bg-white text-[#1a3a5c] hover:bg-[#1a3a5c]/5"
+            : "border border-[#0D2A21]/20 bg-white text-[#0D2A21] hover:bg-[#0D2A21]/5"
         }`}
       >
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -98,24 +98,24 @@ export default function ShareButton({ toolName, section, description, stats, sum
         >
           <div
             className="relative bg-white rounded-2xl overflow-hidden shadow-2xl max-w-xl w-full"
-            style={{ border: "1px solid rgba(26,58,92,0.15)" }}
+            style={{ border: "1px solid rgba(13,42,33,0.15)" }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Live OG preview. Rendered server-side from current view state */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={ogUrl()} alt={`${toolName} share preview`} className="w-full block" style={{ aspectRatio: "1200/630", background: "#0f2540" }} />
+            <img src={ogUrl()} alt={`${toolName} share preview`} className="w-full block" style={{ aspectRatio: "1200/630", background: "#0A1F18" }} />
 
             <div className="px-5 py-4">
-              <p className="text-sm font-semibold text-[#1a3a5c]" style={{ fontFamily: "var(--font-playfair), serif" }}>
+              <p className="text-sm font-semibold text-[#0D2A21]" style={{ fontFamily: "var(--font-playfair), serif" }}>
                 {toolName}
               </p>
-              <p className="text-xs text-[#1a3a5c]/60 mt-1 leading-relaxed">{shareText()}</p>
-              <p className="text-[10px] text-[#1a3a5c]/40 mt-1 break-all">{currentUrl()}</p>
+              <p className="text-xs text-[#0D2A21]/60 mt-1 leading-relaxed">{shareText()}</p>
+              <p className="text-[10px] text-[#0D2A21]/40 mt-1 break-all">{currentUrl()}</p>
 
               <div className="flex gap-2 mt-4 flex-wrap">
                 <button
                   onClick={shareNative}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-[#1a3a5c] text-white hover:bg-[#2563a8] transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-[#0D2A21] text-white hover:bg-[#2563a8] transition-colors"
                 >
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                     <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
@@ -126,7 +126,7 @@ export default function ShareButton({ toolName, section, description, stats, sum
                 </button>
                 <button
                   onClick={copyLink}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold border border-[#1a3a5c]/20 text-[#1a3a5c] bg-white hover:bg-[#1a3a5c]/5 transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold border border-[#0D2A21]/20 text-[#0D2A21] bg-white hover:bg-[#0D2A21]/5 transition-colors"
                 >
                   {copied ? "✓ Copied" : "Copy link"}
                 </button>

@@ -164,7 +164,7 @@ function VitruvianFigure({ slug, photo, party, name, legiscanName }: {
   slug: string; photo?: string; party: string; name: string; legiscanName?: string;
 }) {
   const isD   = party === "D";
-  const suit  = isD ? "#1a3a5c" : "#6b1a1a";
+  const suit  = isD ? "#0D2A21" : "#6b1a1a";
   const suitM = isD ? "#2a4f7a" : "#8b2020";
   const suitL = isD ? "#3b6fa0" : "#b03030";
   const accent= isD ? "#3b82f6" : "#ef4444";
@@ -225,10 +225,10 @@ function VitruvianFigure({ slug, photo, party, name, legiscanName }: {
 
         {/* Outer square */}
         <rect x="50" y="85" width="460" height="460" fill="none"
-          stroke="rgba(26,58,92,0.06)" strokeWidth="1" strokeDasharray="5 10"/>
+          stroke="rgba(13,42,33,0.06)" strokeWidth="1" strokeDasharray="5 10"/>
         {/* Outer circle */}
         <circle cx="280" cy="312" r="228" fill="none"
-          stroke="rgba(26,58,92,0.08)" strokeWidth="0.8" strokeDasharray="2 5"/>
+          stroke="rgba(13,42,33,0.08)" strokeWidth="0.8" strokeDasharray="2 5"/>
         {/* Rotating ticks */}
         <g className="vit-ticks">
           {Array.from({ length: 72 }, (_, i) => {
@@ -239,17 +239,17 @@ function VitruvianFigure({ slug, photo, party, name, legiscanName }: {
               <line key={i}
                 x1={280 + r1 * Math.cos(a)} y1={312 + r1 * Math.sin(a)}
                 x2={280 + r2 * Math.cos(a)} y2={312 + r2 * Math.sin(a)}
-                stroke={`rgba(26,58,92,${big ? 0.3 : mid ? 0.14 : 0.07})`}
+                stroke={`rgba(13,42,33,${big ? 0.3 : mid ? 0.14 : 0.07})`}
                 strokeWidth={big ? 1.5 : 0.8}
               />
             );
           })}
         </g>
         {/* Inner guide */}
-        <circle cx="280" cy="312" r="190" fill="none" stroke="rgba(26,58,92,0.04)" strokeWidth="0.5"/>
+        <circle cx="280" cy="312" r="190" fill="none" stroke="rgba(13,42,33,0.04)" strokeWidth="0.5"/>
         {/* Crosshairs */}
-        <line x1="50" y1="312" x2="510" y2="312" stroke="rgba(26,58,92,0.04)" strokeWidth="0.5"/>
-        <line x1="280" y1="85"  x2="280" y2="545" stroke="rgba(26,58,92,0.04)" strokeWidth="0.5"/>
+        <line x1="50" y1="312" x2="510" y2="312" stroke="rgba(13,42,33,0.04)" strokeWidth="0.5"/>
+        <line x1="280" y1="85"  x2="280" y2="545" stroke="rgba(13,42,33,0.04)" strokeWidth="0.5"/>
 
         {/* ── LEFT ARM ── */}
         <g className="vit-arm-l">
@@ -374,7 +374,7 @@ function VitruvianFigure({ slug, photo, party, name, legiscanName }: {
         {/* Legislature label */}
         {legiscanName && (
           <text x="280" y="56" fontFamily="system-ui,sans-serif" fontSize="8" fontWeight="700"
-            fill="rgba(26,58,92,0.28)" textAnchor="middle" letterSpacing="3">
+            fill="rgba(13,42,33,0.28)" textAnchor="middle" letterSpacing="3">
             89TH TEXAS LEGISLATURE
           </text>
         )}
@@ -396,7 +396,7 @@ function VitruvianFigure({ slug, photo, party, name, legiscanName }: {
           <div
             className="w-full h-full rounded-full overflow-hidden"
             style={{
-              boxShadow: `0 0 0 3px ${ringC}, 0 0 0 6px rgba(255,255,255,0.55), 0 12px 32px rgba(26,58,92,0.28)`,
+              boxShadow: `0 0 0 3px ${ringC}, 0 0 0 6px rgba(255,255,255,0.55), 0 12px 32px rgba(13,42,33,0.28)`,
               backdropFilter: "blur(2px)",
             }}
           >
@@ -524,7 +524,7 @@ function BskyCard({ post }: { post: BskyPost }) {
           : <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center text-white text-[10px] font-bold" style={{ background: "#0085ff" }}>{post.author[0]}</div>
         }
         <div className="flex-1 min-w-0">
-          <span className="font-semibold text-xs" style={{ color: "#1a3a5c" }}>{post.author}</span>
+          <span className="font-semibold text-xs" style={{ color: "#0D2A21" }}>{post.author}</span>
           <span className="text-[10px] ml-1.5" style={{ color: "#9ca3af" }}>@{post.handle} · {date}</span>
         </div>
         <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full flex-shrink-0" style={{ background: "#0085ff", color: "#fff" }}>Bluesky</span>
@@ -551,12 +551,12 @@ function NewsCard({ article }: { article: NewsArticle }) {
       target="_blank"
       rel="noopener noreferrer"
       className="block rounded-xl p-3 transition-colors group"
-      style={{ background: "#fff", border: "1px solid rgba(26,58,92,0.1)" }}
+      style={{ background: "#fff", border: "1px solid rgba(13,42,33,0.1)" }}
     >
       <div className="flex items-start gap-2 mb-1">
-        <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full flex-shrink-0 mt-0.5" style={{ background: "#1a3a5c", color: "#fff" }}>News</span>
+        <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full flex-shrink-0 mt-0.5" style={{ background: "#0D2A21", color: "#fff" }}>News</span>
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-semibold leading-snug group-hover:text-[var(--accent)] transition-colors line-clamp-2" style={{ color: "#1a3a5c" }}>
+          <p className="text-xs font-semibold leading-snug group-hover:text-[var(--accent)] transition-colors line-clamp-2" style={{ color: "#0D2A21" }}>
             {article.title}
           </p>
           <div className="flex items-center gap-1.5 mt-1 text-[10px]" style={{ color: "#9ca3af" }}>
@@ -618,7 +618,7 @@ function ProfileCard({ platform, handle, color, bg }: { platform: string; handle
         {label[0]}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-bold" style={{ color: "#1a3a5c" }}>{label}</p>
+        <p className="text-xs font-bold" style={{ color: "#0D2A21" }}>{label}</p>
         <p className="text-[10px]" style={{ color: "#9ca3af" }}>@{handle}</p>
       </div>
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" className="flex-shrink-0">
@@ -683,7 +683,7 @@ function SocialFeed({ pol }: { pol: import("@/lib/politicians").Politician }) {
           <p className="text-[9px] font-black uppercase tracking-[0.25em] mb-2" style={{ color: "var(--muted)" }}>
             Official Posts: @{pol.twitter}
           </p>
-          <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(26,58,92,0.1)" }}>
+          <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(13,42,33,0.1)" }}>
             <TwitterTimeline handle={pol.twitter} />
           </div>
         </div>
@@ -1020,7 +1020,7 @@ export default function PoliticianProfile() {
             </div>
             {/* Portrait: large photo card (replaces the 3D figure) */}
             <div className="relative rounded-2xl overflow-hidden select-none"
-              style={{ width: "100%", aspectRatio: "560/600", background: "linear-gradient(180deg,#0a1626 0%,#0f2540 100%)" }}>
+              style={{ width: "100%", aspectRatio: "560/600", background: "linear-gradient(180deg,#0a1626 0%,#0A1F18 100%)" }}>
               {pol.photo ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={pol.photo} alt={pol.name} className="w-full h-full object-cover object-top"
@@ -1204,8 +1204,8 @@ export default function PoliticianProfile() {
                               return (
                                 <span key={c} className="inline-flex items-center gap-1.5 text-xs font-medium rounded-full px-3 py-1.5"
                                   style={{
-                                    background: role?.role === "Chair" ? "#1a3a5c" : role?.role === "Vice Chair" ? "#e0e7ef" : "#f1f5f9",
-                                    color: role?.role === "Chair" ? "#ffffff" : "#1a3a5c",
+                                    background: role?.role === "Chair" ? "#0D2A21" : role?.role === "Vice Chair" ? "#e0e7ef" : "#f1f5f9",
+                                    color: role?.role === "Chair" ? "#ffffff" : "#0D2A21",
                                   }}>
                                   {role && (
                                     <span className="text-[9px] font-bold uppercase tracking-wider opacity-70">{role.role}</span>

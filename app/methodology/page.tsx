@@ -35,9 +35,9 @@ const COMPONENTS = [
 
 export default function MethodologyPage() {
   return (
-    <div style={{ background: "#f2f5f9", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
+    <div style={{ background: "#F1F2EE", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
       <section className="relative overflow-hidden topo-dark"
-        style={{ background: "linear-gradient(135deg,#1a3a5c 0%,#0f2540 60%,#162e4a 100%)", paddingTop: "3.5rem", paddingBottom: "3.5rem" }}>
+        style={{ background: "linear-gradient(135deg,#0D2A21 0%,#0A1F18 60%,#162e4a 100%)", paddingTop: "3.5rem", paddingBottom: "3.5rem" }}>
         <div className="relative max-w-3xl mx-auto px-5">
           <p className="text-sky-300 text-xs font-bold uppercase tracking-[0.22em] mb-3">Methodology · Published in full</p>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-2" style={{ fontFamily: "var(--font-playfair,serif)" }}>
@@ -54,7 +54,7 @@ export default function MethodologyPage() {
       <div className="max-w-3xl mx-auto px-5 py-10">
         <div className="hcp-card p-6 mb-8">
           <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#9ca3af] mb-2">The formula</p>
-          <p className="text-sm leading-relaxed" style={{ color: "#1a3a5c" }}>
+          <p className="text-sm leading-relaxed" style={{ color: "#0D2A21" }}>
             <strong>Score = 30% Fundraising strength + 30% Legislative output + 20% Peer standing + 20% Experience.</strong>
           </p>
           <p className="text-xs text-[#6b7280] mt-3 leading-relaxed">
@@ -68,7 +68,7 @@ export default function MethodologyPage() {
         {COMPONENTS.map(c => (
           <div key={c.name} className="hcp-card p-6 mb-4">
             <div className="flex items-baseline justify-between mb-2">
-              <h2 className="text-lg font-bold" style={{ color: "#1a3a5c", fontFamily: "var(--font-playfair,serif)" }}>{c.name}</h2>
+              <h2 className="text-lg font-bold" style={{ color: "#0D2A21", fontFamily: "var(--font-playfair,serif)" }}>{c.name}</h2>
               <span className="text-sm font-bold" style={{ color: "#2563a8" }}>{c.weight}</span>
             </div>
             <p className="text-sm text-[#374151] leading-relaxed mb-2">{c.what}</p>
