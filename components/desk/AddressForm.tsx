@@ -8,6 +8,7 @@ export default function AddressForm({ dark = false, initial = "", onSubmit }: { 
   const router = useRouter();
   const [value, setValue] = useState(initial);
   const [locating, setLocating] = useState(false);
+  const [locErr, setLocErr] = useState<string | null>(null);
 
   function go(e: React.FormEvent) {
     e.preventDefault();
@@ -18,12 +19,18 @@ export default function AddressForm({ dark = false, initial = "", onSubmit }: { 
   }
 
   function locate() {
-    if (!navigator.geolocation) return;
+    setLocErr(null);
+    if (!navigator.geolocation) { setLocErr("This browser can’t share location. Type your address instead."); return; }
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
-      p => router.push(`/tools/my-ballot?lat=${p.coords.latitude.toFixed(5)}&lng=${p.coords.longitude.toFixed(5)}`),
-      () => setLocating(false),
-      { timeout: 10_000 },
+      p => router.push(`/tools/my-ballot?lat=${p.coords.latitude.toFixed(6)}&lng=${p.coords.longitude.toFixed(6)}`),
+      err => {
+        setLocating(false);
+        setLocErr(err.code === err.PERMISSION_DENIED
+          ? "Location is blocked for this site. Allow it in your browser settings, or type your address."
+          : "Couldn’t get a precise location. Type your address instead.");
+      },
+      { enableHighAccuracy: true, timeout: 15_000, maximumAge: 60_000 },
     );
   }
 
@@ -43,6 +50,7 @@ export default function AddressForm({ dark = false, initial = "", onSubmit }: { 
         style={dark ? undefined : { color: "var(--brand)" }}>
         {locating ? "Finding you…" : "Use my location instead"}
       </button>
+      {locErr && <p role="alert" className={`mt-1.5 text-[13px] ${dark ? "text-white/80" : ""}`} style={dark ? undefined : { color: "#962A20" }}>{locErr}</p>}
     </form>
   );
 }

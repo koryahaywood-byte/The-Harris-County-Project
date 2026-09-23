@@ -63,6 +63,42 @@ function pointInFeature(x: number, y: number, f: GeoFeature): boolean {
   return false;
 }
 
+// Precinct lines run down street centerlines, and the simplified boundary file
+// leaves 1–15 m seams between neighbors. Phone GPS often snaps to the street,
+// i.e. into a seam, so a strict point-in-polygon test reports a real Harris
+// County location as "outside". Fall back to the nearest feature whose edge is
+// within `maxMeters`.
+function distToFeatureMeters(x: number, y: number, f: GeoFeature): number {
+  const kx = 111_320 * Math.cos((y * Math.PI) / 180), ky = 110_540;
+  const polys = f.geometry.type === "Polygon" ? [f.geometry.coordinates as Ring[]] : (f.geometry.coordinates as Ring[][]);
+  let best = Infinity;
+  for (const poly of polys) {
+    for (const ring of poly) {
+      for (let i = 0; i < ring.length - 1; i++) {
+        const [ax, ay] = ring[i], [bx, by] = ring[i + 1];
+        const dx = (bx - ax) * kx, dy = (by - ay) * ky;
+        const px = (x - ax) * kx, py = (y - ay) * ky;
+        const len = dx * dx + dy * dy;
+        const t = len ? Math.max(0, Math.min(1, (px * dx + py * dy) / len)) : 0;
+        const d = Math.hypot(px - t * dx, py - t * dy);
+        if (d < best) best = d;
+      }
+    }
+  }
+  return best;
+}
+
+function findFeature(x: number, y: number, features: GeoFeature[], maxMeters = 300): GeoFeature | null {
+  const hit = features.find(f => pointInFeature(x, y, f));
+  if (hit) return hit;
+  let best: GeoFeature | null = null, bestD = maxMeters;
+  for (const f of features) {
+    const d = distToFeatureMeters(x, y, f);
+    if (d < bestD) { bestD = d; best = f; }
+  }
+  return best;
+}
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const address = searchParams.get("address")?.trim();
@@ -103,11 +139,11 @@ export async function GET(req: Request) {
   }
 
   // 2. Find the voting precinct
-  const feature = loadPrecincts().find(f => pointInFeature(lng, lat, f));
+  const feature = findFeature(lng, lat, loadPrecincts());
   if (!feature) {
     return NextResponse.json(
       { error: hasCoords
-          ? "You appear to be outside Harris County voting precincts."
+          ? "Your device reported a location outside Harris County. Location on laptops can be miles off; type your street address instead."
           : "That address geocoded outside Harris County voting precincts.", matched },
       { status: 404 }
     );
@@ -115,7 +151,7 @@ export async function GET(req: Request) {
   const precinct = String(feature.properties.PREC);
 
   // 3. Direct PIP for commissioner precinct. Overrides crosswalk centroid which fails at boundaries
-  const commFeature = loadCommPrecincts().find(f => pointInFeature(lng, lat, f));
+  const commFeature = findFeature(lng, lat, loadCommPrecincts());
   const commPct = commFeature ? String(commFeature.properties.PCT_NO) : undefined;
 
   // 4. Crosswalk → all other districts; override pct with direct PIP result
