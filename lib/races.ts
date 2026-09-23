@@ -307,7 +307,7 @@ export interface RaceLite {
   d: { name: string; incumbent: boolean; cash: number; photo?: string; woman: boolean } | null;
   r: { name: string; incumbent: boolean; cash: number; photo?: string; woman: boolean } | null;
   open: boolean; holder: "D" | "R" | null;
-  last: { dPct: number; rPct: number; year: number; proxy: boolean } | null;
+  last: { dPct: number; rPct: number; year: number; proxy: boolean; oldLines: boolean } | null;
   stakes?: string;
 }
 
@@ -316,7 +316,9 @@ export function toLite(r: Race): RaceLite {
   return {
     key: r.key, slug: r.slug, office: r.office, tag: r.tag, group: r.group, lean: r.lean,
     d: side(r.d), r: side(r.r), open: r.open, holder: r.holder,
-    last: r.last && { dPct: r.last.dPct, rPct: r.last.rPct, year: r.last.year, proxy: r.last.proxy },
+    // Congressional results predate the 2025 map (PLANC2333): flag them so a
+    // D+26 "last result" never silently contradicts a toss-up rating.
+    last: r.last && { dPct: r.last.dPct, rPct: r.last.rPct, year: r.last.year, proxy: r.last.proxy, oldLines: r.key.startsWith("CD-") },
     stakes: r.stakes,
   };
 }

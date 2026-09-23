@@ -162,8 +162,8 @@ export default async function RacePage({ params }: { params: Promise<{ race: str
               </p>
               <ResultBar dPct={race.last.dPct} rPct={race.last.rPct}
                 caption={race.last.proxy
-                  ? "No same-office result on file, so this shows the county's partisan baseline, not this race."
-                  : `${race.last.dVotes.toLocaleString()} D votes to ${race.last.rVotes.toLocaleString()} R, two-party share.`} />
+                  ? "No same-office result on file, so this shows the county’s partisan baseline, not this race."
+                  : `${race.last.dVotes.toLocaleString()} D votes to ${race.last.rVotes.toLocaleString()} R, two-party share.${race.key.startsWith("CD-") ? " Cast under the district’s pre-2025 lines; the 2025 map changed who votes here, which is why the rating can differ." : ""}`} />
               {race.districtHref && (
                 <Link href={race.districtHref} className="mt-4 inline-block text-[13px] font-bold" style={{ color: "var(--brand)" }}>
                   Precinct results and demographics <span aria-hidden>→</span>

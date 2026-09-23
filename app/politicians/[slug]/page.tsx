@@ -12,6 +12,13 @@ import DistrictHistory from "@/components/DistrictHistory";
 import { SharedDonors } from "@/components/MoneyTrail";
 import NarrativePanel from "@/components/NarrativePanel";
 import Link from "next/link";
+import { MATCHUPS_2026, type RaceLean } from "@/lib/matchups-2026";
+import { RATING, raceHref } from "@/lib/ratings";
+
+// Official name → [race key, rating] for anyone on the November 2026 ballot.
+const RACE_OF: Record<string, [string, RaceLean | undefined]> = Object.fromEntries(
+  Object.entries(MATCHUPS_2026).flatMap(([k, m]) => m.sides.map(s => [s.name, [k, m.lean]] as [string, [string, RaceLean | undefined]]))
+);
 
 // ── Accountability Score panel (hero) ────────────────────────────────────────
 function AccountabilityPanel({ pol, billCount, lawCount }: { pol: Politician; billCount: number; lawCount: number }) {
@@ -930,12 +937,12 @@ export default function PoliticianProfile() {
   const statOrder = ["warChest", "lawmaker", "influence", "access", "tenure"] as const;
 
   return (
-    <div className="bg-[var(--background)] topo-light">
+    <div className="bg-[var(--background)]">
 
-      {/* ── NBA 2K Hero ────────────────────────────────────────────────── */}
+      {/* ── Hero ───────────────────────────────────────────────────────── */}
       <div
         style={{
-          background: `linear-gradient(135deg, #0a1628 0%, #0f1f3a 50%, #0d1b33 100%)`,
+          background: "var(--board)",
           position: "relative",
           overflow: "hidden",
         }}
@@ -984,43 +991,11 @@ export default function PoliticianProfile() {
         {/* Main hero grid: figure left, stats right */}
         <div className="relative max-w-6xl mx-auto px-4 pt-2 pb-6 grid grid-cols-1 md:grid-cols-[340px_1fr] gap-0 md:gap-6 items-end">
 
-          {/* Figure column: character-select arena */}
-          <div className="relative">
-            <style>{`
-              @keyframes arena-ring   { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
-              @keyframes arena-pulse  { 0%,100% { opacity: 0.55; transform: scaleX(1) } 50% { opacity: 0.9; transform: scaleX(1.04) } }
-              @keyframes arena-scan   { 0%,100% { opacity: 0.12 } 50% { opacity: 0.3 } }
-            `}</style>
-            {/* spotlight cone */}
-            <div className="absolute pointer-events-none" aria-hidden
-              style={{
-                left: "10%", right: "10%", top: "-6%", bottom: "8%",
-                background: `conic-gradient(from 180deg at 50% 0%, transparent 42%, ${accentColor}14 47%, ${accentColor}22 50%, ${accentColor}14 53%, transparent 58%)`,
-                animation: "arena-scan 6s ease-in-out infinite",
-              }} />
-            {/* platform: glow ellipse + rotating select ring */}
-            <div className="absolute pointer-events-none" aria-hidden
-              style={{ left: "14%", right: "14%", bottom: "1.5%", height: "9%" }}>
-              <div className="absolute inset-0 rounded-[50%]"
-                style={{
-                  background: `radial-gradient(ellipse at center, ${accentColor}40 0%, ${accentColor}14 45%, transparent 72%)`,
-                  animation: "arena-pulse 4s ease-in-out infinite",
-                }} />
-              <svg viewBox="0 0 200 60" className="absolute inset-0 w-full h-full" style={{ overflow: "visible" }}>
-                <g style={{ animation: "arena-ring 24s linear infinite", transformOrigin: "100px 30px" }}>
-                  <ellipse cx="100" cy="30" rx="92" ry="26" fill="none" stroke={accentColor} strokeWidth="1.1"
-                    strokeDasharray="20 9 4 9" opacity="0.55" />
-                </g>
-                <g style={{ animation: "arena-ring 38s linear infinite reverse", transformOrigin: "100px 30px" }}>
-                  <ellipse cx="100" cy="30" rx="78" ry="21" fill="none" stroke="#fbbf24" strokeWidth="0.7"
-                    strokeDasharray="2 14" opacity="0.5" />
-                </g>
-                <ellipse cx="100" cy="30" rx="62" ry="16" fill="none" stroke={accentColor} strokeWidth="0.6" opacity="0.3" />
-              </svg>
-            </div>
+          {/* Portrait column */}
+          <div className="relative w-full max-w-[260px] md:max-w-none mx-auto md:mx-0">
             {/* Portrait: large photo card (replaces the 3D figure) */}
             <div className="relative rounded-2xl overflow-hidden select-none"
-              style={{ width: "100%", aspectRatio: "560/600", background: "linear-gradient(180deg,#0a1626 0%,#0A1F18 100%)" }}>
+              style={{ width: "100%", aspectRatio: "560/600", background: "var(--board-2)" }}>
               {pol.photo ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={pol.photo} alt={pol.name} className="w-full h-full object-cover object-top"
@@ -1032,9 +1007,9 @@ export default function PoliticianProfile() {
                 </div>
               )}
               <div className="absolute bottom-0 left-0 right-0 pointer-events-none"
-                style={{ background: "linear-gradient(to top, rgba(4,10,22,0.95) 0%, rgba(4,10,22,0.55) 55%, transparent 100%)", paddingBottom: "0.6rem", paddingTop: "2.5rem" }}>
+                style={{ background: "linear-gradient(to top, rgba(13,42,33,0.95) 0%, rgba(13,42,33,0.5) 55%, transparent 100%)", paddingBottom: "0.6rem", paddingTop: "2.5rem" }}>
                 <p className="text-center font-black tracking-[0.32em] leading-none"
-                  style={{ color: pol.party === "D" ? "#60a5fa" : pol.party === "R" ? "#f87171" : "#cbd5e1", fontSize: "clamp(14px, 3vw, 20px)", textShadow: "0 0 18px rgba(37,99,168,0.5)" }}>
+                  style={{ color: pol.party === "D" ? "#60a5fa" : pol.party === "R" ? "#f87171" : "#cbd5e1", fontSize: "clamp(14px, 3vw, 20px)", }}>
                   {(pol.name.split(" ").at(-1) ?? pol.name).toUpperCase()}
                 </p>
                 <p className="text-center font-bold tracking-[0.22em] mt-0.5 opacity-55 text-white"
@@ -1080,6 +1055,17 @@ export default function PoliticianProfile() {
                 {pol.note && (
                   <p className="text-xs mt-1.5 font-medium px-2 py-1 rounded" style={{ color: "#fbbf24", background: "rgba(251,191,36,0.12)" }}>{pol.note}</p>
                 )}
+                {RACE_OF[pol.name] && (() => {
+                  const [key, lean] = RACE_OF[pol.name];
+                  const m = lean ? RATING[lean] : null;
+                  return (
+                    <Link href={raceHref(key)} className="mt-2.5 inline-flex items-center gap-2 text-[13px] font-semibold rounded-md px-2.5 py-1.5 hover:bg-white/10 transition-colors"
+                      style={{ color: "#fff", border: "1px solid rgba(255,255,255,0.18)" }}>
+                      <span className="w-2 h-2 rounded-[2px]" style={{ background: m?.color ?? "#9AA19C" }} aria-hidden />
+                      On the Nov 3 ballot{m ? `: ${m.label}` : ""} <span aria-hidden>→</span>
+                    </Link>
+                  );
+                })()}
                 {(pol.birthYear || pol.salary) && (
                   <p className="text-xs mt-1 font-semibold" style={{ color: "rgba(255,255,255,0.3)" }}>
                     {pol.birthYear && <span>Age {new Date().getFullYear() - pol.birthYear}{pol.salary ? " · " : ""}</span>}

@@ -62,7 +62,7 @@ export default function RaceTile({ race, showStakes = true }: { race: RaceLite; 
       {race.last && (
         <div className="px-4 py-2.5 border-t" style={{ borderColor: "var(--rule)", background: "#FAFAF8" }}>
           <p className="label mb-1" style={{ color: "#7C837E", fontSize: 10 }}>
-            {race.last.proxy ? `Baseline, ${race.last.year}` : `Last general, ${race.last.year}`}
+            {race.last.proxy ? `Baseline, ${race.last.year}` : `Last general, ${race.last.year}${race.last.oldLines ? ", old district lines" : ""}`}
           </p>
           <ResultBar dPct={race.last.dPct} rPct={race.last.rPct} compact />
         </div>

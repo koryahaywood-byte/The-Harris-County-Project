@@ -658,7 +658,7 @@ export default function WhoDoICallPage() {
             Your Government · Take Action
           </p>
           <h1 className="text-4xl md:text-5xl font-bold mb-2" style={{ fontFamily: "var(--font-playfair,serif)" }}>
-            <span style={{ color: "#aab4c0" }}>Who do I </span><span style={{ color: "#0A1F18" }}>call?</span>
+            <span style={{ color: "var(--ink)" }}>Who do I </span><span style={{ color: "#0A1F18" }}>call?</span>
           </h1>
           <p className="text-sm max-w-lg mb-5" style={{ color: "#5b6470" }}>
             Two questions. What&rsquo;s wrong and where it is. And you&rsquo;ll have the right number to call and the official who answers for it.

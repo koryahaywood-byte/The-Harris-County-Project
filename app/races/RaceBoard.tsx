@@ -236,7 +236,7 @@ function Row({ r }: { r: RaceLite }) {
                 <span className="font-bold" style={{ color: r.last.dPct >= r.last.rPct ? PARTY.D.color : PARTY.R.color }}>
                   {r.last.dPct >= r.last.rPct ? "D" : "R"}+{Math.abs(r.last.dPct - r.last.rPct).toFixed(1)}
                 </span>{" "}
-                in {r.last.year}{r.last.proxy ? ", baseline" : ""}
+                in {r.last.year}{r.last.proxy ? ", baseline" : r.last.oldLines ? ", old lines" : ""}
               </p>
             </div>
           ) : <p className="text-[12px]" style={{ color: "#9AA19C" }}>No prior result on file</p>}

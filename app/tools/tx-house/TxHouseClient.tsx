@@ -186,9 +186,9 @@ export default function TxHouse2026() {
       <div className="max-w-5xl mx-auto px-5 sm:px-6 py-10">
         {/* Header */}
         <Link href="/races" className="text-[11px] font-semibold hover:opacity-70" style={{ color: "#0D2A21" }}>
-          ← Back to the 2026 ballot
+          ← The race board
         </Link>
-        <h1 className="font-black mt-3 leading-tight" style={{ color: "#0D2A21", fontSize: "clamp(26px,5vw,40px)" }}>
+        <h1 className="serif font-semibold mt-3 leading-tight tracking-[-0.02em]" style={{ color: "var(--ink)", fontSize: "clamp(32px,5vw,50px)" }}>
           Texas House 2026
         </h1>
         <p className="text-[13px] sm:text-[15px] mt-1.5 max-w-2xl" style={{ color: "#475569" }}>
@@ -349,7 +349,7 @@ function SeatCard({ seat }: { seat: Seat }) {
       {/* Top row: district + rating */}
       <div className="flex items-start justify-between gap-2 mb-3">
         <div className="min-w-0">
-          <div className="font-black text-[17px] leading-none" style={{ color: "#0D2A21" }}>HD {seat.num}</div>
+          <Link href={`/races/hd-${seat.num}`} className="serif font-semibold text-[19px] leading-none hover:underline decoration-1 underline-offset-4" style={{ color: "var(--ink)" }}>HD {seat.num}</Link>
           {seat.locale && <div className="text-[10.5px] mt-1 truncate" style={{ color: "#94a3b8" }}>{seat.locale}</div>}
         </div>
         <span className="text-[10px] font-bold px-2 py-1 rounded shrink-0"

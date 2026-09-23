@@ -508,7 +508,7 @@ function Ballot2026Inner() {
             November 2026
           </p>
           <h1 className="text-4xl md:text-5xl font-bold mb-2" style={{ fontFamily: "var(--font-playfair,serif)" }}>
-            <span style={{ color: "#aab4c0" }}>The 2026 </span><span style={{ color: "#0A1F18" }}>Ballot</span>
+            <span style={{ color: "var(--ink)" }}>The 2026 </span><span style={{ color: "#0A1F18" }}>Ballot</span>
           </h1>
           <p className="text-sm mb-4" style={{ color: "#5b6470" }}>
             {stats.contested} contested · {stats.tossups} toss-ups · {stats.competitive} competitive · {stats.womenCount} women candidates · Harris County

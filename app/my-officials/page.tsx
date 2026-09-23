@@ -295,7 +295,7 @@ export default function MyOfficialsPage() {
             Your Government · Lookup
           </p>
           <h1 className="text-4xl md:text-5xl font-bold mb-3" style={{ fontFamily: "var(--font-playfair,serif)" }}>
-            <span style={{ color: "#aab4c0" }}>Who represents </span><span style={{ color: "#0A1F18" }}>me?</span>
+            <span style={{ color: "var(--ink)" }}>Who represents </span><span style={{ color: "#0A1F18" }}>me?</span>
           </h1>
           <p className="text-sm md:text-[15px] max-w-lg mb-7" style={{ color: "#5b6470" }}>
             Enter your Harris County address. Get every elected official who answers to you –
