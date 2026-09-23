@@ -650,7 +650,7 @@ export default function WhoDoICallPage() {
       {/* Hero */}
       <section className="relative overflow-hidden topo-hero"
         style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#F1F2EE 60%,#F1F2EE 100%)", paddingTop: "3.75rem", paddingBottom: "3rem" }}>
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(37,99,168,0.10),transparent_70%)]" />
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(226,177,60,0.07),transparent_70%)]" />
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_40%_45%_at_90%_75%,rgba(52,160,110,0.04),transparent_70%)]" />
         <div className="relative max-w-3xl mx-auto px-5">
           <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 flex items-center gap-2" style={{ color: "#64748b" }}>
@@ -802,7 +802,7 @@ export default function WhoDoICallPage() {
               { href: "/tools/districts", label: "District vote history →" },
               { href: "/tools/where-is-the-dough", label: "Campaign finance →" },
               { href: "/tools/heat-check", label: "Precinct heat map →" },
-              { href: "/tools/ballot-2026", label: "2026 ballot →" },
+              { href: "/races", label: "2026 ballot →" },
             ].map((l) => (
               <Link key={l.href} href={l.href}
                 className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#0D2A21] hover:text-white hover:border-[#0D2A21]"

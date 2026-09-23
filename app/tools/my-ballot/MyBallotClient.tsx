@@ -110,7 +110,7 @@ export default function MyBallotClient({ races }: { races: RaceLite[] }) {
             <p className="label" style={{ color: "var(--brand)" }}>November 3, 2026 general election</p>
             <h1 className="serif text-[40px] md:text-[52px] leading-[1.03] tracking-[-0.02em] font-semibold mt-2" style={{ color: "var(--ink)" }}>Your ballot</h1>
             <p className="mt-3 text-[17px] leading-relaxed max-w-xl" style={{ color: "#3C443F" }}>
-              Every race you vote in, in the order it appears, with the desk&apos;s rating and each candidate&apos;s cash.
+              Every race you vote in, in the order it appears, with the desk’s rating and each candidate’s cash.
               Print it and bring it to the booth: Texas allows written notes while you vote.
             </p>
           </div>

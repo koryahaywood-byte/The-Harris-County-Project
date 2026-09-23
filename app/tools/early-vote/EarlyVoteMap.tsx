@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import type { Feature, GeoJsonObject } from "geojson";
+import { BASEMAP } from "@/lib/basemap";
 
 interface PrecinctFeature extends Feature {
   properties: { precinct: string; name: string; [key: string]: unknown };
@@ -102,10 +103,8 @@ export default function EarlyVoteMap({ daysPassed, selectedRaceId }: EVMapProps)
       style={{ height: 500, width: "100%", borderRadius: 16 }}
       scrollWheelZoom={true}
     >
-      <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-        attribution='&copy; OpenStreetMap contributors &copy; CARTO'
-      />
+      <TileLayer url={BASEMAP.base} attribution={BASEMAP.attribution} maxNativeZoom={BASEMAP.maxNativeZoom} maxZoom={19} />
+      <TileLayer url={BASEMAP.labels} maxNativeZoom={BASEMAP.maxNativeZoom} maxZoom={19} />
       <GeoJSON
         key={geoKey}
         data={geojson}

@@ -315,7 +315,7 @@ const NOVEMBER_2026_BALLOT: BallotRace[] = MARQUEE_RACES.flatMap(({ key, office 
     incumbent: `${last(d?.name)} (D) vs ${last(r?.name)} (R)${open ? ". Open" : ""}`,
     party: (holder?.party ?? (m.lean?.endsWith("-d") ? "D" : m.lean?.endsWith("-r") ? "R" : "?")) as BallotRace["party"],
     competitive: LEAN_TO_COMPETITIVE[m.lean ?? "toss-up"],
-    href: "/tools/ballot-2026",
+    href: "/races",
   }];
 });
 

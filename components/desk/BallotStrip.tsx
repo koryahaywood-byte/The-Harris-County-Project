@@ -29,15 +29,15 @@ export default function BallotStrip({ races, height = 64 }: { races: StripRace[]
 
   return (
     <div ref={wrap} className="relative" onMouseLeave={() => setHover(null)}>
-      <div className="strip strip-grow flex gap-[6px] items-end" style={{ height }}>
+      <div className="strip strip-grow flex gap-[4px] sm:gap-[6px] items-end" style={{ height }}>
         {buckets.map(b => (
-          <div key={b.lean} className="flex gap-[2px] items-end h-full" style={{ flex: `${b.races.length} 1 0`, minWidth: 30 }}>
+          <div key={b.lean} className="flex justify-center gap-px sm:gap-[2px] items-end h-full min-w-[18px] sm:min-w-[30px]" style={{ flex: `${b.races.length} 1 0` }}>
             {b.races.map(r => {
               const delay = (i++ % 100) * 6;
               const lean = r.lean ?? "toss-up";
               return (
                 <Link key={r.key} href={raceHref(r.key)}
-                  className="strip-cell flex-1 rounded-[2px] min-w-[3px]"
+                  className="strip-cell flex-1 rounded-[1px] sm:rounded-[2px] min-w-0 max-w-[12px]"
                   aria-label={`${r.office}: ${RATING[lean].long}`}
                   onMouseEnter={e => show(r, e.currentTarget)}
                   onFocus={e => show(r, e.currentTarget)}
@@ -53,13 +53,17 @@ export default function BallotStrip({ races, height = 64 }: { races: StripRace[]
       </div>
 
       {/* Bucket legend, aligned to the segments above */}
-      <div className="flex gap-[6px] mt-3">
+      <div className="flex gap-[4px] sm:gap-[6px] mt-3">
         {buckets.map(b => (
-          <div key={b.lean} className="min-w-0" style={{ flex: `${b.races.length} 1 0`, minWidth: 30 }}>
-            <p className="text-[20px] md:text-[26px] font-extrabold leading-none num" style={{ color: b.lean === "toss-up" ? "var(--gold)" : "#fff" }}>{b.races.length}</p>
-            <p className="label mt-1 text-white/55 leading-tight" style={{ fontSize: 10 }}>{b.races.length < 3 ? RATING[b.lean].label.split(/[\s-]/).map((w, i) => <span key={i} className="block">{w}</span>) : RATING[b.lean].label}</p>
+          <div key={b.lean} className="min-w-[18px] sm:min-w-[30px]" style={{ flex: `${b.races.length} 1 0` }}>
+            <p className="text-[17px] sm:text-[20px] md:text-[26px] font-extrabold leading-none num" style={{ color: b.lean === "toss-up" ? "var(--gold)" : "#fff" }}>{b.races.length}</p>
+            <p className="label mt-1 text-white/55 leading-tight hidden sm:block" style={{ fontSize: 10 }}>{b.races.length < 3 ? RATING[b.lean].label.split(/[\s-]/).map((w, i) => <span key={i} className="block">{w}</span>) : RATING[b.lean].label}</p>
           </div>
         ))}
+      </div>
+
+      <div className="sm:hidden flex justify-between mt-2 label text-white/50" style={{ fontSize: 10 }} aria-hidden>
+        <span>Safe D</span><span style={{ color: "var(--gold)" }}>Toss-up</span><span>Safe R</span>
       </div>
 
       {hover && (

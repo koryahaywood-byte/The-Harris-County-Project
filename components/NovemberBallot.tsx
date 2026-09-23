@@ -43,7 +43,7 @@ export interface BallotRace {
 
 // Countywide judicial races (district courts, county courts at law, probate)
 // are on every ballot too but would triple the list; they get a counted
-// pointer to /tools/ballot-2026 instead of rows.
+// pointer to /races instead of rows.
 const JUDICIAL_RACE_COUNT = Object.keys(MATCHUPS_2026).filter(k =>
   /^(Probate|CCL|DC)-/.test(k)
 ).length;
@@ -214,7 +214,7 @@ export default function NovemberBallot({ districts }: { districts: BallotDistric
             <p className="text-[10px] leading-relaxed" style={{ color: "#6b7280" }}>
               Your countywide ballot also carries {JUDICIAL_RACE_COUNT} judicial races: district courts,
               county courts at law, and probate courts.{" "}
-              <Link href="/tools/ballot-2026" className="font-bold hover:underline" style={{ color: "#2563a8" }}>
+              <Link href="/races" className="font-bold hover:underline" style={{ color: "#2563a8" }}>
                 Check every judicial matchup →
               </Link>
             </p>

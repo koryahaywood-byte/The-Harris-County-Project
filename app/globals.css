@@ -11,7 +11,7 @@
   --color-sky-300: #E2B13C;
   --color-sky-400: #D39E22;
   --font-serif: var(--font-source-serif), Georgia, serif;
-  --font-sans: var(--font-overpass), system-ui, sans-serif;
+  --font-sans: "HCP Dot", var(--font-overpass), system-ui, sans-serif;
   --font-mono: var(--font-overpass-mono), ui-monospace, monospace;
 }
 
@@ -40,7 +40,7 @@
   --border: var(--rule);
   --card: var(--surface);
   --font-playfair: var(--font-source-serif);
-  --font-outfit: var(--font-overpass);
+  --font-outfit: "HCP Dot", var(--font-overpass);
 
   --glass-bg: rgba(255,255,255,0.86);
   --glass-border: rgba(18,23,20,0.08);
@@ -71,20 +71,11 @@
    Subtle topographic contour texture - the platform reads like a field map.
    Light surfaces get navy contours at ~4% opacity; dark surfaces get white.
    Refined texture, never decorative noise. */
-.topo-light {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280' viewBox='0 0 280 280'%3E%3Cg fill='none' stroke='%231a3a5c' stroke-opacity='0.045' stroke-width='1'%3E%3Cpath d='M20 250c40-60 10-90 50-120s90-10 110-50 60-40 90-60'/%3E%3Cpath d='M0 230c50-55 25-85 62-112s85-15 108-52 58-36 92-58'/%3E%3Cpath d='M-15 210c55-50 40-80 74-104s80-20 106-54 56-32 94-56'/%3E%3Cpath d='M40 280c35-65 0-95 38-128s95-5 112-48 62-44 86-62'/%3E%3Cpath d='M65 280c30-60-5-88 32-122s90-8 110-46'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 280px 280px;
-}
-.topo-dark {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280' viewBox='0 0 280 280'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.05' stroke-width='1'%3E%3Cpath d='M20 250c40-60 10-90 50-120s90-10 110-50 60-40 90-60'/%3E%3Cpath d='M0 230c50-55 25-85 62-112s85-15 108-52 58-36 92-58'/%3E%3Cpath d='M-15 210c55-50 40-80 74-104s80-20 106-54 56-32 94-56'/%3E%3Cpath d='M40 280c35-65 0-95 38-128s95-5 112-48 62-44 86-62'/%3E%3Cpath d='M65 280c30-60-5-88 32-122s90-8 110-46'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 280px 280px;
-}
+.topo-light { /* retired Sep 2026: the desk uses clean surfaces */ }
+.topo-dark { /* retired Sep 2026: the desk uses clean surfaces */ }
 /* Hero terrain - the contour motif made more present, as the civic "terrain"
    under floating cards (the light counterpart to organic landscape imagery). */
-.topo-hero {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='340' height='340' viewBox='0 0 340 340'%3E%3Cg fill='none' stroke='%231a3a5c' stroke-opacity='0.07' stroke-width='1'%3E%3Cpath d='M24 304c48-72 12-108 60-144s108-12 132-60 72-48 108-72'/%3E%3Cpath d='M0 280c60-66 30-102 74-134s102-18 130-62 70-44 110-70'/%3E%3Cpath d='M-18 256c66-60 48-96 89-125s96-24 127-65 67-38 113-67'/%3E%3Cpath d='M48 340c42-78 0-114 46-154s114-6 134-58 74-53 103-74'/%3E%3Cpath d='M78 340c36-72-6-106 38-146s108-10 132-55'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 340px 340px;
-}
+.topo-hero { /* retired Sep 2026: the desk uses clean surfaces */ }
 
 /* Chip row: consistent wrap + gap for filter pills across all tools */
 .chip-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
@@ -403,7 +394,10 @@ img { image-rendering: -webkit-optimize-contrast; }
 
 
 /* ══ Election Desk primitives ═══════════════════════════════════════════ */
-body { font-family: var(--font-overpass), system-ui, sans-serif; font-feature-settings: "kern"; }
+/* Overpass ships U+00B7 (middle dot) with zero advance width, so "a · b"
+   renders as "a ·b". Borrow just that one glyph from a system face. */
+@font-face { font-family: "HCP Dot"; src: local("Helvetica Neue"), local("Helvetica"), local("Arial"), local("Roboto"); unicode-range: U+00B7; }
+body { font-family: "HCP Dot", var(--font-overpass), system-ui, sans-serif; font-feature-settings: "kern"; }
 .serif { font-family: var(--font-source-serif), Georgia, serif; font-optical-sizing: auto; }
 .mono  { font-family: var(--font-overpass-mono), ui-monospace, monospace; }
 .num   { font-variant-numeric: tabular-nums lining-nums; }
@@ -457,3 +451,11 @@ body { font-family: var(--font-overpass), system-ui, sans-serif; font-feature-se
 @media print {
   .no-print, header, footer, nav { display: none !important; }
 }
+
+/* Legacy tool pages used soft, oversized radii (1.35–2rem, "double-bezel" cards).
+   Unlayered rules beat Tailwind's utility layer, so these pull every legacy
+   card onto the desk's tighter radius without editing 40 files. */
+.rounded-\[2rem\] { border-radius: 14px; }
+.rounded-\[1\.75rem\] { border-radius: 12px; }
+.rounded-\[1\.35rem\] { border-radius: 9px; }
+.rounded-3xl { border-radius: 14px; }

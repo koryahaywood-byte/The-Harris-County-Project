@@ -189,7 +189,7 @@ function OfficialCard({ rep, districts }: { rep: RepEntry; districts?: LookupRes
             </Link>
           ) : null}
           {onBallot2026 && (
-            <Link href={`/tools/ballot-2026?q=${encodeURIComponent(rep.name)}`}
+            <Link href={`/races?q=${encodeURIComponent(rep.name)}`}
               className="text-[10px] font-bold hover:underline" style={{ color: leanMeta?.color ?? "#d97706" }}>
               {leanMeta ? `${leanMeta.label} in Nov →` : "2026 race →"}
             </Link>
@@ -287,7 +287,7 @@ export default function MyOfficialsPage() {
       {/* Hero. Synex-style light, with the topo terrain motif */}
       <section className="relative overflow-hidden topo-hero"
         style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#F1F2EE 60%,#F1F2EE 100%)", paddingTop: "3.75rem", paddingBottom: "3.5rem" }}>
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(37,99,168,0.10),transparent_70%)]" />
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(226,177,60,0.07),transparent_70%)]" />
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_40%_45%_at_90%_75%,rgba(52,160,110,0.04),transparent_70%)]" />
         <div className="relative max-w-3xl mx-auto px-5">
           <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 flex items-center gap-2" style={{ color: "#64748b" }}>

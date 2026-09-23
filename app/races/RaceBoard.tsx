@@ -126,7 +126,7 @@ export default function RaceBoard({ races, groups }: { races: RaceLite[]; groups
         <div className="flex items-baseline justify-between mb-4">
           <p className="text-[14px]" style={{ color: "#4F5752" }}>
             <strong className="num" style={{ color: "var(--ink)" }}>{sorted.length}</strong> {sorted.length === 1 ? "race" : "races"}
-            {q && <> matching &ldquo;{q}&rdquo;</>}
+            {q && <> matching “{q}”</>}
           </p>
           <Legend />
         </div>
@@ -134,7 +134,7 @@ export default function RaceBoard({ races, groups }: { races: RaceLite[]; groups
         {sorted.length === 0 && (
           <div className="panel p-10 text-center">
             <p className="serif text-[20px] font-semibold" style={{ color: "var(--ink)" }}>No races match.</p>
-            <p className="text-[14px] mt-1" style={{ color: "#6B726D" }}>Try a last name, an office like &ldquo;sheriff&rdquo;, or a district like &ldquo;HD 134&rdquo;.</p>
+            <p className="text-[14px] mt-1" style={{ color: "#6B726D" }}>Try a last name, an office like “sheriff”, or a district like “HD 134”.</p>
             <button onClick={() => set({ q: null, view: null, level: null })} className="btn btn-ink mt-4">Show every race</button>
           </div>
         )}

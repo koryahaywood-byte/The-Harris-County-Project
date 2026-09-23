@@ -1,41 +1,41 @@
 import Link from "next/link";
 
-// Cross-tool strip so the toolbox reads as one system, not separate pages.
-// Pass `current` to drop the self-link from the row.
+// Cross-tool strip at the foot of every tool so the site reads as one desk.
+// Pass `current` to drop the self-link.
 const TOOLS = [
-  { href: "/tools/my-ballot",           label: "Print your ballot →" },
-  { href: "/tools/campaign-trail",      label: "Campaign events →" },
-  { href: "/tools/heat-check",          label: "Precinct heat map →" },
-  { href: "/tools/districts",           label: "District vote history →" },
-  { href: "/tools/where-is-the-dough",  label: "Follow the money →" },
-  { href: "/tools/donor-search",        label: "Who gave →" },
-  { href: "/my-officials",              label: "Who represents me →" },
-  { href: "/tools/who-do-i-call",       label: "Who do I call? →" },
-  { href: "/tools/ballot-2026",         label: "2026 ballot →" },
-  { href: "/tools/judges",              label: "Know your judges →" },
-  { href: "/tools/tx-house",            label: "TX House board →" },
-  { href: "/tools/opportunity-map",     label: "Opportunity map →" },
-  { href: "/tools/tax-receipt",         label: "Your tax receipt →" },
-  { href: "/tools/court-votes",         label: "The vote record →" },
-  { href: "/tools/the-brief",           label: "The Brief →" },
-  { href: "/tools/public-money",        label: "Public money →" },
-  { href: "/tools/the-network",         label: "The Network →" },
+  { href: "/races",                     label: "The race board" },
+  { href: "/tools/my-ballot",           label: "Your ballot" },
+  { href: "/tools/where-is-the-dough",  label: "Campaign cash" },
+  { href: "/tools/heat-check",          label: "Precinct results" },
+  { href: "/tools/districts",           label: "District portraits" },
+  { href: "/my-officials",              label: "Who represents me" },
+  { href: "/tools/donor-search",        label: "Who gave" },
+  { href: "/tools/judges",              label: "Know your judges" },
+  { href: "/tools/tx-house",            label: "Texas House board" },
+  { href: "/tools/court-votes",         label: "Commissioners Court votes" },
+  { href: "/tools/civic-calendar",      label: "Civic calendar" },
+  { href: "/tools/campaign-trail",      label: "Campaign trail" },
+  { href: "/tools/tax-receipt",         label: "Your tax receipt" },
+  { href: "/tools/who-do-i-call",       label: "Who do I call" },
 ];
 
 export default function RelatedTools({ current, className }: { current?: string; className?: string }) {
   const links = TOOLS.filter(t => t.href !== current);
   return (
-    <div className={className ?? "mt-10 pt-6 border-t border-black/8"}>
-      <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "#9ca3af" }}>Go deeper</p>
-      <div className="flex flex-wrap gap-2">
-        {links.map(l => (
-          <Link key={l.href} href={l.href}
-            className="text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors hover:bg-[#0D2A21] hover:text-white hover:border-[#0D2A21]"
-            style={{ color: "#374151", borderColor: "#e5e7eb", background: "#fff" }}>
-            {l.label}
-          </Link>
-        ))}
+    <nav className={className ?? "mt-12 pt-5 desk-head"} aria-label="More from the desk">
+      <div className="flex items-baseline justify-between gap-4 mb-3">
+        <p className="serif text-[19px] font-semibold" style={{ color: "var(--ink)" }}>More from the desk</p>
+        <Link href="/tools" className="text-[13px] font-bold" style={{ color: "var(--brand)" }}>Every tool <span aria-hidden>→</span></Link>
       </div>
-    </div>
+      <ul className="flex flex-wrap gap-x-5 gap-y-2">
+        {links.map(l => (
+          <li key={l.href}>
+            <Link href={l.href} className="text-[14px] font-semibold hover:underline underline-offset-4" style={{ color: "#2F3632" }}>
+              {l.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }

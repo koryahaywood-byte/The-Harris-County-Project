@@ -15,8 +15,9 @@ export const runtime = "edge";
    - badge=Lean D                   — competitiveness chip next to the title
    bar/duel replace the desc block when present so the numbers stay big. */
 
-const D_BLUE = "#3b82f6";
-const R_RED = "#ef4444";
+const D_BLUE = "#4C74E0";
+const R_RED = "#DB5245";
+const GOLD = "#E2B13C";
 
 function fmtCash(n: number): string {
   if (!isFinite(n) || n <= 0) return "$0";
@@ -27,7 +28,7 @@ function fmtCash(n: number): string {
 
 function badgeColor(label: string): string {
   const l = label.toLowerCase();
-  if (l.includes("toss")) return "#a855f7";
+  if (l.includes("toss")) return GOLD;
   if (l.endsWith("d")) return D_BLUE;
   if (l.endsWith("r")) return R_RED;
   return "#94a3b8";
@@ -81,16 +82,16 @@ export async function GET(req: NextRequest) {
         style={{
           width: "100%", height: "100%", display: "flex", flexDirection: "column",
           justifyContent: "space-between",
-          background: "linear-gradient(135deg, #0D2A21 0%, #0A1F18 55%, #0D2A21 100%)",
+          background: "#0D2A21",
           padding: "56px 72px", position: "relative",
         }}
       >
         <div style={{
           position: "absolute", inset: 0, display: "flex",
-          background: "radial-gradient(ellipse 70% 80% at 80% 50%, rgba(37,99,168,0.45), transparent)",
+          background: "radial-gradient(ellipse 70% 90% at 90% -10%, rgba(226,177,60,0.16), transparent)",
         }} />
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(147,210,255,0.75)" }}>
+          <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: GOLD }}>
             {`The Harris County Project · ${section}`}
           </div>
           <div style={{ fontSize: 16, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)" }}>
@@ -105,7 +106,7 @@ export async function GET(req: NextRequest) {
             </div>
             {badge && (
               <div style={{
-                display: "flex", fontSize: 22, fontWeight: 700, color: "#fff",
+                display: "flex", fontSize: 22, fontWeight: 700, color: badge.toLowerCase().includes("toss") ? "#2A1E00" : "#fff",
                 background: badgeColor(badge), borderRadius: 10, padding: "8px 18px",
                 textTransform: "uppercase", letterSpacing: "0.06em",
               }}>
@@ -145,16 +146,16 @@ export async function GET(req: NextRequest) {
             return (
               <div style={{ display: "flex", flexDirection: "column", marginTop: bar ? 26 : 8 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
-                  <div style={{ display: "flex", fontSize: 24, fontWeight: 700, color: "#93c5fd" }}>
+                  <div style={{ display: "flex", fontSize: 24, fontWeight: 700, color: "#A9BDF2" }}>
                     {`${duel.dName} · ${fmtCash(duel.dCash)} cash`}
                   </div>
-                  <div style={{ display: "flex", fontSize: 24, fontWeight: 700, color: "#fca5a5" }}>
+                  <div style={{ display: "flex", fontSize: 24, fontWeight: 700, color: "#F2B0A8" }}>
                     {`${fmtCash(duel.rCash)} cash · ${duel.rName}`}
                   </div>
                 </div>
                 <div style={{ display: "flex", width: "100%", height: 34, borderRadius: 10, overflow: "hidden", border: "1px solid rgba(255,255,255,0.18)" }}>
-                  <div style={{ display: "flex", width: `${dw}%`, background: "rgba(59,130,246,0.75)" }} />
-                  <div style={{ display: "flex", width: `${rw}%`, background: "rgba(239,68,68,0.75)" }} />
+                  <div style={{ display: "flex", width: `${dw}%`, background: D_BLUE }} />
+                  <div style={{ display: "flex", width: `${rw}%`, background: R_RED }} />
                 </div>
               </div>
             );
@@ -168,7 +169,7 @@ export async function GET(req: NextRequest) {
                   background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.16)",
                   borderRadius: 14, padding: "16px 26px",
                 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(147,210,255,0.75)", marginBottom: 6 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: GOLD, marginBottom: 6 }}>
                     {s.label}
                   </div>
                   <div style={{ fontSize: 34, fontWeight: 700, color: "#fff" }}>{s.value}</div>
@@ -183,10 +184,10 @@ export async function GET(req: NextRequest) {
           borderTop: "1px solid rgba(255,255,255,0.12)", paddingTop: 22,
         }}>
           <div style={{ fontSize: 18, color: "rgba(255,255,255,0.45)", fontWeight: 500 }}>
-            {"Civic data for Houston & Harris County"}
+            {"Every race on the Harris County ballot, rated"}
           </div>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "rgba(147,210,255,0.65)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-            Free · Open · Independent
+          <div style={{ fontSize: 18, fontWeight: 700, color: "rgba(255,255,255,0.55)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+            Election desk · Public records
           </div>
         </div>
       </div>

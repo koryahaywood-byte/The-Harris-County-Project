@@ -84,7 +84,7 @@ export default function LeaderboardPage() {
 
       {/* Hero */}
       <div className="bg-[var(--accent)] text-white px-6 py-16 md:py-20 relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_80%_50%,rgba(37,99,168,0.4),transparent)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_80%_50%,rgba(226,177,60,0.07),transparent)]" />
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="flex items-center gap-3 mb-3">
             <Link href="/politicians" className="text-sky-300/70 text-[11px] font-bold uppercase tracking-[0.2em] hover:text-sky-300 transition-colors">

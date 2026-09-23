@@ -137,7 +137,7 @@ export default function EarlyVotePage() {
       <section className="relative overflow-hidden"
         style={{ background: "linear-gradient(135deg,#0D2A21 0%,#0A1F18 60%,#162e4a 100%)", paddingTop: "4rem", paddingBottom: "4rem" }}>
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%,rgba(37,99,168,0.18) 0%,transparent 70%)" }} />
+          style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%,rgba(226,177,60,0.07) 0%,transparent 70%)" }} />
         <div className="relative max-w-6xl mx-auto px-5">
           <p className="text-sky-300 text-xs font-bold uppercase tracking-[0.22em] mb-3">Elections · Early Vote</p>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-2" style={{ fontFamily: "var(--font-playfair,serif)" }}>

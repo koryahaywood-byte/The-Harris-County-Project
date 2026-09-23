@@ -127,7 +127,7 @@ export default function MoneyDuel({ race }: { race: MoneyRace }) {
       </div>
 
       <div className="flex items-center gap-3 mt-2.5 pt-2 border-t border-black/5">
-        <Link href={`/tools/ballot-2026?q=${encodeURIComponent(race.office)}`}
+        <Link href={`/races/${race.key.toLowerCase()}`}
           className="text-[9px] font-bold hover:underline" style={{ color: "#d97706" }}>
           Ballot →
         </Link>

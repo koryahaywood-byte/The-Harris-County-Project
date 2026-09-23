@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Where the Money Resides · The Harris County Project",
-  description: "Cash-on-hand for every Harris County official, candidate, and challenger. TEC & FEC filings.",
+  title: "Campaign cash · The Harris County Project",
+  description: "Cash on hand, raised and spent for every Harris County official and 2026 candidate, from FEC, Texas Ethics Commission and county filings.",
   openGraph: {
-    title: "Where the Money Resides",
+    title: "Campaign cash: who has the money in Harris County",
     description: "Cash-on-hand for every Harris County official, candidate, and challenger. TEC & FEC filings.",
-    images: [{ url: "/api/og?tool=Where+the+Money+Resides&section=Money&desc=Cash-on-hand+for+every+Harris+County+official%2C+candidate%2C+and+challenger.+TEC+%26+FEC+filings.", width: 1200, height: 630 }],
+    images: [{ url: "/api/og?tool=Campaign+cash&section=Money&desc=Cash+on+hand%2C+raised+and+spent+for+every+Harris+County+official+and+2026+candidate.", width: 1200, height: 630 }],
   },
   twitter: { card: "summary_large_image" },
 };

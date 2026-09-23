@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
+import { BASEMAP } from "@/lib/basemap";
 
 // A small read-only map: a pulsing pin at the user's coordinates, with their voting
 // precinct outlined. Leaflet is imported dynamically so it never runs during SSR.
@@ -31,7 +32,8 @@ export default function LocationMap({
       }).setView([lat, lng], 13);
       mapRef.current = map;
 
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", { maxZoom: 19 }).addTo(map);
+      L.tileLayer(BASEMAP.base, { attribution: BASEMAP.attribution, maxNativeZoom: BASEMAP.maxNativeZoom, maxZoom: 19 }).addTo(map);
+      L.tileLayer(BASEMAP.labels, { maxNativeZoom: BASEMAP.maxNativeZoom, maxZoom: 19 }).addTo(map);
 
       if (geometry) {
         const layer = L.geoJSON(geometry as GeoJSON.GeoJsonObject, {

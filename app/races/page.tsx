@@ -31,7 +31,7 @@ export default function RacesPage() {
             The race board
           </h1>
           <p className="mt-3 max-w-2xl text-[17px] leading-relaxed" style={{ color: "#3C443F" }}>
-            All {t.total}{" "}contests on the Harris County ballot, with the desk&apos;s rating, the cash each candidate reports,
+            {`All ${t.total} contests on the Harris County ballot, with the desk's rating, the cash each candidate reports,`}{" "}
             and how the seat voted last time. Select any race for the full matchup.
           </p>
         </div>

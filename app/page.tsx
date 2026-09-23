@@ -68,15 +68,15 @@ export default function FrontPage() {
               </p>
             </div>
             <div className="rounded-lg p-5" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
-              <p className="serif text-[20px] font-semibold text-white leading-snug">What&apos;s on your ballot?</p>
-              <p className="text-[14px] text-white/60 mt-1 mb-4">Enter a Harris County address. You&apos;ll get every race you vote in, in ballot order.</p>
+              <p className="serif text-[20px] font-semibold text-white leading-snug">What’s on your ballot?</p>
+              <p className="text-[14px] text-white/60 mt-1 mb-4">Enter a Harris County address. You’ll get every race you vote in, in ballot order.</p>
               <AddressForm dark />
             </div>
           </div>
 
           <div className="mt-12">
-            <div className="flex items-baseline justify-between mb-4">
-              <p className="label text-white/60">The whole ballot, one bar per race</p>
+            <div className="flex items-baseline justify-between gap-4 mb-4">
+              <p className="label text-white/60"><span className="hidden sm:inline">The whole ballot, </span>one bar per race</p>
               <Link href="/races" className="text-[13px] font-semibold text-white/80 hover:text-white">Open the race board <span aria-hidden>→</span></Link>
             </div>
             <BallotStrip races={stripRaces} />
@@ -208,7 +208,7 @@ export default function FrontPage() {
           ))}
         </div>
         <p className="mt-6 text-[13px]" style={{ color: "#6B726D" }}>
-          Ratings are the desk&apos;s judgment, built from past results, registration, money and reported polling. <Link href="/methodology" className="link">How we rate races</Link>.
+          Ratings are the desk’s judgment, built from past results, registration, money and reported polling. <Link href="/methodology" className="link">How we rate races</Link>.
         </p>
       </section>
     </div>

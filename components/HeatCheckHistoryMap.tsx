@@ -8,6 +8,7 @@ import RelatedTools from "@/components/RelatedTools";
 import HeatCheckInsights from "@/components/HeatCheckInsights";
 import { useUrlState, readUrlParams } from "@/lib/useUrlState";
 import "leaflet/dist/leaflet.css";
+import { BASEMAP } from "@/lib/basemap";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface HistCandidate { name: string; party: string }
@@ -263,8 +264,8 @@ export default function HeatCheckHistoryMap() {
     import("leaflet").then(L => {
       const map = L.map(mapRef.current!, { zoomControl: true, scrollWheelZoom: true })
         .setView([29.78, -95.37], 10);
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
-        attribution: "© CartoDB", maxZoom: 16,
+      L.tileLayer(BASEMAP.base, {
+        attribution: BASEMAP.attribution, maxNativeZoom: BASEMAP.maxNativeZoom, maxZoom: 18,
       }).addTo(map);
       leafletMap.current = map;
     });
@@ -438,13 +439,14 @@ export default function HeatCheckHistoryMap() {
     <div style={{ fontFamily: "var(--font-outfit,sans-serif)" }}>
 
       {/* Page header */}
-      <div className="flex items-end gap-0 px-5 pt-5 pb-0 border-b border-black/8"
-        style={{ background: "rgba(255,255,255,0.7)", backdropFilter: "blur(12px)" }}>
+      <div className="flex items-end gap-0 px-5 pt-6 pb-1 border-b"
+        style={{ background: "var(--surface)", borderColor: "var(--rule)" }}>
         <div className="pb-3 mr-auto">
-          <h1 style={{ fontFamily: "var(--font-dancing), cursive", fontSize: "1.6rem", lineHeight: 1, color: "var(--accent)" }}>
-            Heat Check
+          <p className="label" style={{ color: "var(--brand)" }}>Maps · Precinct results</p>
+          <h1 className="serif text-[28px] md:text-[32px] font-semibold leading-tight mt-0.5" style={{ color: "var(--ink)" }}>
+            How every precinct voted
           </h1>
-          <p className="text-[10px]" style={{ color: "#9ca3af" }}>
+          <p className="text-[13px] mt-0.5" style={{ color: "#6B726D" }}>
             {jurisdiction === "houston" ? "City of Houston precincts" : "Harris County"} · precinct-level election results · 2012 – 2026
           </p>
         </div>

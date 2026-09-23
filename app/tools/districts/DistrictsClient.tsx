@@ -269,7 +269,7 @@ function VsCard({ dKey, office }: { dKey: string; office: string }) {
               const knownD = enriched.find(s => s.party === "D" && s.name !== "Challenger");
               const q = knownD?.name ?? enriched.find(s => s.name !== "Challenger")?.name;
               return q ? (
-                <Link href={`/tools/ballot-2026?q=${encodeURIComponent(q)}`}
+                <Link href={`/races?q=${encodeURIComponent(q)}`}
                   className="text-[10px] font-bold hover:opacity-80 transition-opacity"
                   style={{ color: "#f9a8d4" }}>
                   Ballot →
@@ -711,7 +711,7 @@ export default function DistrictsPage() {
       {/* Hero */}
       <section className="relative overflow-hidden topo-hero"
         style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#F1F2EE 60%,#F1F2EE 100%)", paddingTop: "3.75rem", paddingBottom: "3.25rem" }}>
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(37,99,168,0.10),transparent_70%)]" />
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_45%_55%_at_82%_30%,rgba(226,177,60,0.07),transparent_70%)]" />
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_40%_45%_at_90%_75%,rgba(52,160,110,0.04),transparent_70%)]" />
         <div className="relative max-w-7xl mx-auto px-5">
           <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 flex items-center gap-2" style={{ color: "#64748b" }}>

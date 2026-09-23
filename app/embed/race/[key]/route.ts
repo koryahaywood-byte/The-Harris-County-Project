@@ -65,7 +65,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ key: st
   </div>
   ${side("D")}
   ${side("R")}
-  <a class="credit" href="${SITE_URL}/tools/ballot-2026?q=${encodeURIComponent(m.office)}" target="_blank" rel="noopener">Full race coverage · ${SITE_NAME} →</a>
+  <a class="credit" href="${SITE_URL}/races/${encodeURIComponent(key.toLowerCase())}" target="_blank" rel="noopener">Full race coverage · ${SITE_NAME} →</a>
 </div></body></html>`;
 
   return new Response(html, {

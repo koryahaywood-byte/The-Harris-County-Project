@@ -18,7 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/", "/my-officials", "/politicians", "/politicians/leaderboard", "/blogs",
     "/methodology", "/contact", "/about",
     "/tools/heat-check", "/tools/where-is-the-dough", "/tools/districts",
-    "/tools/ballot-2026", "/tools/tx-house", "/tools/field-sweep",
+    "/races", "/tools", "/tools/tx-house", "/tools/field-sweep",
     "/tools/pac-tracker", "/tools/precinct-lookup",
     "/tools/early-vote", "/tools/opportunity-map", "/tools/civic-calendar",
     "/tools/bill-tracker", "/tools/congressional-bills", "/tools/the-brief",
@@ -27,6 +27,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/tools/my-ballot", "/tools/judges", "/tools/donor-search",
     "/tools/tax-receipt", "/tools/court-votes", "/tools/embeds",
   ].map(p => page(p, p === "/" ? 1 : 0.8));
+
+  // One permanent page per race: the pages people search for by name.
+  const races = Object.keys(MATCHUPS_2026).map(key => page(`/races/${key.toLowerCase()}`, 0.9));
 
   const politicians = POLITICIANS.map(p => page(`/politicians/${p.slug}`, 0.6));
 
@@ -37,5 +40,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
     .filter((x): x is NonNullable<typeof x> => x !== null);
 
-  return [...tools, ...politicians, ...districts];
+  return [...tools, ...races, ...politicians, ...districts];
 }

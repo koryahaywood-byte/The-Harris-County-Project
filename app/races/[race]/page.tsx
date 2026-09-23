@@ -95,7 +95,7 @@ export default async function RacePage({ params }: { params: Promise<{ race: str
               )}
             </div>
             <div className="rounded-lg p-4" style={{ background: m ? m.tint : "#F1F2EE" }}>
-              <p className="label" style={{ color: "#4F5752" }}>The desk&apos;s rating</p>
+              <p className="label" style={{ color: "#4F5752" }}>The desk’s rating</p>
               <p className="serif text-[28px] font-semibold leading-tight mt-1 mb-4" style={{ color: "var(--ink)" }}>{m ? m.long : "Not rated"}</p>
               <RatingScale lean={race.lean} />
             </div>
@@ -121,12 +121,12 @@ export default async function RacePage({ params }: { params: Promise<{ race: str
               <h2 className="desk-head serif text-[22px] font-semibold mb-4" style={{ color: "var(--ink)" }}>Money</h2>
               <CashDuel d={dCash} r={rCash} dName={race.d.name} rName={race.r.name} />
               <p className="text-[12px] mt-3" style={{ color: "#8A918C" }}>
-                Cash on hand as reported in each campaign&apos;s latest filing{asOfNote(race)}. <Link href={`/tools/where-is-the-dough?q=${encodeURIComponent(race.d.name)}`} className="link">Full finance records</Link>
+                Cash on hand as reported in each campaign’s latest filing{asOfNote(race)}. <Link href={`/tools/where-is-the-dough?q=${encodeURIComponent(race.d.name)}`} className="link">Full finance records</Link>
               </p>
             </div>
           )}
 
-          <h2 className="desk-head serif text-[22px] font-semibold mb-3" style={{ color: "var(--ink)" }}>The desk&apos;s notes</h2>
+          <h2 className="desk-head serif text-[22px] font-semibold mb-3" style={{ color: "var(--ink)" }}>The desk’s notes</h2>
           <div className="space-y-4 text-[16px] leading-[1.7]" style={{ color: "#2F3632" }}>
             {paragraphs(race.detail).map((p, i) => <p key={i}>{p}</p>)}
             {!race.detail && <p style={{ color: "#6B726D" }}>No reporting on file for this race yet.</p>}

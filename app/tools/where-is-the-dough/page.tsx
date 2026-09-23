@@ -1,35 +1,45 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { FINANCE_DATA_MERGED, fmt, type CandidateFinance } from "@/lib/campaign-finance";
+import { FINANCE_DATA_MERGED, fmt, formatAsOf, type CandidateFinance } from "@/lib/campaign-finance";
 import ShareButton from "@/components/ShareButton";
 import RelatedTools from "@/components/RelatedTools";
 import { MoneyTrailView } from "@/components/MoneyTrail";
 import TerrainReport from "@/components/TerrainReport";
 import { useUrlState, readUrlParams } from "@/lib/useUrlState";
-import { WOMEN_IN_POLITICS } from "@/lib/women-names";
 import { MATCHUPS_2026 } from "@/lib/matchups-2026";
 import { buildMoneyRaces } from "@/lib/money-races";
-import MoneyDuel, { MoversStrip } from "@/components/MoneyDuel";
+import { MoversStrip } from "@/components/MoneyDuel";
+import { POLITICIANS } from "@/lib/politicians";
+import { CANDIDATE_PHOTOS } from "@/lib/candidate-photos";
+import { RATING, PARTY, raceHref } from "@/lib/ratings";
+import { RatingChip } from "@/components/desk/Rating";
+import { CashDuel } from "@/components/desk/Bars";
+import Face from "@/components/desk/Face";
 
-const ON_BALLOT_2026 = new Set(
-  Object.values(MATCHUPS_2026).flatMap(m => m.sides.map(s => s.name))
+// Candidate name → the 2026 race they're on the ballot for.
+const RACE_BY_NAME = new Map<string, string>(
+  Object.entries(MATCHUPS_2026).flatMap(([key, m]) => m.sides.map(s => [s.name, key] as [string, string]))
 );
+const PHOTO_BY_NAME = new Map<string, string>([
+  ...Object.entries(CANDIDATE_PHOTOS),
+  ...POLITICIANS.filter(p => p.photo).map(p => [p.name, p.photo!] as [string, string]),
+]);
 import type { FECCandidate } from "@/app/api/finance/fec/route";
 import type { TECCandidate } from "@/app/api/finance/tec/route";
 
 type Candidate = CandidateFinance;
 
-type Tab   = "story" | "races" | "leaderboard" | "trail" | "scanner" | "portal";
+type Tab   = "leaderboard" | "races" | "story" | "trail" | "portal" | "scanner";
 type Level = "all" | "federal" | "state" | "houston" | "county";
 type CountyGroup = "all" | "commissioners" | "jp" | "courts" | "law" | "admin";
 
 const LEVEL_LABELS: Record<Level, string> = {
-  all: "All", federal: "Federal", state: "State", houston: "City of Houston", county: "County",
+  all: "Every level", federal: "Federal", state: "State", county: "Harris County", houston: "City of Houston",
 };
 
 const COUNTY_GROUPS: Record<CountyGroup, string> = {
-  all: "All County", commissioners: "Commissioners Court", jp: "Justices of the Peace",
+  all: "All county offices", commissioners: "Commissioners Court", jp: "Justices of the Peace",
   courts: "County Courts", law: "Law Enforcement", admin: "Clerks & Admin",
 };
 
@@ -464,54 +474,51 @@ function PortalSearch() {
   );
 }
 
+const TABS: { id: Tab; label: string }[] = [
+  { id: "leaderboard", label: "Leaderboard" },
+  { id: "races", label: "2026 races" },
+  { id: "story", label: "What it shows" },
+  { id: "trail", label: "Donor trail" },
+  { id: "portal", label: "Search county filings" },
+  { id: "scanner", label: "Read a filing" },
+];
+
+const STATEWIDE = /governor|comptroller|attorney general|railroad|u\.s\. senat/i;
+
 export default function WhereIsTheDough() {
-  const [tab, setTab]     = useState<Tab>("story");
+  const [tab, setTab]     = useState<Tab>("leaderboard");
   const [level, setLevel] = useState<Level>("all");
   const [countyGroup, setCountyGroup] = useState<CountyGroup>("all");
   const [party, setParty] = useState<"all" | "D" | "R">("all");
   const [search, setSearch] = useState("");
   const [fecData, setFecData]   = useState<FECCandidate[]>([]);
   const [tecData, setTecData]   = useState<TECCandidate[]>([]);
-  const [fecFetchedAt, setFecFetchedAt] = useState<string>("");
-  const [tecFetchedAt, setTecFetchedAt] = useState<string>("");
 
   // Hydrate filters from the URL once, then mirror them back so shared links restore the view.
-  // The races view lives on ?view=races; the other tabs keep ?tab= as before.
   useEffect(() => {
     const p = readUrlParams(["tab", "view", "level", "group", "party", "q"]);
     if (p.view === "races" || p.tab === "races") setTab("races");
-    else if (p.tab === "story" || p.tab === "leaderboard" || p.tab === "trail" || p.tab === "scanner" || p.tab === "portal") setTab(p.tab as Tab);
+    else if (TABS.some(t => t.id === p.tab)) setTab(p.tab as Tab);
     if (p.level && p.level in LEVEL_LABELS) setLevel(p.level as Level);
     if (p.group && p.group in COUNTY_GROUPS) setCountyGroup(p.group as CountyGroup);
     if (p.party === "D" || p.party === "R") setParty(p.party);
     if (p.q) setSearch(p.q);
   }, []);
   useUrlState(
-    { tab: tab === "races" ? "story" : tab, view: tab === "races" ? "races" : "", level, group: countyGroup, party, q: search },
-    { tab: "story", view: "", level: "all", group: "all", party: "all", q: "" }
+    { tab, level, group: countyGroup, party, q: search },
+    { tab: "leaderboard", level: "all", group: "all", party: "all", q: "" }
   );
 
   useEffect(() => {
-    fetch("/api/finance/fec")
-      .then(r => r.json())
-      .then(({ results, fetchedAt }: { results: FECCandidate[]; fetchedAt: string }) => {
-        setFecData(results.filter(r => r.dataSource === "live"));
-        setFecFetchedAt(fetchedAt);
-      })
+    fetch("/api/finance/fec").then(r => r.json())
+      .then(({ results }: { results: FECCandidate[] }) => setFecData(results.filter(r => r.dataSource === "live")))
       .catch(() => {});
-
-    fetch("/api/finance/tec")
-      .then(r => r.json())
-      .then(({ results, fetchedAt }: { results: TECCandidate[]; fetchedAt: string }) => {
-        setTecData(results.filter(r => r.dataSource === "live"));
-        setTecFetchedAt(fetchedAt);
-      })
+    fetch("/api/finance/tec").then(r => r.json())
+      .then(({ results }: { results: TECCandidate[] }) => setTecData(results.filter(r => r.dataSource === "live")))
       .catch(() => {});
-
   }, []);
 
-  // Base is the pipeline-merged static data. Layer FEC + TEC live on top (both are
-  // clean JSON APIs with no PDF scraping: fast and reliable).
+  // Pipeline-merged static data with FEC + TEC live figures layered on top.
   const DATA: Candidate[] = FINANCE_DATA_MERGED.map(d => {
     if (d.level === "federal") {
       const live = fecData.find(l => l.name === d.name);
@@ -526,576 +533,333 @@ export default function WhereIsTheDough() {
     return d;
   });
 
-  // Race-centric duel model: MATCHUPS_2026 joined against the live-layered data
   const moneyRaces = buildMoneyRaces(DATA);
-
   const withCash  = DATA.filter(d => d.cash > 0);
-  const demTotal  = withCash.filter(d => d.party === "D").reduce((s, d) => s + d.cash, 0);
-  const repTotal  = withCash.filter(d => d.party === "R").reduce((s, d) => s + d.cash, 0);
-  const totalPool = demTotal + repTotal;
+  const total     = withCash.reduce((s, d) => s + d.cash, 0);
   const biggest   = withCash.reduce<Candidate | null>((m, d) => (!m || d.cash > m.cash ? d : m), null);
+  const localOnly = withCash.filter(d => d.level === "county" || d.level === "houston");
+  const biggestLocal = localOnly.reduce<Candidate | null>((m, d) => (!m || d.cash > m.cash ? d : m), null);
 
   const filtered = DATA
     .filter(d => level === "all" || d.level === level)
     .filter(d => level !== "county" || countyGroup === "all" || countyGroupOf(d.office) === countyGroup)
     .filter(d => party === "all" || d.party === party)
     .filter(d => !search || d.name.toLowerCase().includes(search.toLowerCase()) || d.office.toLowerCase().includes(search.toLowerCase()))
-    .sort((a, b) => {
-      // Officials with no data sort to the bottom
-      if ((a.cash > 0) !== (b.cash > 0)) return a.cash > 0 ? -1 : 1;
-      return b.cash - a.cash;
-    });
-
-  const maxCash = filtered[0]?.cash ?? 1;
-
-  const ellis    = DATA.find(d => d.name === "Rodney Ellis");
-  const briones  = DATA.find(d => d.name === "Lesley Briones");
-  const garcia   = DATA.find(d => d.name === "Adrian Garcia");
-  const ramsey   = DATA.find(d => d.name === "Tom Ramsey");
-  const cornyn   = DATA.find(d => d.name === "John Cornyn");
-  const talarico = DATA.find(d => d.name === "James Talarico");
-  const paxton   = DATA.find(d => d.name === "Ken Paxton");
-  const whitmire = DATA.find(d => d.name === "John Whitmire");
-  const hollins  = DATA.find(d => d.name === "Chris Hollins");
-  const pollard  = DATA.find(d => d.name === "Ed Pollard");
-  const radack   = DATA.find(d => d.name === "Steve Radack");
+    .sort((a, b) => ((a.cash > 0) !== (b.cash > 0) ? (a.cash > 0 ? -1 : 1) : b.cash - a.cash));
+  const maxCash = filtered[0]?.cash || 1;
+  const filteredCash = filtered.reduce((s, d) => s + d.cash, 0);
 
   return (
-    <div className="bg-[var(--background)] min-h-screen">
-
-      {/* ── Hero. Synex-style light, topo terrain ─────────────────────── */}
-      <div className="px-6 py-14 md:py-20 relative overflow-hidden topo-hero" style={{ background: "linear-gradient(180deg,#fbfbfd 0%,#F1F2EE 60%,#F1F2EE 100%)" }}>
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_60%_at_85%_40%,rgba(37,99,168,0.10),transparent_70%)]"/>
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_38%_45%_at_92%_80%,rgba(52,160,110,0.04),transparent_70%)]"/>
-        <div className="max-w-6xl mx-auto relative z-10">
-          <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 flex items-center gap-2" style={{ color: "#64748b" }}>
-            <span className="w-5 h-px" style={{ background: "#94a3b8" }} />
-            Money
+    <div>
+      {/* ── Header ─────────────────────────────────────────────────── */}
+      <header className="border-b" style={{ background: "var(--surface)", borderColor: "var(--rule)" }}>
+        <div className="max-w-6xl mx-auto px-4 md:px-6 pt-10 pb-7">
+          <p className="label" style={{ color: "var(--brand)" }}>Money · Campaign finance</p>
+          <h1 className="serif text-[40px] md:text-[52px] leading-[1.03] tracking-[-0.02em] font-semibold mt-2" style={{ color: "var(--ink)" }}>Campaign cash</h1>
+          <p className="mt-3 max-w-2xl text-[17px] leading-relaxed" style={{ color: "#3C443F" }}>
+            What {withCash.length} Harris County officials and 2026 candidates report having in the bank, and what they raised and spent to get there.
+            From FEC, Texas Ethics Commission, county and city filings.
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-2" style={{ fontFamily: "var(--font-playfair), serif" }}>
-            <span style={{ color: "#aab4c0" }}>Where the </span><span style={{ color: "#0A1F18" }}>money resides.</span>
-          </h1>
-          <p className="text-sm max-w-lg" style={{ color: "#5b6470" }}>
-            Cash-on-hand for every Harris County official, candidate, and challenger. TEC &amp; FEC filings.
-          </p>
-          <ShareButton
-            toolName="Where the Money Resides"
-            section="Money"
-            description="Cash-on-hand for every Harris County official, candidate, and challenger. TEC & FEC filings."
-            summary={(() => {
-              if (tab === "races") {
-                const top = moneyRaces.topDuel;
-                return `2026 cash duels: ${moneyRaces.raceCount} set races, ${fmt(moneyRaces.totalTracked)} combined cash.${top ? ` Top duel: ${top.office}, ${fmt(top.totalCash)}.` : ""} Via The Harris County Project`;
-              }
-              const scope = level === "all" ? "All levels"
-                : level === "county" && countyGroup !== "all" ? `Harris County: ${COUNTY_GROUPS[countyGroup]}`
-                : LEVEL_LABELS[level];
-              const cash = filtered.reduce((s, d) => s + d.cash, 0);
-              return `${scope}: ${filtered.length} filers, ${fmt(cash)} cash on hand. Via The Harris County Project`;
-            })()}
-            stats={tab === "races" ? [
-              { label: "Races tracked", value: String(moneyRaces.raceCount) },
-              { label: "Combined cash", value: fmt(moneyRaces.totalTracked) },
-              ...(moneyRaces.topDuel ? [{ label: "Top duel", value: moneyRaces.topDuel.office }] : []),
-            ] : [
-              { label: "Filers", value: String(filtered.length) },
-              { label: "Cash on hand", value: fmt(filtered.reduce((s, d) => s + d.cash, 0)) },
-              { label: "View", value: level === "county" && countyGroup !== "all" ? COUNTY_GROUPS[countyGroup] : LEVEL_LABELS[level] },
-            ]}
-            light={false}
-          />
-          {(fecData.length > 0 || tecData.length > 0) && (
-            <p className="mt-2 text-[11px] flex items-center gap-1.5" style={{ color: "#15803d" }}>
-              <span className="inline-block w-1.5 h-1.5 rounded-full alive-pulse" style={{ background: "#22c55e" }} />
-              {[
-                fecData.length > 0 ? "Federal: FEC" : null,
-                tecData.length > 0 ? "State: TEC" : null,
-              ].filter(Boolean).join(" · ")}: live data
-              {fecFetchedAt && <span className="ml-1" style={{ color: "#94a3b8" }}>as of {new Date(fecFetchedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>}
-            </p>
-          )}
-          <div className="mt-5 flex flex-wrap gap-3">
+          <dl className="mt-7 grid grid-cols-2 md:grid-cols-4 gap-px rounded-lg overflow-hidden" style={{ background: "var(--rule)", border: "1px solid var(--rule)" }}>
             {[
-              { label: "Democrat Total",    val: fmt(demTotal),         color: "#2563a8", sub: null },
-              { label: "Republican Total",  val: fmt(repTotal),         color: "#dc2626", sub: null },
-              { label: "Biggest War Chest", val: biggest ? fmt(biggest.cash) : "–", color: "#b45309", sub: biggest?.name ?? null },
-            ].map(({ label, val, color, sub }) => (
-              <div key={label} className="hcp-card rounded-2xl px-5 py-3">
-                <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: "#94a3b8" }}>{label}</p>
-                <p className="text-2xl font-bold tnum" style={{ fontFamily: "var(--font-playfair), serif", color }}>{val}</p>
-                {sub && <p className="text-[10px] font-semibold mt-0.5" style={{ color: "#94a3b8" }}>{sub}</p>}
+              ["Cash on hand, all filers", fmt(total), `${withCash.length} filers with money reported`],
+              ["Biggest war chest", biggest ? fmt(biggest.cash) : "None", biggest ? `${biggest.name}, ${biggest.office.replace(/\s*\(.*\)/, "")}` : ""],
+              ["Biggest local war chest", biggestLocal ? fmt(biggestLocal.cash) : "None", biggestLocal ? `${biggestLocal.name}, ${biggestLocal.office.replace(/\s*\(.*\)/, "")}` : ""],
+              ["2026 races with money on both sides", String(moneyRaces.races.filter(r => (r.d.fin?.cash ?? 0) > 0 && (r.r.fin?.cash ?? 0) > 0).length), `of ${moneyRaces.raceCount} with any filing`],
+            ].map(([k, v, sub]) => (
+              <div key={k} className="bg-white px-4 py-3.5">
+                <dt className="label" style={{ color: "#6B726D", fontSize: 10 }}>{k}</dt>
+                <dd className="text-[26px] font-extrabold num leading-tight mt-1" style={{ color: "var(--ink)" }}>{v}</dd>
+                <dd className="text-[12px] mt-0.5 truncate" style={{ color: "#6B726D" }}>{sub}</dd>
               </div>
             ))}
-          </div>
-          {/* D vs R cash ratio bar */}
-          {totalPool > 0 && (() => {
-            const dPct = Math.round(demTotal / totalPool * 100);
-            return (
-              <div className="mt-4 max-w-sm">
-                <div className="h-2 rounded-full overflow-hidden flex" style={{ background: "#e5e7eb" }}>
-                  <div style={{ width: `${dPct}%`, background: "#2563a8" }} />
-                  <div style={{ width: `${100 - dPct}%`, background: "#dc2626" }} />
-                </div>
-                <div className="flex justify-between text-[9px] font-semibold mt-1" style={{ color: "#94a3b8" }}>
-                  <span>Dems {dPct}% of total cash</span>
-                  <span>Reps {100 - dPct}%</span>
-                </div>
-                {biggest && (biggest.level === "state" || biggest.level === "federal") && (
-                  <p className="text-[9px] mt-1.5 leading-snug" style={{ color: "#9ca3af" }}>
-                    Statewide filings: {biggest.name}&rsquo;s {fmt(biggest.cash)} alone. Inflate this split; county-level cash runs far closer.
-                  </p>
-                )}
-              </div>
-            );
-          })()}
+          </dl>
+          <p className="mt-3 text-[12px] flex items-center gap-2" style={{ color: "#6B726D" }}>
+            {(fecData.length > 0 || tecData.length > 0) && <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--brand)" }} aria-hidden />}
+            {fecData.length > 0 || tecData.length > 0
+              ? `Live from ${[fecData.length && "the FEC", tecData.length && "the TEC"].filter(Boolean).join(" and ")}; county and city figures from the latest filing period.`
+              : "Figures from each filer's most recent report."}
+          </p>
         </div>
-      </div>
 
-      {/* ── Tab bar ───────────────────────────────────────────────────── */}
-      <div className="sticky top-0 z-20 bg-[var(--background)]/90 backdrop-blur border-b border-[var(--border)] px-6 py-3">
-        <div className="max-w-6xl mx-auto flex flex-wrap items-center gap-3">
-          {(["story","races","leaderboard","trail","portal","scanner"] as Tab[]).map(t => (
-            <button key={t} onClick={() => setTab(t)}
-              className={`text-xs font-bold uppercase tracking-[0.12em] px-4 py-2 rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-                tab === t ? "bg-[var(--accent)] text-white" : "bg-white ring-1 ring-[var(--border)] text-[var(--muted)] hover:ring-[var(--accent-light)]"
-              }`}>
-              {t === "story" ? "The Story" : t === "races" ? "The Races" : t === "trail" ? "Money Trail" : t === "scanner" ? "File Scanner" : t === "portal" ? "Portal Search" : "Leaderboard"}
-            </button>
-          ))}
-
-          {tab === "leaderboard" && (
-            <>
-              <span className="text-[var(--border)] hidden sm:block">|</span>
-              {(Object.entries(LEVEL_LABELS) as [Level, string][]).map(([l, label]) => (
-                <button key={l} onClick={() => { setLevel(l); if (l !== "county") setCountyGroup("all"); }}
-                  className={`text-xs font-bold uppercase tracking-[0.1em] px-3 py-1.5 rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-                    level === l ? "bg-[var(--accent)] text-white" : "bg-white ring-1 ring-[var(--border)] text-[var(--muted)] hover:ring-[var(--accent-light)]"
-                  }`}>
-                  {label}
-                </button>
-              ))}
-              <span className="text-[var(--border)] hidden sm:block">|</span>
-              {([["all","Both"],["D","Dem"],["R","Rep"]] as [string, string][]).map(([v, lbl]) => (
-                <button key={v} onClick={() => setParty(v as "all"|"D"|"R")}
-                  className={`text-xs font-bold uppercase tracking-[0.1em] px-3 py-1.5 rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-                    party === v
-                      ? v === "D" ? "bg-blue-600 text-white" : v === "R" ? "bg-red-600 text-white" : "bg-[var(--accent)] text-white"
-                      : "bg-white ring-1 ring-[var(--border)] text-[var(--muted)] hover:ring-[var(--accent-light)]"
-                  }`}>
-                  {lbl}
-                </button>
-              ))}
-            </>
-          )}
-        </div>
-        {tab === "leaderboard" && level === "county" && (
-          <div className="max-w-6xl mx-auto flex flex-wrap items-center gap-2 mt-2.5">
-            <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--muted)]">Filter county:</span>
-            {(Object.entries(COUNTY_GROUPS) as [CountyGroup, string][]).map(([g, label]) => (
-              <button key={g} onClick={() => setCountyGroup(g)}
-                className={`text-[10px] font-bold uppercase tracking-[0.08em] px-2.5 py-1 rounded-full transition-all duration-300 ${
-                  countyGroup === g ? "bg-[var(--accent-light)] text-white" : "bg-white ring-1 ring-[var(--border)] text-[var(--muted)] hover:ring-[var(--accent-light)]"
-                }`}>
-                {label}
+        {/* Tabs */}
+        <div className="max-w-6xl mx-auto px-4 md:px-6">
+          <nav className="flex gap-6 overflow-x-auto -mb-px" style={{ scrollbarWidth: "none" }} aria-label="Views">
+            {TABS.map(t => (
+              <button key={t.id} onClick={() => setTab(t.id)} aria-current={tab === t.id ? "page" : undefined}
+                className="shrink-0 py-3 text-[14px] font-semibold border-b-[3px] transition-colors"
+                style={{ borderColor: tab === t.id ? "var(--gold)" : "transparent", color: tab === t.id ? "var(--ink)" : "#5B635E" }}>
+                {t.label}
               </button>
             ))}
-          </div>
-        )}
-      </div>
+          </nav>
+        </div>
+      </header>
 
-      <div className="max-w-6xl mx-auto px-6 py-12">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 py-8">
 
-        {/* ── THE STORY ─────────────────────────────────────────────── */}
-        {tab === "story" && (
-          <div className="space-y-6">
-            <div className="mb-8">
-              <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[var(--muted)] mb-2">What the Money Says</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-[var(--accent)] leading-tight max-w-2xl"
-                style={{ fontFamily: "var(--font-playfair), serif" }}>
-                Four money stories that tell you everything about 2026 Harris County politics.
-              </h2>
-            </div>
-
-            {[
-              {
-                eyebrow: "County Power",
-                color: "#2563eb",
-                border: "#3b82f6",
-                stat: ellis ? fmt(ellis.cash) : "–",
-                statLabel: "Rodney Ellis · PCT 1",
-                headline: "Rodney Ellis has more cash than every other commissioner combined.",
-                body: `Commissioner Ellis's ${ellis ? fmt(ellis.cash) : "–"} war chest dwarfs his colleagues: Briones has ${briones ? fmt(briones.cash) : "–"}, Garcia ${garcia ? fmt(garcia.cash) : "–"}, Ramsey ${ramsey ? fmt(ramsey.cash) : "–"}. Ellis is up in 2026, and that pile signals to any challenger: this seat won't be cheap.`,
-                links: [
-                  { label: "Ellis finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=Rodney+Ellis" },
-                  { label: "PCT 1 ballot →", href: "/tools/ballot-2026?q=Rodney+Ellis" },
-                ],
-              },
-              {
-                eyebrow: "Senate Race",
-                color: "#7c3aed",
-                border: "#a78bfa",
-                stat: talarico ? fmt(talarico.cash) : "–",
-                statLabel: "Talarico · D nominee",
-                headline: "Talarico enters November with a near 4-to-1 cash lead over Paxton.",
-                body: `James Talarico (D) holds ${talarico ? fmt(talarico.cash) : "–"} cash on hand to Ken Paxton's ${paxton ? fmt(paxton.cash) : "–"} for Texas's first open Senate seat in 24 years. Paxton got here by beating four-term incumbent John Cornyn: who burned ${cornyn ? fmt(cornyn.spent ?? 0) : "–"} defending the seat and still lost the May runoff.`,
-                links: [
-                  { label: "Talarico finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=James+Talarico" },
-                  { label: "Paxton finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=Ken+Paxton" },
-                  { label: "U.S. Senate ballot →", href: "/tools/ballot-2026?q=James+Talarico" },
-                ],
-              },
-              {
-                eyebrow: "City Hall",
-                color: "#059669",
-                border: "#10b981",
-                stat: whitmire ? fmt(whitmire.cash) : "–",
-                statLabel: "Mayor Whitmire",
-                headline: "The Mayor isn't up until 2027. And he's sitting on nearly $3M.",
-                body: `John Whitmire holds ${whitmire ? fmt(whitmire.cash) : "–"} with no election until 2027. City Controller Chris Hollins. Widely viewed as a likely mayoral candidate: has banked ${hollins ? fmt(hollins.cash) : "–"}. Council member Ed Pollard holds ${pollard ? fmt(pollard.cash) : "–"}, the most of any council seat, and is also seen as a future citywide contender.`,
-                links: [
-                  { label: "Whitmire finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=John+Whitmire" },
-                  { label: "Hollins finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=Chris+Hollins" },
-                ],
-              },
-              {
-                eyebrow: "Commissioner PCT 4",
-                color: "#b45309",
-                border: "#d97706",
-                stat: briones ? fmt(briones.cash) : "–",
-                statLabel: "Briones · PCT 4 incumbent",
-                headline: `Briones leads the county's only contested commissioner race with a 10-to-1 cash edge over Radack.`,
-                body: `Commissioner Lesley Briones is sitting on ${briones ? fmt(briones.cash) : "–"} as she heads into her first reelection bid. Her Republican challenger, Steve Radack, ran neighboring Precinct 3 from 2003 to 2021 and won the 2026 primary for this seat: he reports ${radack ? fmt(radack.cash) : "–"}. Money alone won't decide it, but the gap signals the institutional backing Radack lost when he left office.`,
-                links: [
-                  { label: "Briones finance →", href: "/tools/where-is-the-dough?tab=leaderboard&q=Lesley+Briones" },
-                  { label: "PCT 4 ballot →", href: "/tools/ballot-2026?q=Lesley+Briones" },
-                ],
-              },
-            ].map(({ eyebrow, color, border, stat, statLabel, headline, body, links }) => (
-              <div key={eyebrow} className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px] card-lift">
-                <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-8 py-8"
-                  style={{ borderLeft: `4px solid ${border}` }}>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.22em] mb-3" style={{ color }}>{eyebrow}</p>
-                  <div className="flex flex-col md:flex-row md:items-start gap-6">
-                    <div className="md:w-36 flex-shrink-0 text-center md:text-left">
-                      <p className="text-4xl md:text-5xl font-bold leading-none" style={{ color, fontFamily: "var(--font-playfair), serif" }}>{stat}</p>
-                      <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--muted)] mt-1">{statLabel}</p>
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-[var(--accent)] mb-2 leading-snug" style={{ fontFamily: "var(--font-playfair), serif" }}>{headline}</h3>
-                      <p className="text-sm text-[var(--muted)] leading-relaxed">{body}</p>
-                      {links && links.length > 0 && (
-                        <div className="flex flex-wrap gap-3 mt-4">
-                          {links.map(lk => (
-                            <Link key={lk.href} href={lk.href}
-                              className="text-[11px] font-bold hover:opacity-75 transition-opacity"
-                              style={{ color }}>
-                              {lk.label}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-
-            {/* Monarch party split bar */}
-            <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
-              <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] px-8 py-7">
-                <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-[var(--muted)] mb-5">The Bank Split</p>
-                {/* Labels */}
-                <div className="flex justify-between items-end mb-3">
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-blue-600 mb-0.5">Democrats</p>
-                    <p className="text-3xl font-bold text-blue-700"
-                      style={{ fontFamily: "var(--font-playfair), serif" }}>{fmt(demTotal)}</p>
-                    <p className="text-[10px] text-blue-500 mt-0.5">{((demTotal / (totalPool || 1)) * 100).toFixed(0)}% of tracked cash</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-red-600 mb-0.5">Republicans</p>
-                    <p className="text-3xl font-bold text-red-700"
-                      style={{ fontFamily: "var(--font-playfair), serif" }}>{fmt(repTotal)}</p>
-                    <p className="text-[10px] text-red-500 mt-0.5">{((repTotal / (totalPool || 1)) * 100).toFixed(0)}% of tracked cash</p>
-                  </div>
-                </div>
-                {/* Single split pill bar */}
-                <div className="h-6 rounded-full overflow-hidden flex">
-                  <div className="h-full bg-gradient-to-r from-blue-600 to-blue-500 transition-all duration-1000 rounded-l-full"
-                    style={{ width: `${(demTotal / (totalPool || 1)) * 100}%` }}/>
-                  <div className="h-full bg-gradient-to-r from-red-500 to-red-600 flex-1 transition-all duration-1000 rounded-r-full"/>
-                </div>
-                <p className="text-[10px] text-[var(--muted)] mt-4">
-                  Note: Abbott&rsquo;s $105M war chest dominates the Republican total. County-level Republican candidates hold substantially less.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex justify-center pt-2">
-              <button onClick={() => setTab("leaderboard")}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--accent)] text-white text-sm font-bold hover:bg-[var(--accent-light)] transition-colors">
-                See Full Leaderboard
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </button>
-            </div>
-            <p className="text-xs text-[var(--muted)] text-center">Source: Texas Ethics Commission (TEC) semi-annual reports · FEC filings. Data as of Jan–Apr 2026.</p>
-          </div>
-        )}
-
-        {/* ── THE RACES: cash duels per 2026 matchup ────────────────── */}
-        {tab === "races" && (
+        {/* ── LEADERBOARD ───────────────────────────────────────────── */}
+        {tab === "leaderboard" && (
           <div>
-            <div className="mb-8">
-              <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[var(--muted)] mb-2">2026 General: Cash Duels</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-[var(--accent)] leading-tight max-w-2xl"
-                style={{ fontFamily: "var(--font-playfair), serif" }}>
-                {moneyRaces.raceCount} set November matchups. {fmt(moneyRaces.totalTracked)} in combined cash.
-              </h2>
-              <p className="text-sm text-[var(--muted)] mt-2 max-w-xl">
-                Every 2026 race with both a Democratic and Republican nominee locked in, side by side by war chest. Burn rates come straight from each filing&rsquo;s raised and spent totals.
-              </p>
+            <div className="flex flex-col gap-3 mb-5">
+              <div className="flex flex-wrap items-center gap-2">
+                <Segmented value={level} onChange={v => { setLevel(v as Level); if (v !== "county") setCountyGroup("all"); }}
+                  options={(Object.entries(LEVEL_LABELS) as [Level, string][]).map(([id, label]) => ({ id, label }))} />
+                <Segmented value={party} onChange={v => setParty(v as "all" | "D" | "R")}
+                  options={[{ id: "all", label: "Both parties" }, { id: "D", label: "Democrats" }, { id: "R", label: "Republicans" }]} />
+                <label className="relative ml-auto w-full sm:w-64">
+                  <span className="sr-only">Search by name or office</span>
+                  <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search a name or office"
+                    className="w-full rounded-md border px-3 py-2 text-[14px] outline-none focus:ring-2"
+                    style={{ borderColor: "var(--rule-strong)", background: "var(--surface)", ["--tw-ring-color" as string]: "var(--brand)" }} />
+                </label>
+              </div>
+              {level === "county" && (
+                <div className="flex flex-wrap gap-1.5">
+                  {(Object.entries(COUNTY_GROUPS) as [CountyGroup, string][]).map(([g, label]) => (
+                    <button key={g} onClick={() => setCountyGroup(g)} aria-pressed={countyGroup === g}
+                      className="px-3 py-1.5 rounded-full text-[13px] font-semibold border"
+                      style={countyGroup === g ? { background: "var(--board)", color: "#fff", borderColor: "var(--board)" } : { background: "var(--surface)", color: "#3C443F", borderColor: "var(--rule-strong)" }}>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
-            <MoversStrip />
+            <div className="flex items-baseline justify-between mb-2">
+              <p className="text-[14px]" style={{ color: "#4F5752" }}>
+                <strong className="num" style={{ color: "var(--ink)" }}>{filtered.length}</strong> filers{" · "}<strong className="num" style={{ color: "var(--ink)" }}>{fmt(filteredCash)}</strong> on hand
+              </p>
+              <ShareButton toolName="Campaign cash" section="Money" light={false}
+                description="Cash on hand for every Harris County official and 2026 candidate."
+                summary={`${LEVEL_LABELS[level]}: ${filtered.length} filers, ${fmt(filteredCash)} cash on hand. Via The Harris County Project`}
+                stats={[{ label: "Filers", value: String(filtered.length) }, { label: "Cash on hand", value: fmt(filteredCash) }]} />
+            </div>
 
-            <div className="space-y-10">
-              {moneyRaces.groups.map(({ group, races }) => {
-                const groupLabel =
-                  group === "Statewide" ? "Statewide Texas" :
-                  group === "Congress" ? "Congress" :
-                  group === "Legislature" ? "Texas Legislature" :
-                  group === "County" ? "Harris County" : "Justices of the Peace";
-                const groupCash = races.reduce((s, rc) => s + rc.totalCash, 0);
+            <ol className="panel overflow-hidden divide-y" style={{ borderColor: "var(--rule)" }}>
+              {filtered.length === 0 && (
+                <li className="p-10 text-center">
+                  <p className="serif text-[19px] font-semibold" style={{ color: "var(--ink)" }}>No filers match.</p>
+                  <p className="text-[14px] mt-1" style={{ color: "#6B726D" }}>Try a last name or an office such as “commissioner”.</p>
+                </li>
+              )}
+              {filtered.map((c, i) => {
+                const raceKey = RACE_BY_NAME.get(c.name);
+                const lean = raceKey ? MATCHUPS_2026[raceKey]?.lean : undefined;
+                const asOf = formatAsOf(c.asOf);
                 return (
-                  <div key={group}>
-                    <div className="flex items-baseline gap-3 mb-4">
-                      <h3 className="text-lg font-bold" style={{ color: "var(--accent)", fontFamily: "var(--font-playfair), serif" }}>
-                        {groupLabel}
-                      </h3>
-                      <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#9ca3af" }}>
-                        {races.length} duel{races.length !== 1 ? "s" : ""} · {fmt(groupCash)} combined
-                      </span>
+                  <li key={`${c.name}-${i}`} className="grid grid-cols-[28px_40px_1fr_auto] md:grid-cols-[28px_40px_minmax(0,1fr)_minmax(0,220px)_120px] gap-x-3 items-center px-4 py-3" style={{ borderColor: "var(--rule)" }}>
+                    <span className="text-[13px] font-bold num text-right" style={{ color: "#8A918C" }}>{c.cash > 0 ? i + 1 : ""}</span>
+                    <Face name={c.name} party={c.party} photo={PHOTO_BY_NAME.get(c.name)} size={36} />
+                    <div className="min-w-0">
+                      <p className="text-[15px] font-bold leading-tight flex items-center gap-2 flex-wrap" style={{ color: "var(--ink)" }}>
+                        {c.name}
+                        {c.incumbent && <span className="label" style={{ fontSize: 9, color: "#6B726D" }}>Inc.</span>}
+                        {raceKey && <Link href={raceHref(raceKey)} className="inline-flex"><RatingChip lean={lean} className="!text-[9px] !px-1.5 !py-[1px]" /></Link>}
+                      </p>
+                      <p className="text-[13px] truncate" style={{ color: "#5B635E" }}>{c.office}</p>
+                      <p className="text-[12px] mt-0.5 flex flex-wrap gap-x-3 md:hidden num" style={{ color: "#8A918C" }}>
+                        {c.raised != null && <span>Raised {fmt(c.raised)}</span>}
+                        {c.spent != null && <span>Spent {fmt(c.spent)}</span>}
+                      </p>
                     </div>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      {races.map(rc => <MoneyDuel key={rc.key} race={rc} />)}
+                    <div className="hidden md:block">
+                      <div className="h-2 rounded-full" style={{ background: "#EEEFEA" }}>
+                        <div className="h-2 rounded-full" style={{ width: `${Math.max((c.cash / maxCash) * 100, c.cash > 0 ? 1 : 0)}%`, background: PARTY[c.party].color }} />
+                      </div>
+                      <p className="text-[12px] mt-1 num" style={{ color: "#8A918C" }}>
+                        {[c.raised != null && `Raised ${fmt(c.raised)}`, c.spent != null && `spent ${fmt(c.spent)}`, (c.loans ?? 0) > 0 && `loans ${fmt(c.loans!)}`].filter(Boolean).join(", ") || " "}
+                      </p>
                     </div>
-                  </div>
+                    <div className="text-right">
+                      <p className="text-[17px] font-extrabold num" style={{ color: c.cash > 0 ? "var(--ink)" : "#A7ADA8" }}>{c.cash > 0 ? fmt(c.cash) : "Pending"}</p>
+                      <p className="text-[11px]" style={{ color: "#8A918C" }}>
+                        {asOf ?? ""}
+                        {c.filingUrl && <> · <a href={c.filingUrl} target="_blank" rel="noopener noreferrer" className="font-semibold hover:underline" style={{ color: "var(--brand)" }}>Filing</a></>}
+                      </p>
+                    </div>
+                  </li>
                 );
               })}
-            </div>
-
-            <p className="text-xs text-[var(--muted)] mt-8 text-center">
-              {moneyRaces.noFilingCount > 0 && <>{moneyRaces.noFilingCount} set race{moneyRaces.noFilingCount !== 1 ? "s have" : " has"} no filings on record and {moneyRaces.noFilingCount !== 1 ? "are" : "is"} not shown. </>}
-              Cash on hand as of each candidate&rsquo;s most recent TEC, FEC, county, or city filing.{" "}
-              <a href="/contact" className="text-[var(--accent-light)] underline underline-offset-2">Report an error →</a>
+            </ol>
+            <p className="text-[12px] mt-3" style={{ color: "#8A918C" }}>
+              Federal: FEC. State: Texas Ethics Commission semiannual reports. County: Harris County clerk filings. City: Houston city secretary filings. Cash on hand as of each filer’s most recent report. <Link href="/contact" className="link">Report an error</Link>.
             </p>
           </div>
         )}
 
-        {/* ── MONEY TRAIL ───────────────────────────────────────────── */}
+        {/* ── 2026 RACES ────────────────────────────────────────────── */}
+        {tab === "races" && (
+          <div>
+            <div className="max-w-3xl mb-6">
+              <h2 className="serif text-[28px] font-semibold leading-tight" style={{ color: "var(--ink)" }}>
+                {moneyRaces.raceCount} November matchups have money on file: {fmt(moneyRaces.totalTracked)} between them.
+              </h2>
+              <p className="text-[15px] mt-2" style={{ color: "#4F5752" }}>Each race, head to head by cash on hand. Bars scale to the larger war chest.</p>
+            </div>
+            <MoversStrip />
+            <div className="space-y-10 mt-8">
+              {moneyRaces.groups.map(({ group, races }) => (
+                <section key={group}>
+                  <div className="desk-head flex items-baseline gap-3 mb-4">
+                    <h3 className="serif text-[22px] font-semibold" style={{ color: "var(--ink)" }}>{group === "JP" ? "Justice of the Peace" : group === "Legislature" ? "Texas Legislature" : group === "County" ? "Harris County" : group}</h3>
+                    <span className="text-[13px]" style={{ color: "#6B726D" }}>{races.length} races · {fmt(races.reduce((s, r) => s + r.totalCash, 0))} combined</span>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {races.map(rc => (
+                      <Link key={rc.key} href={raceHref(rc.key)} className="group panel panel-hover p-4 block" style={{ borderTop: `4px solid ${rc.lean ? RATING[rc.lean].color : "#C9CCC4"}` }}>
+                        <div className="flex items-start justify-between gap-3 mb-3">
+                          <p className="serif text-[17px] font-semibold leading-snug group-hover:underline decoration-1 underline-offset-4" style={{ color: "var(--ink)" }}>{rc.office}</p>
+                          <RatingChip lean={rc.lean} />
+                        </div>
+                        <CashDuel d={rc.d.fin?.cash ?? 0} r={rc.r.fin?.cash ?? 0} dName={rc.d.name} rName={rc.r.name} />
+                      </Link>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+            {moneyRaces.noFilingCount > 0 && (
+              <p className="text-[12px] mt-8" style={{ color: "#8A918C" }}>{moneyRaces.noFilingCount} set races have no filing on record for either candidate and are not shown.</p>
+            )}
+          </div>
+        )}
+
+        {/* ── WHAT IT SHOWS (computed from the data on screen) ───────── */}
+        {tab === "story" && <Findings data={DATA} moneyRaces={moneyRaces} onLeaderboard={() => setTab("leaderboard")} />}
+
         {tab === "trail" && (
           <div className="space-y-8">
             <MoneyTrailView />
             <TerrainReport types={["money"]} compact />
           </div>
         )}
-
-        {/* ── FILE SCANNER ──────────────────────────────────────────── */}
         {tab === "scanner" && <FinanceScanner />}
         {tab === "portal"  && <PortalSearch />}
 
-        {/* ── LEADERBOARD ───────────────────────────────────────────── */}
-        {tab === "leaderboard" && (
-          <div>
-            {/* Head-to-head duel bars. Only when level filter would show both parties */}
-            {party === "all" && !search && (() => {
-              const levelData = DATA.filter(d => level === "all" || d.level === level)
-                .filter(d => level !== "county" || countyGroup === "all" || countyGroupOf(d.office) === countyGroup);
-              // Normalize office string so "State Rep HD-134" and "State Rep HD-134 (R nominee)" pair up
-              const normalizeOffice = (office: string) =>
-                office.toLowerCase()
-                  .replace(/\s*\((d|r)\s*(nominee|general|primary|candidate|incumbent|runoff|former[^)]*)\)/g, "")
-                  .replace(/\s*\(won[^)]*\)/g, "")
-                  .replace(/\s*\(not seeking[^)]*\)/g, "")
-                  .replace(/\s*\(lame duck[^)]*\)/g, "")
-                  .replace(/\s*\(lost[^)]*\)/g, "")
-                  .replace(/\s*\(ran for[^)]*\)/g, "")
-                  .trim();
-              // Group by normalized office, find matched pairs
-              const byOffice = new Map<string, { d?: Candidate; r?: Candidate; label: string }>();
-              for (const c of levelData) {
-                const key = normalizeOffice(c.office);
-                const entry = byOffice.get(key) ?? { label: key };
-                if (c.party === "D") entry.d = c;
-                if (c.party === "R") entry.r = c;
-                byOffice.set(key, entry);
-              }
-              const pairs = [...byOffice.values()].filter(p => p.d && p.r && (p.d.cash > 0 || p.r.cash > 0));
-              if (pairs.length === 0) return null;
-              pairs.sort((a, b) => (b.d!.cash + b.r!.cash) - (a.d!.cash + a.r!.cash));
-              return (
-                <div className="mb-6 rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
-                  <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
-                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] mb-4" style={{ color: "#9ca3af" }}>Head-to-head: cash on hand</p>
-                    <div className="space-y-3">
-                      {pairs.slice(0, 8).map((p, i) => {
-                        const d = p.d!, r = p.r!;
-                        const total = d.cash + r.cash || 1;
-                        const dPct = Math.round(d.cash / total * 100);
-                        const officeLabel = (d.office.includes("nominee") || d.office.includes("general"))
-                          ? r.office : d.office;
-                        return (
-                          <div key={i}>
-                            <p className="text-[10px] font-semibold mb-1 truncate" style={{ color: "#6b7280" }}>{officeLabel.replace(/\s*\([^)]*nominee[^)]*\)/gi, "").replace(/\s*\([^)]*general[^)]*\)/gi, "").trim()}</p>
-                            <div className="flex items-center gap-2">
-                              <span className="text-[10px] font-bold w-24 truncate" style={{ color: "#2563a8" }}>{d.name.split(" ").pop()}</span>
-                              <div className="flex-1 h-2 rounded-full overflow-hidden flex" style={{ background: "#e5e7eb" }}>
-                                <div className="h-full" style={{ width: `${dPct}%`, background: "#2563a8" }} />
-                                <div className="h-full" style={{ width: `${100 - dPct}%`, background: "#dc2626" }} />
-                              </div>
-                              <span className="text-[10px] font-bold w-24 truncate text-right" style={{ color: "#dc2626" }}>{r.name.split(" ").pop()}</span>
-                            </div>
-                            <div className="flex justify-between text-[9px] mt-0.5 px-0">
-                              <span style={{ color: "#2563a8" }}>{fmt(d.cash)}</span>
-                              <span style={{ color: "#dc2626" }}>{fmt(r.cash)}</span>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              );
-            })()}
-
-            <div className="mb-6 relative max-w-sm">
-              <input type="text" value={search} onChange={e => setSearch(e.target.value)}
-                placeholder="Search by name or office…"
-                className="w-full px-4 py-2.5 rounded-full bg-white ring-1 ring-[var(--border)] text-sm text-[var(--foreground)] placeholder:text-[var(--muted)] focus:ring-[var(--accent)] focus:outline-none transition-all duration-300"
-                style={{ paddingRight: search ? "2.5rem" : undefined }}
-              />
-              {search && (
-                <button onClick={() => setSearch("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg leading-none"
-                  aria-label="Clear search">
-                  ×
-                </button>
-              )}
-            </div>
-
-            <div className="rounded-[1.75rem] bg-white/60 ring-1 ring-black/8 p-[6px]">
-              <div className="rounded-[1.35rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] overflow-hidden">
-                <div className="flex items-center gap-3 px-5 py-2.5 border-b border-[var(--border)] bg-[var(--background)]">
-                  <span className="w-8 flex-shrink-0 text-[10px] font-bold uppercase tracking-widest text-[var(--muted)] text-center">#</span>
-                  <span className="flex-1 text-[10px] font-bold uppercase tracking-widest text-[var(--muted)]">Name / Office</span>
-                  <span className="w-28 flex-shrink-0 hidden sm:block text-[10px] font-bold uppercase tracking-widest text-[var(--muted)]">Cash Bar</span>
-                  <span className="w-24 text-right flex-shrink-0 text-[10px] font-bold uppercase tracking-widest text-[var(--muted)]">Cash on Hand</span>
-                  <span className="w-20 text-right flex-shrink-0 hidden md:block text-[10px] font-bold uppercase tracking-widest text-[var(--muted)]">As of</span>
-                </div>
-
-                {filtered.length === 0 ? (
-                  <p className="p-10 text-center text-[var(--muted)] text-sm">No results found.</p>
-                ) : filtered.map((c, i) => {
-                  const isD = c.party === "D";
-                  const pct = Math.min((c.cash / maxCash) * 100, 100);
-                  const initials = c.name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase();
-                  const rankColor = i === 0 ? "text-amber-500" : i === 1 ? "text-gray-400" : i === 2 ? "text-amber-700" : "text-[var(--muted)]";
-                  return (
-                    <div key={`${c.name}-${i}`}
-                      className="flex items-center gap-4 px-5 py-4 border-b border-[var(--border)] last:border-0 hover:bg-black/[0.018] transition-colors duration-200">
-                      {/* Rank */}
-                      <span className={`w-6 flex-shrink-0 text-center text-xs font-bold ${rankColor}`}>{c.cash > 0 ? i + 1 : "–"}</span>
-                      {/* Avatar */}
-                      <div
-                        className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-white text-[11px] font-bold"
-                        style={{ background: isD ? "#3b82f6" : "#ef4444" }}>
-                        {initials}
-                      </div>
-                      {/* Name + bar */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
-                          <span className="font-semibold text-sm text-[var(--foreground)] leading-tight">{c.name}</span>
-                          <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full ${isD ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"}`}>{c.party}</span>
-                          {c.incumbent && <span className="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Inc</span>}
-                          {WOMEN_IN_POLITICS.has(c.name) && (
-                            <span className="text-[9px] font-bold px-1 py-0.5 rounded leading-none" style={{ background: "#fce7f3", color: "#9d174d" }}>W</span>
-                          )}
-                        </div>
-                        <p className="text-[10px] text-[var(--muted)] truncate mb-1">{c.office}</p>
-                        {(c.raised != null || c.spent != null || c.loans != null) && (
-                          <p className="tnum text-[10px] mb-2 flex flex-wrap gap-x-3" style={{ color: "#9ca3af" }}>
-                            {c.raised != null && <span>Raised <strong style={{ color: "#4b5563" }}>{fmt(c.raised)}</strong></span>}
-                            {c.spent != null && <span>Spent <strong style={{ color: "#4b5563" }}>{fmt(c.spent)}</strong></span>}
-                            {c.loans != null && c.loans > 0 && <span>Loans <strong style={{ color: "#b45309" }}>{fmt(c.loans)}</strong></span>}
-                          </p>
-                        )}
-                        {/* Proportional fill bar */}
-                        <div className="h-[5px] bg-black/[0.06] rounded-full overflow-hidden max-w-xs hidden sm:block">
-                          <div className="h-full rounded-full transition-all duration-700"
-                            style={{ width: `${pct}%`, background: isD ? "#2563a8" : "#dc2626" }}/>
-                        </div>
-                      </div>
-                      {/* Cash + date */}
-                      <div className="flex-shrink-0 text-right">
-                        {c.cash > 0 ? (
-                          <>
-                            <p className={`tnum text-xl font-bold ${isD ? "text-blue-700" : "text-red-700"}`}
-                              style={{ fontFamily: "var(--font-playfair), serif" }}>{fmt(c.cash)}</p>
-                            <p className="text-[10px] text-[var(--muted)] mt-0.5 hidden md:block">cash on hand · {c.asOf}</p>
-                            <div className="flex items-center justify-end gap-2 mt-0.5">
-                              {c.filingUrl && (
-                                <a href={c.filingUrl} target="_blank" rel="noopener noreferrer"
-                                  className="text-[9px] font-semibold hover:underline"
-                                  style={{ color: isD ? "#2563a8" : "#b91c1c" }}>
-                                  Filing →
-                                </a>
-                              )}
-                              {ON_BALLOT_2026.has(c.name) && (
-                                <Link href={`/tools/ballot-2026?q=${encodeURIComponent(c.name)}`}
-                                  className="text-[9px] font-semibold hover:underline"
-                                  style={{ color: "#d97706" }}>
-                                  Ballot →
-                                </Link>
-                              )}
-                            </div>
-                          </>
-                        ) : (
-                          <div className="flex flex-col items-end gap-1">
-                            <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full bg-gray-100 text-gray-400">Pending</span>
-                            <div className="flex items-center gap-2">
-                              {c.filingUrl && (
-                                <a href={c.filingUrl} target="_blank" rel="noopener noreferrer"
-                                  className="text-[9px] font-semibold hover:underline"
-                                  style={{ color: isD ? "#2563a8" : "#b91c1c" }}>
-                                  Filing →
-                                </a>
-                              )}
-                              {ON_BALLOT_2026.has(c.name) && (
-                                <Link href={`/tools/ballot-2026?q=${encodeURIComponent(c.name)}`}
-                                  className="text-[9px] font-semibold hover:underline"
-                                  style={{ color: "#d97706" }}>
-                                  Ballot →
-                                </Link>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-            <p className="text-xs text-[var(--muted)] mt-4 text-center">
-              Federal: FEC API (live). State: TEC semi-annual report (live). County: Harris County Clerk filings. City: Houston COH filings. Cash on hand as of most recent filing.{" "}
-              <a href="/contact" className="text-[var(--accent-light)] underline underline-offset-2">Report an error →</a>
-            </p>
-          </div>
-        )}
-
         <RelatedTools current="/tools/where-is-the-dough" />
-
       </div>
+    </div>
+  );
+}
+
+function Segmented({ value, onChange, options }: { value: string; onChange: (v: string) => void; options: { id: string; label: string }[] }) {
+  return (
+    <div className="inline-flex rounded-md p-0.5 border overflow-x-auto max-w-full" style={{ borderColor: "var(--rule-strong)", background: "var(--surface)" }}>
+      {options.map(o => (
+        <button key={o.id} onClick={() => onChange(o.id)} aria-pressed={value === o.id}
+          className="shrink-0 px-3 py-1.5 text-[13px] font-semibold rounded-[5px] transition-colors"
+          style={value === o.id ? { background: "var(--ink)", color: "#fff" } : { color: "#3C443F" }}>
+          {o.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* Every sentence here is computed from the filings on screen, so it can never
+   go stale the way hand-written copy does. A finding renders only when its
+   inputs exist. */
+function Findings({ data, moneyRaces, onLeaderboard }: { data: Candidate[]; moneyRaces: ReturnType<typeof buildMoneyRaces>; onLeaderboard: () => void }) {
+  const by = (n: string) => data.find(d => d.name === n);
+  const ratio = (a: number, b: number) => (b > 0 ? a / b : null);
+  const times = (x: number) => (x >= 10 ? `${Math.round(x)} times` : `${x.toFixed(1)} times`);
+  const out: { k: string; stat: string; head: string; body: string; href: string; cta: string }[] = [];
+
+  // 1. Top of the ticket
+  const sen = moneyRaces.races.find(r => r.key === "US-Senate");
+  if (sen?.d.fin && sen.r.fin) {
+    const [lead, trail] = sen.d.fin.cash >= sen.r.fin.cash ? [sen.d, sen.r] : [sen.r, sen.d];
+    const x = ratio(lead.fin!.cash, trail.fin!.cash);
+    if (x) out.push({
+      k: "U.S. Senate", stat: fmt(lead.fin!.cash),
+      head: `${lead.name} has ${times(x)} as much cash as ${trail.name}.`,
+      body: `${lead.name} reports ${fmt(lead.fin!.cash)} on hand to ${trail.name}'s ${fmt(trail.fin!.cash)}${lead.fin!.raised ? `, after raising ${fmt(lead.fin!.raised)}` : ""}.`,
+      href: raceHref("US-Senate"), cta: "The Senate race",
+    });
+  }
+
+  // 2. Commissioners Court
+  const court = data.filter(d => /^Commissioner PCT \d$/.test(d.office) && d.cash > 0).sort((a, b) => b.cash - a.cash);
+  if (court.length >= 3) {
+    const [top, ...rest] = court;
+    const restSum = rest.reduce((s, d) => s + d.cash, 0);
+    out.push({
+      k: "Commissioners Court", stat: fmt(top.cash),
+      head: top.cash > restSum
+        ? `${top.name} holds more than the other ${rest.length} commissioners combined.`
+        : `${top.name} leads Commissioners Court in cash on hand.`,
+      body: `${court.map(c => `${c.name.split(" ").slice(-1)[0]} ${fmt(c.cash)}`).join(", ")}.`,
+      href: "/tools/where-is-the-dough?level=county&group=commissioners", cta: "Commissioners' filings",
+    });
+  }
+
+  // 3. Biggest gap in a race that's actually in play
+  const gaps = moneyRaces.races
+    .filter(r => r.lean && RATING[r.lean].competitive && (r.d.fin?.cash ?? 0) > 0 && (r.r.fin?.cash ?? 0) > 0)
+    .map(r => {
+      const d = r.d.fin!.cash, rr = r.r.fin!.cash;
+      return { r, x: Math.max(d, rr) / Math.min(d, rr), lead: d >= rr ? r.d : r.r, trail: d >= rr ? r.r : r.d };
+    })
+    .sort((a, b) => b.x - a.x);
+  if (gaps[0]) {
+    const g = gaps[0];
+    out.push({
+      k: "Competitive races", stat: `${times(g.x).replace(" times", "x")}`,
+      head: `The widest cash gap in a competitive race is ${g.r.office}.`,
+      body: `${g.lead.name} reports ${fmt(g.lead.fin!.cash)} to ${g.trail.name}'s ${fmt(g.trail.fin!.cash)} in a race the desk rates ${RATING[g.r.lean!].long.toLowerCase()}.`,
+      href: raceHref(g.r.key), cta: "See the race",
+    });
+  }
+
+  // 4. Party split, with and without statewide war chests
+  const cash = data.filter(d => d.cash > 0);
+  const share = (rows: Candidate[]) => {
+    const dd = rows.filter(r => r.party === "D").reduce((s, r) => s + r.cash, 0);
+    const t = rows.reduce((s, r) => s + r.cash, 0);
+    return t > 0 ? Math.round((dd / t) * 100) : null;
+  };
+  const all = share(cash), local = share(cash.filter(d => !STATEWIDE.test(d.office)));
+  if (all != null && local != null) {
+    const topR = cash.filter(d => STATEWIDE.test(d.office)).sort((a, b) => b.cash - a.cash)[0];
+    out.push({
+      k: "The party split", stat: `${local}% D`,
+      head: `Set aside statewide war chests and Democrats hold ${local}% of tracked cash.`,
+      body: `Counting everyone, Democrats hold ${all}%.${topR ? ` Statewide accounts like ${topR.name}'s ${fmt(topR.cash)} tilt the overall total.` : ""}`,
+      href: "/tools/where-is-the-dough?level=county", cta: "County filers only",
+    });
+  }
+
+  // 5. Races where one side is broke
+  const broke = moneyRaces.races.filter(r => (r.d.fin?.cash ?? 0) === 0 || (r.r.fin?.cash ?? 0) === 0);
+  if (broke.length) out.push({
+    k: "Unfunded challengers", stat: String(broke.length),
+    head: `In ${broke.length} of ${moneyRaces.raceCount} set races, one candidate reports no cash at all.`,
+    body: "A candidate with no money on hand has little way to reach voters beyond the party label on the ballot.",
+    href: "/tools/where-is-the-dough?tab=races", cta: "All 2026 duels",
+  });
+
+  return (
+    <div>
+      <h2 className="serif text-[28px] font-semibold leading-tight max-w-3xl" style={{ color: "var(--ink)" }}>What the filings show</h2>
+      <p className="text-[15px] mt-2 max-w-2xl" style={{ color: "#4F5752" }}>Each finding below is calculated from the current filings, so it updates when new reports land.</p>
+      <div className="mt-6 divide-y border-t border-b" style={{ borderColor: "var(--rule)" }}>
+        {out.map(f => (
+          <article key={f.k} className="grid md:grid-cols-[180px_1fr] gap-4 md:gap-8 py-6" style={{ borderColor: "var(--rule)" }}>
+            <div>
+              <p className="label" style={{ color: "var(--brand)" }}>{f.k}</p>
+              <p className="text-[34px] font-extrabold num leading-none mt-2" style={{ color: "var(--ink)" }}>{f.stat}</p>
+            </div>
+            <div>
+              <h3 className="serif text-[22px] font-semibold leading-snug" style={{ color: "var(--ink)" }}>{f.head}</h3>
+              <p className="text-[15px] leading-relaxed mt-2" style={{ color: "#3C443F" }}>{f.body}</p>
+              <Link href={f.href} className="inline-block mt-3 text-[14px] font-bold" style={{ color: "var(--brand)" }}>{f.cta} <span aria-hidden>→</span></Link>
+            </div>
+          </article>
+        ))}
+      </div>
+      <button onClick={onLeaderboard} className="btn btn-ink mt-6">See every filer</button>
     </div>
   );
 }

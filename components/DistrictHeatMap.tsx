@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import Link from "next/link";
 import "leaflet/dist/leaflet.css";
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
+import { BASEMAP } from "@/lib/basemap";
 
 type DistrictField = "cd" | "sd" | "hd" | "jp" | "council" | "pct";
 
@@ -269,8 +270,8 @@ export default function DistrictHeatMap({ districtField, districtValue, district
     import("leaflet").then(L => {
       const map = L.map(mapRef.current!, { zoomControl: true, scrollWheelZoom: false })
         .setView([29.78, -95.37], 10);
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
-        attribution: "© CartoDB", maxZoom: 16,
+      L.tileLayer(BASEMAP.base, {
+        attribution: BASEMAP.attribution, maxNativeZoom: BASEMAP.maxNativeZoom, maxZoom: 18,
       }).addTo(map);
       leafletMap.current = map;
     });

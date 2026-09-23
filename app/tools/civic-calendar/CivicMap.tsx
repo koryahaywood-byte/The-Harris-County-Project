@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { BASEMAP } from "@/lib/basemap";
 
 export interface MapEvent {
   id: string;
@@ -55,10 +56,8 @@ export default function CivicMap({ events }: { events: MapEvent[] }) {
       zoomControl={false}
       scrollWheelZoom={false}
     >
-      <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-      />
+      <TileLayer url={BASEMAP.base} attribution={BASEMAP.attribution} maxNativeZoom={BASEMAP.maxNativeZoom} maxZoom={19} />
+      <TileLayer url={BASEMAP.labels} maxNativeZoom={BASEMAP.maxNativeZoom} maxZoom={19} />
       {events.map(e => (
         <Marker key={e.id} position={[e.lat, e.lng]} icon={makeIcon(e.color)}>
           <Popup>

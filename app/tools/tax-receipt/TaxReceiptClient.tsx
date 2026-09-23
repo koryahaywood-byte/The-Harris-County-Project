@@ -67,7 +67,7 @@ export default function TaxReceiptClient() {
     <div>
       {/* Hero */}
       <section className="bg-[var(--accent)] text-white px-6 py-16 md:py-24 relative overflow-hidden topo-dark">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_80%_50%,rgba(37,99,168,0.4),transparent)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_80%_50%,rgba(226,177,60,0.07),transparent)]" />
         <div className="max-w-3xl mx-auto relative z-10">
           <p className="text-sky-300/80 text-[11px] font-bold uppercase tracking-[0.25em] mb-3">Public Money · 2025 Adopted Rates</p>
           <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4" style={{ fontFamily: "var(--font-playfair), serif" }}>

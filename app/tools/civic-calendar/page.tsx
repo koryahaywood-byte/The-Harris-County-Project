@@ -326,7 +326,7 @@ export default function CivicCalendar() {
       <section className="relative overflow-hidden"
         style={{ background: "linear-gradient(135deg,#0D2A21 0%,#0A1F18 60%,#162e4a 100%)", paddingTop: "3rem", paddingBottom: "3rem" }}>
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%,rgba(37,99,168,0.18) 0%,transparent 70%)" }}/>
+          style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%,rgba(226,177,60,0.07) 0%,transparent 70%)" }}/>
         <div className="relative max-w-6xl mx-auto px-5">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>

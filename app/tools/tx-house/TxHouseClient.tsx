@@ -185,7 +185,7 @@ export default function TxHouse2026() {
     <main className="min-h-screen" style={{ background: "#F1F2EE" }}>
       <div className="max-w-5xl mx-auto px-5 sm:px-6 py-10">
         {/* Header */}
-        <Link href="/tools/ballot-2026" className="text-[11px] font-semibold hover:opacity-70" style={{ color: "#0D2A21" }}>
+        <Link href="/races" className="text-[11px] font-semibold hover:opacity-70" style={{ color: "#0D2A21" }}>
           ← Back to the 2026 ballot
         </Link>
         <h1 className="font-black mt-3 leading-tight" style={{ color: "#0D2A21", fontSize: "clamp(26px,5vw,40px)" }}>

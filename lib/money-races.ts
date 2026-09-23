@@ -32,6 +32,7 @@ export interface MoneyRace {
 }
 
 export interface MoneyRacesResult {
+  races: MoneyRace[];
   groups: { group: RaceGroup; races: MoneyRace[] }[];
   raceCount: number;      // duels rendered
   totalTracked: number;   // combined cash across all rendered duels
@@ -104,7 +105,7 @@ export function buildMoneyRaces(finance: CandidateFinance[]): MoneyRacesResult {
     null
   );
 
-  return { groups, raceCount: races.length, totalTracked, noFilingCount, topDuel };
+  return { races, groups, raceCount: races.length, totalTracked, noFilingCount, topDuel };
 }
 
 /* ── Movers: cash deltas between the two most recent snapshots ────────────── */
