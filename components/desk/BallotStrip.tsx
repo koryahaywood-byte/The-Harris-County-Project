@@ -57,7 +57,7 @@ export default function BallotStrip({ races, height = 64 }: { races: StripRace[]
         {buckets.map(b => (
           <div key={b.lean} className="min-w-[18px] sm:min-w-[30px]" style={{ flex: `${b.races.length} 1 0` }}>
             <p className="text-[17px] sm:text-[20px] md:text-[26px] font-extrabold leading-none num" style={{ color: b.lean === "toss-up" ? "var(--gold)" : "#fff" }}>{b.races.length}</p>
-            <p className="label mt-1 text-white/55 leading-tight hidden sm:block" style={{ fontSize: 10 }}>{b.races.length < 3 ? RATING[b.lean].label.split(/[\s-]/).map((w, i) => <span key={i} className="block">{w}</span>) : RATING[b.lean].label}</p>
+            <p className="label mt-1 text-white/55 leading-tight hidden sm:block" style={{ fontSize: 10 }} title={RATING[b.lean].long}>{b.races.length < 3 ? RATING[b.lean].label.split(/[\s-]/)[0] : RATING[b.lean].label}</p>
           </div>
         ))}
       </div>

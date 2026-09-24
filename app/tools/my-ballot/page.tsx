@@ -3,6 +3,9 @@ import { Suspense } from "react";
 import MyBallotClient from "./MyBallotClient";
 import { SITE_URL } from "@/lib/site";
 import { getAllRaces, toLite } from "@/lib/races";
+import { getAllMarketOdds } from "@/lib/kalshi";
+
+export const revalidate = 1800;
 
 export const metadata: Metadata = {
   title: "Your ballot · The Harris County Project",
@@ -15,8 +18,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function MyBallotPage() {
-  const races = getAllRaces().map(toLite);
+export default async function MyBallotPage() {
+  const odds = await getAllMarketOdds();
+  const races = getAllRaces().map(r => toLite(r, odds));
   return (
     <Suspense fallback={null}>
       <MyBallotClient races={races} />

@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getAllRaces, tally, toLite, GROUPS } from "@/lib/races";
 import RaceBoard from "./RaceBoard";
+import { getAllMarketOdds } from "@/lib/kalshi";
+
+export const revalidate = 1800;
 
 export async function generateMetadata(): Promise<Metadata> {
   const races = getAllRaces();
@@ -19,7 +22,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function RacesPage() {
+export default async function RacesPage() {
+  const odds = await getAllMarketOdds();
   const races = getAllRaces();
   const t = tally(races);
   return (
@@ -37,7 +41,7 @@ export default function RacesPage() {
         </div>
       </header>
       <Suspense fallback={<div className="max-w-7xl mx-auto px-4 md:px-6 py-10 text-[14px]" style={{ color: "#6B726D" }}>Loading the board…</div>}>
-        <RaceBoard races={races.map(toLite)} groups={GROUPS} />
+        <RaceBoard races={races.map(r => toLite(r, odds))} groups={GROUPS} />
       </Suspense>
     </div>
   );

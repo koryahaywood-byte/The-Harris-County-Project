@@ -11,8 +11,11 @@ import Face from "@/components/desk/Face";
 import RaceTile from "@/components/desk/RaceTile";
 import AddressForm from "@/components/desk/AddressForm";
 import CopyLink from "@/components/desk/CopyLink";
+import { getAllMarketOdds } from "@/lib/kalshi";
+import MarketBar from "@/components/desk/MarketBar";
 
 export const dynamicParams = false;
+export const revalidate = 1800;
 
 export function generateStaticParams() {
   return getAllRaces().map(r => ({ race: r.slug }));
@@ -73,6 +76,8 @@ export default async function RacePage({ params }: { params: Promise<{ race: str
   const related = getAllRaces().filter(r => r.group === race.group && r.key !== race.key).sort(byCompetitiveness).slice(0, 3);
   const dCash = race.d?.finance?.cash ?? 0, rCash = race.r?.finance?.cash ?? 0;
   const holderName = race.holder === "D" ? race.d?.name : race.holder === "R" ? race.r?.name : null;
+  const odds = await getAllMarketOdds();
+  const market = odds[race.key];
 
   return (
     <article>
@@ -154,6 +159,16 @@ export default async function RacePage({ params }: { params: Promise<{ race: str
         </div>
 
         <aside className="space-y-6">
+          {market && race.d && race.r && (
+            <div className="panel p-5">
+              <p className="label" style={{ color: "#6B726D" }}>Prediction market</p>
+              <p className="serif text-[18px] font-semibold mt-1 mb-4" style={{ color: "var(--ink)" }}>What Kalshi traders expect</p>
+              <MarketBar dName={race.d.name} rName={race.r.name} demProb={market.demProb} openInterest={market.openInterest} />
+              <p className="text-[12px] mt-3 leading-relaxed" style={{ color: "#8A918C" }}>
+                Implied chance of winning from Kalshi’s margin-of-victory markets, {market.openInterest.toLocaleString()} contracts open. Markets are bets, not polls, and can move fast. <a href={market.url} target="_blank" rel="noopener noreferrer" className="link">Kalshi ↗</a>
+              </p>
+            </div>
+          )}
           {race.last && (
             <div className="panel p-5">
               <p className="label" style={{ color: "#6B726D" }}>{race.last.proxy ? "Partisan baseline" : "Last time"}</p>
@@ -195,7 +210,7 @@ export default async function RacePage({ params }: { params: Promise<{ race: str
             <Link href={`/races?level=${race.group}`} className="text-[13px] font-bold" style={{ color: "var(--brand)" }}>All {group.label.toLowerCase()} races <span aria-hidden>→</span></Link>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {related.map(r => <RaceTile key={r.key} race={toLite(r)} />)}
+            {related.map(r => <RaceTile key={r.key} race={toLite(r, odds)} />)}
           </div>
         </section>
       )}

@@ -459,3 +459,47 @@ body { font-family: "HCP Dot", var(--font-overpass), system-ui, sans-serif; font
 .rounded-\[1\.75rem\] { border-radius: 12px; }
 .rounded-\[1\.35rem\] { border-radius: 9px; }
 .rounded-3xl { border-radius: 14px; }
+
+/* ══ Depth (Sep 2026): cards read as physical objects, not flat boxes ══════
+   Layered shadow (contact + ambient), a rating-colored accent line and a
+   faint wash of the rating tint at the top. Lifts on hover. */
+.card-depth {
+  position: relative;
+  background: linear-gradient(180deg, var(--tint, #F1F2EE) 0px, #fff 96px);
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 1px rgba(18,23,20,0.07),
+    0 1px 1px rgba(18,23,20,0.04),
+    0 6px 16px -8px rgba(18,23,20,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+  transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s cubic-bezier(.2,.8,.2,1);
+}
+.card-depth::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px;
+  background: var(--accent-line, #C9CCC4);
+}
+.card-depth:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 0 0 1px rgba(18,23,20,0.09),
+    0 2px 4px rgba(18,23,20,0.05),
+    0 18px 36px -14px rgba(18,23,20,0.30),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+}
+.card-depth .face-pop { display: inline-flex; transition: transform .25s cubic-bezier(.2,.8,.2,1); }
+.card-depth:hover .face-pop { transform: translateY(-2px) scale(1.04); }
+
+/* Panels get the same physical feel, quieter */
+.panel { box-shadow: 0 1px 1px rgba(18,23,20,0.03), 0 4px 12px -8px rgba(18,23,20,0.14); }
+.panel-hover:hover { transform: translateY(-2px); }
+
+/* Bars fill in once when they enter */
+@keyframes bar-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.bar-grow { display: block; height: 100%; transform-origin: left; animation: bar-grow .7s cubic-bezier(.2,.8,.2,1) both; }
+.bar-grow + .bar-grow { transform-origin: right; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card-depth, .card-depth .face-pop, .panel-hover { transition: none; }
+  .card-depth:hover, .card-depth:hover .face-pop, .panel-hover:hover { transform: none; }
+  .bar-grow { animation: none; }
+}

@@ -309,9 +309,11 @@ export interface RaceLite {
   open: boolean; holder: "D" | "R" | null;
   last: { dPct: number; rPct: number; year: number; proxy: boolean; oldLines: boolean } | null;
   stakes?: string;
+  /** Kalshi odds, only when the market is liquid (see lib/kalshi.ts). */
+  market?: { demProb: number; repProb: number; openInterest: number } | null;
 }
 
-export function toLite(r: Race): RaceLite {
+export function toLite(r: Race, odds?: Record<string, { demProb: number; repProb: number; openInterest: number }>): RaceLite {
   const side = (c: Candidate | null) => c && { name: c.name, incumbent: c.incumbent, cash: c.finance?.cash ?? 0, photo: c.photo, woman: c.woman };
   return {
     key: r.key, slug: r.slug, office: r.office, tag: r.tag, group: r.group, lean: r.lean,
@@ -320,5 +322,6 @@ export function toLite(r: Race): RaceLite {
     // D+26 "last result" never silently contradicts a toss-up rating.
     last: r.last && { dPct: r.last.dPct, rPct: r.last.rPct, year: r.last.year, proxy: r.last.proxy, oldLines: r.key.startsWith("CD-") },
     stakes: r.stakes,
+    market: odds?.[r.key] ? { demProb: odds[r.key].demProb, repProb: odds[r.key].repProb, openInterest: odds[r.key].openInterest } : null,
   };
 }
