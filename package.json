@@ -33,6 +33,7 @@
     "three": "^0.184.0"
   },
   "devDependencies": {
+    "@gradio/client": "^2.7.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

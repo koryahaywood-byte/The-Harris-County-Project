@@ -13,9 +13,15 @@
  *
  * Usage:
  *   env $(grep -v '^#' .env.local | xargs) node scripts/build-player-models.mjs rodney-ellis lina-hidalgo
- *   ... --all            every official with a photo and no model yet
+ *   ... --all            every official with a photo and no model yet, in TIERS order
+ *   ... --tier jp        only one tier (see TIERS)
  *   ... --mesh trellis-2 use TRELLIS.2 instead of Hunyuan3D v3 (fal only)
  *   ... --force          regenerate even if cached
+ *   ... --approve <slug> publish a reviewed model (new models land as review: "pending")
+ *
+ * The HF quota is ~3.5 GPU-minutes a day (about one official). When it runs out the
+ * script stops with exit code 75 and the cached steps resume on the next run, so
+ * launchd can simply retry it every hour (scripts/run-player-models.sh).
  *
  * Intermediate files are cached in .player-models/<slug>/ (gitignored) so a failed
  * step resumes where it stopped. Every model is labeled on the site as an
@@ -35,15 +41,36 @@ const flag = (f) => args.includes(f);
 const opt = (f, d) => { const i = args.indexOf(f); return i >= 0 ? args[i + 1] : d; };
 const FORCE = flag("--force");
 const MESH = opt("--mesh", "hunyuan3d-v3");
-const slugsArg = args.filter((a, i) => !a.startsWith("--") && !["--mesh"].includes(args[i - 1]));
+const TIER = opt("--tier", null);
+const APPROVE = opt("--approve", null);
+const slugsArg = args.filter((a, i) => !a.startsWith("--") && !["--mesh", "--tier", "--approve"].includes(args[i - 1]));
+
+/* Build order, as the editor set it: Commissioners Court first, then JPs, state
+   reps, Congress, and everyone else after. */
+const TIERS = [
+  ["commissioners", /Harris County Commissioner/],
+  ["jp", /Justice of the Peace/],
+  ["house", /State Representative/],
+  ["congress", /U\.S\. Representative/],
+  ["county", /Harris County/],
+  ["senate", /State Senator/],
+  ["city", /Mayor|City Controller|City Council/],
+  ["hisd", /HISD/],
+];
+const tierOf = (office = "") => { const i = TIERS.findIndex(([, re]) => re.test(office)); return i < 0 ? TIERS.length : i; };
+
+if (APPROVE) {
+  const man = JSON.parse(fs.readFileSync(MANIFEST, "utf8"));
+  if (!man[APPROVE]) { console.error(`no model for ${APPROVE}`); process.exit(1); }
+  delete man[APPROVE].review;
+  fs.writeFileSync(MANIFEST, JSON.stringify(man, null, 2) + "\n");
+  console.log(`approved ${APPROVE}`);
+  process.exit(0);
+}
 
 const FAL_KEY = process.env.FAL_KEY;
 const HF_TOKEN = process.env.HF_TOKEN;
 const PROVIDER = FAL_KEY ? "fal" : HF_TOKEN ? "hf" : null;
-if (!PROVIDER) {
-  console.error("Set FAL_KEY or HF_TOKEN in .env.local first.");
-  process.exit(1);
-}
 
 /* ── Officials (parsed from lib/politicians.ts) ─────────────────────────── */
 function loadOfficials() {
@@ -53,7 +80,8 @@ function loadOfficials() {
   let m;
   while ((m = re.exec(src))) {
     const photo = /photo:\s*"([^"]+)"/.exec(m[3])?.[1];
-    out.push({ slug: m[1], name: m[2], photo });
+    const office = /office:\s*"([^"]+)"/.exec(m[3])?.[1];
+    out.push({ slug: m[1], name: m[2], office, photo });
   }
   return out;
 }
@@ -194,24 +222,42 @@ async function build(o) {
     portrait: o.photo,
     pipeline: PROVIDER === "fal" ? `nano-banana → ${MESH}` : "flux-kontext → trellis-2",
     generated: new Date().toISOString().slice(0, 10),
+    review: "pending",   // hidden on the site until approved with --approve
     ...(manifest[o.slug]?.yaw != null ? { yaw: manifest[o.slug].yaw } : {}),
   };
   fs.writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2) + "\n");
 }
 
+if (!PROVIDER) {
+  console.error("Set FAL_KEY or HF_TOKEN in .env.local first.");
+  process.exit(1);
+}
 const officials = loadOfficials();
 const existing = fs.existsSync(MANIFEST) ? JSON.parse(fs.readFileSync(MANIFEST, "utf8")) : {};
-const queue = flag("--all")
-  ? officials.filter(o => o.photo && (FORCE || !existing[o.slug]))
+const tierFilter = TIER ? TIERS.findIndex(([n]) => n === TIER) : -1;
+if (TIER && tierFilter < 0) { console.error(`unknown tier ${TIER}; one of ${TIERS.map(t => t[0]).join(", ")}`); process.exit(1); }
+const queue = flag("--all") || TIER
+  ? officials
+      .map((o, i) => ({ ...o, tier: tierOf(o.office), i }))
+      .filter(o => o.photo && (FORCE || !existing[o.slug]) && (tierFilter < 0 || o.tier === tierFilter))
+      .sort((a, b) => a.tier - b.tier || a.i - b.i)
   : slugsArg.map(s => officials.find(o => o.slug === s) ?? (console.error(`unknown slug ${s}`), process.exit(1)));
 if (!queue.length) { console.log("Nothing to build."); process.exit(0); }
 for (const o of queue) if (!o.photo) { console.error(`${o.slug} has no photo`); process.exit(1); }
 
 console.log(`Building ${queue.length} model(s) via ${PROVIDER}${PROVIDER === "fal" ? ` (${MESH})` : ""}`);
 let failed = 0;
+const QUOTA = /ZeroGPU quota|exceeded your .*quota|quota exceeded/i;
+let built = 0;
 for (const o of queue) {
-  try { await build(o); }
-  catch (e) { failed++; console.error(`[${o.slug}] FAILED: ${e.message}`); }
+  try { await build(o); built++; }
+  catch (e) {
+    if (QUOTA.test(e.message)) {
+      console.log(`QUOTA: stopped at ${o.slug} after ${built} built. ${e.message.match(/Try again in [0-9:]+/)?.[0] ?? ""}`);
+      process.exit(75);
+    }
+    failed++; console.error(`[${o.slug}] FAILED: ${e.message}`);
+  }
 }
 console.log(`${queue.length - failed} built, ${failed} failed.`);
 process.exit(failed ? 1 : 0);

@@ -68,7 +68,10 @@ export default function PlayerStage({ slug, name, party, photo }: {
             ))}
           </div>
         )}
-        {has3d && show3d && !ready && (
+        {has3d && model.review === "pending" && (
+          <span className="absolute top-3 left-3 label rounded px-1.5 py-0.5" style={{ background: "#E2B13C", color: "#0D2A21", fontSize: 9 }}>Pending review · dev only</span>
+        )}
+        {has3d && show3d && !ready && model.review !== "pending" && (
           <span className="absolute top-3 left-3 label" style={{ color: "rgba(255,255,255,0.55)", fontSize: 9 }}>Loading 3D…</span>
         )}
 
