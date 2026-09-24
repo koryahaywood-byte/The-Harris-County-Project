@@ -12,6 +12,9 @@ import Face from "@/components/desk/Face";
 import { RatingChip } from "@/components/desk/Rating";
 import { CashDuel, ResultBar } from "@/components/desk/Bars";
 import AddressForm from "@/components/desk/AddressForm";
+import MarketBar from "@/components/desk/MarketBar";
+import County3DLoader from "@/components/desk/County3DLoader";
+import { getAllMarketOdds, type MarketOdds } from "@/lib/kalshi";
 
 export const revalidate = 1800;
 
@@ -24,8 +27,9 @@ function todayCentral(): string {
 const fmtDate = (iso: string, opts: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" }) =>
   new Date(iso + "T12:00:00Z").toLocaleDateString("en-US", { ...opts, timeZone: "UTC" });
 
-export default function FrontPage() {
+export default async function FrontPage() {
   const races = getAllRaces();
+  const odds = await getAllMarketOdds();
   const t = tally(races);
   const competitive = competitiveRaces();
   const tossups = competitive.filter(r => r.lean === "toss-up");
@@ -88,7 +92,7 @@ export default function FrontPage() {
       <section className="max-w-7xl mx-auto px-4 md:px-6 pt-12">
         <SectionHead title="Top of the ticket" note="Both seats are open for the first time in years" />
         <div className="grid md:grid-cols-2 gap-5">
-          {marquee.map(r => <Marquee key={r.key} race={r} />)}
+          {marquee.map(r => <Marquee key={r.key} race={r} odds={odds[r.key]} />)}
         </div>
       </section>
 
@@ -99,8 +103,14 @@ export default function FrontPage() {
           note={`${spell(tossups.length)} toss-up${tossups.length === 1 ? "" : "s"} and ${t.dLean + t.rLean} leaning races, closest first`}
           href="/races?view=competitive" cta={`All ${competitive.length} competitive races`} />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {watch.map(r => <RaceTile key={r.key} race={toLite(r)} />)}
+          {watch.map(r => <RaceTile key={r.key} race={toLite(r, odds)} />)}
         </div>
+      </section>
+
+      {/* ── THE COUNTY IN 3D ─────────────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 md:px-6 pt-14">
+        <SectionHead title="The county, precinct by precinct" note="Every 2024 precinct, raised by the votes it cast" href="/tools/heat-check" cta="Open the precinct map" />
+        <County3DLoader />
       </section>
 
       {/* ── DESK + SIDEBAR ─────────────────────────────────────────── */}
@@ -219,8 +229,8 @@ export default function FrontPage() {
 
 function SectionHead({ title, note, href, cta }: { title: string; note?: string; href?: string; cta?: string }) {
   return (
-    <div className="desk-head flex items-baseline justify-between gap-4 mb-5">
-      <div className="flex items-baseline gap-3 flex-wrap">
+    <div className="desk-head flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4 mb-5">
+      <div className="flex items-baseline gap-x-3 gap-y-1 flex-wrap">
         <h2 className="serif text-[24px] md:text-[26px] font-semibold tracking-[-0.01em]" style={{ color: "var(--ink)" }}>{title}</h2>
         {note && <p className="text-[13px]" style={{ color: "#6B726D" }}>{note}</p>}
       </div>
@@ -231,10 +241,12 @@ function SectionHead({ title, note, href, cta }: { title: string; note?: string;
   );
 }
 
-function Marquee({ race }: { race: Race }) {
+function Marquee({ race, odds }: { race: Race; odds?: MarketOdds }) {
   const d = race.d, r = race.r;
+  const m = race.lean ? RATING[race.lean] : null;
   return (
-    <Link href={raceHref(race.key)} className="group panel panel-hover block overflow-hidden">
+    <Link href={raceHref(race.key)} className="group card-depth block overflow-hidden"
+      style={{ ["--tint" as string]: m?.tint ?? "#F1F2EE", ["--accent-line" as string]: m?.color ?? "#C9CCC4" }}>
       <div className="px-5 pt-4 pb-5">
         <div className="flex items-center justify-between">
           <p className="label" style={{ color: "#6B726D" }}>{race.tag} · {race.open ? "Open seat" : "Incumbent running"}</p>
@@ -244,12 +256,17 @@ function Marquee({ race }: { race: Race }) {
         <div className="grid grid-cols-2 gap-4 mt-5">
           {[d, r].map((c, i) => c && (
             <div key={c.name} className={`flex flex-col ${i === 1 ? "items-end text-right" : ""}`}>
-              <Face name={c.name} party={c.party} photo={c.photo} size={64} />
+              <span className="face-pop"><Face name={c.name} party={c.party} photo={c.photo} size={72} /></span>
               <p className="mt-3 text-[17px] font-bold leading-tight" style={{ color: "var(--ink)" }}>{c.name}</p>
               <p className="text-[12px] mt-0.5" style={{ color: PARTY[c.party].color }}>{c.party === "D" ? "Democrat" : "Republican"}</p>
             </div>
           ))}
         </div>
+        {odds && d && r && (
+          <div className="mt-4 rounded-md px-3 py-2.5" style={{ background: "rgba(255,255,255,0.75)", boxShadow: "inset 0 0 0 1px var(--rule)" }}>
+            <MarketBar dName={d.name} rName={r.name} demProb={odds.demProb} openInterest={odds.openInterest} compact />
+          </div>
+        )}
         {race.stakes && <p className="mt-4 text-[15px] leading-relaxed" style={{ color: "#3C443F" }}>{race.stakes.split(". ").slice(0, 2).join(". ").replace(/\.?$/, ".")}</p>}
         <div className="mt-5 grid sm:grid-cols-2 gap-5">
           {(d?.finance || r?.finance) && (
