@@ -28,6 +28,18 @@ function loadPrecincts(): GeoFeature[] {
   return GEO_CACHE!;
 }
 
+// Houston council districts do NOT follow voting precincts: council lines and
+// the city limits cut through precincts. Council is resolved from the point
+// itself against the council district polygons, never from the precinct.
+let COUNCIL_CACHE: GeoFeature[] | null = null;
+function loadCouncil(): GeoFeature[] {
+  if (!COUNCIL_CACHE) {
+    const raw = readFileSync(join(process.cwd(), "public/data/houston-council-districts.geojson"), "utf8");
+    COUNCIL_CACHE = JSON.parse(raw).features;
+  }
+  return COUNCIL_CACHE!;
+}
+
 let COMM_CACHE: GeoFeature[] | null = null;
 function loadCommPrecincts(): GeoFeature[] {
   if (!COMM_CACHE) {
@@ -156,7 +168,12 @@ export async function GET(req: Request) {
 
   // 4. Crosswalk → all other districts; override pct with direct PIP result
   const cwBase = (crosswalkRaw as { precincts: Record<string, CrosswalkEntry> }).precincts[precinct] ?? {};
-  const cw: CrosswalkEntry = commPct ? { ...cwBase, pct: commPct } : cwBase;
+  // Council: point-in-polygon only. A small 25 m tolerance covers boundary
+  // seams; anything farther is outside the city and gets no council member.
+  const councilFeature = findFeature(lng, lat, loadCouncil(), 25);
+  const council = councilFeature ? String(councilFeature.properties.DISTRICT) : undefined;
+  const cw: CrosswalkEntry = { ...cwBase, ...(commPct ? { pct: commPct } : {}), council };
+  if (!council) delete cw.council;
   const reps = findRepresentatives(cw);
 
   return NextResponse.json({ matched, precinct, districts: cw, officials: reps });
