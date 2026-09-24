@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { BASEMAP } from "@/lib/basemap";
+import { isCoarsePointer } from "@/lib/touch";
 
 export interface MapEvent {
   id: string;
@@ -50,6 +51,7 @@ export default function CivicMap({ events }: { events: MapEvent[] }) {
 
   return (
     <MapContainer
+      dragging={!isCoarsePointer()}
       center={[avgLat, avgLng]}
       zoom={11}
       style={{ height: 240, width: "100%", borderRadius: 16 }}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import "leaflet/dist/leaflet.css";
 import crosswalkRaw from "@/lib/precinct-crosswalk.json";
 import { BASEMAP } from "@/lib/basemap";
+import { isCoarsePointer } from "@/lib/touch";
 
 type DistrictField = "cd" | "sd" | "hd" | "jp" | "council" | "pct";
 
@@ -268,7 +269,7 @@ export default function DistrictHeatMap({ districtField, districtValue, district
   useEffect(() => {
     if (!mapRef.current || leafletMap.current) return;
     import("leaflet").then(L => {
-      const map = L.map(mapRef.current!, { zoomControl: true, scrollWheelZoom: false })
+      const map = L.map(mapRef.current!, { zoomControl: true, scrollWheelZoom: false, dragging: !isCoarsePointer() })
         .setView([29.78, -95.37], 10);
       L.tileLayer(BASEMAP.base, {
         attribution: BASEMAP.attribution, maxNativeZoom: BASEMAP.maxNativeZoom, maxZoom: 18,

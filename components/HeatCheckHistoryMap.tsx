@@ -26,23 +26,23 @@ interface PrecinctData {
 
 // ── Color scales ──────────────────────────────────────────────────────────────
 function partisanColor(pct: number): string {
-  if (pct >= 0.65) return "#1e3a8a";
-  if (pct >= 0.57) return "#2563a8";
-  if (pct >= 0.52) return "#7aaee8";
-  if (pct >= 0.48) return "#a78bfa";
-  if (pct >= 0.43) return "#e58f8f";
-  if (pct >= 0.35) return "#dc2626";
-  return "#991b1b";
+  if (pct >= 0.65) return "#1A3A93";
+  if (pct >= 0.57) return "#3F66CF";
+  if (pct >= 0.52) return "#93AAE8";
+  if (pct >= 0.48) return "#E6C35C";
+  if (pct >= 0.43) return "#EC9C92";
+  if (pct >= 0.35) return "#D2584B";
+  return "#86211A";
 }
 
 function swingColor(swing: number): string {
-  if (swing >= 0.10) return "#1e3a8a";
-  if (swing >= 0.05) return "#2563a8";
-  if (swing >= 0.02) return "#93c5fd";
-  if (swing >= -0.02) return "#d1d5db";
-  if (swing >= -0.05) return "#fca5a5";
-  if (swing >= -0.10) return "#dc2626";
-  return "#991b1b";
+  if (swing >= 0.10) return "#1A3A93";
+  if (swing >= 0.05) return "#3F66CF";
+  if (swing >= 0.02) return "#93AAE8";
+  if (swing >= -0.02) return "#D6D8D1";
+  if (swing >= -0.05) return "#EC9C92";
+  if (swing >= -0.10) return "#D2584B";
+  return "#86211A";
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -93,23 +93,23 @@ function computeLookup(
 
 // ── Legends ───────────────────────────────────────────────────────────────────
 const PARTISAN_LEGEND = [
-  { color: "#1e3a8a", label: "Strong Dem (65%+)" },
-  { color: "#2563a8", label: "Dem (57–65%)" },
-  { color: "#7aaee8", label: "Lean Dem (52–57%)" },
-  { color: "#a78bfa", label: "Toss-up (48–52%)" },
-  { color: "#e58f8f", label: "Lean Rep (43–48%)" },
-  { color: "#dc2626", label: "Rep (35–43%)" },
-  { color: "#991b1b", label: "Strong Rep (<35% D)" },
+  { color: "#1A3A93", label: "D 65%+" },
+  { color: "#3F66CF", label: "D 57–65%" },
+  { color: "#93AAE8", label: "D 52–57%" },
+  { color: "#E6C35C", label: "Even, 48–52%" },
+  { color: "#EC9C92", label: "R 52–57%" },
+  { color: "#D2584B", label: "R 57–65%" },
+  { color: "#86211A", label: "R 65%+" },
 ];
 
 const SWING_LEGEND = [
-  { color: "#1e3a8a", label: "Shifted D 10%+" },
-  { color: "#2563a8", label: "Shifted D 5–10%" },
-  { color: "#93c5fd", label: "Shifted D 2–5%" },
-  { color: "#d1d5db", label: "Stable (±2%)" },
-  { color: "#fca5a5", label: "Shifted R 2–5%" },
-  { color: "#dc2626", label: "Shifted R 5–10%" },
-  { color: "#991b1b", label: "Shifted R 10%+" },
+  { color: "#1A3A93", label: "Toward D 10+ pts" },
+  { color: "#3F66CF", label: "Toward D 5–10" },
+  { color: "#93AAE8", label: "Toward D 2–5" },
+  { color: "#D6D8D1", label: "Within 2 pts" },
+  { color: "#EC9C92", label: "Toward R 2–5" },
+  { color: "#D2584B", label: "Toward R 5–10" },
+  { color: "#86211A", label: "Toward R 10+ pts" },
 ];
 
 // General cycles used for the pinned-precinct trend sparkline, oldest first
@@ -160,7 +160,7 @@ export default function HeatCheckHistoryMap() {
 
   // Selectors
   const [jurisdiction, setJurisdiction] = useState<Jurisdiction>("county");
-  const [cycle, setCycle] = useState("2026P");
+  const [cycle, setCycle] = useState("2024G");
   const [showIframe, setShowIframe] = useState(false);
   const [race, setRace] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("partisan");
@@ -176,6 +176,18 @@ export default function HeatCheckHistoryMap() {
     prec: string; data: PrecinctData | null; baseData: PrecinctData | null; swing: number | null;
   } | null>(null);
   const [pinned, setPinned] = useState<string | null>(null);
+
+  // Touch devices: one finger scrolls the PAGE and taps pick a precinct; the
+  // map only moves with two fingers. Hover cards are desktop-only.
+  const [coarse, setCoarse] = useState(false);
+  useEffect(() => { setCoarse(window.matchMedia("(pointer: coarse)").matches); }, []);
+
+  // Find a precinct by number or street address
+  const [findQ, setFindQ] = useState("");
+  const [finding, setFinding] = useState(false);
+  const [findErr, setFindErr] = useState<string | null>(null);
+  const layerByPrec = useRef<Map<string, L.Path>>(new Map());
+  const [layerVersion, setLayerVersion] = useState(0);
 
   // ── URL round-trip ─────────────────────────────────────────────────────────
   const pendingUrlRace = useRef<string | null>(null);
@@ -262,8 +274,15 @@ export default function HeatCheckHistoryMap() {
   useEffect(() => {
     if (!mapRef.current || leafletMap.current) return;
     import("leaflet").then(L => {
-      const map = L.map(mapRef.current!, { zoomControl: true, scrollWheelZoom: true })
-        .setView([29.78, -95.37], 10);
+      const touch = window.matchMedia("(pointer: coarse)").matches;
+      const map = L.map(mapRef.current!, {
+        zoomControl: true,
+        scrollWheelZoom: false,     // scrolling the page never zooms the map
+        dragging: !touch,           // phones: one finger scrolls the page, two fingers move the map
+        touchZoom: true,
+        doubleClickZoom: true,
+        zoomSnap: 0.5,
+      }).setView([29.78, -95.37], touch ? 9.5 : 10);
       L.tileLayer(BASEMAP.base, {
         attribution: BASEMAP.attribution, maxNativeZoom: BASEMAP.maxNativeZoom, maxZoom: 18,
       }).addTo(map);
@@ -277,6 +296,8 @@ export default function HeatCheckHistoryMap() {
     if (!leafletMap.current || !geojson) return;
     import("leaflet").then(L => {
       if (geoLayerRef.current) { geoLayerRef.current.remove(); geoLayerRef.current = null; }
+      layerByPrec.current = new Map();
+      const touch = window.matchMedia("(pointer: coarse)").matches;
 
       const layer = L.geoJSON(geojson as GeoJSON.FeatureCollection, {
         style: (feature) => {
@@ -303,7 +324,8 @@ export default function HeatCheckHistoryMap() {
         },
         onEachFeature: (feature, lyr) => {
           const raw = (feature as GeoFeature).properties.PREC || "";
-          lyr.on("mouseover", () => {
+          layerByPrec.current.set(normPrec(raw), lyr as L.Path);
+          if (!touch) lyr.on("mouseover", () => {
             const inJurisdiction = jurisdiction !== "houston" || filterPrec(raw);
             if (!inJurisdiction) return;
             (lyr as L.Path).setStyle({ weight: 2, color: "#fbbf24", opacity: 1 });
@@ -318,7 +340,7 @@ export default function HeatCheckHistoryMap() {
               swing: lookupPrec(swingMap, raw) ?? null,
             });
           });
-          lyr.on("mouseout", () => { layer.resetStyle(lyr); setHovered(null); });
+          if (!touch) lyr.on("mouseout", () => { layer.resetStyle(lyr); setHovered(null); });
           lyr.on("click", () => {
             const inJurisdiction = jurisdiction !== "houston" || filterPrec(raw);
             if (!inJurisdiction) return;
@@ -329,8 +351,60 @@ export default function HeatCheckHistoryMap() {
       }).addTo(leafletMap.current!);
 
       geoLayerRef.current = layer;
+      setLayerVersion(v => v + 1);
     });
   }, [geojson, lookup, baseLookup, swingMap, viewMode, jurisdiction, filterPrec]); // eslint-disable-line
+
+  // Keep the selected precinct outlined in gold, whatever the layer rebuilds do.
+  const outlined = useRef<L.Path | null>(null);
+  useEffect(() => {
+    const layer = geoLayerRef.current;
+    if (outlined.current && layer) layer.resetStyle(outlined.current);
+    outlined.current = null;
+    if (pinned == null) return;
+    const lyr = layerByPrec.current.get(normPrec(pinned));
+    if (!lyr) return;
+    lyr.setStyle({ weight: 3, color: "#E2B13C", opacity: 1 });
+    lyr.bringToFront();
+    outlined.current = lyr;
+  }, [pinned, layerVersion]);
+
+  // A precinct carried in the URL (?prec=0890, e.g. from the 3D county) is
+  // zoomed to once, as soon as its shape exists.
+  const zoomedFromUrl = useRef(false);
+  useEffect(() => {
+    if (zoomedFromUrl.current || pinned == null || !layerByPrec.current.size) return;
+    zoomedFromUrl.current = true;
+    zoomTo(pinned);
+  }, [pinned, layerVersion]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function zoomTo(prec: string) {
+    const lyr = layerByPrec.current.get(normPrec(prec)) as (L.Path & { getBounds?: () => L.LatLngBounds }) | undefined;
+    const map = leafletMap.current;
+    if (lyr?.getBounds && map) map.fitBounds(lyr.getBounds(), { maxZoom: 14, padding: [40, 40] });
+  }
+
+  async function findPrecinct(e: React.FormEvent) {
+    e.preventDefault();
+    const q = findQ.trim();
+    if (!q) return;
+    setFindErr(null);
+    const digits = q.replace(/^pct\.?\s*|^precinct\s*/i, "");
+    if (/^\d{1,4}$/.test(digits)) {
+      if (!layerByPrec.current.has(normPrec(digits))) { setFindErr(`There is no precinct ${digits} on the county map.`); return; }
+      setPinned(digits.padStart(4, "0")); zoomTo(digits);
+      return;
+    }
+    setFinding(true);
+    try {
+      const res = await fetch(`/api/my-officials?address=${encodeURIComponent(q)}`);
+      const data = await res.json();
+      if (!res.ok || !data.precinct) { setFindErr(data.error ?? "That address wasn’t found. Add the street number and ZIP."); return; }
+      setPinned(String(data.precinct)); zoomTo(String(data.precinct));
+    } catch {
+      setFindErr("The address lookup didn’t respond. Try the precinct number instead.");
+    } finally { setFinding(false); }
+  }
 
   // ── Derived display values ─────────────────────────────────────────────────
   const cycleData = history?.cycles[cycle];
@@ -381,7 +455,7 @@ export default function HeatCheckHistoryMap() {
       area: jurisdiction,
       prec: pinned != null ? normPrec(pinned).padStart(4, "0") : null,
     },
-    { view: "partisan", cycle: "2026P", from: "2020G", race: defaultRace, area: "county", prec: "" }
+    { view: "partisan", cycle: "2024G", from: "2020G", race: defaultRace, area: "county", prec: "" }
   );
 
   const deltaPresetActive = viewMode === "swing" && cycle === "2024G" && compareCycle === "2020G";
@@ -434,346 +508,193 @@ export default function HeatCheckHistoryMap() {
 
   const legend = viewMode === "swing" ? SWING_LEGEND : PARTISAN_LEGEND;
 
+  // One sentence that says what the map shows, computed from what's on screen.
+  const where = jurisdiction === "houston" ? "City of Houston precincts" : "Harris County precincts";
+  const raceLabel = availableRaces.find(r => r.key === race)?.label ?? "";
+  const dFull = precincts[0]?.dName ?? "";
+  const demShare = totalVotes ? (demVotes / totalVotes) * 100 : 0;
+  const headline = !history
+    ? "Loading precinct results…"
+    : viewMode === "swing"
+      ? `From the ${cmpCycleLabel.toLowerCase()} to the ${curCycleLabel.toLowerCase()}, ${dSwingCount.toLocaleString()} precincts moved toward Democrats and ${rSwingCount.toLocaleString()} toward Republicans. The average precinct moved ${Math.abs(avgSwing * 100).toFixed(1)} points toward ${avgSwing >= 0 ? "Democrats" : "Republicans"}.`
+      : cycleData?.primary
+        ? `In the ${curCycleLabel.toLowerCase()}, ${demShare.toFixed(1)}% of primary ballots in ${where} were cast in the Democratic primary.`
+        : `In the ${curCycleLabel.slice(0, 4)} race for ${raceLabel === "President" ? "president" : raceLabel}, ${dFull} (D) won ${demShare.toFixed(1)}% of the two-party vote across ${precincts.length.toLocaleString()} ${where}.`;
+
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div style={{ fontFamily: "var(--font-outfit,sans-serif)" }}>
 
-      {/* Page header */}
-      <div className="flex items-end gap-0 px-5 pt-6 pb-1 border-b"
-        style={{ background: "var(--surface)", borderColor: "var(--rule)" }}>
-        <div className="pb-3 mr-auto">
-          <p className="label" style={{ color: "var(--brand)" }}>Maps · Precinct results</p>
-          <h1 className="serif text-[28px] md:text-[32px] font-semibold leading-tight mt-0.5" style={{ color: "var(--ink)" }}>
-            How every precinct voted
-          </h1>
-          <p className="text-[13px] mt-0.5" style={{ color: "#6B726D" }}>
-            {jurisdiction === "houston" ? "City of Houston precincts" : "Harris County"} · precinct-level election results · 2012 – 2026
-          </p>
-        </div>
-        <div className="pb-3">
-          <ShareButton
-            toolName="Heat Check"
-            section="Maps"
-            description={`Precinct-level election results · ${jurisdiction === "houston" ? "City of Houston" : "Harris County"} · 2012–2026`}
-            stats={totalVotes > 0 ? [
-              { label: "D", value: `${overallDemPct}%` },
-              { label: "R", value: `${100 - overallDemPct}%` },
-              { label: "Votes", value: totalVotes.toLocaleString() },
-            ] : undefined}
-            summary={`Heat Check. Harris County precinct-level election map · ${curCycleLabel} · via The Harris County Project`}
-            light={false}
-          />
-        </div>
-      </div>
-
-      {/* Controls row 1 */}
-      <div className="flex flex-wrap items-center gap-3 px-5 py-3 border-b border-black/8 bg-white/60"
-        style={{ backdropFilter: "blur(8px)" }}>
-
-        {/* Jurisdiction selector */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>Area</span>
-          <select
-            value={jurisdiction}
-            onChange={e => setJurisdiction(e.target.value as Jurisdiction)}
-            className="rounded-lg border border-black/10 px-2.5 py-1.5 text-[11px] font-semibold bg-white"
-            style={{ color: "#374151" }}>
-            <option value="county">Harris County</option>
-            <option value="houston">City of Houston</option>
-          </select>
-        </div>
-
-        {/* View mode toggle */}
-        <div className="flex rounded-lg overflow-hidden border border-black/10">
-          {(["partisan", "swing"] as const).map(mode => (
-            <button key={mode} onClick={() => setViewMode(mode)}
-              className="px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.14em] transition-colors"
-              style={{
-                background: viewMode === mode ? "#0A1F18" : "#fff",
-                color: viewMode === mode ? "#fbbf24" : "#6b7280",
-                borderRight: "1px solid rgba(0,0,0,0.08)",
-              }}>
-              {mode === "partisan" ? "Partisan" : "⇄ Swing"}
-            </button>
-          ))}
-        </div>
-
-        {/* Cycle dropdown */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>
-            {viewMode === "swing" ? "To" : "Election"}
-          </span>
-          <select
-            value={cycle}
-            onChange={e => { setCycle(e.target.value); setShowIframe(false); }}
-            className="rounded-lg border border-black/10 px-2.5 py-1.5 text-[11px] font-semibold bg-white"
-            style={{ color: "#374151" }}>
-            {CYCLES.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
-          </select>
-        </div>
-
-        {/* One-click Trump-era delta preset */}
-        <button
-          onClick={() => {
-            if (deltaPresetActive) { setViewMode("partisan"); return; }
-            setViewMode("swing"); setCycle("2024G"); setCompareCycle("2020G"); setShowIframe(false);
-          }}
-          title="Color precincts by change in presidential D share, 2020 to 2024"
-          className="px-3 py-1.5 rounded-lg text-[11px] font-bold border transition-colors"
-          style={{
-            background: deltaPresetActive ? "#0A1F18" : "#fff",
-            color: deltaPresetActive ? "#fbbf24" : "#6b7280",
-            borderColor: deltaPresetActive ? "#0A1F18" : "rgba(0,0,0,0.1)",
-          }}>
-          Δ 2020→2024
-        </button>
-
-        {/* Race dropdown */}
-        {availableRaces.length > 1 && (
-          <div className="flex items-center gap-1.5">
-            <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#6b7280" }}>Race</span>
-            <select
-              value={race ?? ""}
-              onChange={e => setRace(e.target.value || null)}
-              className="rounded-lg border border-black/10 px-2.5 py-1.5 text-[11px] font-semibold bg-white"
-              style={{ color: "#374151" }}>
-              {availableRaces.map(r => <option key={r.key} value={r.key}>{r.label}</option>)}
-            </select>
+      {/* ── Header: what you're looking at, in one sentence ─────────────── */}
+      <div className="border-b" style={{ background: "var(--surface)", borderColor: "var(--rule)" }}>
+        <div className="max-w-6xl mx-auto px-4 md:px-6 pt-6 pb-4 flex items-start gap-4">
+          <div className="min-w-0 flex-1">
+            <p className="label" style={{ color: "var(--brand)" }}>Maps · Precinct results</p>
+            <h1 className="serif text-[30px] md:text-[38px] font-semibold leading-[1.05] tracking-[-0.01em] mt-1" style={{ color: "var(--ink)" }}>
+              How every precinct voted
+            </h1>
+            <p className="text-[15px] md:text-[16px] leading-relaxed mt-2 max-w-2xl" style={{ color: "#3C443F" }}>{headline}</p>
           </div>
-        )}
+          <div className="shrink-0 pt-1">
+            <ShareButton
+              toolName="Precinct results"
+              section="Maps"
+              description={`Precinct-level election results · ${jurisdiction === "houston" ? "City of Houston" : "Harris County"} · 2012–2026`}
+              stats={totalVotes > 0 ? [
+                { label: "D", value: `${overallDemPct}%` },
+                { label: "R", value: `${100 - overallDemPct}%` },
+                { label: "Votes", value: totalVotes.toLocaleString() },
+              ] : undefined}
+              summary={`${headline} Via The Harris County Project`}
+              light={false}
+            />
+          </div>
+        </div>
 
-        {/* 2026 race detail toggle */}
-        {cycle === "2026P" && (
-          <button
-            onClick={() => setShowIframe(v => !v)}
-            className="px-3 py-1.5 rounded-lg text-[11px] font-bold border transition-colors"
-            style={{
-              background: showIframe ? "#2563a8" : "#fff",
-              color: showIframe ? "#fff" : "#2563a8",
-              borderColor: "#2563a8",
-            }}>
-            {showIframe ? "← Partisan Map" : "Race Breakdown →"}
-          </button>
-        )}
-
-        {/* Partisan summary bar */}
-        {viewMode === "partisan" && precincts.length > 0 && !showIframe && totalVotes > 0 && (
-          <div className="flex items-center gap-2 ml-auto">
-            <span className="text-[9px] shrink-0 hidden sm:block" style={{ color: "#9ca3af" }}>{curCycleLabel}</span>
-            <span className="text-[10px] font-bold tabular-nums shrink-0" style={{ color: "#2563a8" }}>D {overallDemPct}%</span>
-            <div className="h-2 rounded-full overflow-hidden flex" style={{ background: "#e5e7eb", minWidth: 80 }}>
-              <div className="h-full" style={{ width: `${overallDemPct}%`, background: "#2563a8" }} />
-              <div className="h-full" style={{ width: `${100 - overallDemPct}%`, background: "#dc2626" }} />
+        {/* ── Controls: plain words, one job each ───────────────────────── */}
+        <div className="max-w-6xl mx-auto px-4 md:px-6 pb-4 grid gap-3 md:grid-cols-[auto_1fr] md:items-end">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3 items-end">
+            <div className="col-span-2 sm:col-span-1">
+              <p className="label mb-1.5" style={{ color: "#6B726D", fontSize: 10 }}>Show</p>
+              <div className="flex rounded-md p-0.5 border w-full sm:w-auto" style={{ borderColor: "var(--rule-strong)", background: "var(--surface)" }} role="tablist" aria-label="What the colors show">
+                {(["partisan", "swing"] as const).map(mode => (
+                  <button key={mode} role="tab" aria-selected={viewMode === mode}
+                    onClick={() => {
+                      setViewMode(mode);
+                      if (mode === "swing" && !cycle.endsWith("G")) { setCycle("2024G"); setCompareCycle("2020G"); }
+                      setShowIframe(false);
+                    }}
+                    className="flex-1 sm:flex-none px-3.5 py-2 text-[14px] font-semibold rounded-[5px] transition-colors"
+                    style={viewMode === mode ? { background: "var(--ink)", color: "#fff" } : { color: "#3C443F" }}>
+                    {mode === "partisan" ? "Who won" : "What changed"}
+                  </button>
+                ))}
+              </div>
             </div>
-            <span className="text-[10px] font-bold tabular-nums shrink-0" style={{ color: "#dc2626" }}>{100 - overallDemPct}% R</span>
-            <span className="text-[9px] ml-1 shrink-0 hidden md:block" style={{ color: "#9ca3af" }}>{totalVotes.toLocaleString()} votes</span>
-          </div>
-        )}
-      </div>
 
-      {/* Controls row 2: swing compare */}
-      {viewMode === "swing" && !showIframe && (
-        <div className="flex flex-wrap items-center gap-3 px-5 py-2.5 border-b border-black/8"
-          style={{ background: "rgba(254,243,199,0.5)" }}>
-          <span className="text-[10px] font-black uppercase tracking-[0.18em]" style={{ color: "#92400e" }}>From</span>
-
-          <select
-            value={compareCycle}
-            onChange={e => setCompareCycle(e.target.value)}
-            className="rounded-lg border border-amber-200 px-2.5 py-1.5 text-[11px] font-semibold bg-white"
-            style={{ color: "#374151" }}>
-            {CYCLES.filter(c => c.key !== cycle).map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
-          </select>
-
-          {compareAvailableRaces.length > 1 && (
-            <>
-              <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#92400e" }}>Race</span>
-              <select
-                value={compareRace ?? ""}
-                onChange={e => setCompareRace(e.target.value || null)}
-                className="rounded-lg border border-amber-200 px-2.5 py-1.5 text-[11px] font-semibold bg-white"
-                style={{ color: "#374151" }}>
-                {compareAvailableRaces.map(r => <option key={r.key} value={r.key}>{r.label}</option>)}
+            {viewMode === "swing" && (
+              <Field label="Compared with">
+                <select value={compareCycle} onChange={e => setCompareCycle(e.target.value)} className={SELECT} style={SELECT_STYLE}>
+                  {CYCLES.filter(c => c.key !== cycle).map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
+                </select>
+              </Field>
+            )}
+            <Field label={viewMode === "swing" ? "Election" : "Election"}>
+              <select value={cycle} onChange={e => { setCycle(e.target.value); setShowIframe(false); }} className={SELECT} style={SELECT_STYLE}>
+                <optgroup label="General elections">
+                  {CYCLES.filter(c => c.key.endsWith("G")).map(c => <option key={c.key} value={c.key}>{c.label.replace(" General", " general")}</option>)}
+                </optgroup>
+                <optgroup label="Primaries (ballots cast in each party)">
+                  {CYCLES.filter(c => c.key.endsWith("P")).map(c => <option key={c.key} value={c.key}>{c.label.replace(" Primary", " primary")}</option>)}
+                </optgroup>
               </select>
-            </>
-          )}
+            </Field>
+            {availableRaces.length > 1 && (
+              <Field label="Race">
+                <select value={race ?? ""} onChange={e => setRace(e.target.value || null)} className={SELECT} style={SELECT_STYLE}>
+                  {availableRaces.map(r => <option key={r.key} value={r.key}>{r.label}</option>)}
+                </select>
+              </Field>
+            )}
+            <Field label="Area">
+              <select value={jurisdiction} onChange={e => setJurisdiction(e.target.value as Jurisdiction)} className={SELECT} style={SELECT_STYLE}>
+                <option value="county">All of Harris County</option>
+                <option value="houston">City of Houston precincts</option>
+              </select>
+            </Field>
+          </div>
 
-          {swings.length > 0 && (
-            <div className="flex items-center gap-2 ml-auto">
-              <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ background: "#dbeafe", color: "#1d4ed8" }}>
-                {dSwingCount.toLocaleString()} → D
-              </span>
-              <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ background: "#fee2e2", color: "#dc2626" }}>
-                {rSwingCount.toLocaleString()} → R
-              </span>
-              <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold"
-                style={{ background: "#f3f4f6", color: avgSwing > 0 ? "#1d4ed8" : "#dc2626" }}>
-                Avg {avgSwing >= 0 ? "+" : ""}{(avgSwing * 100).toFixed(1)}% D
-              </span>
+          <form onSubmit={findPrecinct} className="md:justify-self-end w-full md:max-w-sm" role="search" aria-label="Find a precinct">
+            <p className="label mb-1.5" style={{ color: "#6B726D", fontSize: 10 }}>Find a precinct</p>
+            <div className="flex gap-2">
+              <input value={findQ} onChange={e => setFindQ(e.target.value)} inputMode="search" enterKeyHint="search"
+                placeholder="Precinct number or street address" aria-label="Precinct number or street address"
+                className="min-w-0 flex-1 rounded-md border px-3 py-2 text-[15px] outline-none focus:ring-2"
+                style={{ borderColor: "var(--rule-strong)", background: "#fff", ["--tw-ring-color" as string]: "var(--brand)" }} />
+              <button type="submit" className="btn btn-ink !py-2 shrink-0" disabled={finding}>{finding ? "…" : "Go"}</button>
             </div>
-          )}
+            {findErr && <p role="alert" className="text-[13px] mt-1.5" style={{ color: "#962A20" }}>{findErr}</p>}
+          </form>
         </div>
-      )}
+
+        {cycle === "2026P" && (
+          <div className="max-w-6xl mx-auto px-4 md:px-6 pb-4">
+            <button onClick={() => setShowIframe(v => !v)} className="text-[14px] font-bold" style={{ color: "var(--brand)" }}>
+              {showIframe ? "← Back to the map" : "See the 2026 primaries race by race →"}
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* 2026 race-by-race iframe panel */}
       {showIframe && (
         <iframe
           src="/heat-check.html"
           className="w-full border-0"
-          style={{ height: "calc(100dvh - 41px - 112px)" }}
-          title="Heat Check. Harris County 2026 Primary Race Detail"
+          style={{ height: "calc(100dvh - 160px)" }}
+          title="2026 primary results, race by race"
           allowFullScreen
         />
       )}
 
-      {/* Map + table + footer. Hidden when iframe is shown */}
-      {!showIframe && (<><div className="relative" style={{ height: 520 }}>
-        <div ref={mapRef} style={{ height: "100%", width: "100%" }} />
-
-        {/* Data-load failure recovery */}
-        {loadError && (
-          <div className="absolute inset-0 z-[1100] flex items-center justify-center" style={{ background: "rgba(245,243,239,0.96)" }}>
-            <div className="text-center max-w-xs px-4">
-              <p className="text-sm font-bold mb-1" style={{ color: "#0D2A21" }}>Precinct data didn&rsquo;t load</p>
-              <p className="text-[11px] mb-3 leading-relaxed" style={{ color: "#6b7280" }}>
-                The map data failed to fetch. Check your connection and try again.
-              </p>
-              <button onClick={loadData} className="pressable rounded-full px-5 py-2 text-xs font-bold text-white" style={{ background: "#0D2A21" }}>
-                Retry
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Precinct card: transient on hover, pinned on click */}
-        {popup && (
-          <div className="absolute bottom-4 left-4 rounded-xl p-3 z-[1000] min-w-[220px]"
-            style={{ background: "rgba(13,42,33,0.93)", backdropFilter: "blur(12px)", border: popup.isPinned ? "1px solid rgba(251,191,36,0.45)" : "1px solid rgba(255,255,255,0.12)" }}>
-            <div className="flex items-center justify-between gap-2 mb-2">
-              <p className="text-[9px] font-bold uppercase tracking-[0.16em]" style={{ color: "rgba(255,255,255,0.4)" }}>
-                Precinct {popup.prec}
-              </p>
-              {/* District quick-links */}
-              <div className="flex items-center gap-1.5">
-                {(() => {
-                  const d = precinctDistricts(popup.prec);
-                  return (
-                    <>
-                      {d.hd && <Link href={`/tools/districts?type=hd&district=${d.hd}`}
-                        className="text-[9px] font-bold px-1.5 py-0.5 rounded-md hover:opacity-80"
-                        style={{ background: "rgba(122,174,232,0.2)", color: "#7aaee8" }}>HD {d.hd} →</Link>}
-                      {d.sd && <Link href={`/tools/districts?type=sd&district=${d.sd}`}
-                        className="text-[9px] font-bold px-1.5 py-0.5 rounded-md hover:opacity-80"
-                        style={{ background: "rgba(122,174,232,0.12)", color: "#7aaee8" }}>SD {d.sd} →</Link>}
-                      {d.cd && <Link href={`/tools/districts?type=cd&district=${d.cd}`}
-                        className="text-[9px] font-bold px-1.5 py-0.5 rounded-md hover:opacity-80"
-                        style={{ background: "rgba(122,174,232,0.08)", color: "#7aaee8" }}>CD {d.cd} →</Link>}
-                    </>
-                  );
-                })()}
-                {popup.isPinned && (
-                  <button onClick={() => setPinned(null)} aria-label="Unpin precinct"
-                    className="text-[11px] leading-none font-bold hover:opacity-80"
-                    style={{ color: "rgba(255,255,255,0.55)" }}>
-                    ✕
-                  </button>
-                )}
-              </div>
-            </div>
-            {popup.data?.pct != null ? (
-              viewMode === "swing" && popup.swing != null ? (
-                <>
-                  <div className="flex justify-between mb-1">
-                    <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.5)" }}>{cmpCycleLabel}</span>
-                    <span className="text-xs font-bold text-white">{Math.round((popup.baseData?.pct ?? 0) * 100)}% D</span>
-                  </div>
-                  <div className="flex justify-between mb-1">
-                    <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.5)" }}>{curCycleLabel}</span>
-                    <span className="text-xs font-bold text-white">{Math.round(popup.data.pct * 100)}% D</span>
-                  </div>
-                  <div className="flex justify-between mt-1.5 pt-1.5 border-t border-white/10">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.45)" }}>Swing</span>
-                    <span className="text-sm font-black" style={{ color: popup.swing > 0 ? "#7aaee8" : "#f87171" }}>
-                      {popup.swing > 0 ? "+" : ""}{(popup.swing * 100).toFixed(1)}% {popup.swing > 0 ? "D" : "R"}
-                    </span>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex justify-between gap-4 mb-1">
-                    <span className="text-xs font-bold" style={{ color: "#7aaee8" }}>{popup.data.dName}</span>
-                    <span className="text-xs font-bold text-white">{Math.round(popup.data.pct * 100)}%</span>
-                  </div>
-                  <div className="h-1.5 rounded-full mb-2 overflow-hidden" style={{ background: "#f87171" }}>
-                    <div className="h-full rounded-full" style={{ width: `${Math.round(popup.data.pct * 100)}%`, background: "#2563a8" }} />
-                  </div>
-                  <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.45)" }}>
-                    {popup.data.d.toLocaleString()} D · {popup.data.r.toLocaleString()} R · {popup.data.total.toLocaleString()} total
-                  </p>
-                </>
-              )
-            ) : (
-              <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.4)" }}>No data for {curCycleLabel}</p>
-            )}
-
-            {/* Trend sparkline: D% in the top-of-ballot general race, per cycle */}
-            {popup.isPinned && pinnedTrend.length >= 2 && (
-              <div className="mt-2 pt-2 border-t border-white/10">
-                <p className="text-[8px] font-bold uppercase tracking-[0.16em] mb-1" style={{ color: "rgba(255,255,255,0.4)" }}>
-                  D share in generals, {pinnedTrend[0].year} to {pinnedTrend[pinnedTrend.length - 1].year}
-                </p>
-                {(() => {
-                  const n = pinnedTrend.length;
-                  const x = (i: number) => 12 + (i * 176) / (n - 1);
-                  const y = (p: number) => 34 - Math.max(0, Math.min(1, p)) * 26;
-                  const first = pinnedTrend[0], last = pinnedTrend[n - 1];
-                  return (
-                    <svg width={200} height={48} viewBox="0 0 200 48" role="img"
-                      aria-label={`D share by cycle: ${pinnedTrend.map(t => `${t.year} ${Math.round(t.pct * 100)}%`).join(", ")}`}>
-                      <line x1={12} x2={188} y1={y(0.5)} y2={y(0.5)} stroke="rgba(255,255,255,0.2)" strokeDasharray="3 3" strokeWidth={1} />
-                      <polyline points={pinnedTrend.map((t, i) => `${x(i)},${y(t.pct)}`).join(" ")}
-                        fill="none" stroke="#7aaee8" strokeWidth={1.5} />
-                      {pinnedTrend.map((t, i) => (
-                        <g key={t.year}>
-                          <circle cx={x(i)} cy={y(t.pct)} r={2.2} fill={t.pct >= 0.5 ? "#7aaee8" : "#f87171"} />
-                          <text x={x(i)} y={45} textAnchor="middle" fontSize={7} fill="rgba(255,255,255,0.35)">{t.year}</text>
-                        </g>
-                      ))}
-                      <text x={x(0)} y={Math.max(9, y(first.pct) - 5)} textAnchor="start" fontSize={8} fontWeight={700}
-                        fill={first.pct >= 0.5 ? "#7aaee8" : "#f87171"}>{Math.round(first.pct * 100)}%</text>
-                      <text x={x(n - 1)} y={Math.max(9, y(last.pct) - 5)} textAnchor="end" fontSize={8} fontWeight={700}
-                        fill={last.pct >= 0.5 ? "#7aaee8" : "#f87171"}>{Math.round(last.pct * 100)}%</text>
-                    </svg>
-                  );
-                })()}
-              </div>
-            )}
-
-            {popup.isPinned ? (
-              <Link href={`/tools/precinct-lookup?p=${popup.prec}`}
-                className="block text-center text-[10px] font-bold rounded-lg px-3 py-1.5 mt-2 hover:opacity-90"
-                style={{ background: "#fbbf24", color: "#0A1F18" }}>
-                Full history: Precinct {popup.prec} →
-              </Link>
-            ) : (
-              <p className="text-[9px] mt-2 pt-2 border-t border-white/10" style={{ color: "rgba(255,255,255,0.5)" }}>
-                Click the precinct to pin this card and open its full history
-              </p>
-            )}
-          </div>
-        )}
-
-        {/* Legend */}
-        <div className="absolute top-3 right-3 rounded-xl p-2.5 z-[1000]"
-          style={{ background: "rgba(255,255,255,0.93)", backdropFilter: "blur(8px)", border: "1px solid rgba(0,0,0,0.08)" }}>
+      {!showIframe && (<>
+      {/* ── Legend: above the map, never covering it ─────────────────────── */}
+      <div className="max-w-6xl mx-auto px-4 md:px-6 py-3">
+        <div className="flex gap-[3px]" role="img" aria-label={`Color key: ${legend.map(l => l.label).join(", ")}`}>
           {legend.map(l => (
-            <div key={l.color} className="flex items-center gap-1.5 mb-0.5">
-              <span className="inline-block w-3 h-3 rounded-sm flex-shrink-0" style={{ background: l.color }} />
-              <span className="text-[9px]" style={{ color: "#374151" }}>{l.label}</span>
+            <div key={l.color} className="flex-1 min-w-0">
+              <div className="h-2.5 rounded-[2px]" style={{ background: l.color }} />
+              <p className="hidden sm:block text-[11px] mt-1 truncate num" style={{ color: "#4F5752" }}>{l.label}</p>
             </div>
           ))}
         </div>
+        <div className="sm:hidden flex justify-between text-[11px] mt-1" style={{ color: "#4F5752" }}>
+          <span>{viewMode === "swing" ? "Moved toward D" : "More Democratic"}</span>
+          <span>{viewMode === "swing" ? "No change" : "Even"}</span>
+          <span>{viewMode === "swing" ? "Moved toward R" : "More Republican"}</span>
+        </div>
       </div>
+
+      <div className="relative md:max-w-none" style={{ height: coarse ? "min(62vh, 520px)" : 560 }}>
+        <div ref={mapRef} style={{ height: "100%", width: "100%" }} aria-label="Precinct map. Use the Find a precinct box above for a text lookup." />
+
+        {loadError && (
+          <div className="absolute inset-0 z-[1100] flex items-center justify-center" style={{ background: "rgba(241,242,238,0.96)" }}>
+            <div className="text-center max-w-xs px-4">
+              <p className="text-[15px] font-bold mb-1" style={{ color: "var(--ink)" }}>Precinct data didn’t load</p>
+              <p className="text-[13px] mb-3 leading-relaxed" style={{ color: "#5B635E" }}>Check your connection and try again.</p>
+              <button onClick={loadData} className="btn btn-ink">Try again</button>
+            </div>
+          </div>
+        )}
+
+        {/* Desktop: card floats over the map */}
+        {popup && !coarse && (
+          <div className="absolute bottom-4 left-4 z-[1000] w-[280px] hidden md:block">
+            <PrecinctCard popup={popup} viewMode={viewMode} curCycleLabel={curCycleLabel} cmpCycleLabel={cmpCycleLabel} trend={pinnedTrend} onClose={() => setPinned(null)} />
+          </div>
+        )}
+      </div>
+
+      {/* Phones and tablets: numbers sit below the map, where a thumb can't knock the map around */}
+      <div className={coarse ? "block" : "md:hidden"}>
+        <div className="max-w-6xl mx-auto px-4 md:px-6 pt-3">
+          {popup ? (
+            <PrecinctCard popup={popup} viewMode={viewMode} curCycleLabel={curCycleLabel} cmpCycleLabel={cmpCycleLabel} trend={pinnedTrend} onClose={() => setPinned(null)} />
+          ) : (
+            <p className="text-[14px] leading-relaxed" style={{ color: "#4F5752" }}>
+              {coarse
+                ? "Tap any precinct for its numbers. Scroll the page with one finger; pinch or use two fingers to move the map."
+                : "Select any precinct for its numbers, or search above."}
+            </p>
+          )}
+        </div>
+      </div>
+      {!coarse && !popup && (
+        <p className="hidden md:block max-w-6xl mx-auto px-6 pt-2 text-[13px]" style={{ color: "#6B726D" }}>
+          Hover a precinct for its numbers; click to keep the card open. Zoom with the + and − buttons or double-click.
+        </p>
+      )}
 
       {/* Insight rail: computed shift, turnout, and flippable rankings */}
       <HeatCheckInsights history={history} />
@@ -908,6 +829,104 @@ export default function HeatCheckHistoryMap() {
 
       <RelatedTools current="/tools/heat-check" className="px-5 py-4 border-t border-black/8" />
       </>)}
+    </div>
+  );
+}
+
+
+/* ── Small pieces ───────────────────────────────────────────────────────── */
+
+const SELECT = "w-full rounded-md border px-2.5 py-2 text-[14px] font-semibold";
+const SELECT_STYLE: React.CSSProperties = { borderColor: "var(--rule-strong)", background: "#fff", color: "var(--ink)" };
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="block min-w-0">
+      <span className="label block mb-1.5" style={{ color: "#6B726D", fontSize: 10 }}>{label}</span>
+      {children}
+    </label>
+  );
+}
+
+interface CardData { prec: string; data: PrecinctData | null; baseData: PrecinctData | null; swing: number | null; isPinned: boolean }
+
+function PrecinctCard({ popup, viewMode, curCycleLabel, cmpCycleLabel, trend, onClose }: {
+  popup: CardData; viewMode: ViewMode; curCycleLabel: string; cmpCycleLabel: string;
+  trend: { year: string; pct: number }[]; onClose: () => void;
+}) {
+  const d = precinctDistricts(popup.prec);
+  const pct = popup.data?.pct;
+  return (
+    <div className="panel p-4 shadow-[0_10px_30px_rgba(18,23,20,0.14)]" role="region" aria-label={`Precinct ${popup.prec}`}>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="label" style={{ color: "#6B726D", fontSize: 10 }}>{curCycleLabel}</p>
+          <p className="serif text-[22px] font-semibold leading-tight" style={{ color: "var(--ink)" }}>Precinct {popup.prec}</p>
+        </div>
+        {popup.isPinned && (
+          <button onClick={onClose} aria-label="Close precinct card" className="w-9 h-9 -mr-2 -mt-1 rounded-md text-[18px] hover:bg-[var(--paper)]" style={{ color: "#5B635E" }}>×</button>
+        )}
+      </div>
+
+      {pct != null ? (
+        viewMode === "swing" && popup.swing != null ? (
+          <div className="mt-3 space-y-1.5 text-[14px] num">
+            <div className="flex justify-between"><span style={{ color: "#5B635E" }}>{cmpCycleLabel}</span><strong>{((popup.baseData?.pct ?? 0) * 100).toFixed(1)}% D</strong></div>
+            <div className="flex justify-between"><span style={{ color: "#5B635E" }}>{curCycleLabel}</span><strong>{(pct * 100).toFixed(1)}% D</strong></div>
+            <div className="flex justify-between pt-1.5 border-t" style={{ borderColor: "var(--rule)" }}>
+              <span style={{ color: "#5B635E" }}>Change</span>
+              <strong style={{ color: popup.swing > 0 ? "#2350C2" : "#C0392E" }}>{Math.abs(popup.swing * 100).toFixed(1)} pts toward {popup.swing > 0 ? "D" : "R"}</strong>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-3">
+            <div className="flex justify-between text-[14px] font-bold num">
+              <span style={{ color: "#2350C2" }}>{popup.data!.dName} {(pct * 100).toFixed(1)}%</span>
+              <span style={{ color: "#C0392E" }}>{((1 - pct) * 100).toFixed(1)}% {popup.data!.rName}</span>
+            </div>
+            <div className="flex h-2.5 rounded-full overflow-hidden mt-1.5" style={{ background: "#E4E6E0" }}>
+              <span style={{ width: `${pct * 100}%`, background: "#2350C2" }} />
+              <span style={{ width: `${(1 - pct) * 100}%`, background: "#C0392E" }} />
+            </div>
+            <p className="text-[13px] mt-1.5 num" style={{ color: "#5B635E" }}>
+              {popup.data!.d.toLocaleString()} to {popup.data!.r.toLocaleString()} · {popup.data!.total.toLocaleString()} two-party votes
+            </p>
+          </div>
+        )
+      ) : (
+        <p className="text-[14px] mt-3" style={{ color: "#6B726D" }}>No votes recorded here for this election.</p>
+      )}
+
+      {popup.isPinned && trend.length >= 2 && (
+        <div className="mt-3 pt-3 border-t" style={{ borderColor: "var(--rule)" }}>
+          <p className="label mb-1.5" style={{ color: "#6B726D", fontSize: 10 }}>Democratic share, every general since {trend[0].year}</p>
+          <div className="flex items-end gap-1.5 h-[68px]" aria-label={trend.map(t => `${t.year} ${Math.round(t.pct * 100)}%`).join(", ")}>
+            {trend.map(t => (
+              <div key={t.year} className="flex-1 flex flex-col items-center gap-1">
+                <span className="text-[11px] font-bold num" style={{ color: t.pct >= 0.5 ? "#2350C2" : "#C0392E" }}>{Math.round(t.pct * 100)}</span>
+                <div className="w-full rounded-t-[2px]" style={{ height: `${Math.max(3, (t.pct - 0.2) / 0.8 * 34)}px`, background: t.pct >= 0.5 ? "#3F66CF" : "#D2584B" }} />
+                <span className="text-[10px] num" style={{ color: "#6B726D" }}>{t.year}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {(d.hd || d.sd || d.cd) && (
+        <div className="flex flex-wrap gap-1.5 mt-3">
+          {d.cd && <Link href={`/races/cd-${d.cd}`} className="text-[13px] font-semibold px-2.5 py-1 rounded-full border hover:bg-[var(--paper)]" style={{ borderColor: "var(--rule-strong)", color: "var(--ink)" }}>Congress {d.cd}</Link>}
+          {d.sd && <Link href={`/tools/districts?type=sd&district=${d.sd}`} className="text-[13px] font-semibold px-2.5 py-1 rounded-full border hover:bg-[var(--paper)]" style={{ borderColor: "var(--rule-strong)", color: "var(--ink)" }}>State Senate {d.sd}</Link>}
+          {d.hd && <Link href={`/tools/districts?type=hd&district=${d.hd}`} className="text-[13px] font-semibold px-2.5 py-1 rounded-full border hover:bg-[var(--paper)]" style={{ borderColor: "var(--rule-strong)", color: "var(--ink)" }}>State House {d.hd}</Link>}
+        </div>
+      )}
+
+      {popup.isPinned ? (
+        <Link href={`/tools/precinct-lookup?p=${popup.prec}`} className="btn btn-gold w-full justify-center mt-3 !py-2.5">
+          Full history for precinct {popup.prec} →
+        </Link>
+      ) : (
+        <p className="text-[12px] mt-3" style={{ color: "#8A918C" }}>Click to keep this card open.</p>
+      )}
     </div>
   );
 }

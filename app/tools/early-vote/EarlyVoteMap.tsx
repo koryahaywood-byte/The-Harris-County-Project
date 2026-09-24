@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import type { Feature, GeoJsonObject } from "geojson";
 import { BASEMAP } from "@/lib/basemap";
+import { isCoarsePointer } from "@/lib/touch";
 
 interface PrecinctFeature extends Feature {
   properties: { precinct: string; name: string; [key: string]: unknown };
@@ -98,10 +99,11 @@ export default function EarlyVoteMap({ daysPassed, selectedRaceId }: EVMapProps)
 
   return (
     <MapContainer
+      dragging={!isCoarsePointer()}
       center={[29.7604, -95.3698]}
       zoom={10}
       style={{ height: 500, width: "100%", borderRadius: 16 }}
-      scrollWheelZoom={true}
+      scrollWheelZoom={false}
     >
       <TileLayer url={BASEMAP.base} attribution={BASEMAP.attribution} maxNativeZoom={BASEMAP.maxNativeZoom} maxZoom={19} />
       <TileLayer url={BASEMAP.labels} maxNativeZoom={BASEMAP.maxNativeZoom} maxZoom={19} />

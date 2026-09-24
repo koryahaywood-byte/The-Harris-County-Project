@@ -28,6 +28,7 @@ export default function LocationMap({
       const map = L.map(elRef.current, {
         zoomControl: true,
         scrollWheelZoom: false,
+        dragging: !window.matchMedia("(pointer: coarse)").matches,
         attributionControl: false,
       }).setView([lat, lng], 13);
       mapRef.current = map;

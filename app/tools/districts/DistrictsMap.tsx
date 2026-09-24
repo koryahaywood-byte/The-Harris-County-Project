@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import type { Feature, GeoJsonObject } from "geojson";
 import { BASEMAP } from "@/lib/basemap";
+import { isCoarsePointer } from "@/lib/touch";
 
 /* Heat Check visual language: continuous precinct fills over a Carto light
    basemap, thin white borders, out-of-district precincts dimmed to warm gray.
@@ -110,10 +111,11 @@ export default function DistrictsMap({
 
   return (
     <MapContainer
+      dragging={!isCoarsePointer()}
       center={[29.76, -95.37]}
       zoom={10}
       style={{ height: 540, width: "100%" }}
-      scrollWheelZoom={true}
+      scrollWheelZoom={false}
       zoomControl={true}
     >
       <TileLayer url={BASEMAP.base} attribution={BASEMAP.attribution} maxNativeZoom={BASEMAP.maxNativeZoom} maxZoom={19} />
