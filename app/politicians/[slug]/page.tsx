@@ -11,6 +11,7 @@ import FollowButton from "@/components/FollowButton";
 import DistrictHistory from "@/components/DistrictHistory";
 import { SharedDonors } from "@/components/MoneyTrail";
 import NarrativePanel from "@/components/NarrativePanel";
+import PlayerStage from "@/components/desk/PlayerStage";
 import Link from "next/link";
 import { MATCHUPS_2026, type RaceLean } from "@/lib/matchups-2026";
 import { RATING, raceHref } from "@/lib/ratings";
@@ -993,31 +994,8 @@ export default function PoliticianProfile() {
 
           {/* Portrait column */}
           <div className="relative w-full max-w-[260px] md:max-w-none mx-auto md:mx-0">
-            {/* Portrait: large photo card (replaces the 3D figure) */}
-            <div className="relative rounded-2xl overflow-hidden select-none"
-              style={{ width: "100%", aspectRatio: "560/600", background: "var(--board-2)" }}>
-              {pol.photo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={pol.photo} alt={pol.name} className="w-full h-full object-cover object-top"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-6xl font-bold text-white/25"
-                  style={{ fontFamily: "var(--font-playfair), serif" }}>
-                  {pol.name.split(" ").map(w => w[0]).slice(0, 2).join("")}
-                </div>
-              )}
-              <div className="absolute bottom-0 left-0 right-0 pointer-events-none"
-                style={{ background: "linear-gradient(to top, rgba(13,42,33,0.95) 0%, rgba(13,42,33,0.5) 55%, transparent 100%)", paddingBottom: "0.6rem", paddingTop: "2.5rem" }}>
-                <p className="text-center font-black tracking-[0.32em] leading-none"
-                  style={{ color: pol.party === "D" ? "#60a5fa" : pol.party === "R" ? "#f87171" : "#cbd5e1", fontSize: "clamp(14px, 3vw, 20px)", }}>
-                  {(pol.name.split(" ").at(-1) ?? pol.name).toUpperCase()}
-                </p>
-                <p className="text-center font-bold tracking-[0.22em] mt-0.5 opacity-55 text-white"
-                  style={{ fontSize: "clamp(8px, 1.5vw, 10px)" }}>
-                  {pol.name.split(" ").slice(0, -1).join(" ").toUpperCase()}
-                </p>
-              </div>
-            </div>
+            {/* Portrait: full-body 3D figure when one has been generated, photo card otherwise */}
+            <PlayerStage slug={pol.slug} name={pol.name} party={pol.party} photo={pol.photo} />
           </div>
 
           {/* Stats column */}

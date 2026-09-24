@@ -52,3 +52,6 @@ data/field-notes/flags.jsonl
 
 # Bulk download scratch
 data/tmp/
+
+# Player-model pipeline cache (scripts/build-player-models.mjs)
+.player-models/
