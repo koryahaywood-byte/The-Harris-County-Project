@@ -1,16 +1,17 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S node --experimental-websocket
 /**
  * Review sheet for a generated player model: the full-body render it came from,
  * then the GLB from the front, side, back and three-quarter, lit like the site.
  * Renders with headless Chrome into .player-models/<slug>/review.png.
  *
- *   node scripts/preview-player-model.mjs rodney-ellis [more slugs…]
- *   node scripts/preview-player-model.mjs --pending      every model awaiting review
+ *   node --experimental-websocket scripts/preview-player-model.mjs rodney-ellis [more slugs…]
+ *   node --experimental-websocket scripts/preview-player-model.mjs --pending      every model awaiting review
  */
 import fs from "node:fs";
 import path from "node:path";
 import http from "node:http";
 import { spawn } from "node:child_process";
+import os from "node:os";
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
@@ -33,7 +34,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-const W = 4 * 360, H = 720;
+const W = 5 * 360, H = 720;
 const r = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
 r.setSize(W, H); r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping;
 document.getElementById("v").appendChild(r.domElement);
@@ -55,6 +56,11 @@ loader.load("${glb}", (g) => {
   [0, Math.PI / 4, Math.PI / 2, Math.PI].forEach((a, i) => {
     pivot.rotation.y = a; r.setViewport(i * 360, 0, 360, H); r.setScissor(i * 360, 0, 360, H); r.render(scene, cam);
   });
+  // Head close-up: the face is where a likeness lives or dies.
+  const top = new THREE.Box3().setFromObject(m).max.y;
+  const head = new THREE.PerspectiveCamera(26, 360 / H, 0.05, 20);
+  head.position.set(0, top - 0.13, 1.25); head.lookAt(0, top - 0.2, 0);
+  pivot.rotation.y = 0; r.setViewport(4 * 360, 0, 360, H); r.setScissor(4 * 360, 0, 360, H); r.render(scene, head);
   document.title = "ready";
 }, undefined, (e) => { document.body.innerHTML = "<p>LOAD FAILED " + e + "</p>"; });
 </script></body></html>`;
@@ -82,13 +88,45 @@ for (const slug of slugs) {
   const front = fs.existsSync(path.join(dir, "front.png")) ? `/.player-models/${slug}/front.png` : null;
   pages.set(`/review-${slug}.html`, PAGE(slug, `/public${entry.file}`, front));
   const out = path.join(dir, "review.png");
-  // Spawn (not execFileSync): the server answering Chrome lives on this event loop.
-  await new Promise((resolve) => {
-    const p = spawn(CHROME, ["--headless=new", "--enable-unsafe-swiftshader", "--use-angle=swiftshader", "--hide-scrollbars",
-      `--window-size=${(front ? 480 : 0) + 1440},720`, "--virtual-time-budget=20000", `--screenshot=${out}`,
-      `http://127.0.0.1:${port}/review-${slug}.html`], { stdio: "ignore" });
-    p.on("exit", resolve);
-  });
-  console.log(fs.existsSync(out) ? `review sheet: ${path.relative(ROOT, out)}` : `${slug}: screenshot failed`);
+  const ok = await capture(`http://127.0.0.1:${port}/review-${slug}.html`, out, (front ? 480 : 0) + 1800, 720);
+  console.log(ok ? `review sheet: ${path.relative(ROOT, out)}` : `${slug}: render failed (${ok === null ? "timeout" : "load error"})`);
 }
 server.close();
+
+/* Drive headless Chrome over the DevTools protocol and wait for the page to say
+   "ready"; a plain --screenshot fires before the meshopt/WebP model decodes. */
+async function capture(url, out, width, height) {
+  const profile = fs.mkdtempSync(path.join(os.tmpdir(), "pm-chrome-"));
+  const chrome = spawn(CHROME, ["--headless=new", "--enable-unsafe-swiftshader", "--use-angle=swiftshader", "--hide-scrollbars",
+    "--remote-debugging-port=0", `--user-data-dir=${profile}`, `--window-size=${width},${height}`, "about:blank"], { stdio: "ignore" });
+  try {
+    const portFile = path.join(profile, "DevToolsActivePort");
+    for (let i = 0; i < 100 && !fs.existsSync(portFile); i++) await new Promise(r => setTimeout(r, 100));
+    const devPort = fs.readFileSync(portFile, "utf8").split("\n")[0];
+    const targets = await (await fetch(`http://127.0.0.1:${devPort}/json`)).json();
+    const ws = new WebSocket(targets.find(t => t.type === "page").webSocketDebuggerUrl);
+    await new Promise((r, j) => { ws.onopen = r; ws.onerror = j; });
+    let id = 0; const waiting = new Map();
+    ws.onmessage = (m) => { const d = JSON.parse(m.data); waiting.get(d.id)?.(d.result); waiting.delete(d.id); };
+    const send = (method, params = {}) => new Promise(r => { const n = ++id; waiting.set(n, r); ws.send(JSON.stringify({ id: n, method, params })); });
+    await send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile: false });
+    await send("Page.navigate", { url });
+    let state = null;
+    for (let i = 0; i < 120 && !state; i++) {
+      await new Promise(r => setTimeout(r, 500));
+      const r = await send("Runtime.evaluate", { expression: "document.title + '|' + document.body.innerText.slice(0, 40)", returnByValue: true });
+      const v = r?.result?.value ?? "";
+      if (v.startsWith("ready")) state = "ready"; else if (v.includes("LOAD FAILED")) state = "failed";
+    }
+    if (state !== "ready") return state === "failed" ? false : null;
+    const shot = await send("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(out, Buffer.from(shot.data, "base64"));
+    ws.close();
+    return true;
+  } finally {
+    const gone = new Promise(r => chrome.once("exit", r));
+    chrome.kill();
+    await gone;
+    try { fs.rmSync(profile, { recursive: true, force: true, maxRetries: 3 }); } catch { /* temp dir; the OS cleans it */ }
+  }
+}

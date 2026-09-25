@@ -2,8 +2,11 @@
 /**
  * Full-body 3D "player models" of officials, built from their official portraits.
  *
- *   portrait ──► full-body game-style render (front, plus a back view)
- *            ──► image-to-3D mesh (GLB)
+ *   portrait ──► full-body game-style render (front, plus a back view on fal)
+ *            ──► head-and-shoulders game-style render
+ *            ──► image-to-3D mesh of each (GLB)
+ *            ──► head swap: the bust's head replaces the body's (scripts/merge-head.mjs),
+ *                because a full-body mesh gets the face from too few pixels
  *            ──► optimized GLB in public/models/officials/<slug>.glb
  *            ──► manifest entry in lib/player-models.json
  *
@@ -30,6 +33,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
+import { mergeHead } from "./merge-head.mjs";
+
+const PIPELINE_V = 2;   // 2 = head swap. Models built by an older pipeline get rebuilt by --all.
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const CACHE = path.join(ROOT, ".player-models");
@@ -88,6 +94,7 @@ function loadOfficials() {
 
 /* ── Prompts ────────────────────────────────────────────────────────────── */
 const FRONT_PROMPT = `Create a full-body 3D video game character of this exact person, in the style of an NBA 2K player model: hyper-realistic game render with detailed skin, fabric and hair. Keep the same face, facial features, skin tone, hairline, hairstyle and apparent age as the photo. Keep the clothing from the photo and complete it into a full professional outfit with matching trousers or skirt and dress shoes. Standing upright in a neutral A-pose, facing the camera straight on, arms relaxed and held slightly away from the body, feet shoulder-width apart. The whole body is visible from the top of the head to the soles of the shoes, centered, with a little empty space above the head and below the feet. Plain seamless light gray background, soft even studio lighting, no cast shadows, no text, no logos.`;
+const HEAD_PROMPT = `Head-and-shoulders portrait of this exact person as a hyper-realistic 3D video game character, NBA 2K style player model: detailed skin, eyes and hair. Keep the same face, facial features, expression, skin tone, hairline, hairstyle and apparent age as the photo. Facing the camera straight on, head level and centered, shoulders square, same clothing as the photo. Frame from a little above the top of the head down to mid-chest. Plain seamless light gray background, soft even studio lighting, no text, no logos.`;
 const BACK_PROMPT = `Show this exact same 3D character from directly behind, a back view: identical body, proportions, outfit, colors, hair and A-pose, full body from head to shoes, same framing and scale, same plain light gray background and even lighting. The face is not visible.`;
 
 /* ── Helpers ────────────────────────────────────────────────────────────── */
@@ -147,8 +154,8 @@ async function falEdit(prompt, imageFiles, out, aspect = "2:3") {
   }
 }
 
-async function falMesh(front, back, out) {
-  if (MESH === "trellis-2") {
+async function falMesh(front, back, out, { head = false } = {}) {
+  if (MESH === "trellis-2" || head) {
     const r = await fal("fal-ai/trellis-2", { image_url: dataUri(front), resolution: 1536, texture_size: 2048 });
     return download(r.model_glb.url, out);
   }
@@ -166,7 +173,7 @@ async function hfClient(space) {
     console.error("HF path needs the Gradio client: npm i --no-save @gradio/client");
     process.exit(1);
   });
-  return gradio.Client.connect(space, { hf_token: HF_TOKEN });
+  return gradio.Client.connect(space, { token: HF_TOKEN });
 }
 
 async function hfEdit(prompt, imageFiles, out) {
@@ -178,11 +185,12 @@ async function hfEdit(prompt, imageFiles, out) {
   return download(r.data[0].url, out);
 }
 
-async function hfMesh(front, _back, out) {
+async function hfMesh(front, _back, out, { head = false } = {}) {
   const c = await hfClient("microsoft/TRELLIS.2");
   await c.predict("/start_session", {});
   const pre = await c.predict("/preprocess_image", { input: gradio.handle_file(new Blob([fs.readFileSync(front)])) });
-  await c.predict("/image_to_3d", { image: gradio.handle_file(pre.data[0].url), seed: 1, resolution: "1536" });
+  // The face comes from the bust, so the body can run at 1024 and spare the daily quota.
+  await c.predict("/image_to_3d", { image: gradio.handle_file(pre.data[0].url), seed: 1, resolution: head ? "1536" : "1024" });
   const glb = await c.predict("/extract_glb", { decimation_target: 200000, texture_size: 2048 });
   return download((glb.data[1] ?? glb.data[0]).url, out);
 }
@@ -204,23 +212,31 @@ async function build(o) {
   const mesh = PROVIDER === "fal" ? falMesh : hfMesh;
 
   const src = await portrait(o, dir);
-  const front = step("front.png"), back = step("back.png"), raw = step(`raw-${PROVIDER === "fal" ? MESH : "trellis-2"}.glb`);
+  const front = step("front.png"), back = step("back.png"), head = step("head.png");
+  const raw = step(`raw-${PROVIDER === "fal" ? MESH : "trellis-2"}.glb`), rawHead = step("raw-head.glb"), merged = step("merged.glb");
+  // Images first (cheap), then meshes, so a quota stop never strands a half-used step.
   if (!cached(front)) { log(o.slug, "full-body render"); await edit(FRONT_PROMPT, [src], front); }
+  if (!cached(head)) { log(o.slug, "head render"); await edit(HEAD_PROMPT, [src], head, "3:4"); }
   const wantBack = PROVIDER === "fal" && MESH === "hunyuan3d-v3";
   if (wantBack && !cached(back)) { log(o.slug, "back view"); await edit(BACK_PROMPT, [front], back); }
-  if (!cached(raw)) { log(o.slug, `mesh (${PROVIDER === "fal" ? MESH : "trellis-2 via HF"})`); await mesh(front, wantBack ? back : null, raw); }
+  if (!cached(raw)) { log(o.slug, `body mesh (${PROVIDER === "fal" ? MESH : "trellis-2 via HF"})`); await mesh(front, wantBack ? back : null, raw); }
+  if (!cached(rawHead)) { log(o.slug, "head mesh"); await mesh(head, null, rawHead, { head: true }); }
+  log(o.slug, "head swap");
+  const fit = await mergeHead(raw, rawHead, merged);
+  log(o.slug, `  head scale ${fit.scale.toFixed(3)}, fit error ${fit.fitErr.toExponential(1)}`);
 
   fs.mkdirSync(OUT_DIR, { recursive: true });
   const final = path.join(OUT_DIR, `${o.slug}.glb`);
   log(o.slug, "optimize");
-  optimize(raw, final);
+  optimize(merged, final);
   log(o.slug, `done: ${(fs.statSync(final).size / 1e6).toFixed(1)} MB`);
 
   const manifest = fs.existsSync(MANIFEST) ? JSON.parse(fs.readFileSync(MANIFEST, "utf8")) : {};
   manifest[o.slug] = {
     file: `/models/officials/${o.slug}.glb`,
     portrait: o.photo,
-    pipeline: PROVIDER === "fal" ? `nano-banana → ${MESH}` : "flux-kontext → trellis-2",
+    pipeline: PROVIDER === "fal" ? `nano-banana → ${MESH} + trellis-2 head` : "flux-kontext → trellis-2, head swap",
+    v: PIPELINE_V,
     generated: new Date().toISOString().slice(0, 10),
     review: "pending",   // hidden on the site until approved with --approve
     ...(manifest[o.slug]?.yaw != null ? { yaw: manifest[o.slug].yaw } : {}),
@@ -239,7 +255,7 @@ if (TIER && tierFilter < 0) { console.error(`unknown tier ${TIER}; one of ${TIER
 const queue = flag("--all") || TIER
   ? officials
       .map((o, i) => ({ ...o, tier: tierOf(o.office), i }))
-      .filter(o => o.photo && (FORCE || !existing[o.slug]) && (tierFilter < 0 || o.tier === tierFilter))
+      .filter(o => o.photo && (FORCE || (existing[o.slug]?.v ?? 0) < PIPELINE_V) && (tierFilter < 0 || o.tier === tierFilter))
       .sort((a, b) => a.tier - b.tier || a.i - b.i)
   : slugsArg.map(s => officials.find(o => o.slug === s) ?? (console.error(`unknown slug ${s}`), process.exit(1)));
 if (!queue.length) { console.log("Nothing to build."); process.exit(0); }

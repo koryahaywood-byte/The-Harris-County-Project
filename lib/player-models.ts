@@ -6,6 +6,7 @@ export type PlayerModelEntry = {
   portrait: string;   // the portrait it was generated from
   pipeline: string;   // models used, for the on-page disclosure
   generated: string;  // YYYY-MM-DD
+  v?: number;         // pipeline version (2 = head swap)
   yaw?: number;       // radians, if a mesh comes out not facing the camera
   review?: "pending"; // new models stay off the live site until approved
 };
