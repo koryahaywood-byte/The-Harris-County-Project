@@ -94,7 +94,9 @@ function loadOfficials() {
 
 /* ── Prompts ────────────────────────────────────────────────────────────── */
 const FRONT_PROMPT = `Create a full-body 3D video game character of this exact person, in the style of an NBA 2K player model: hyper-realistic game render with detailed skin, fabric and hair. Keep the same face, facial features, skin tone, hairline, hairstyle and apparent age as the photo. Keep the clothing from the photo and complete it into a full professional outfit with matching trousers or skirt and dress shoes. Standing upright in a neutral A-pose, facing the camera straight on, arms relaxed and held slightly away from the body, feet shoulder-width apart. The whole body is visible from the top of the head to the soles of the shoes, centered, with a little empty space above the head and below the feet. Plain seamless light gray background, soft even studio lighting, no cast shadows, no text, no logos.`;
-const HEAD_PROMPT = `Head-and-shoulders portrait of this exact person as a hyper-realistic 3D video game character, NBA 2K style player model: detailed skin, eyes and hair. Keep the same face, facial features, expression, skin tone, hairline, hairstyle and apparent age as the photo. Facing the camera straight on, head level and centered, shoulders square, same clothing as the photo. Frame from a little above the top of the head down to mid-chest. Plain seamless light gray background, soft even studio lighting, no text, no logos.`;
+// A style change, not a new picture: Kontext keeps identity best when the framing
+// stays and only the look changes. ("Create a portrait of this person" drew a stranger.)
+const HEAD_PROMPT = `Restyle this photo as a hyper-realistic 3D video game character render, NBA 2K style player model. Keep the exact same person: identical face, facial features, face shape, head shape, hair or lack of hair, facial hair, skin tone, expression, age and clothing, while maintaining the same head-and-shoulders framing. Replace the background with a plain light gray studio background with soft even lighting.`;
 const BACK_PROMPT = `Show this exact same 3D character from directly behind, a back view: identical body, proportions, outfit, colors, hair and A-pose, full body from head to shoes, same framing and scale, same plain light gray background and even lighting. The face is not visible.`;
 
 /* ── Helpers ────────────────────────────────────────────────────────────── */
@@ -176,22 +178,25 @@ async function hfClient(space) {
   return gradio.Client.connect(space, { token: HF_TOKEN });
 }
 
+/** Gradio errors hide the reason in .title ("ZeroGPU quota exceeded"); keep it in the message. */
+const hfErr = (e) => { throw new Error(`${e?.title ?? ""} ${e?.message ?? e}`.trim()); };
+
 async function hfEdit(prompt, imageFiles, out) {
   const c = await hfClient("black-forest-labs/FLUX.1-Kontext-Dev");
   const r = await c.predict("/infer", {
     input_image: gradio.handle_file(new Blob([fs.readFileSync(imageFiles[0])])), prompt,
     seed: 7, randomize_seed: false, guidance_scale: 2.5, steps: 28,
-  });
+  }).catch(hfErr);
   return download(r.data[0].url, out);
 }
 
 async function hfMesh(front, _back, out, { head = false } = {}) {
   const c = await hfClient("microsoft/TRELLIS.2");
-  await c.predict("/start_session", {});
-  const pre = await c.predict("/preprocess_image", { input: gradio.handle_file(new Blob([fs.readFileSync(front)])) });
+  await c.predict("/start_session", {}).catch(hfErr);
+  const pre = await c.predict("/preprocess_image", { input: gradio.handle_file(new Blob([fs.readFileSync(front)])) }).catch(hfErr);
   // The face comes from the bust, so the body can run at 1024 and spare the daily quota.
-  await c.predict("/image_to_3d", { image: gradio.handle_file(pre.data[0].url), seed: 1, resolution: head ? "1536" : "1024" });
-  const glb = await c.predict("/extract_glb", { decimation_target: 200000, texture_size: 2048 });
+  await c.predict("/image_to_3d", { image: gradio.handle_file(pre.data[0].url), seed: 1, resolution: head ? "1536" : "1024" }).catch(hfErr);
+  const glb = await c.predict("/extract_glb", { decimation_target: 200000, texture_size: 2048 }).catch(hfErr);
   return download((glb.data[1] ?? glb.data[0]).url, out);
 }
 
@@ -263,7 +268,7 @@ for (const o of queue) if (!o.photo) { console.error(`${o.slug} has no photo`); 
 
 console.log(`Building ${queue.length} model(s) via ${PROVIDER}${PROVIDER === "fal" ? ` (${MESH})` : ""}`);
 let failed = 0;
-const QUOTA = /ZeroGPU quota|exceeded your .*quota|quota exceeded/i;
+const QUOTA = /ZeroGPU|runs limit|exceeded your .*quota|quota exceeded/i;
 let built = 0;
 for (const o of queue) {
   try { await build(o); built++; }
