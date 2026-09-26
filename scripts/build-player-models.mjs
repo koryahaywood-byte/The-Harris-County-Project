@@ -34,6 +34,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { mergeHead } from "./merge-head.mjs";
+import sharp from "sharp";
 
 const PIPELINE_V = 2;   // 2 = head swap. Models built by an older pipeline get rebuilt by --all.
 
@@ -221,11 +222,23 @@ async function build(o) {
   const raw = step(`raw-${PROVIDER === "fal" ? MESH : "trellis-2"}.glb`), rawHead = step("raw-head.glb"), merged = step("merged.glb");
   // Images first (cheap), then meshes, so a quota stop never strands a half-used step.
   if (!cached(front)) { log(o.slug, "full-body render"); await edit(FRONT_PROMPT, [src], front); }
-  if (!cached(head)) { log(o.slug, "head render"); await edit(HEAD_PROMPT, [src], head, "3:4"); }
+  if (!cached(head)) {
+    // The portrait itself is the best head source: 2K faces are photographic, the
+    // mesh step strips the background, and a restyle can drift (it gave Ellis a
+    // beard). Only portraits too small to mesh well go through the restyle.
+    const meta = await sharp(src).metadata();
+    if (Math.min(meta.width, meta.height) >= 600) { log(o.slug, "head from portrait"); await sharp(src).png().toFile(head); }
+    else { log(o.slug, `head render (portrait only ${meta.width}x${meta.height})`); await edit(HEAD_PROMPT, [src], head, "3:4"); }
+  }
   const wantBack = PROVIDER === "fal" && MESH === "hunyuan3d-v3";
   if (wantBack && !cached(back)) { log(o.slug, "back view"); await edit(BACK_PROMPT, [front], back); }
-  if (!cached(raw)) { log(o.slug, `body mesh (${PROVIDER === "fal" ? MESH : "trellis-2 via HF"})`); await mesh(front, wantBack ? back : null, raw); }
-  if (!cached(rawHead)) { log(o.slug, "head mesh"); await mesh(head, null, rawHead, { head: true }); }
+  // A long GPU job sometimes loses its connection; one retry, then give up for this run.
+  const retry = async (fn) => { try { return await fn(); } catch (e) {
+    if (!/Connection errored|ECONNRESET|terminated|fetch failed/i.test(e.message)) throw e;
+    log(o.slug, "  connection dropped, retrying once"); await sleep(30000); return fn();
+  } };
+  if (!cached(raw)) { log(o.slug, `body mesh (${PROVIDER === "fal" ? MESH : "trellis-2 via HF"})`); await retry(() => mesh(front, wantBack ? back : null, raw)); }
+  if (!cached(rawHead)) { log(o.slug, "head mesh"); await retry(() => mesh(head, null, rawHead, { head: true })); }
   log(o.slug, "head swap");
   const fit = await mergeHead(raw, rawHead, merged);
   log(o.slug, `  head scale ${fit.scale.toFixed(3)}, fit error ${fit.fitErr.toExponential(1)}`);
