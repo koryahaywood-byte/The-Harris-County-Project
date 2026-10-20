@@ -3,141 +3,67 @@
 import { useEffect, useMemo, useState } from "react";
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-import type { Feature, GeoJsonObject } from "geojson";
+import type L from "leaflet";
+import type { Feature, FeatureCollection } from "geojson";
 import { BASEMAP } from "@/lib/basemap";
 import { isCoarsePointer } from "@/lib/touch";
 
-interface PrecinctFeature extends Feature {
-  properties: { precinct: string; name: string; [key: string]: unknown };
-}
+import { EDGE_STEPS, GAP_STEPS, TURNOUT_RAMP, gapOf, turnoutBreaks, type Metric, type PrecinctRow } from "./scale";
 
-interface EVMapProps {
-  daysPassed: number;
-  selectedRaceId: string;
-}
+const MIN_BALLOTS = 25;   // below this a precinct's mix is noise; shown neutral
 
-function genEV(precinctId: string, daysPassed: number) {
-  const seed = precinctId.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-  const rnd = (min: number, max: number) => min + ((seed * 17 + min * 13) % (max - min));
-  const evRate = Math.min(0.85, 0.025 * daysPassed + (rnd(0, 20) / 100));
-  const demTurnout = Math.min(90, Math.round(evRate * (0.85 + rnd(0, 25) / 100) * 100));
-  return demTurnout;
-}
-
-function evColor(pct: number): string {
-  if (pct >= 60) return "#1e40af";
-  if (pct >= 45) return "#2563a8";
-  if (pct >= 30) return "#60a5fa";
-  if (pct >= 15) return "#bfdbfe";
-  return "#dbeafe";
-}
-
-function buildTooltip(precinctId: string, demPct: number, repPct: number, daysPassed: number): string {
-  const seed = precinctId.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-  const rnd = (min: number, max: number) => min + ((seed * 31 + min * 7) % (max - min));
-  const rv = rnd(800, 4200);
-  const demUni = Math.round(rv * 0.38);
-  const repUni = Math.round(rv * 0.26);
-  const demVoted = Math.round(demUni * demPct / 100);
-  const repVoted = Math.round(repUni * repPct / 100);
-  return `
-    <div style="font-family:system-ui,sans-serif;font-size:12px;color:#0D2A21;min-width:170px">
-      <div style="font-weight:700;font-size:13px;margin-bottom:5px;border-bottom:1px solid rgba(13,42,33,0.1);padding-bottom:3px">
-        Precinct ${parseInt(precinctId, 10)}: Day ${daysPassed}
-      </div>
-      <div style="margin-bottom:4px">
-        <span style="color:#2563a8;font-weight:600">Dem Universe:</span>
-        ${demVoted.toLocaleString()} / ${demUni.toLocaleString()} voted
-        <span style="font-weight:700;color:#2563a8;margin-left:4px">${demPct}%</span>
-      </div>
-      <div>
-        <span style="color:#dc2626;font-weight:600">Rep Universe:</span>
-        ${repVoted.toLocaleString()} / ${repUni.toLocaleString()} voted
-        <span style="font-weight:700;color:#dc2626;margin-left:4px">${repPct}%</span>
-      </div>
-    </div>
-  `;
-}
-
-export default function EarlyVoteMap({ daysPassed, selectedRaceId }: EVMapProps) {
-  const [geojson, setGeojson] = useState<GeoJsonObject | null>(null);
-
-  useEffect(() => {
-    fetch("/api/districts/precincts")
-      .then(r => r.json())
-      .then(d => { if (d?.features) setGeojson(d); })
-      .catch(() => {});
-  }, []);
-
-  // Fix Leaflet icon
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    delete (L.Icon.Default.prototype as any)._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-      iconUrl:       "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-      shadowUrl:     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-    });
-  }, []);
-
-  const geoKey = useMemo(() => `${daysPassed}_${selectedRaceId}`, [daysPassed, selectedRaceId]);
-
-  if (!geojson) {
-    return (
-      <div className="flex items-center justify-center" style={{ height: 500 }}>
-        <div className="text-center">
-          <span className="relative flex h-3 w-3 mx-auto mb-2">
-            <span className="alive-halo absolute inset-0 rounded-full bg-sky-400"/>
-            <span className="alive-pulse relative h-3 w-3 rounded-full bg-sky-400"/>
-          </span>
-          <p className="text-xs" style={{ color: "#9ca3af" }}>Loading precinct map…</p>
-        </div>
-      </div>
-    );
+function colorFor(r: PrecinctRow | undefined, metric: Metric, breaks: number[]) {
+  if (!r || r[0] === 0) return "#F1F2EE";
+  if (metric === "gap") {
+    const g = gapOf(r);
+    return g == null ? "#F1F2EE" : GAP_STEPS.find(s => g < s.max)!.color;
   }
+  if (metric === "edge") {
+    if (r[0] < MIN_BALLOTS) return "#F1F2EE";
+    const e = ((r[1] - r[2]) / r[0]) * 100;
+    return EDGE_STEPS.find(s => e < s.max)!.color;
+  }
+  if (r[6] < 50) return "#F1F2EE";
+  const t = r[0] / r[6];
+  const i = breaks.findIndex(b => t < b);
+  return TURNOUT_RAMP[i < 0 ? TURNOUT_RAMP.length - 1 : i];
+}
 
+function tip(prec: string, r: PrecinctRow | undefined) {
+  const n = Number(prec);
+  if (!r || r[0] === 0) return `<b>Precinct ${n}</b><br/>No early ballots yet`;
+  const p = (x: number) => `${((x / r[0]) * 100).toFixed(0)}%`;
+  return `<div style="font:12.5px/1.45 var(--font-overpass),system-ui;color:#121714;min-width:180px">
+    <div style="font-weight:700;font-size:13px;margin-bottom:3px">Precinct ${n}</div>
+    <div><b>${r[0].toLocaleString()}</b> ballots · ${r[4].toLocaleString()} in person, ${r[5].toLocaleString()} mail</div>
+    ${r[6] ? `<div style="color:#5B635E">${((r[0] / r[6]) * 100).toFixed(1)}% of 2024 registered voters</div>` : ""}
+    <div style="margin-top:4px">Last primary: Dem <b>${p(r[1])}</b> · Rep <b>${p(r[2])}</b> · none <b>${p(r[3])}</b></div>
+    ${r[7] && r[8] ? `<div>March voters who voted: Dem <b>${((r[9] / r[7]) * 100).toFixed(1)}%</b> · Rep <b>${((r[10] / r[8]) * 100).toFixed(1)}%</b></div>` : ""}
+    ${r[0] < MIN_BALLOTS ? `<div style="color:#8A918C;margin-top:2px">Too few ballots to read a lean</div>` : ""}
+  </div>`;
+}
+
+export default function EarlyVoteMap({ precincts, metric }: { precincts: Record<string, PrecinctRow>; metric: Metric }) {
+  const [geo, setGeo] = useState<FeatureCollection | null>(null);
+  useEffect(() => { fetch("/data/harris-precincts.geojson").then(r => r.json()).then(setGeo).catch(() => {}); }, []);
+  const breaks = useMemo(() => turnoutBreaks(Object.values(precincts)), [precincts]);
+  const key = (f: Feature) => String(Number((f.properties as { PREC?: string })?.PREC ?? 0)).padStart(4, "0");
+
+  if (!geo) return <div className="flex items-center justify-center text-[13px]" style={{ height: 520, color: "#6B726D" }}>Loading precincts…</div>;
   return (
-    <MapContainer
-      dragging={!isCoarsePointer()}
-      center={[29.7604, -95.3698]}
-      zoom={10}
-      style={{ height: 500, width: "100%", borderRadius: 16 }}
-      scrollWheelZoom={false}
-    >
+    <MapContainer center={[29.83, -95.4]} zoom={10} zoomSnap={0.5} scrollWheelZoom={false} dragging={!isCoarsePointer()}
+      style={{ height: 520, width: "100%", background: "#F1F2EE" }}>
       <TileLayer url={BASEMAP.base} attribution={BASEMAP.attribution} maxNativeZoom={BASEMAP.maxNativeZoom} maxZoom={19} />
+      <GeoJSON key={metric} data={geo}
+        style={(f) => ({ fillColor: colorFor(precincts[key(f as Feature)], metric, breaks), fillOpacity: 0.85, color: "#fff", weight: 0.5 })}
+        onEachFeature={(f, layer) => {
+          layer.bindTooltip(tip(key(f), precincts[key(f)]), { sticky: true, offset: [12, 0] });
+          if (!isCoarsePointer()) layer.on({
+            mouseover: (e) => (e.target as L.Path).setStyle({ weight: 2, color: "#121714" }),
+            mouseout: (e) => (e.target as L.Path).setStyle({ weight: 0.5, color: "#fff" }),
+          });
+        }} />
       <TileLayer url={BASEMAP.labels} maxNativeZoom={BASEMAP.maxNativeZoom} maxZoom={19} />
-      <GeoJSON
-        key={geoKey}
-        data={geojson}
-        style={(feature) => {
-          const id = (feature as PrecinctFeature).properties.precinct ?? "";
-          const demPct = genEV(id, daysPassed);
-          return {
-            fillColor: evColor(demPct),
-            fillOpacity: 0.72,
-            color: "rgba(255,255,255,0.55)",
-            weight: 0.6,
-          };
-        }}
-        onEachFeature={(feature, layer) => {
-          const id = (feature as PrecinctFeature).properties.precinct ?? "";
-          const demPct = genEV(id, daysPassed);
-          const seed = id.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-          const repPct = Math.min(85, Math.round(
-            Math.min(0.85, 0.018 * daysPassed + ((seed * 11) % 20) / 100) *
-            (0.7 + ((seed * 7) % 30) / 100) * 100
-          ));
-          layer.bindTooltip(buildTooltip(id, demPct, repPct, daysPassed), {
-            sticky: true,
-            offset: [12, 0],
-          });
-          layer.on({
-            mouseover: (e) => (e.target as L.Path).setStyle({ weight: 1.5, fillOpacity: 0.9 }),
-            mouseout: (e) => (e.target as L.Path).setStyle({ weight: 0.6, fillOpacity: 0.72 }),
-          });
-        }}
-      />
     </MapContainer>
   );
 }

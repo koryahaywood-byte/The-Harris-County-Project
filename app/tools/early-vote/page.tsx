@@ -1,362 +1,272 @@
-"use client";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { EV, MIN_DISTRICT_BALLOTS, dayName, rateGap, pctText, evDistrictFor } from "@/lib/early-vote";
+import { gapOf } from "./scale";
+import { MATCHUPS_2026 } from "@/lib/matchups-2026";
+import { raceHref } from "@/lib/ratings";
+import { PARTY } from "@/lib/ratings";
+import EVMix from "@/components/desk/EVMix";
+import EVCurve from "./EVCurve";
+import EVDistricts from "./EVDistricts";
+import EVMapPanel from "./EVMapPanel";
+import RelatedTools from "@/components/RelatedTools";
 
-import { useState, useMemo } from "react";
-import dynamic from "next/dynamic";
+const t = EV.totals;
+const vs22 = t.all / EV.compare2022.atSameDay - 1;
+// Like with like: early voters who voted in the March 2026 primary, over everyone who did.
+const rateD = (t.D26 ?? 0) / EV.universe.D, rateR = (t.R26 ?? 0) / EV.universe.R;
+const ahead = rateD >= rateR ? "D" : "R";
+const fmt = (n: number) => n.toLocaleString("en-US");
 
-const EarlyVoteMap = dynamic(() => import("./EarlyVoteMap"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center rounded-2xl animate-pulse"
-      style={{ height: 500, background: "#f0f4f8", border: "1px solid rgba(13,42,33,0.08)" }}>
-      <p className="text-xs" style={{ color: "#9ca3af" }}>Loading map...</p>
-    </div>
-  ),
-});
+export const metadata: Metadata = {
+  title: `Early vote, day ${EV.day}: ${fmt(t.all)} ballots · The Harris County Project`,
+  description: `Harris County early vote through ${dayName(EV.through)}: ${fmt(t.all)} ballots, ${pctText(Math.abs(vs22), 0)} ${vs22 >= 0 ? "ahead of" : "behind"} the 2022 midterm. ${pctText(rateD)} of March's Democratic primary voters and ${pctText(rateR)} of its Republican primary voters have voted.`,
+  openGraph: {
+    title: `Harris County early vote, day ${EV.day}: ${fmt(t.all)} ballots`,
+    description: `Who is voting, by primary history, district and precinct. Updated daily from the county's rosters.`,
+  },
+};
 
-/* ── Types ────────────────────────────────────────────────────────────────── */
-interface Race {
-  id: string;
-  label: string;
-  category: string;
-  candidates: { name: string; party: "D" | "R" | "NP" }[];
-}
-
-interface PrecintEVData {
-  precinctId: string;
-  totalVoted: number;
-  demUniverse: number;     // registered voters with Dem primary history
-  repUniverse: number;
-  totalRegistered: number;
-  demTurnoutPct: number;   // % of Dem universe who have voted early
-  repTurnoutPct: number;
-}
-
-/* ── Demo races ───────────────────────────────────────────────────────────── */
-const RACES: Race[] = [
-  // Marquee statewide
-  { id: "us-sen", label: "U.S. Senate", category: "Federal",
-    candidates: [{ name: "James Talarico", party: "D" }, { name: "Ken Paxton", party: "R" }] },
-  // Marquee county
-  { id: "county-judge", label: "Harris County Judge", category: "County",
-    candidates: [{ name: "Letitia Plummer", party: "D" }, { name: "Orlando Sanchez", party: "R" }] },
-  // Congressional
-  { id: "cd-07", label: "U.S. Rep CD-07", category: "Federal",
-    candidates: [{ name: "Lizzie Fletcher", party: "D" }, { name: "Alexander Hale", party: "R" }] },
-  { id: "cd-18", label: "U.S. Rep CD-18", category: "Federal",
-    candidates: [{ name: "Christian Menefee", party: "D" }, { name: "Ronald D. Whitfield", party: "R" }] },
-  // State Senate
-  { id: "sd-15", label: "State Senator SD-15", category: "State",
-    candidates: [{ name: "Molly Cook", party: "D" }] },
-  // State House: contested
-  { id: "hd-126", label: "State Rep HD-126", category: "State",
-    candidates: [{ name: "Stefanie Bord", party: "D" }, { name: "Stan Stanart", party: "R" }] },
-  { id: "hd-134", label: "State Rep HD-134", category: "State",
-    candidates: [{ name: "Ann Johnson", party: "D" }] },
-  { id: "hd-138", label: "State Rep HD-138", category: "State",
-    candidates: [{ name: "Lacey Hull", party: "R" }] },
-  { id: "hd-148", label: "State Rep HD-148", category: "State",
-    candidates: [{ name: "Penny Morales Shaw", party: "D" }] },
-  // County commissioners
-  { id: "pct-1", label: "Commissioner PCT 1", category: "County",
-    candidates: [{ name: "Rodney Ellis", party: "D" }] },
-  { id: "pct-2", label: "Commissioner PCT 2", category: "County",
-    candidates: [{ name: "Adrian Garcia", party: "D" }, { name: "Richard Vega", party: "R" }] },
-  // JP contested
-  { id: "jp-5", label: "Justice of the Peace PCT 5 PL 2", category: "County",
-    candidates: [{ name: "Lisa Jefferson", party: "D" }, { name: "Mark Fury", party: "R" }] },
-];
-
-const CATEGORIES = ["All", "Federal", "State", "County", "City"];
-
-/* ── Generate demo precinct EV data ──────────────────────────────────────── */
-function genPrecinctEV(precinctId: string, daysPassed: number): PrecintEVData {
-  const seed = precinctId.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-  const rnd = (min: number, max: number) => min + ((seed * 17 + min * 13) % (max - min));
-  const totalReg = rnd(800, 4200);
-  const demUni = Math.round(totalReg * (0.35 + (rnd(0, 40) / 100)));
-  const repUni = Math.round(totalReg * (0.20 + (rnd(0, 25) / 100)));
-  const evRate = Math.min(0.85, 0.02 * daysPassed + (rnd(0, 20) / 100));
-  const demTurnout = Math.min(95, Math.round(evRate * (0.8 + rnd(0, 30) / 100) * 100));
-  const repTurnout = Math.min(95, Math.round(evRate * (0.6 + rnd(0, 40) / 100) * 100));
-  return {
-    precinctId,
-    totalRegistered: totalReg,
-    demUniverse: demUni,
-    repUniverse: repUni,
-    totalVoted: Math.round((demUni * demTurnout / 100) + (repUni * repTurnout / 100)),
-    demTurnoutPct: demTurnout,
-    repTurnoutPct: repTurnout,
-  };
-}
-
-/* ── Gauge component ─────────────────────────────────────────────────────── */
-function TurnoutGauge({ label, pct, color, universe, voted }:
-  { label: string; pct: number; color: string; universe: number; voted: number }) {
+function Stat({ label, value, note }: { label: string; value: string; note?: string }) {
   return (
-    <div className="mb-3">
-      <div className="flex justify-between items-baseline mb-1">
-        <span className="text-[11px] font-semibold" style={{ color }}>{label}</span>
-        <span className="text-[13px] font-bold" style={{ color }}>{pct}%</span>
-      </div>
-      <div className="rounded-full overflow-hidden" style={{ height: 8, background: "#f3f4f6" }}>
-        <div className="h-full rounded-full transition-all duration-700"
-          style={{ width: `${pct}%`, background: color }} />
-      </div>
-      <p className="text-[10px] mt-1" style={{ color: "#9ca3af" }}>
-        {voted.toLocaleString()} of {universe.toLocaleString()} universe voted
-      </p>
+    <div className="panel px-4 py-3.5">
+      <p className="label" style={{ color: "#6B726D", fontSize: 10 }}>{label}</p>
+      <p className="num text-[28px] leading-tight font-bold mt-1" style={{ color: "var(--ink)" }}>{value}</p>
+      {note && <p className="text-[12.5px] mt-0.5" style={{ color: "#5B635E" }}>{note}</p>}
     </div>
   );
 }
 
-/* ── Main page ────────────────────────────────────────────────────────────── */
+function RateBar({ party, rate, voted, universe }: { party: "D" | "R"; rate: number; voted: number; universe: number }) {
+  const max = Math.max(rateD, rateR) * 1.15;
+  return (
+    <div>
+      <div className="flex items-baseline justify-between text-[13.5px]">
+        <span className="inline-flex items-center gap-1.5" style={{ color: "var(--ink-2)" }}>
+          <span className="w-2.5 h-2.5 rounded-[2px]" style={{ background: PARTY[party].color }} aria-hidden />
+          {party === "D" ? "Democratic" : "Republican"}-primary voters
+        </span>
+        <b className="num text-[15px]" style={{ color: "var(--ink)" }}>{pctText(rate)}</b>
+      </div>
+      <div className="h-2.5 mt-1.5 rounded-[4px]" style={{ background: "#ECEDE8" }}>
+        <div className="h-full rounded-[4px] bar-grow" style={{ width: `${(rate / max) * 100}%`, background: PARTY[party].color }} />
+      </div>
+      <p className="num text-[12px] mt-1" style={{ color: "#6B726D" }}>{fmt(voted)} of {fmt(universe)}</p>
+    </div>
+  );
+}
+
 export default function EarlyVotePage() {
-  const [selectedRace, setSelectedRace] = useState<string>("county-judge");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [daysPassed, setDaysPassed] = useState(6); // simulate day 6 of early voting
-
-  const race = RACES.find(r => r.id === selectedRace) ?? RACES[0];
-
-  const filteredRaces = useMemo(() =>
-    RACES.filter(r => selectedCategory === "All" || r.category === selectedCategory),
-    [selectedCategory]
-  );
-
-  // Aggregate county-wide stats
-  const totalDemVoted   = Math.round(2_100_000 * 0.38 * (daysPassed * 0.015 + 0.04));
-  const totalDemUniverse = Math.round(2_100_000 * 0.38);
-  const totalRepVoted   = Math.round(2_100_000 * 0.28 * (daysPassed * 0.011 + 0.03));
-  const totalRepUniverse = Math.round(2_100_000 * 0.28);
-  const demOverallPct   = Math.round((totalDemVoted / totalDemUniverse) * 100);
-  const repOverallPct   = Math.round((totalRepVoted / totalRepUniverse) * 100);
+  const c22 = EV.compare2022;
+  const leanShift = c22.lean != null ? (EV.lean.earlyVote - c22.lean) * 100 : null;
+  const curve = EV.byDay.map((d, i) => ({ day: d.day, date: dayName(d.date).split(", ")[1], v26: d.cumulative, v22: c22.curve[i].cumulative }));
+  const races: Record<string, string> = {};
+  for (const k of Object.keys(MATCHUPS_2026)) { const d = evDistrictFor(k); if (d && EV.districts[d]) races[d] ??= raceHref(k); }
+  const hd = Object.entries(EV.districts).filter(([k, m]) => k.startsWith("HD-") && m.all >= MIN_DISTRICT_BALLOTS).map(([k, m]) => ({ k, g: rateGap(m) }));
+  const hdD = hd.filter(h => h.g > 0).length;
+  const gaps = Object.values(EV.precincts).map(gapOf).filter((g): g is number => g != null);
+  const dAhead = gaps.filter(g => g > 0).length;
+  const updated = new Date(EV.updated).toLocaleString("en-US", { timeZone: "America/Chicago", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 
   return (
-    <div style={{ background: "#F1F2EE", minHeight: "100vh", fontFamily: "var(--font-outfit,sans-serif)" }}>
-
-      {/* Hero */}
-      <section className="relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg,#0D2A21 0%,#0A1F18 60%,#162e4a 100%)", paddingTop: "4rem", paddingBottom: "4rem" }}>
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 70% 60% at 80% 40%,rgba(226,177,60,0.07) 0%,transparent 70%)" }} />
-        <div className="relative max-w-6xl mx-auto px-5">
-          <p className="text-sky-300 text-xs font-bold uppercase tracking-[0.22em] mb-3">Elections · Early Vote</p>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2" style={{ fontFamily: "var(--font-playfair,serif)" }}>
-            Early Vote Tracker
-          </h1>
-          <p className="text-white/50 text-sm max-w-lg">
-            Track who is voting early across Harris County precincts, cross-referenced against Democratic and Republican primary history. To gauge which side is turning out.
+    <div>
+      <header className="border-b" style={{ borderColor: "var(--rule)", background: "var(--surface)" }}>
+        <div className="max-w-6xl mx-auto px-4 md:px-6 pt-10 pb-8">
+          <p className="label" style={{ color: "var(--brand)" }}>
+            {`Early vote · Day ${EV.day} of ${EV.evDays} · through ${dayName(EV.through)}`}
           </p>
-          {/* Live demo banner */}
-          <div className="mt-4 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold"
-            style={{ background: "rgba(245,158,11,0.15)", border: "1px solid rgba(245,158,11,0.35)", color: "#fcd34d" }}>
-            <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: "#fcd34d" }} />
-            Demo mode: no active election. Data is illustrative.
+          <h1 className="serif text-[40px] md:text-[56px] leading-[1.02] tracking-[-0.02em] font-semibold mt-2" style={{ color: "var(--ink)" }}>
+            {`${fmt(t.all)} ballots are in`}
+          </h1>
+          <p className="mt-3 max-w-3xl text-[17.5px] leading-relaxed" style={{ color: "#3C443F" }}>
+            {`Harris County is ${pctText(Math.abs(vs22), 0)} ${vs22 >= 0 ? "ahead of" : "behind"} the 2022 midterm at the same point. `}
+            {`Among people who voted in this March's primaries, ${ahead === "D" ? "Democrats" : "Republicans"} are turning out faster: ${pctText(ahead === "D" ? rateD : rateR)} have already voted, against ${pctText(ahead === "D" ? rateR : rateD)} of ${ahead === "D" ? "Republicans" : "Democrats"}.`}
+          </p>
+          <p className="mt-3 text-[12.5px]" style={{ color: "#6B726D" }}>
+            {`From the county's early-voting and mail-ballot rosters, updated ${updated}. Early voting runs through Friday, Oct. 30; Election Day is Tuesday, Nov. 3.`}
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
+            <Stat label="In person" value={fmt(t.inPerson)} />
+            <Stat label="By mail" value={fmt(t.mail)} note="Mail ballots received" />
+            <Stat label={`2022 at day ${EV.day}`} value={fmt(c22.atSameDay)} note={`${vs22 >= 0 ? "+" : ""}${pctText(vs22, 0)} this year`} />
+            <Stat label="Of 2024 registered" value={pctText(t.all / EV.registered2024)} note={`${fmt(EV.registered2024)} registered in 2024`} />
           </div>
         </div>
-      </section>
+      </header>
 
-      {/* Body */}
-      <div className="max-w-7xl mx-auto px-5 py-10">
-        <div className="flex flex-col xl:flex-row gap-6">
-
-          {/* Left: map + controls */}
-          <div className="flex-1 min-w-0">
-
-            {/* EV day simulator */}
-            <div className="mb-5 rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-              <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>
-                  Simulate Early Vote Day
-                </p>
-                <div className="flex items-center gap-4">
-                  <input
-                    type="range" min={1} max={12} value={daysPassed}
-                    onChange={e => setDaysPassed(Number(e.target.value))}
-                    className="flex-1 accent-[#0D2A21]"
-                  />
-                  <span className="text-sm font-bold w-20 text-right" style={{ color: "#0D2A21" }}>
-                    Day {daysPassed} of 12
-                  </span>
+      <div className="max-w-6xl mx-auto px-4 md:px-6 py-10 space-y-14">
+        {/* Who is voting */}
+        <section className="grid md:grid-cols-[1.4fr_1fr] gap-8 md:gap-12">
+          <div>
+            <h2 className="serif text-[26px] leading-tight font-semibold" style={{ color: "var(--ink)" }}>
+              {`${pctText(t.D / t.all, 0)} of early voters last chose a Democratic primary; ${pctText(t.R / t.all, 0)} a Republican one`}
+            </h2>
+            <p className="mt-2 text-[15px] leading-relaxed" style={{ color: "#3C443F" }}>
+              Texas has no party registration, so the desk sorts each voter by the last party primary they voted in: March 2022, 2024 or 2026.
+              It shows who is voting, not how they vote. &ldquo;No primary&rdquo; is new voters, independents and people who skip primaries.
+            </p>
+            <div className="mt-5 space-y-5">
+              <div>
+                <p className="label mb-1.5" style={{ color: "#5B635E", fontSize: 10 }}>{`Everyone so far · ${fmt(t.all)}`}</p>
+                <EVMix m={t} />
+              </div>
+              <div className="grid sm:grid-cols-2 gap-5">
+                <div>
+                  <p className="label mb-1.5" style={{ color: "#5B635E", fontSize: 10 }}>{`In person · ${fmt(t.inPerson)}`}</p>
+                  <EVMix m={EV.byMethod.inPerson} compact />
                 </div>
-                <p className="text-[10px] mt-1" style={{ color: "#9ca3af" }}>
-                  Harris County early voting runs 12 days before Election Day
-                </p>
+                <div>
+                  <p className="label mb-1.5" style={{ color: "#5B635E", fontSize: 10 }}>{`By mail · ${fmt(t.mail)}`}</p>
+                  <EVMix m={EV.byMethod.mail} compact />
+                </div>
               </div>
-            </div>
-
-            {/* Race selector */}
-            <div className="mb-4">
-              <div className="flex flex-wrap gap-2 mb-3">
-                {CATEGORIES.map(cat => (
-                  <button key={cat}
-                    onClick={() => setSelectedCategory(cat)}
-                    className="rounded-full px-3 py-1 text-xs font-semibold transition-all duration-150"
-                    style={{
-                      background: selectedCategory === cat ? "#0D2A21" : "#fff",
-                      color:      selectedCategory === cat ? "#fff" : "#374151",
-                      border:     `1.5px solid ${selectedCategory === cat ? "#0D2A21" : "#e5e7eb"}`,
-                    }}
-                  >{cat}</button>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {filteredRaces.map(r => (
-                  <button key={r.id}
-                    onClick={() => setSelectedRace(r.id)}
-                    className="rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-150"
-                    style={{
-                      background: selectedRace === r.id ? "#0D2A21" : "#fff",
-                      color:      selectedRace === r.id ? "#fff" : "#374151",
-                      border:     `1.5px solid ${selectedRace === r.id ? "#0D2A21" : "#e5e7eb"}`,
-                    }}
-                  >{r.label}</button>
-                ))}
-              </div>
-            </div>
-
-            {/* Legend */}
-            <div className="flex items-center gap-4 mb-3 text-[11px]" style={{ color: "#6b7280" }}>
-              <span className="font-semibold uppercase tracking-wider text-[10px]">Dem Universe Turnout:</span>
-              {[
-                { color: "#1e40af", label: "High (60%+)" },
-                { color: "#60a5fa", label: "Mid (30–60%)" },
-                { color: "#dbeafe", label: "Low (under 30%)" },
-                { color: "#f3f4f6", label: "No data" },
-              ].map(l => (
-                <span key={l.label} className="flex items-center gap-1.5">
-                  <span className="inline-block w-3 h-3 rounded-sm border border-black/10" style={{ background: l.color }} />
-                  {l.label}
-                </span>
-              ))}
-            </div>
-
-            {/* Map */}
-            <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-              <div className="rounded-[1rem] overflow-hidden bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]">
-                <EarlyVoteMap daysPassed={daysPassed} selectedRaceId={selectedRace} />
-              </div>
-            </div>
-
-            {/* Data source note */}
-            <div className="mt-4 rounded-xl px-4 py-3 text-[10px] leading-relaxed" style={{ background: "rgba(13,42,33,0.05)", color: "#6b7280" }}>
-              <strong style={{ color: "#0D2A21" }}>Data source:</strong> During active elections, Harris County Clerk publishes daily early vote participation files at harrisvotes.com. The voter file (TEAM system, TX Sec. of State) provides party primary history. Precinct-level cross-reference powers the Dem vs. Rep universe gauge.
             </div>
           </div>
-
-          {/* Right: race stats */}
-          <div className="w-full xl:w-[340px] shrink-0 space-y-4">
-
-            {/* Race header */}
-            <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-              <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-5">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "#2563a8" }}>
-                  {race.category}
-                </p>
-                <h2 className="text-lg font-bold mb-3" style={{ fontFamily: "var(--font-playfair,serif)", color: "#0D2A21" }}>
-                  {race.label}
-                </h2>
-                {race.candidates.map(c => (
-                  <div key={c.name} className="flex items-center gap-2 mb-1.5">
-                    <span className="inline-block w-2 h-2 rounded-full"
-                      style={{ background: c.party === "D" ? "#2563a8" : c.party === "R" ? "#dc2626" : "#9ca3af" }} />
-                    <span className="text-sm font-medium" style={{ color: "#0D2A21" }}>{c.name}</span>
-                    <span className="text-[10px] rounded px-1.5 py-0.5 font-bold ml-auto"
-                      style={{
-                        background: c.party === "D" ? "#dbeafe" : c.party === "R" ? "#fee2e2" : "#f3f4f6",
-                        color:      c.party === "D" ? "#1d4ed8" : c.party === "R" ? "#dc2626" : "#6b7280",
-                      }}>
-                      {c.party === "D" ? "Dem" : c.party === "R" ? "Rep" : "NP"}
-                    </span>
-                  </div>
-                ))}
-              </div>
+          <div className="panel p-5 self-start">
+            <h3 className="font-semibold text-[16px]" style={{ color: "var(--ink)" }}>Share of March 2026 primary voters who have voted</h3>
+            <p className="text-[13px] mt-1 leading-snug" style={{ color: "#5B635E" }}>
+              The fair test of turnout. Democrats&rsquo; March primary was far bigger, which inflates the bar on the left; comparing each party&rsquo;s own March voters cancels that out.
+            </p>
+            <div className="mt-4 space-y-4">
+              <RateBar party="D" rate={rateD} voted={t.D26 ?? 0} universe={EV.universe.D} />
+              <RateBar party="R" rate={rateR} voted={t.R26 ?? 0} universe={EV.universe.R} />
             </div>
+          </div>
+        </section>
 
-            {/* County-wide turnout */}
-            <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-              <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-4" style={{ color: "#6b7280" }}>
-                  County-Wide Turnout: Day {daysPassed}
-                </p>
-                <TurnoutGauge
-                  label="Dem Primary Universe"
-                  pct={demOverallPct}
-                  color="#2563a8"
-                  universe={totalDemUniverse}
-                  voted={totalDemVoted}
-                />
-                <TurnoutGauge
-                  label="Rep Primary Universe"
-                  pct={repOverallPct}
-                  color="#dc2626"
-                  universe={totalRepUniverse}
-                  voted={totalRepVoted}
-                />
-                <div className="mt-3 pt-3" style={{ borderTop: "1px solid #f3f4f6" }}>
-                  <p className="text-[10px]" style={{ color: "#9ca3af" }}>
-                    Total early ballots cast (est.): <strong style={{ color: "#0D2A21" }}>{(totalDemVoted + totalRepVoted).toLocaleString()}</strong>
+        {/* Against 2022 */}
+        <section>
+          <h2 className="serif text-[26px] leading-tight font-semibold" style={{ color: "var(--ink)" }}>
+            {`Day ${EV.day}: ${fmt(t.all - c22.atSameDay)} more ballots than 2022 at this point`}
+          </h2>
+          <div className="grid md:grid-cols-[1.6fr_1fr] gap-8 mt-5">
+            <div className="panel p-4 md:p-5">
+              <EVCurve points={curve} />
+            </div>
+            <div className="space-y-4">
+              {leanShift != null && (
+                <div className="panel p-4">
+                  <p className="label" style={{ color: "#6B726D", fontSize: 10 }}>Where early voters live</p>
+                  <p className="text-[14.5px] leading-snug mt-1.5" style={{ color: "var(--ink)" }}>
+                    {`This year's early voters live in precincts that gave Harris ${pctText(EV.lean.earlyVote)} in 2024. At this point in 2022 it was ${pctText(c22.lean!)}: `}
+                    <b>{`${Math.abs(leanShift).toFixed(1)} points ${leanShift >= 0 ? "bluer" : "redder"}`}</b>
+                    {` this year, on the same yardstick. The county as a whole gave Harris ${pctText(EV.lean.county2024)}.`}
                   </p>
-                  {demOverallPct > repOverallPct ? (
-                    <p className="text-[11px] font-semibold mt-1" style={{ color: "#2563a8" }}>
-                      Dem universe turning out at a higher rate: favorable indicator
-                    </p>
-                  ) : (
-                    <p className="text-[11px] font-semibold mt-1" style={{ color: "#dc2626" }}>
-                      Rep universe turning out at a higher rate: watch closely
-                    </p>
-                  )}
                 </div>
-              </div>
-            </div>
-
-            {/* What to watch */}
-            <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-              <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>
-                  What This Measures
+              )}
+              <div className="panel p-4">
+                <p className="label" style={{ color: "#6B726D", fontSize: 10 }}>Voted in that year&rsquo;s March primary</p>
+                <table className="w-full mt-2 text-[13.5px] num">
+                  <thead>
+                    <tr style={{ color: "#6B726D" }} className="text-left">
+                      <th className="font-normal py-1" />
+                      <th className="font-normal py-1 text-right">Dem</th>
+                      <th className="font-normal py-1 text-right">Rep</th>
+                      <th className="font-normal py-1 text-right">Neither</th>
+                    </tr>
+                  </thead>
+                  <tbody style={{ color: "var(--ink)" }}>
+                    <tr className="border-t" style={{ borderColor: "var(--rule)" }}>
+                      <td className="py-1.5 font-semibold">2026</td>
+                      <td className="text-right">{pctText(EV.sameCycle.D / t.all, 0)}</td>
+                      <td className="text-right">{pctText(EV.sameCycle.R / t.all, 0)}</td>
+                      <td className="text-right">{pctText(EV.sameCycle.N / t.all, 0)}</td>
+                    </tr>
+                    <tr className="border-t" style={{ borderColor: "var(--rule)" }}>
+                      <td className="py-1.5 font-semibold">2022</td>
+                      <td className="text-right">{pctText(c22.sameCycle.D / c22.sameCycle.total, 0)}</td>
+                      <td className="text-right">{pctText(c22.sameCycle.R / c22.sameCycle.total, 0)}</td>
+                      <td className="text-right">{pctText(c22.sameCycle.N / c22.sameCycle.total, 0)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p className="text-[12px] mt-2 leading-snug" style={{ color: "#6B726D" }}>
+                  {`Early voters at day ${EV.day} each year. Part of the swing is the size of each primary, not only who is showing up.`}
                 </p>
-                <ul className="space-y-2 text-[11px] leading-relaxed" style={{ color: "#374151" }}>
-                  {[
-                    "Dem Primary Universe: voters who cast a Democratic ballot in any of the last 4 primaries",
-                    "Rep Primary Universe: voters who cast a Republican ballot in any of the last 4 primaries",
-                    "Turnout %: how many from each universe have already voted early",
-                    "Higher Dem turnout % = more Dem-leaning ballots already cast = favorable for Dem candidates",
-                    "Gaps widen or close as election day approaches. Watch daily trend",
-                  ].map((item, i) => (
-                    <li key={i} className="flex gap-2">
-                      <span className="shrink-0 w-1 h-1 rounded-full mt-1.5" style={{ background: "#9ca3af" }} />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Coming features */}
-            <div className="rounded-[1.35rem] bg-white/70 ring-1 ring-black/8 p-[4px]">
-              <div className="rounded-[1rem] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] p-4">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "#6b7280" }}>
-                  When an Election is Live
-                </p>
-                <ul className="space-y-1.5 text-[11px]" style={{ color: "#374151" }}>
-                  {[
-                    "Daily EV file auto-ingested from harrisvotes.com",
-                    "Real precinct-level turnout by universe",
-                    "Daily delta. Who jumped overnight",
-                    "Trend line: is the Dem universe accelerating or stalling?",
-                    "Split by race (each contest on the ballot)",
-                  ].map((item, i) => (
-                    <li key={i} className="flex gap-2">
-                      <span className="shrink-0 text-[10px] font-bold" style={{ color: "#2563a8" }}>→</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
               </div>
             </div>
           </div>
-        </div>
+        </section>
+
+        {/* Day by day */}
+        <section>
+          <h2 className="serif text-[26px] leading-tight font-semibold" style={{ color: "var(--ink)" }}>Day by day</h2>
+          <div className="panel overflow-x-auto mt-4">
+            <table className="w-full text-[13.5px] num min-w-[560px]">
+              <thead>
+                <tr className="label text-left" style={{ color: "#6B726D", fontSize: 10 }}>
+                  <th className="font-normal px-4 py-2.5">Day</th>
+                  <th className="font-normal px-2 py-2.5 text-right">In person</th>
+                  <th className="font-normal px-2 py-2.5 text-right">Mail</th>
+                  <th className="font-normal px-2 py-2.5 text-right">Total so far</th>
+                  <th className="font-normal px-4 py-2.5 w-[38%]">Last primary of that day&rsquo;s voters</th>
+                </tr>
+              </thead>
+              <tbody>
+                {EV.mailBeforeEV.all > 0 && (
+                  <tr className="border-t" style={{ borderColor: "var(--rule)" }}>
+                    <td className="px-4 py-2.5" style={{ color: "var(--ink-2)" }}>Before early voting</td>
+                    <td className="px-2 text-right" style={{ color: "#9AA19C" }}>–</td>
+                    <td className="px-2 text-right">{fmt(EV.mailBeforeEV.mail)}</td>
+                    <td className="px-2 text-right">{fmt(EV.mailBeforeEV.all)}</td>
+                    <td className="px-4"><EVMix m={EV.mailBeforeEV} inline /></td>
+                  </tr>
+                )}
+                {EV.byDay.map(d => {
+                  const done = d.cumulative != null;
+                  return (
+                    <tr key={d.day} className="border-t" style={{ borderColor: "var(--rule)", color: done ? "var(--ink)" : "#9AA19C" }}>
+                      <td className="px-4 py-2.5"><b className="font-semibold">{d.day}</b> <span style={{ color: done ? "#5B635E" : "#9AA19C" }}>{dayName(d.date)}</span></td>
+                      <td className="px-2 text-right">{done ? fmt(d.inPerson) : "–"}</td>
+                      <td className="px-2 text-right">{done ? fmt(d.mail) : "–"}</td>
+                      <td className="px-2 text-right font-semibold">{done ? fmt(d.cumulative!) : "–"}</td>
+                      <td className="px-4">{done ? <EVMix m={d} inline /> : null}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* Districts */}
+        <section>
+          <h2 className="serif text-[26px] leading-tight font-semibold" style={{ color: "var(--ink)" }}>
+            {`Democrats are out-voting Republicans in ${hdD} of ${hd.length} State House districts`}
+          </h2>
+          <p className="mt-2 text-[15px]" style={{ color: "#3C443F" }}>
+            Measured by the share of each party&rsquo;s March 2026 primary voters in the district who have voted. Seats on this year&rsquo;s ballot link to the race.
+          </p>
+          <div className="mt-5"><EVDistricts districts={EV.districts} races={races} /></div>
+        </section>
+
+        {/* Precincts */}
+        <section>
+          <h2 className="serif text-[26px] leading-tight font-semibold" style={{ color: "var(--ink)" }}>
+            {`Democrats are out-voting Republicans in ${fmt(dAhead)} of ${fmt(gaps.length)} precincts`}
+          </h2>
+          <div className="mt-5"><EVMapPanel precincts={EV.precincts} /></div>
+        </section>
+
+        <section className="max-w-3xl text-[13.5px] leading-relaxed space-y-2" style={{ color: "#3C443F" }}>
+          <h2 className="label" style={{ color: "#5B635E" }}>How this is built</h2>
+          <p>
+            Every morning the county clerk posts who has voted early in person and whose mail ballot has arrived, by voter ID and precinct
+            (<a className="underline" href="https://www.harrisvotes.com/Election-Results/Election-Rosters" target="_blank" rel="noopener noreferrer">harrisvotes.com election rosters</a>).
+            The desk matches those IDs to the county&rsquo;s official rosters of the March 2022, 2024 and 2026 primaries, which record each voter&rsquo;s party ballot.
+            {` ${pctText(EV.matchRate, 0)} of early voters so far voted in at least one of those primaries.`}
+          </p>
+          <p>
+            The 2022 comparison uses the county&rsquo;s official November 2022 roster, counted through the same day of early voting (early voting began on a Monday both years).
+            Precinct lean is each precinct&rsquo;s 2024 presidential result, the same yardstick for both years. The rosters are unofficial until the canvass, so totals can shift slightly.
+            Only totals are published here; no individual voter appears on this site.
+          </p>
+          <p>
+            Related: <Link className="underline" href="/races">every race, rated</Link> · <Link className="underline" href="/tools/my-ballot">your ballot</Link>.
+          </p>
+        </section>
       </div>
+      <RelatedTools current="/tools/early-vote" />
     </div>
   );
 }

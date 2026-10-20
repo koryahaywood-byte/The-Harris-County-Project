@@ -55,3 +55,6 @@ data/tmp/
 
 # Player-model pipeline cache (scripts/build-player-models.mjs)
 .player-models/
+
+# Raw county voter rosters (voter-level, never committed; scripts publish aggregates only)
+.rosters/
