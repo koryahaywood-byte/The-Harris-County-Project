@@ -13,6 +13,8 @@ import AddressForm from "@/components/desk/AddressForm";
 import CopyLink from "@/components/desk/CopyLink";
 import { getAllMarketOdds } from "@/lib/kalshi";
 import MarketBar from "@/components/desk/MarketBar";
+import { RaceEVPanel } from "@/components/desk/EVPanel";
+import { evDistrictFor } from "@/lib/early-vote";
 
 export const dynamicParams = false;
 export const revalidate = 1800;
@@ -159,6 +161,7 @@ export default async function RacePage({ params }: { params: Promise<{ race: str
         </div>
 
         <aside className="space-y-6">
+          <RaceEVPanel district={evDistrictFor(race.key)} label={evLabel(evDistrictFor(race.key))} />
           {market && race.d && race.r && (
             <div className="panel p-5">
               <p className="label" style={{ color: "#6B726D" }}>Prediction market</p>
@@ -216,6 +219,12 @@ export default async function RacePage({ params }: { params: Promise<{ race: str
       )}
     </article>
   );
+}
+
+function evLabel(district: string | null): string {
+  if (!district) return "the county";
+  const [kind, n] = district.split("-");
+  return kind === "PCT" ? `Commissioner Precinct ${n}` : kind === "JP" ? `JP Precinct ${n}` : `${kind} ${n}`;
 }
 
 function asOfNote(race: Race): string {

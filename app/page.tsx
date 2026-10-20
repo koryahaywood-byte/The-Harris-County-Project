@@ -7,6 +7,7 @@ import { EVENTS } from "@/lib/civic-events";
 import { fmt } from "@/lib/campaign-finance";
 import { getDashboardData } from "@/lib/dashboard-data";
 import BallotStrip from "@/components/desk/BallotStrip";
+import { EVBand } from "@/components/desk/EVPanel";
 import RaceTile from "@/components/desk/RaceTile";
 import Face from "@/components/desk/Face";
 import { RatingChip } from "@/components/desk/Rating";
@@ -87,6 +88,9 @@ export default async function FrontPage() {
           </div>
         </div>
       </section>
+
+      {/* ── EARLY VOTE (Oct 19–30) ──────────────────────────────────── */}
+      <EVBand />
 
       {/* ── THE MARQUEE ─────────────────────────────────────────────── */}
       <section className="max-w-7xl mx-auto px-4 md:px-6 pt-12">
